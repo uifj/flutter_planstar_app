@@ -1,0 +1,78 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+**/.dart_tool/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+# No leading slash: also covers packages/*/build, android/build, build/test_cache
+build/
+coverage/
+**/test_cache/
+*.dill
+*.track.dill
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# ---------------------------------------------------------------------------
+# Planstar: local-only / machine-specific artifacts (first Git push)
+# These stay on disk; they are only excluded from version control.
+# ---------------------------------------------------------------------------
+
+# Gradle / Kotlin incremental caches and local SDK paths
+.gradle/
+.kotlin/
+local.properties
+
+# Generated Flutter platform glue (contains absolute local paths)
+**/Generated.xcconfig
+**/flutter_export_environment.sh
+**/ephemeral/
+**/GeneratedPluginRegistrant.swift
+
+# Build outputs that may live outside a build/ directory
+*.apk
+*.aab
+
+# Root-level UI-debug screenshots and logs (not project assets)
+/*.png
+/*.jpg
+
+# Local AI assistant working memory - keep on disk, never commit
+.workbuddy-ai/

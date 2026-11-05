@@ -1,0 +1,91 @@
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:core_design_system/core_design_system.dart';
+import 'package:flutter/material.dart';
+
+/// 楼层标题。
+///
+/// 企划星每个楼层都是"标题 +（可选）副标题 +（可选）全部 >"的三段式：
+/// - `view_home_choiceness.xml`：20sp 粗体、左右 14dp
+/// - `view_home_show_floor.xml`：18dp 粗体 + 12dp `text_3` 副标题 + 11dp「全部」+ 10dp 箭头
+/// - `view_home_popular_venues.xml`：20sp 粗体、左右 14dp
+class PsSectionHeader extends StatelessWidget {
+  const PsSectionHeader({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.actionLabel = '全部',
+    this.onAction,
+    this.titleSize = 18,
+    this.horizontalPadding = 14,
+    this.showActionArrow = true,
+  });
+
+  final String title;
+  final String? subtitle;
+
+  /// 右侧动作文案（企划星固定为「全部」）。
+  final String actionLabel;
+
+  /// 为 `null` 时不显示右侧动作。
+  final VoidCallback? onAction;
+
+  final double titleSize;
+  final double horizontalPadding;
+  final bool showActionArrow;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: titleSize,
+              height: 1.2,
+              fontWeight: FontWeight.w700,
+              color: colors.textPrimary,
+            ),
+          ),
+          if (subtitle != null)
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: Text(
+                  subtitle!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12, height: 1.2, color: colors.textTertiary),
+                ),
+              ),
+            )
+          else
+            const Spacer(),
+          if (onAction != null)
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: onAction,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      actionLabel,
+                      style: TextStyle(fontSize: 11, height: 1.1, color: colors.textTertiary),
+                    ),
+                    if (showActionArrow)
+                      Icon(LucideIcons.chevronRight, size: 12, color: colors.textTertiary),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}

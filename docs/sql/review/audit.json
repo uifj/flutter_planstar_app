@@ -1,0 +1,59 @@
+{
+  "table_count": 89,
+  "column_count": 1444,
+  "index_count": 169,
+  "fk_count": 61,
+  "fk_incompatible": [
+    {
+      "child_db": "planstar_marketing",
+      "child_table": "pin_tuan_orders",
+      "name": "fk_pin_tuan_orders_pin_tuan_id",
+      "child_col": "pin_tuan_id",
+      "parent_db": "planstar_marketing",
+      "parent_table": "pin_tuan_campaigns",
+      "parent_col": "id",
+      "child_type": "INT",
+      "parent_type": "BIGINT",
+      "compatible": false
+    }
+  ],
+  "fk_cross_database": 24,
+  "tables_by_db": {
+    "planstar_catalog": 23,
+    "planstar_community": 10,
+    "planstar_content": 8,
+    "planstar_marketing": 12,
+    "planstar_meta": 4,
+    "planstar_order": 10,
+    "planstar_payment": 7,
+    "planstar_ticket": 6,
+    "planstar_user": 9
+  },
+  "applied_type_alignments": [
+    "planstar_marketing.pin_tuan_orders.pin_tuan_id",
+    "planstar_marketing.pin_tuan_orders.pin_tuan_campaign_item_id",
+    "planstar_order.orders.pin_tuan_id",
+    "planstar_order.speed_packs.pin_tuan_id",
+    "planstar_catalog.activity_events.ticket_group_id",
+    "planstar_ticket.ticket_groups.pin_tuan_campaign_item_id",
+    "planstar_marketing.coupons.activity_event_id",
+    "planstar_marketing.pin_tuan_campaigns.shop_id"
+  ],
+  "applied_comment_additions": [
+    "planstar_meta.dict_enums.id",
+    "planstar_meta._rev_dto_field_catalog.id",
+    "planstar_meta._rev_endpoint_catalog.id",
+    "planstar_meta._rev_dto_table_mapping.id"
+  ],
+  "applied_index_candidates": [
+    "planstar_order.orders.idx_order_user_addtime",
+    "planstar_order.order_events.idx_orderev_order_time",
+    "planstar_catalog.activity_events.idx_event_act_start",
+    "planstar_ticket.ticket_categories.idx_tc_event_status",
+    "planstar_marketing.coupons.idx_coupon_user_status_expiry",
+    "planstar_payment.wallet_sequences.idx_walletseq_account_time",
+    "planstar_community.reviews.idx_review_act_time",
+    "planstar_community.feeds.idx_feed_addtime_id"
+  ],
+  "warnings": []
+}

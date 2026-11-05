@@ -1,0 +1,18 @@
+name: core_design_system
+description: 三层设计令牌（原始色板 → 语义槽 → 组件）+ ThemeExtension + AppThemeConfig。配色取自企划星 Android res/values/colors.xml。
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.11.5
+  flutter: ">=3.41.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter

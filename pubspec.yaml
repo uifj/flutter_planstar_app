@@ -1,0 +1,90 @@
+name: planstar
+description: "企划星 · Planstar — 演出票务 Flutter 应用（Clean DDD + Riverpod + GoRouter）。"
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+version: 9.9.39+90939
+
+environment:
+  sdk: ^3.11.5
+
+# ── Pub Workspace ────────────────────────────────────────────────────────────
+# 只纳入自建的 core/* 包。vendored 的 pudding / infras / appunits 虽然也写了
+# `resolution: workspace`，但**故意不列在这里**：它们带 firebase_remote_config、
+# grpc、gql、sentry 等重依赖，纳入解析会显著拖慢 pub get 且易失败。
+workspace:
+  - packages/core/result
+  - packages/core/domain
+  - packages/core/network
+  - packages/core/storage
+  - packages/core/cache
+  - packages/core/upload
+  - packages/core/design_system
+  - packages/core/logger
+  - packages/core/config
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: 2.6.1
+  go_router: 14.6.2
+  adaptive_platform_ui: 1.0.2
+
+  # 全量图标：Lucide 线性图标集（开源、免费可商用），替代全部 Material Icons。
+  lucide_icons_flutter: 3.1.25
+
+  # adaptive_platform_ui 的日期/文案本地化需要 Global*Delegates。
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+  # ── 自建 core 包（pub workspace 成员，无需 path:）────────────────────────────
+  core_result: ^0.1.0
+  core_domain: ^0.1.0
+  core_network: ^0.1.0
+  core_storage: ^0.1.0
+  core_cache: ^0.1.0
+  core_upload: ^0.1.0
+  core_design_system: ^0.1.0
+  core_logger: ^0.1.0
+  core_config: ^0.1.0
+
+  # 网络/存储底层实现（core_* 只暴露端口，实现依赖由应用侧注入）
+  dio: ^5.11.1
+  fluwx: 6.0.6
+  jpush_flutter: 3.6.0
+  geolocator: 14.1.2
+  permission_handler: 12.0.1
+  geocoding: ^5.0.1
+  flutter_baidu_mapapi_map: 4.0.2
+  flutter_baidu_mapapi_utils: ^4.0.2
+  flutter_baidu_mapapi_search: ^4.0.2
+  flutter_baidu_mapapi_base: 4.0.2
+
+  # 已移除 lottie：本地动画资源随 assets/ 一并删除，加载态改为代码绘制。
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  # 开启 gen-l10n 代码生成（l10n.yaml 驱动，产物在 lib/l10n/ 下）。
+  generate: true
+
+  # 保留 MaterialIcons 字体：部分 Flutter 内置组件（返回按钮等）仍会引用。
+  # 业务侧图标已全量改为 Lucide，不再直接使用 Icons.*。
+  uses-material-design: true
+
+  # 本地 assets/ 与 DIN 品牌字体已整体移除：
+  #   - 图片统一走开源免费图床（见 lib/shared/ui/ps_network_images.dart）
+  #   - categories / api_config 等配置改为 Dart 编译期常量
+  #   - 字体使用系统默认字体

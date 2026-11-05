@@ -1,0 +1,9 @@
+{
+  "@@locale": "en",
+  "userTitle": "Me",
+  "userLoggedIn": "Signed in as {nickname}",
+  "userNotLoggedIn": "Not signed in",
+  "userLogout": "Sign out",
+  "userMockLogin": "Mock sign-in",
+  "userViewOrders": "View orders (gated)"
+}

@@ -1,0 +1,22 @@
+# 应用级 l10n 配置。
+#
+# 只放**跨 feature 共用**的文案：应用名、底栏 Tab、通用动作（重试/取消/确定/
+# 保存）、通用状态（加载/空/网络错误/超时/登录失效/离线缓存）。
+# 各 feature 自己的文案在 `lib/features/<name>/l10n/<name>_zh.arb`——
+# 这是 §3.4 的"包级 l10n"，避免所有文案堆进一个巨型 ARB。
+#
+# `⚠` 这个文件只驱动**应用级**生成。feature 级必须跑
+#     `dart tool/gen_l10n.dart`
+# 因为 `flutter gen-l10n` 只读 cwd 的 l10n.yaml，且一旦发现它存在就会忽略
+# 全部命令行参数，无法在同一工程里维护多套配置（细节见该脚本头部注释）。
+# `flutter build` / `flutter run` 在 generate: true 下会自动重跑本文件的配置，
+# 但**不会**管 feature 级，所以生成产物需要入库。
+#
+# `⚠` 相对来源的刻意改动：来源 `app_common` 有**两套** l10n
+# （`lib/l10n/` 的 ARB 驱动 + `lib/localizations/` 的手写分文件，30-11）。
+# 这里只有一套：ARB → gen-l10n 生成，手写的那套不要。
+arb-dir: lib/l10n
+template-arb-file: app_zh.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false

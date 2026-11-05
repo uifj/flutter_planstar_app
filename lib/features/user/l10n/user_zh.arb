@@ -1,0 +1,16 @@
+{
+  "@@locale": "zh",
+  "userTitle": "我的",
+  "userLoggedIn": "已登录：{nickname}",
+  "@userLoggedIn": {
+    "placeholders": {
+      "nickname": {
+        "type": "String"
+      }
+    }
+  },
+  "userNotLoggedIn": "未登录",
+  "userLogout": "退出登录",
+  "userMockLogin": "模拟登录",
+  "userViewOrders": "查看订单（受门禁保护）"
+}

@@ -1,0 +1,12 @@
+name: core_result
+description: 领域原语：Result / Failure / FailureType。零运行时依赖，可在纯 Dart 环境使用。
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.11.5
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

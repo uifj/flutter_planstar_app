@@ -1,0 +1,142 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- 迁移自原 Android 项目第一方权限；厂商推送（JPush/小米/华为HMS/OPPO/vivo）与 OAID 等权限随各自 SDK 插件接入时再补。 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+
+    <!-- 定位（百度地图/地理编码 + geolocator 后台定位）：补齐原项目定位与网络状态权限。 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- Android 11+ 相册细分选择；≤ 12 的旧存储读取保留 maxSdkVersion。 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <!-- 分享/拉起第三方 App（微信/QQ/地图）在 Android 11+ 需要包可见性；见下方 <queries>。 -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission"/>
+
+    <!-- 硬件特性：迁移自原清单。glEsVersion=0x20000 为地图/OpenGL 渲染硬性要求。 -->
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
+    <uses-feature android:name="android.hardware.wifi" android:required="false"/>
+    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+
+    <application
+        android:label="企划星"
+        android:name="${applicationName}"
+        android:allowBackup="false"
+        android:usesCleartextTraffic="true"
+        android:icon="@mipmap/ic_launcher">
+        <!-- ── SDK 声明式配置（取自原 com.planstar.app 清单）───────────── -->
+        <!-- 百度地图 / 定位 API Key（com.baidu.mapapi + com.baidu.location 消费）。 -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="noGiz1ZV4N3445UU0OWrmSPlQRqh2xmW"/>
+        <!-- 极光推送 JPush：AppKey/渠道通过 android/app/build.gradle.kts 的
+             manifestPlaceholders（JPUSH_APPKEY/JPUSH_PKGNAME/JPUSH_CHANNEL）注入。
+             jpush_flutter 插件自身清单引用 ${JPUSH_APPKEY} 等占位符，若在此再写死
+             同名 meta-data 会与之重复、导致清单合并失败。 -->
+        <!-- 厂商推送通道 ID（原清单已含；仅在你接入对应 JPush 厂商 SDK + Gradle 插件后生效，
+             未接入时这些 meta 惰性无害，保留以对齐原项目）。 -->
+        <meta-data android:name="XIAOMI_APPID"    android:value="MI-2882303761517405771"/>
+        <meta-data android:name="XIAOMI_APPKEY"   android:value="MI-5561740550771"/>
+        <meta-data android:name="OPPO_APPID"      android:value="3024221"/>
+        <meta-data android:name="OPPO_APPKEY"     android:value="BsRs0mARghcsg8c08K4GwcskK"/>
+        <meta-data android:name="OPPO_APPSECRET"  android:value="DFf3c7b2f2c5a3265B1AF73f14aC554b"/>
+        <meta-data android:name="com.vivo.push.app_id"   android:value="100228639"/>
+        <meta-data android:name="com.vivo.push.api_key"  android:value="913a334ff608742c83fa424c078330ec"/>
+        <meta-data android:name="com.huawei.hms.client.appid" android:value="appid=10375963"/>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <!-- planstar:// 深链（整站 catch-all，由 GoRouter 的 scheme 解析器按 host/path 分发） -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="planstar"/>
+            </intent-filter>
+
+            <!-- https://m.planstar.com 通用链接（App Links；需托管 assetlinks.json） -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https" android:host="m.planstar.com"/>
+            </intent-filter>
+        </activity>
+        <!-- 微信回调 Activity（fluwx）：WeChat 按 {applicationId}.wxapi.WXEntryActivity 拉起。
+             applicationId=com.planstar.app（release）；debug 带 .debug 后缀且非微信登记
+             签名，微信登录/分享/支付在 debug 下不可用，属预期。 -->
+        <activity
+            android:name="com.planstar.app.wxapi.WXEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity="com.planstar.app"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name="com.planstar.app.wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity="com.planstar.app"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+    <!-- Required to query activities that can process text, see:
+         https://developer.android.com/training/package-visibility and
+         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+
+         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- 分享/登录/地图可达性检测（fluwx 微信、QQ、百度地图、腾讯地图、高德）。 -->
+        <package android:name="com.tencent.mm"/>
+        <package android:name="com.tencent.mobileqq"/>
+        <package android:name="com.tencent.tim"/>
+        <package android:name="com.tencent.wework"/>
+        <package android:name="com.baidu.BaiduMap"/>
+        <package android:name="com.tencent.map"/>
+        <package android:name="com.autonavi.minimap"/>
+    </queries>
+</manifest>

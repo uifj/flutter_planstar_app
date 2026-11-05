@@ -1,0 +1,17 @@
+name: core_cache
+description: HTTP 缓存：五策略 + CacheStore 端口 + LRU 实现 + 带 scope 的缓存键（防多账号串号）。
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  core_result: ^0.1.0
+  core_network: ^0.1.0
+  dio: ^5.11.1
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

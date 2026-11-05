@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "appTitle": "Planstar",
+  "tabHome": "Home",
+  "tabDiscover": "Discover",
+  "tabMessage": "Messages",
+  "tabOrder": "Orders",
+  "tabProfile": "Me",
+  "actionRetry": "Retry",
+  "actionCancel": "Cancel",
+  "actionConfirm": "OK",
+  "actionSave": "Save",
+  "stateLoading": "Loading…",
+  "stateEmpty": "Nothing here yet",
+  "stateNetworkError": "Network unavailable, please try again later",
+  "stateTimeout": "Request timed out, please retry",
+  "stateUnauthorized": "Session expired, please sign in again",
+  "stateOfflineCache": "Showing cached content while offline"
+}

@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "orderListTitle": "My orders",
+  "orderListPlaceholder": "Order list (sign-in required)",
+  "orderGoConfirm": "Go to confirm",
+  "orderStatusPending": "Unpaid",
+  "orderStatusPaid": "To ship",
+  "orderStatusShipped": "To receive",
+  "orderStatusFinished": "Completed",
+  "orderStatusRefund": "Refunding"
+}

@@ -1,0 +1,18 @@
+name: core_logger
+description: 日志：级别按 kReleaseMode 决定 + sink 注入 + 结构化字段。修掉来源 minLevel 恒为 debug 的缺陷。
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.11.5
+  flutter: ">=3.41.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter

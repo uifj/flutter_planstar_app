@@ -1,0 +1,153 @@
+import 'package:core_domain/core_domain.dart';
+
+import 'group_buy.dart';
+
+/// 拼团演示数据。
+///
+/// 对齐 Android `PinTuanService.fetchPinTuanCampaign()` 返回的 `PinTuanInfo`。
+class DemoGroupBuy {
+  DemoGroupBuy._();
+
+  /// 演示拼团列表。
+  static final List<GroupBuyInfo> campaigns = <GroupBuyInfo>[
+    GroupBuyInfo(
+      id: 101,
+      showTitle: '五月天回到那一天巡回演唱会',
+      showPoster: null,
+      venue: '上海体育场',
+      eventTime: '2026-12-01 19:30',
+      lowPrice: Money.fromYuan(380),
+      originalPrice: Money.fromYuan(680),
+      succeedNum: 3,
+      currentMembers: 2,
+      effectiveFrom: DateTime(2026, 11, 20),
+      effectiveTo: DateTime(2026, 11, 30, 23, 59),
+      status: GroupBuyStatus.grouping,
+      slogan: '3人成团立享超低价，仅剩1个名额！',
+      tag: '超低价拼团',
+      stock: 50,
+      members: <GroupBuyMember>[
+        GroupBuyMember(
+          userId: 1,
+          nickname: '票友小王',
+          avatarUrl: null,
+          isLeader: true,
+          joinedAt: DateTime(2026, 11, 25, 10, 0),
+        ),
+        GroupBuyMember(
+          userId: 2,
+          nickname: '追星达人',
+          avatarUrl: null,
+          isLeader: false,
+          joinedAt: DateTime(2026, 11, 25, 14, 30),
+        ),
+      ],
+    ),
+    GroupBuyInfo(
+      id: 102,
+      showTitle: '周杰伦嘉年华世界巡回演唱会',
+      showPoster: null,
+      venue: '国家体育场（鸟巢）',
+      eventTime: '2026-12-25 19:30',
+      lowPrice: Money.fromYuan(580),
+      originalPrice: Money.fromYuan(880),
+      succeedNum: 5,
+      currentMembers: 3,
+      effectiveFrom: DateTime(2026, 11, 15),
+      effectiveTo: DateTime(2026, 12, 10, 23, 59),
+      status: GroupBuyStatus.grouping,
+      slogan: '5人成团享7折，还差2人！',
+      tag: '超低价拼团',
+      stock: 80,
+      members: <GroupBuyMember>[
+        GroupBuyMember(
+          userId: 3,
+          nickname: '杰迷一号',
+          avatarUrl: null,
+          isLeader: true,
+          joinedAt: DateTime(2026, 11, 20, 9, 0),
+        ),
+        GroupBuyMember(
+          userId: 4,
+          nickname: '音乐爱好者',
+          avatarUrl: null,
+          isLeader: false,
+          joinedAt: DateTime(2026, 11, 21, 15, 0),
+        ),
+        GroupBuyMember(
+          userId: 5,
+          nickname: '演唱会常客',
+          avatarUrl: null,
+          isLeader: false,
+          joinedAt: DateTime(2026, 11, 22, 20, 30),
+        ),
+      ],
+    ),
+    GroupBuyInfo(
+      id: 103,
+      showTitle: '林俊杰JJ20世界巡回演唱会',
+      showPoster: null,
+      venue: '广州奥体中心',
+      eventTime: '2026-12-15 19:30',
+      lowPrice: Money.fromYuan(480),
+      originalPrice: Money.fromYuan(580),
+      succeedNum: 3,
+      currentMembers: 3,
+      effectiveFrom: DateTime(2026, 11, 1),
+      effectiveTo: DateTime(2026, 12, 5, 23, 59),
+      status: GroupBuyStatus.success,
+      slogan: '3人团已满，拼团成功！',
+      tag: '超低价拼团',
+      stock: 0,
+      members: <GroupBuyMember>[
+        GroupBuyMember(
+          userId: 6,
+          nickname: 'JJ铁粉',
+          avatarUrl: null,
+          isLeader: true,
+          joinedAt: DateTime(2026, 11, 10, 10, 0),
+        ),
+        GroupBuyMember(
+          userId: 7,
+          nickname: '歌友会成员',
+          avatarUrl: null,
+          isLeader: false,
+          joinedAt: DateTime(2026, 11, 10, 14, 0),
+        ),
+        GroupBuyMember(
+          userId: 8,
+          nickname: '路人转粉',
+          avatarUrl: null,
+          isLeader: false,
+          joinedAt: DateTime(2026, 11, 11, 9, 0),
+        ),
+      ],
+    ),
+    GroupBuyInfo(
+      id: 104,
+      showTitle: '薛之谦天外来物巡回演唱会',
+      showPoster: null,
+      venue: '深圳湾体育中心',
+      eventTime: '2026-11-20 19:30',
+      lowPrice: Money.fromYuan(280),
+      originalPrice: Money.fromYuan(480),
+      succeedNum: 3,
+      currentMembers: 1,
+      effectiveFrom: DateTime(2026, 10, 15),
+      effectiveTo: DateTime(2026, 11, 18, 23, 59),
+      status: GroupBuyStatus.failed,
+      slogan: '拼团未成功，已自动退款',
+      tag: '超低价拼团',
+      stock: 30,
+      members: <GroupBuyMember>[
+        GroupBuyMember(
+          userId: 9,
+          nickname: '孤独的团长',
+          avatarUrl: null,
+          isLeader: true,
+          joinedAt: DateTime(2026, 10, 20, 12, 0),
+        ),
+      ],
+    ),
+  ];
+}

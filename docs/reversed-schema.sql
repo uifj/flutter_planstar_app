@@ -1,0 +1,64 @@
+-- ============================================================================
+--  企划星 / Planstar · 数据库逆向工程 SQL · 总入口 / 索引
+-- ============================================================================
+--  本文件已按 kratos-shop/sql 的目录结构重构，DDL 不再放这里。
+--  真正的建表语句在 ./sql/ 目录下，请按编号顺序执行：
+--
+--    sql/01_init_databases.sql       建 9 个服务库（CREATE DATABASE IF NOT EXISTS）
+--    sql/02_user.sql                 planstar_user       9 张表
+--    sql/03_catalog.sql              planstar_catalog   23 张表
+--    sql/04_ticket_inventory.sql     planstar_ticket     6 张表
+--    sql/05_order.sql                planstar_order     10 张表
+--    sql/06_payment.sql              planstar_payment    7 张表
+--    sql/07_marketing.sql            planstar_marketing 12 张表
+--    sql/08_community.sql            planstar_community 10 张表
+--    sql/09_content_ops.sql          planstar_content    8 张表
+--    sql/10_dict_enums.sql           planstar_meta       1 张表 + 143 条枚举种子
+--    sql/11_rev_evidence.sql         planstar_meta       3 张证据表 + 1,736/267/217 行
+--    sql/12_constraints.sql          跨库推断外键（可选）+ 校验查询 + 落地建议
+--
+--    sql/migrations/<库>/000001_init.up.sql    每库一份迁移（DDL，不含 USE）
+--    sql/migrations/<库>/000001_init.down.sql  逆序 DROP TABLE IF EXISTS
+--
+--  一键执行（MySQL 客户端，从本文件所在目录）：
+--    mysql -u root -p < sql/01_init_databases.sql
+--    for f in sql/[0-9][0-9]_*.sql; do mysql -u root -p < "$f"; done
+--    （12_constraints.sql 为可选项；不需要外键时跳过）
+--
+-- ---------------------------------------------------------------------------
+--  与参考仓库 github.com/arixbit/kratos-shop/tree/main/sql 的差异
+-- ---------------------------------------------------------------------------
+--  1) 方言：参考仓库为 PostgreSQL（\connect / BIGSERIAL / TIMESTAMPTZ /
+--     COMMENT ON COLUMN）；本工程按用户选择【保持 MySQL 8.0】
+--     （USE / BIGINT+epoch 毫秒 / ENGINE=InnoDB / 行内 COMMENT）。
+--  2) 分库：参考仓库 6 个库（user/goods/cart/order/inventory/payment）；
+--     票务域拆为 9 个库，新增 catalog / ticket / marketing / community /
+--     content / meta；原 cart 域在逆向源中无对应 DTO，未虚构。
+--  3) 参考仓库 09_permissions.sql：反编译源中未发现任何权限 / 角色 DTO
+--     （证据目录仅出现一个 role 字段），故【不建权限表】，不虚构业务表。
+--  4) 参考仓库编号跳到 09（缺 08）；本工程连续编号 01–12。
+--  5) 【第三方 SDK 表全部移除】小米推送 / 极光 JPush / 百度定位·mshield /
+--     腾讯 Bugly / 字节 AppLog·bdtracker 共 31 张端侧 SQLite 表，
+--     按用户要求不再保留。它们是 SDK 私有缓存，不属于企划星业务库。
+--  6) 证据目录（PART D）与枚举字典（PART C）保留，但单独成库 planstar_meta，
+--     标记为「勿用于生产业务查询」。
+--
+-- ---------------------------------------------------------------------------
+--  关键结论（沿用原逆向报告）
+-- ---------------------------------------------------------------------------
+--  · Android 原包 com.ipiaoniu 内【没有业务 SQLite】：业务数据全在服务端，
+--    客户端只是 REST + SharedPreferences；APK 内全部 CREATE TABLE 均属第三方 SDK。
+--  · 本 schema 的 85 张业务表是【由 DTO 字段 + REST 契约 + 枚举 + Flutter 领域
+--    模型反推】的，不是服务端 dump；表名 / 主键 / 外键 / 字段类型均为推定，
+--    上线前必须拿真实 information_schema 校验（尤其金额口径、时间口径、状态编码）。
+--  · 类型映射：Java int/long → BIGINT；double → DECIMAL(12,2)/DOUBLE；
+--    boolean → TINYINT(1)；List/Map/自定义对象 → JSON；列名 snake_case。
+--  · 逐列 COMMENT 保留原 Java 字段名与来源 DTO；ActivityBean 112 字段
+--    100% 落在 activities 表。1,427 个业务列全部带注释。
+--  · 已知陷阱：94 个 DTO 的 ID 原为 Java int（已放宽 BIGINT）；
+--    ActivityBean.id 与 activityId 是两个独立字段，导入需 COALESCE 归一；
+--    OrderStatus 与 OrderUtils 前 4 个状态差 1；
+--    MakeOrderRequestBody.channelAttributeInfo 是自嵌套 JSON 字符串。
+-- ============================================================================
+--  EOF
+-- ============================================================================

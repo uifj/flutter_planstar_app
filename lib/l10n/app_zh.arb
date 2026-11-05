@@ -1,0 +1,22 @@
+{
+  "@@locale": "zh",
+  "appTitle": "企划星",
+  "@appTitle": {
+    "description": "应用名称，显示在任务切换器与关于页"
+  },
+  "tabHome": "首页",
+  "tabDiscover": "发现",
+  "tabMessage": "消息",
+  "tabOrder": "订单",
+  "tabProfile": "我的",
+  "actionRetry": "重试",
+  "actionCancel": "取消",
+  "actionConfirm": "确定",
+  "actionSave": "保存",
+  "stateLoading": "加载中…",
+  "stateEmpty": "暂无内容",
+  "stateNetworkError": "网络不给力，请稍后重试",
+  "stateTimeout": "请求超时，请重试",
+  "stateUnauthorized": "登录已失效，请重新登录",
+  "stateOfflineCache": "当前展示的是离线缓存内容"
+}

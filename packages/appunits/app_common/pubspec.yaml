@@ -1,0 +1,58 @@
+name: app_common
+description: >-
+  用户反馈表单 + 应用内升级面板 + 登录注册
+version: 0.0.1
+resolution: workspace
+publish_to: none
+
+environment:
+  sdk: ">=3.8.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # app_common 自己的 gen-l10n 束（`AppCommonLocalizations`，镜像 appunits_core
+  # 的 `AtomicLocalizations`）：面板/弹窗直接读 `.of(context)`，文案不再由宿主注入。
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  # feedback + upgrade 面板的 shadcn 组件（ShadInput/ShadSelect/ShadButton/
+  # ShadCheckbox/ShadTheme + shadcn re-export 的 LucideIcons）。版本对齐宿主
+  # root pubspec（shadcn_ui 0.56.3），避免 monorepo 内解析漂移。
+  shadcn_ui: 0.56.3
+  # LogFileBrowser 打开本地日志文件（宿主设备能力）。
+  open_file: ^3.5.10
+
+  # ── BetterAuth 客户端（lib/better_auth/，原独立包 flutter_better_auth 并入）──
+  # 依赖路线 ADR-0083：sentry → stone_core → pudding → appunits → lib，本包在
+  # appunits 层消费 stone_core。secure KV（flutter_secure_storage）、Hive（hive_ce +
+  # path_provider）、日志（logging）均改经 stone_core 封装提供，本包不再直接依赖它们，
+  # 只保留 better_auth 自身的网络/认证依赖。
+  stone_core:
+    path: ../../infras/stone_core
+  dio: ^5.9.2
+  retrofit: ^4.9.2
+  cookie_jar: ^4.0.9
+  dio_cookie_manager: ^3.4.0
+  connectivity_plus: ^7.1.1
+  flutter_web_auth_2: ^5.0.2
+  web: ^1.1.1
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.11.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  # better_auth 的 *.g.dart / *.freezed.dart 再生所需（生成物入库，比照 root）。
+  build_runner: ^2.15.1
+  freezed: ^3.2.5
+  json_serializable: ^6.13.2
+  retrofit_generator: ^10.2.5
+  mocktail: ^1.0.4
+
+# gen-l10n：把 `lib/l10n/*.arb` 生成 `AppCommonLocalizations` 到
+# `lib/localizations/`（配置见 `l10n.yaml`），生成件入库。
+flutter:
+  uses-material-design: true
+  generate: true
