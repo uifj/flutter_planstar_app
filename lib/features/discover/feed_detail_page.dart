@@ -12,8 +12,9 @@ import '../catalog/domain/show_summary.dart';
 import '../catalog/ui/show_cards.dart';
 import 'application/feed_providers.dart';
 import 'domain/feed_post.dart';
+import 'feed_l10n.dart';
 import '../../shared/ui/ps_network_images.dart';
-import '../../l10n/discover_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 动态详情页（企划星 `FeedDetailActivity` + `FeedDetailTweetFragment`）。
 ///
@@ -43,13 +44,13 @@ class FeedDetailPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: DiscoverLocalizations.of(context).feedDetailPage_45),
+      appBar: AdaptiveAppBar(title: context.l10n.feedDetailPage_45),
       body: post == null
           ? PsEmptyState(
-              title: DiscoverLocalizations.of(context).feedDetailPage_48,
-              description: DiscoverLocalizations.of(context).feedDetailPage_49,
+              title: context.l10n.feedDetailPage_48,
+              description: context.l10n.feedDetailPage_49,
               icon: LucideIcons.fileText,
-              actionLabel: DiscoverLocalizations.of(context).feedDetailPage_51,
+              actionLabel: context.l10n.feedDetailPage_51,
               onAction: () => context.go('/discover'),
             )
           : _FeedDetailBody(post: post),
@@ -66,8 +67,9 @@ class _FeedDetailBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final List<FeedComment> comments = ref.watch(feedCommentsProvider(post.id));
-    final ShowSummary? show =
-        post.showId == null ? null : ref.watch(showByIdProvider(post.showId!));
+    final ShowSummary? show = post.showId == null
+        ? null
+        : ref.watch(showByIdProvider(post.showId!));
 
     return ListView(
       padding: const EdgeInsets.only(bottom: 24),
@@ -123,7 +125,7 @@ class _FeedDetailBody extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
                   child: Text(
-                    DiscoverLocalizations.of(context).feedDetailPage_125,
+                    context.l10n.feedDetailPage_125,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -149,7 +151,7 @@ class _FeedDetailBody extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
                 child: Text(
-                  DiscoverLocalizations.of(context).feedDetailPage_151(comments.length),
+                  context.l10n.feedDetailPage_151(comments.length),
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -159,8 +161,8 @@ class _FeedDetailBody extends ConsumerWidget {
               ),
               if (comments.isEmpty)
                 PsEmptyState(
-                  title: DiscoverLocalizations.of(context).feedDetailPage_161,
-                  description: DiscoverLocalizations.of(context).feedDetailPage_162,
+                  title: context.l10n.feedDetailPage_161,
+                  description: context.l10n.feedDetailPage_162,
                   icon: LucideIcons.messageSquare,
                   compact: true,
                 )
@@ -192,11 +194,8 @@ class _AuthorRow extends StatelessWidget {
             width: 36,
             height: 36,
             fit: BoxFit.cover,
-            errorBuilder: (_, _, _) => Container(
-              width: 36,
-              height: 36,
-              color: colors.brandSubtle,
-            ),
+            errorBuilder: (_, _, _) =>
+                Container(width: 36, height: 36, color: colors.brandSubtle),
           ),
         ),
         const SizedBox(width: 10),
@@ -214,7 +213,10 @@ class _AuthorRow extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                DiscoverLocalizations.of(context).feedDetailPage_216(formatRelativeTime(post.publishedAt), post.viewCountLabel),
+                context.l10n.feedDetailPage_216(
+                  formatRelativeTimeL10n(context, post.publishedAt),
+                  post.viewCountLabelOf(context),
+                ),
                 style: TextStyle(fontSize: 11, color: colors.textTertiary),
               ),
             ],
@@ -250,8 +252,12 @@ class _VideoNotice extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              DiscoverLocalizations.of(context).feedDetailPage_252,
-              style: TextStyle(fontSize: 12, height: 1.4, color: colors.textTertiary),
+              context.l10n.feedDetailPage_252,
+              style: TextStyle(
+                fontSize: 12,
+                height: 1.4,
+                color: colors.textTertiary,
+              ),
             ),
           ),
         ],
@@ -273,24 +279,24 @@ class _InteractionBar extends StatelessWidget {
       children: <Widget>[
         _Action(
           icon: LucideIcons.heart,
-          label: post.likeCountLabel,
-          onTap: () => _toast(context, DiscoverLocalizations.of(context).feedDetailPage_276),
+          label: post.likeCountLabelOf(context),
+          onTap: () => _toast(context, context.l10n.feedDetailPage_276),
         ),
         const SizedBox(width: 24),
         _Action(
           icon: LucideIcons.messageSquare,
-          label: DiscoverLocalizations.of(context).feedDetailPage_281,
-          onTap: () => _toast(context, DiscoverLocalizations.of(context).feedDetailPage_282),
+          label: context.l10n.feedDetailPage_281,
+          onTap: () => _toast(context, context.l10n.feedDetailPage_282),
         ),
         const SizedBox(width: 24),
         _Action(
           icon: LucideIcons.share,
-          label: DiscoverLocalizations.of(context).feedDetailPage_287,
-          onTap: () => _toast(context, DiscoverLocalizations.of(context).feedDetailPage_288),
+          label: context.l10n.feedDetailPage_287,
+          onTap: () => _toast(context, context.l10n.feedDetailPage_288),
         ),
         const Spacer(),
         Text(
-          post.viewCountLabel,
+          post.viewCountLabelOf(context),
           style: TextStyle(fontSize: 11, color: colors.textDisabled),
         ),
         const SizedBox(width: 3),
@@ -300,7 +306,9 @@ class _InteractionBar extends StatelessWidget {
   }
 
   static void _toast(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
@@ -321,7 +329,10 @@ class _Action extends StatelessWidget {
         children: <Widget>[
           Icon(icon, size: 16, color: colors.textSecondary),
           const SizedBox(width: 4),
-          Text(label, style: TextStyle(fontSize: 12, color: colors.textSecondary)),
+          Text(
+            label,
+            style: TextStyle(fontSize: 12, color: colors.textSecondary),
+          ),
         ],
       ),
     );
@@ -348,11 +359,8 @@ class _CommentTile extends StatelessWidget {
               width: 28,
               height: 28,
               fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => Container(
-                width: 28,
-                height: 28,
-                color: colors.brandSubtle,
-              ),
+              errorBuilder: (_, _, _) =>
+                  Container(width: 28, height: 28, color: colors.brandSubtle),
             ),
           ),
           const SizedBox(width: 8),
@@ -372,8 +380,11 @@ class _CommentTile extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      comment.timeLabel(DateTime.now()),
-                      style: TextStyle(fontSize: 10, color: colors.textDisabled),
+                      comment.timeLabelOf(context, DateTime.now()),
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: colors.textDisabled,
+                      ),
                     ),
                   ],
                 ),

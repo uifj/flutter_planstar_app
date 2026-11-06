@@ -54,8 +54,10 @@ final class OrderPricingService {
         ? Money.zero(totalAmount.currency)
         : giftCard.balance.min(payable);
 
-    final speedPackCash = speedPack?.cashPortion ?? Money.zero(totalAmount.currency);
-    final speedPackBalance = speedPack?.balancePortion ?? Money.zero(totalAmount.currency);
+    final speedPackCash =
+        speedPack?.cashPortion ?? Money.zero(totalAmount.currency);
+    final speedPackBalance =
+        speedPack?.balancePortion ?? Money.zero(totalAmount.currency);
 
     final paymentAmount = payable - giftCardApplied + speedPackCash;
 

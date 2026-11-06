@@ -112,12 +112,20 @@ final class PlanstarOrderApi {
     // TicketOrder.create() 返回 Result<TicketOrder>；
     // 这里用 requireData 解包（如果校验失败会抛 StateError，
     // 被 ApiClient 的 try/catch 收敛成 Fail）。
-    final id = TicketOrderId.tryParse(json['orderId']?.toString() ?? json['id']?.toString()) ??
+    final id =
+        TicketOrderId.tryParse(
+          json['orderId']?.toString() ?? json['id']?.toString(),
+        ) ??
         const TicketOrderId('');
     final number = OrderNumber(json['orderNumber']?.toString() ?? '');
-    final showId = ShowId.tryParse(json['showId']?.toString()) ?? const ShowId('');
-    final sessionId = SessionId.tryParse(json['sessionId']?.toString()) ?? const SessionId('');
-    final createTime = DateTime.tryParse(json['createTime']?.toString() ?? '') ?? DateTime.now();
+    final showId =
+        ShowId.tryParse(json['showId']?.toString()) ?? const ShowId('');
+    final sessionId =
+        SessionId.tryParse(json['sessionId']?.toString()) ??
+        const SessionId('');
+    final createTime =
+        DateTime.tryParse(json['createTime']?.toString() ?? '') ??
+        DateTime.now();
 
     return TicketOrder.create(
       id: id,

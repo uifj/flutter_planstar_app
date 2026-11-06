@@ -11,8 +11,9 @@ import '../../shared/ui/ps_floating_tab_bar.dart';
 import '../auth/application/auth_providers.dart';
 import '../message/application/message_providers.dart';
 import '../order/application/order_list_controller.dart';
+import '../order/order_l10n.dart';
 import 'application/profile_providers.dart';
-import '../../l10n/user_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 我的 Tab（`layout_user.xml`）。
 ///
@@ -65,7 +66,7 @@ class UserPage extends ConsumerWidget {
             },
             onTapMessage: () => context.go('/message'),
             onTapSetting: () => context.push('/settings'),
-            onTapHome: () => _toast(context, UserLocalizations.of(context).userPage_67),
+            onTapHome: () => _toast(context, context.l10n.userPage_67),
           ),
           _OrderCard(
             badges: badges,
@@ -79,9 +80,9 @@ class UserPage extends ConsumerWidget {
           ),
           _MenuCard(
             onTapAddress: () => context.push('/address'),
-            onTapVisitors: () => _toast(context, UserLocalizations.of(context).userPage_81),
-            onTapService: () => _toast(context, UserLocalizations.of(context).userPage_82),
-            onTapBusiness: () => _toast(context, UserLocalizations.of(context).userPage_83),
+            onTapVisitors: () => _toast(context, context.l10n.userPage_81),
+            onTapService: () => _toast(context, context.l10n.userPage_82),
+            onTapBusiness: () => _toast(context, context.l10n.userPage_83),
             onTapGiftCard: () => context.push('/giftcards'),
             onTapProxyBuy: () => context.push('/proxy-buy'),
             onTapGroupBuy: () => context.push('/group-buy'),
@@ -96,7 +97,7 @@ class UserPage extends ConsumerWidget {
                     // 真实登出：清掉 psSession 令牌 + 本地资料，并让路由门禁
                     // 立刻把受保护页弹回登录页。
                     ref.read(authControllerProvider.notifier).logout();
-                    _toast(context, UserLocalizations.of(context).userPage_98);
+                    _toast(context, context.l10n.userPage_98);
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: colors.bgCard,
@@ -105,7 +106,7 @@ class UserPage extends ConsumerWidget {
                     ),
                   ),
                   child: Text(
-                    UserLocalizations.of(context).userLogout,
+                    context.l10n.userLogout,
                     style: TextStyle(fontSize: 16, color: colors.error),
                   ),
                 ),
@@ -124,9 +125,12 @@ class UserPage extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    '登录 / 注册',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  child: Text(
+                    context.l10n.authLoginTitle,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -241,7 +245,11 @@ class _ProfileHeader extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            profile.nickname,
+                            profile.nickname.isEmpty
+                                ? (profile.isLoggedIn
+                                      ? context.l10n.authUser_119
+                                      : context.l10n.profileProviders_58)
+                                : profile.nickname,
                             maxLines: 1,
                             style: TextStyle(
                               fontSize: 14,
@@ -252,13 +260,14 @@ class _ProfileHeader extends StatelessWidget {
                           const SizedBox(height: 7),
                           if (!profile.isLoggedIn)
                             Text(
-                              UserLocalizations.of(context).userPage_254,
+                              context.l10n.userPage_254,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: colors.textTertiary,
                               ),
                             )
-                          else if (profile.levelLabel.isNotEmpty)
+                          else if (profile.levelLabel.isNotEmpty ||
+                              profile.level > 0)
                             Container(
                               constraints: const BoxConstraints(minHeight: 18),
                               padding: const EdgeInsets.symmetric(
@@ -273,7 +282,11 @@ class _ProfileHeader extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                profile.levelLabel,
+                                profile.levelLabel.isNotEmpty
+                                    ? profile.levelLabel
+                                    : context.l10n.profileProviders_86(
+                                        profile.level,
+                                      ),
                                 style: TextStyle(
                                   fontSize: 10,
                                   height: 1.2,
@@ -306,7 +319,7 @@ class _ProfileHeader extends StatelessWidget {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          UserLocalizations.of(context).userPage_308,
+                          context.l10n.userPage_308,
                           style: TextStyle(
                             fontSize: 12,
                             color: colors.textPrimary,
@@ -331,14 +344,14 @@ class _ProfileHeader extends StatelessWidget {
                       Expanded(
                         child: _StatColumn(
                           value: profile.wannaSeeCount,
-                          label: UserLocalizations.of(context).userPage_333,
+                          label: context.l10n.userPage_333,
                         ),
                       ),
                       Container(width: 1, height: 18, color: colors.border),
                       Expanded(
                         child: _StatColumn(
                           value: profile.followCount,
-                          label: UserLocalizations.of(context).userPage_340,
+                          label: context.l10n.userPage_340,
                         ),
                       ),
                     ],
@@ -439,10 +452,7 @@ class _OrderCard extends StatelessWidget {
 
   static const List<(OrderListFilter, IconData)> _entries =
       <(OrderListFilter, IconData)>[
-        (
-          OrderListFilter.awaitingPayment,
-          LucideIcons.wallet,
-        ),
+        (OrderListFilter.awaitingPayment, LucideIcons.wallet),
         (OrderListFilter.awaitingTickets, LucideIcons.package),
         (OrderListFilter.ticketsInTransit, LucideIcons.truck),
         (OrderListFilter.awaitingReview, LucideIcons.star),
@@ -467,7 +477,7 @@ class _OrderCard extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                '我的订单',
+                context.l10n.orderListTitle,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -481,7 +491,7 @@ class _OrderCard extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      UserLocalizations.of(context).userPage_483,
+                      context.l10n.userPage_483,
                       style: TextStyle(fontSize: 14, color: colors.textPrimary),
                     ),
                     Icon(
@@ -516,7 +526,7 @@ class _OrderCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            filter.label,
+                            filter.labelOf(context),
                             style: TextStyle(
                               fontSize: 12,
                               height: 1.1,
@@ -567,7 +577,7 @@ class _AssetsCard extends StatelessWidget {
               onTap: onTapCoupon,
               child: _AssetColumn(
                 value: '${profile.couponCount}',
-                label: UserLocalizations.of(context).userPage_569,
+                label: context.l10n.userPage_569,
               ),
             ),
           ),
@@ -578,7 +588,7 @@ class _AssetsCard extends StatelessWidget {
               onTap: onTapWallet,
               child: _AssetColumn(
                 value: profile.walletBalance.format(withSymbol: false),
-                label: UserLocalizations.of(context).userPage_580,
+                label: context.l10n.userPage_580,
               ),
             ),
           ),
@@ -648,13 +658,13 @@ class _MenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final entries = <(String, VoidCallback)>[
-      (UserLocalizations.of(context).userPage_650, onTapGiftCard),
-      (UserLocalizations.of(context).userPage_651, onTapProxyBuy),
-      (UserLocalizations.of(context).userPage_652, onTapGroupBuy),
-      (UserLocalizations.of(context).userPage_653, onTapAddress),
-      (UserLocalizations.of(context).userPage_654, onTapVisitors),
-      (UserLocalizations.of(context).userPage_655, onTapService),
-      (UserLocalizations.of(context).userPage_656, onTapBusiness),
+      (context.l10n.userPage_650, onTapGiftCard),
+      (context.l10n.userPage_651, onTapProxyBuy),
+      (context.l10n.userPage_652, onTapGroupBuy),
+      (context.l10n.userPage_653, onTapAddress),
+      (context.l10n.userPage_654, onTapVisitors),
+      (context.l10n.userPage_655, onTapService),
+      (context.l10n.userPage_656, onTapBusiness),
     ];
 
     return Container(

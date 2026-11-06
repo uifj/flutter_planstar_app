@@ -9,8 +9,7 @@ import '../../shared/ui/ps_empty_state.dart';
 import '../../shared/ui/ps_tag.dart';
 import 'application/address_providers.dart';
 import 'domain/shipping_address.dart';
-import '../../l10n/user_localizations.dart';
-import '../../l10n/app_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 收货地址管理（企划星 `AddressListActivity` + `item_address.xml`）。
 ///
@@ -48,16 +47,16 @@ class AddressPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: UserLocalizations.of(context).addressPage_49),
+      appBar: AdaptiveAppBar(title: context.l10n.addressPage_49),
       body: Column(
         children: <Widget>[
           Expanded(
             child: addresses.isEmpty
                 ? PsEmptyState(
-                    title: UserLocalizations.of(context).addressPage_55,
-                    description: UserLocalizations.of(context).addressPage_56,
+                    title: context.l10n.addressPage_55,
+                    description: context.l10n.addressPage_56,
                     icon: LucideIcons.mapPinOff,
-                    actionLabel: UserLocalizations.of(context).addressPage_58,
+                    actionLabel: context.l10n.addressPage_58,
                     onAction: () => _openForm(context, ref),
                   )
                 : ListView.builder(
@@ -130,16 +129,18 @@ class AddressPage extends ConsumerWidget {
     final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
-        title: Text(UserLocalizations.of(context).addressPage_131),
-        content: Text(UserLocalizations.of(context).addressPage_132(address.name, address.maskedMobile)),
+        title: Text(context.l10n.addressPage_131),
+        content: Text(
+          context.l10n.addressPage_132(address.name, address.maskedMobile),
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(AppLocalizations.of(context).actionCancel),
+            child: Text(context.l10n.actionCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(UserLocalizations.of(context).addressPage_140),
+            child: Text(context.l10n.addressPage_140),
           ),
         ],
       ),
@@ -149,7 +150,7 @@ class AddressPage extends ConsumerWidget {
     if (!context.mounted) return;
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(UserLocalizations.of(context).addressPage_150)));
+    ).showSnackBar(SnackBar(content: Text(context.l10n.addressPage_150)));
   }
 }
 
@@ -210,7 +211,7 @@ class _AddressCard extends StatelessWidget {
                     if (address.isDefault) ...<Widget>[
                       const SizedBox(width: 6),
                       PsTag(
-                        label: UserLocalizations.of(context).addressPage_211,
+                        label: context.l10n.addressPage_211,
                         tone: PsTagTone.soft,
                         fontSize: 10,
                         radius: 3,
@@ -262,7 +263,9 @@ class _AddressCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            address.isDefault ? UserLocalizations.of(context).addressPage_263 : UserLocalizations.of(context).addressPage_263_2,
+                            address.isDefault
+                                ? context.l10n.addressPage_263
+                                : context.l10n.addressPage_263_2,
                             style: TextStyle(
                               fontSize: 13,
                               color: address.isDefault
@@ -275,9 +278,12 @@ class _AddressCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                _ActionButton(label: UserLocalizations.of(context).addressPage_276, onTap: onEdit),
                 _ActionButton(
-                  label: UserLocalizations.of(context).addressPage_278,
+                  label: context.l10n.addressPage_276,
+                  onTap: onEdit,
+                ),
+                _ActionButton(
+                  label: context.l10n.addressPage_278,
                   onTap: onDelete,
                   isDestructive: true,
                 ),
@@ -348,7 +354,7 @@ class _BottomBar extends StatelessWidget {
             ),
           ),
           child: Text(
-            UserLocalizations.of(context).addressPage_349,
+            context.l10n.addressPage_349,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
           ),
         ),
@@ -471,7 +477,9 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
               Row(
                 children: <Widget>[
                   Text(
-                    isEditing ? UserLocalizations.of(context).addressPage_472 : UserLocalizations.of(context).addressPage_472_2,
+                    isEditing
+                        ? context.l10n.addressPage_472
+                        : context.l10n.addressPage_472_2,
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w700,
@@ -492,15 +500,15 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
               const SizedBox(height: 4),
               _Field(
                 controller: _name,
-                label: UserLocalizations.of(context).addressPage_493,
-                hint: UserLocalizations.of(context).addressPage_494,
+                label: context.l10n.addressPage_493,
+                hint: context.l10n.addressPage_494,
                 maxLength: 20,
                 onChanged: _refresh,
               ),
               _Field(
                 controller: _mobile,
-                label: UserLocalizations.of(context).addressPage_500,
-                hint: UserLocalizations.of(context).addressPage_501,
+                label: context.l10n.addressPage_500,
+                hint: context.l10n.addressPage_501,
                 keyboardType: TextInputType.phone,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly,
@@ -510,14 +518,14 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
               ),
               _Field(
                 controller: _region,
-                label: UserLocalizations.of(context).addressPage_511,
-                hint: UserLocalizations.of(context).addressPage_512,
+                label: context.l10n.addressPage_511,
+                hint: context.l10n.addressPage_512,
                 onChanged: _refresh,
               ),
               _Field(
                 controller: _detail,
-                label: UserLocalizations.of(context).addressPage_517,
-                hint: UserLocalizations.of(context).addressPage_518,
+                label: context.l10n.addressPage_517,
+                hint: context.l10n.addressPage_518,
                 maxLines: 2,
                 maxLength: 60,
                 onChanged: _refresh,
@@ -538,7 +546,7 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
                     ),
                   ),
                   child: Text(
-                    AppLocalizations.of(context).actionSave,
+                    context.l10n.actionSave,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                 ),

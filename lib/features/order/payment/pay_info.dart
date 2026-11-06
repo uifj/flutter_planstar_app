@@ -37,28 +37,28 @@ class PayInfo {
       channels: <PayChannelOption>[
         const PayChannelOption(
           channel: PaymentChannel.wechat,
-          tip: '推荐',
+          tip: PayChannelTip.recommended,
           available: true,
         ),
         const PayChannelOption(
           channel: PaymentChannel.alipay,
-          tip: '',
+          tip: PayChannelTip.none,
           available: true,
         ),
         const PayChannelOption(
           channel: PaymentChannel.unionPay,
-          tip: '',
+          tip: PayChannelTip.none,
           available: true,
         ),
         const PayChannelOption(
           channel: PaymentChannel.balance,
-          tip: '余额 ¥0.00',
+          tip: PayChannelTip.balance,
           available: false,
         ),
       ],
       detailLines: <PayDetailLine>[
-        PayDetailLine(label: '演出', value: showTitle),
-        PayDetailLine(label: '订单号', value: orderNumber),
+        PayDetailLine(kind: PayDetailKind.show, value: showTitle),
+        PayDetailLine(kind: PayDetailKind.orderNumber, value: orderNumber),
       ],
     );
   }
@@ -82,6 +82,18 @@ class PayInfo {
   final String showTitle;
 }
 
+/// 支付渠道下方的提示类型。
+enum PayChannelTip {
+  /// 无提示。
+  none,
+
+  /// 推荐。
+  recommended,
+
+  /// 余额支付提示。
+  balance,
+}
+
 /// 一个支付渠道选项（对齐 `PayInfo.channels[]`）。
 class PayChannelOption {
   const PayChannelOption({
@@ -93,18 +105,21 @@ class PayChannelOption {
   /// 渠道。
   final PaymentChannel channel;
 
-  /// 提示文案（如"推荐""余额 ¥128.00"）。
-  final String tip;
+  /// 提示类型（展示文案由 UI 层按 l10n 解析）。
+  final PayChannelTip tip;
 
   /// 是否可选。余额不足 / 未绑卡时为 false。
   final bool available;
 }
 
+/// 订单摘要行类型。
+enum PayDetailKind { show, orderNumber }
+
 /// 订单摘要行（对齐 `PayInfo.detailInfo[]`）。
 class PayDetailLine {
-  const PayDetailLine({required this.label, required this.value});
+  const PayDetailLine({required this.kind, required this.value});
 
-  final String label;
+  final PayDetailKind kind;
   final String value;
 }
 

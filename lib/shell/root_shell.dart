@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-import '../l10n/app_localizations.dart';
+import '../l10n/l10n.dart';
 import '../shared/ui/ps_floating_tab_bar.dart';
 
 /// StatefulShellRoute 的外壳：唯一的自适配底栏 + 当前分支（IndexedStack）。
@@ -41,7 +41,7 @@ class RootShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final currentIndex = navigationShell.currentIndex;
 
     final items = <AdaptiveNavigationDestination>[
@@ -76,7 +76,7 @@ class RootShell extends ConsumerWidget {
     );
   }
 
-  String _resolveLabel(AppLocalizations l10n, String key) => switch (key) {
+  String _resolveLabel(AppL10n l10n, String key) => switch (key) {
     'tabHome' => l10n.tabHome,
     'tabDiscover' => l10n.tabDiscover,
     'tabMessage' => l10n.tabMessage,

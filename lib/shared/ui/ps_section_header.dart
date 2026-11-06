@@ -1,6 +1,7 @@
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
+import '../../l10n/l10n.dart';
 
 /// 楼层标题。
 ///
@@ -13,7 +14,7 @@ class PsSectionHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
-    this.actionLabel = '全部',
+    this.actionLabel,
     this.onAction,
     this.titleSize = 18,
     this.horizontalPadding = 14,
@@ -23,8 +24,8 @@ class PsSectionHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
 
-  /// 右侧动作文案（企划星固定为「全部」）。
-  final String actionLabel;
+  /// 右侧动作文案（企划星固定为「全部」）；`null` 时用默认文案。
+  final String? actionLabel;
 
   /// 为 `null` 时不显示右侧动作。
   final VoidCallback? onAction;
@@ -59,7 +60,11 @@ class PsSectionHeader extends StatelessWidget {
                   subtitle!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 12, height: 1.2, color: colors.textTertiary),
+                  style: TextStyle(
+                    fontSize: 12,
+                    height: 1.2,
+                    color: colors.textTertiary,
+                  ),
                 ),
               ),
             )
@@ -75,11 +80,19 @@ class PsSectionHeader extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
-                      actionLabel,
-                      style: TextStyle(fontSize: 11, height: 1.1, color: colors.textTertiary),
+                      actionLabel ?? context.l10n.psSectionHeader_16,
+                      style: TextStyle(
+                        fontSize: 11,
+                        height: 1.1,
+                        color: colors.textTertiary,
+                      ),
                     ),
                     if (showActionArrow)
-                      Icon(LucideIcons.chevronRight, size: 12, color: colors.textTertiary),
+                      Icon(
+                        LucideIcons.chevronRight,
+                        size: 12,
+                        color: colors.textTertiary,
+                      ),
                   ],
                 ),
               ),

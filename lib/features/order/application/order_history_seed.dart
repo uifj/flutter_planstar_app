@@ -49,7 +49,7 @@ List<TicketOrder> buildDemoOrderHistory({
     GiftCardTender? giftCard,
     SpeedPack? speedPack,
     required _Stage stage,
-    String? cancelReason,
+    OrderCancelReason? cancelReason,
   }) {
     final placedAt = reference.subtract(ago);
     sequence++;
@@ -98,7 +98,9 @@ List<TicketOrder> buildDemoOrderHistory({
     if (stage != _Stage.awaitingPayment && stage != _Stage.cancelled) {
       order.markPaid(
         now: placedAt.add(const Duration(minutes: 3)),
-        channel: stage == _Stage.refunded ? PaymentChannel.unionPay : PaymentChannel.wechat,
+        channel: stage == _Stage.refunded
+            ? PaymentChannel.unionPay
+            : PaymentChannel.wechat,
       );
     }
     if (stage == _Stage.ticketsInTransit || stage == _Stage.completed) {
@@ -112,7 +114,7 @@ List<TicketOrder> buildDemoOrderHistory({
     }
     if (stage == _Stage.cancelled) {
       order.cancel(
-        reason: cancelReason ?? '用户主动取消',
+        reason: cancelReason ?? OrderCancelReason.userCancelled,
         now: placedAt.add(const Duration(minutes: 12)),
       );
     }
@@ -166,7 +168,10 @@ List<TicketOrder> buildDemoOrderHistory({
       const CampaignId('CM-9ZHE'),
       RateDiscount(900, cap: Money.fromYuan(300)),
     ),
-    giftCard: GiftCardTender(id: const GiftCardId('GC-8888'), balance: Money.fromYuan(200)),
+    giftCard: GiftCardTender(
+      id: const GiftCardId('GC-8888'),
+      balance: Money.fromYuan(200),
+    ),
     stage: _Stage.awaitingTickets,
   );
 
@@ -204,7 +209,7 @@ List<TicketOrder> buildDemoOrderHistory({
     quantity: 1,
     ago: const Duration(days: 6),
     stage: _Stage.cancelled,
-    cancelReason: '支付超时，订单已关闭',
+    cancelReason: OrderCancelReason.timeout,
   );
 
   // 6) 已退款。

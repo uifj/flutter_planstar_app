@@ -6,6 +6,28 @@ import '../domain/domain.dart';
 import 'order_draft_seed.dart';
 import 'order_providers.dart';
 
+/// 确认页提示条的类型（文案由 UI 层按 l10n 解析）。
+enum OrderNoticeCode {
+  ticketTierMissing,
+  noCampaign,
+  noCoupon,
+  noGiftCard,
+  noSpeedPack,
+  failure,
+  saveFailed,
+  submitted,
+}
+
+/// 确认页提示条。
+class OrderNotice {
+  const OrderNotice(this.code, {this.detail});
+
+  final OrderNoticeCode code;
+
+  /// `failure` / `saveFailed` 的原始错误信息，`submitted` 的订单号。
+  final String? detail;
+}
+
 /// 确认订单页的视图状态。
 ///
 /// 只有**一个**可变来源：[order]（聚合）。页面上的每个数字都从它派生，
@@ -27,7 +49,7 @@ final class OrderConfirmState {
   final OrderQuote quote;
 
   /// 一次性提示（校验失败原因 / 成功文案）。
-  final String? notice;
+  final OrderNotice? notice;
 
   /// 是否正在提交。
   final bool submitting;
@@ -56,7 +78,9 @@ final class OrderConfirmState {
     return OrderConfirmState(
       order: order ?? this.order,
       quote: quote ?? this.quote,
-      notice: identical(notice, _sentinel) ? this.notice : notice as String?,
+      notice: identical(notice, _sentinel)
+          ? this.notice
+          : notice as OrderNotice?,
       submitting: submitting ?? this.submitting,
       submitted: submitted ?? this.submitted,
       recentEvents: recentEvents ?? this.recentEvents,
@@ -71,9 +95,11 @@ const Object _sentinel = Object();
 /// 职责只有三件：**调聚合、算报价、把事件发出去**。
 /// 不写业务规则——规则都在 [TicketOrder] 和 [OrderPricingService] 里，
 /// 所以这段代码在单测里根本不需要 Widget 环境。
-final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, String> {
+final class OrderConfirmController
+    extends FamilyNotifier<OrderConfirmState, String> {
   OrderPricingService get _pricing => ref.read(orderPricingServiceProvider);
-  TicketOrderRepository get _repository => ref.read(ticketOrderRepositoryProvider);
+  TicketOrderRepository get _repository =>
+      ref.read(ticketOrderRepositoryProvider);
   DomainEventBus get _bus => ref.read(domainEventBusProvider);
 
   @override
@@ -114,7 +140,9 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
     final seed = ref.read(orderDraftSeedProvider(arg));
     final offer = _offerOf(seed, tierId);
     if (offer == null) {
-      state = state.copyWith(notice: '票档不存在');
+      state = state.copyWith(
+        notice: const OrderNotice(OrderNoticeCode.ticketTierMissing),
+      );
       return;
     }
     _apply(
@@ -134,7 +162,9 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
     final line = _lineOf(tierId);
     if (line == null) return;
     final next = line.quantity.value - 1;
-    _apply(state.order.changeLineQuantity(tierId, Quantity(next < 0 ? 0 : next)));
+    _apply(
+      state.order.changeLineQuantity(tierId, Quantity(next < 0 ? 0 : next)),
+    );
   }
 
   /// 选择营销活动。
@@ -142,7 +172,9 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
     final seed = ref.read(orderDraftSeedProvider(arg));
     final campaign = seed.availableCampaign;
     if (campaign == null) {
-      state = state.copyWith(notice: '本单没有可用营销活动');
+      state = state.copyWith(
+        notice: const OrderNotice(OrderNoticeCode.noCampaign),
+      );
       return;
     }
     _apply(state.order.selectDiscount(campaign));
@@ -153,20 +185,25 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
     final seed = ref.read(orderDraftSeedProvider(arg));
     final coupon = seed.availableCoupon;
     if (coupon == null) {
-      state = state.copyWith(notice: '本单没有可用优惠券');
+      state = state.copyWith(
+        notice: const OrderNotice(OrderNoticeCode.noCoupon),
+      );
       return;
     }
     _apply(state.order.selectDiscount(coupon));
   }
 
   /// 不使用优惠。
-  void clearDiscount() => _apply(state.order.selectDiscount(DiscountSelection.none));
+  void clearDiscount() =>
+      _apply(state.order.selectDiscount(DiscountSelection.none));
 
   /// 使用礼品卡。
   void useGiftCard() {
     final giftCard = ref.read(orderDraftSeedProvider(arg)).giftCard;
     if (giftCard == null) {
-      state = state.copyWith(notice: '本单没有可用礼品卡');
+      state = state.copyWith(
+        notice: const OrderNotice(OrderNoticeCode.noGiftCard),
+      );
       return;
     }
     _apply(state.order.applyGiftCard(giftCard));
@@ -180,7 +217,9 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
     final seed = ref.read(orderDraftSeedProvider(arg));
     final unitPrice = seed.speedPackUnitPrice;
     if (unitPrice == null) {
-      state = state.copyWith(notice: '本场不提供加速包');
+      state = state.copyWith(
+        notice: const OrderNotice(OrderNoticeCode.noSpeedPack),
+      );
       return;
     }
     _apply(
@@ -204,7 +243,9 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
   void toggleAgreement() {
     final order = state.order;
     _apply(
-      order.agreementAccepted ? order.revokeAgreement() : order.acceptAgreement(),
+      order.agreementAccepted
+          ? order.revokeAgreement()
+          : order.acceptAgreement(),
     );
   }
 
@@ -218,7 +259,10 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
         Visitor(
           id: const VisitorId('visitor-1'),
           name: '张票友',
-          idCard: IdCardNumber(type: IdCardType.idCard, number: '310101199003074511'),
+          idCard: IdCardNumber(
+            type: IdCardType.idCard,
+            number: '310101199003074511',
+          ),
         ),
       ]),
     );
@@ -233,7 +277,13 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
     final order = state.order;
     final submitted = order.submit(DateTime.now());
     if (submitted.isFailure) {
-      state = state.copyWith(submitting: false, notice: submitted.failure!.message);
+      state = state.copyWith(
+        submitting: false,
+        notice: OrderNotice(
+          OrderNoticeCode.failure,
+          detail: submitted.failure!.message,
+        ),
+      );
       return;
     }
 
@@ -243,7 +293,10 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
       // 在同一个事务里（失败则回滚聚合状态），否则会出现"本地已提交、服务端没建单"。
       state = state.copyWith(
         submitting: false,
-        notice: '提交失败：${saved.failure!.message}',
+        notice: OrderNotice(
+          OrderNoticeCode.saveFailed,
+          detail: saved.failure!.message,
+        ),
       );
       return;
     }
@@ -254,7 +307,10 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
     state = state.copyWith(
       submitting: false,
       submitted: true,
-      notice: '订单已提交：${order.number.value}',
+      notice: OrderNotice(
+        OrderNoticeCode.submitted,
+        detail: order.number.value,
+      ),
       recentEvents: ref.read(orderEventRecorderProvider).eventNames,
     );
   }
@@ -266,7 +322,12 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
 
   void _apply(Result<void> result) {
     if (result.isFailure) {
-      state = state.copyWith(notice: result.failure!.message);
+      state = state.copyWith(
+        notice: OrderNotice(
+          OrderNoticeCode.failure,
+          detail: result.failure!.message,
+        ),
+      );
       return;
     }
 
@@ -283,13 +344,13 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
   /// 拆单费固定 0：企划星的 `bizParam.splitOrderContext.splitOrderFee` 只在
   /// 跨仓拆单时出现，本切片没有跨仓商品。
   OrderQuote _quoteOf(TicketOrder order) => _pricing.quote(
-        goodsTotal: order.goodsTotal,
-        postage: order.delivery.postage,
-        splitFee: Money.zero(),
-        discount: order.discount,
-        giftCard: order.giftCard,
-        speedPack: order.speedPack,
-      );
+    goodsTotal: order.goodsTotal,
+    postage: order.delivery.postage,
+    splitFee: Money.zero(),
+    discount: order.discount,
+    giftCard: order.giftCard,
+    speedPack: order.speedPack,
+  );
 
   TicketTierOffer? _offerOf(OrderDraftSeed seed, TicketTierId tierId) {
     for (final offer in seed.tiers) {
@@ -309,5 +370,5 @@ final class OrderConfirmController extends FamilyNotifier<OrderConfirmState, Str
 /// 确认订单页控制器 Provider（按演出 id 分族）。
 final orderConfirmControllerProvider =
     NotifierProvider.family<OrderConfirmController, OrderConfirmState, String>(
-  OrderConfirmController.new,
-);
+      OrderConfirmController.new,
+    );

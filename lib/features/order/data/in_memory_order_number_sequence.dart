@@ -12,7 +12,8 @@ final class InMemoryOrderNumberSequence implements OrderNumberSequence {
 
   @override
   Future<Result<OrderNumber>> next(DateTime date) async {
-    final day = '${date.year}${date.month.toString().padLeft(2, '0')}'
+    final day =
+        '${date.year}${date.month.toString().padLeft(2, '0')}'
         '${date.day.toString().padLeft(2, '0')}';
     if (_currentDay != day) {
       _currentDay = day;

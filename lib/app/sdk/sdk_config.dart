@@ -12,7 +12,8 @@ class SdkConfig {
   /// iOS 微信回调 Universal Link。
   /// `⚠` 占位值：上线前必须替换为在微信开放平台登记、且已在 Xcode 里
   /// 开启 Associated Domains（entitlements）的真实域名。Android 侧忽略此参数。
-  static const String wechatUniversalLink = 'https://m.planstar.com/flutter/wx/';
+  static const String wechatUniversalLink =
+      'https://m.planstar.com/flutter/wx/';
 
   /// 极光推送 AppKey（原清单 `JPUSH_APPKEY`）与渠道。
   static const String jpushAppKey = 'baeccd5e33d6af24b55804f7';

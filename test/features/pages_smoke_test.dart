@@ -106,6 +106,7 @@ void main() {
           // 否则 `XxxLocalizations.of(context)!` 会在首帧抛 Null check。
           localizationsDelegates: appLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('zh'),
         ),
       ),
     );

@@ -21,9 +21,10 @@ const bool _demoMode = true;
 ///
 /// 换真实接口时把 [_demoMode] 改成 `false`。
 /// 所有页面都从这一个人口读数据，所以"分页/缓存/离线"这类横切能力只需要在这里做一次。
-final showCatalogProvider = AsyncNotifierProvider<ShowCatalogController, List<ShowSummary>>(
-  ShowCatalogController.new,
-);
+final showCatalogProvider =
+    AsyncNotifierProvider<ShowCatalogController, List<ShowSummary>>(
+      ShowCatalogController.new,
+    );
 
 class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
   @override
@@ -54,8 +55,11 @@ class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
 
 /// 按 id 取演出。查不到返回 `null`（不是抛异常）——深链带了脏 id 是正常情况。
 final showByIdProvider = Provider.family<ShowSummary?, String>((ref, id) {
-  final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(showCatalogProvider);
-  final List<ShowSummary> shows = asyncShows.valueOrNull ?? const <ShowSummary>[];
+  final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(
+    showCatalogProvider,
+  );
+  final List<ShowSummary> shows =
+      asyncShows.valueOrNull ?? const <ShowSummary>[];
   for (final show in shows) {
     if (show.id == id) return show;
   }
@@ -79,7 +83,9 @@ class SelectedCityController extends Notifier<String> {
 /// 当前城市的演出。
 final cityShowsProvider = Provider<AsyncValue<List<ShowSummary>>>((ref) {
   final city = ref.watch(selectedCityProvider);
-  final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(showCatalogProvider);
+  final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(
+    showCatalogProvider,
+  );
   return asyncShows.whenData(
     (shows) => shows.where((show) => show.city == city).toList(growable: false),
   );
@@ -100,7 +106,9 @@ final showCategoriesProvider = FutureProvider<List<ShowCategory>>((ref) async {
 // ── 精选推荐 ────────────────────────────────────────────────────────────
 
 /// 精选推荐：按分类分组后的演出（首页「精选」楼层每个 tab 一组）。
-final choicenessGroupsProvider = Provider<AsyncValue<List<ChoicenessGroup>>>((ref) {
+final choicenessGroupsProvider = Provider<AsyncValue<List<ChoicenessGroup>>>((
+  ref,
+) {
   final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(cityShowsProvider);
   return asyncShows.whenData((shows) {
     final byCategory = <int, List<ShowSummary>>{};
@@ -120,7 +128,9 @@ final choicenessGroupsProvider = Provider<AsyncValue<List<ChoicenessGroup>>>((re
         ),
       );
     }
-    groups.sort((a, b) => b.shows.first.wishCount.compareTo(a.shows.first.wishCount));
+    groups.sort(
+      (a, b) => b.shows.first.wishCount.compareTo(a.shows.first.wishCount),
+    );
     return groups;
   });
 });
@@ -157,11 +167,13 @@ final popularVenuesProvider = Provider<AsyncValue<List<VenueSummary>>>((ref) {
           city: entry.value.first.city,
           address: entry.value.first.venueAddress,
           showCount: entry.value.length,
-          showIds: (entry.value.toList()
-                ..sort((a, b) => a.firstSessionAt.compareTo(b.firstSessionAt)))
-              .take(2)
-              .map((show) => show.id)
-              .toList(growable: false),
+          showIds:
+              (entry.value.toList()..sort(
+                    (a, b) => a.firstSessionAt.compareTo(b.firstSessionAt),
+                  ))
+                  .take(2)
+                  .map((show) => show.id)
+                  .toList(growable: false),
         ),
     ];
     venues.sort((a, b) => b.showCount.compareTo(a.showCount));
@@ -170,8 +182,13 @@ final popularVenuesProvider = Provider<AsyncValue<List<VenueSummary>>>((ref) {
 });
 
 /// 按场馆名取场馆。查不到返回 `null`——深链带脏名字是正常情况。
-final venueByNameProvider = Provider.family<AsyncValue<VenueSummary?>, String>((ref, name) {
-  final AsyncValue<List<VenueSummary>> asyncVenues = ref.watch(popularVenuesProvider);
+final venueByNameProvider = Provider.family<AsyncValue<VenueSummary?>, String>((
+  ref,
+  name,
+) {
+  final AsyncValue<List<VenueSummary>> asyncVenues = ref.watch(
+    popularVenuesProvider,
+  );
   return asyncVenues.whenData((venues) {
     for (final venue in venues) {
       if (venue.name == name) return venue;
@@ -181,11 +198,14 @@ final venueByNameProvider = Provider.family<AsyncValue<VenueSummary?>, String>((
 });
 
 /// 某场馆在当前城市的全部演出（按首场时间升序）。
-final venueShowsProvider = Provider.family<AsyncValue<List<ShowSummary>>, String>((ref, name) {
-  final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(cityShowsProvider);
-  return asyncShows.whenData((shows) {
-    final result = shows.where((show) => show.venue == name).toList()
-      ..sort((a, b) => a.firstSessionAt.compareTo(b.firstSessionAt));
-    return List<ShowSummary>.unmodifiable(result);
-  });
-});
+final venueShowsProvider =
+    Provider.family<AsyncValue<List<ShowSummary>>, String>((ref, name) {
+      final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(
+        cityShowsProvider,
+      );
+      return asyncShows.whenData((shows) {
+        final result = shows.where((show) => show.venue == name).toList()
+          ..sort((a, b) => a.firstSessionAt.compareTo(b.firstSessionAt));
+        return List<ShowSummary>.unmodifiable(result);
+      });
+    });

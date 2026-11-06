@@ -9,7 +9,9 @@ void main() {
 
     test('activity_detail?showId=888 → /show/888', () {
       expect(
-        PlanstarLinks.resolve(Uri.parse('planstar://activity_detail?showId=888')),
+        PlanstarLinks.resolve(
+          Uri.parse('planstar://activity_detail?showId=888'),
+        ),
         '/show/888',
       );
     });
@@ -22,7 +24,10 @@ void main() {
     });
 
     test('未登记的 host → null（由调用方回退）', () {
-      expect(PlanstarLinks.resolve(Uri.parse('planstar://no_such_host')), isNull);
+      expect(
+        PlanstarLinks.resolve(Uri.parse('planstar://no_such_host')),
+        isNull,
+      );
     });
 
     test('保留 query 透传', () {

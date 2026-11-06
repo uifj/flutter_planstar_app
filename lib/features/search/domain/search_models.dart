@@ -10,15 +10,7 @@ library;
 /// 企划星的结果页有「全部 / 演出 / 动态 / 商品」四栏（`SearchResultFragment`
 /// 下面挂了 5 个 Fragment）。本项目只做了演出与动态两条链路，商品没有数据源，
 /// 所以**只声明存在的两栏**——放一个永远空的「商品」栏等于给用户一个死入口。
-enum SearchScope {
-  all('全部'),
-  shows('演出'),
-  feeds('动态');
-
-  const SearchScope(this.label);
-
-  final String label;
-}
+enum SearchScope { all, shows, feeds }
 
 /// 热搜词条目（`item_search_hot.xml`）。
 final class HotKeyword {
@@ -36,12 +28,4 @@ final class HotKeyword {
 
   /// 是否标「热」（前 3 名带火焰标）。
   final bool hot;
-
-  /// 热度文案：`1.2万` / `3862`。
-  String get hitLabel {
-    if (hitCount >= 10000) {
-      return '${(hitCount / 10000).toStringAsFixed(1)}万';
-    }
-    return '$hitCount';
-  }
 }

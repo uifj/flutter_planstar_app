@@ -69,7 +69,7 @@ final class GroupBuyInfo {
     required this.slogan,
     required this.members,
     required this.stock,
-    this.tag = '超低价拼团',
+    this.tag = '',
   });
 
   /// 拼团活动 ID（Android `id`）。
@@ -133,32 +133,8 @@ final class GroupBuyInfo {
   bool get isExpired => DateTime.now().isAfter(effectiveTo);
 
   /// 距到期剩余小时数。
-  int get remainingHours =>
-      effectiveTo.difference(DateTime.now()).inHours;
-
-  /// 折扣文案（如"5.5折"）。
-  String get discountLabel {
-    if (originalPrice.minorUnits <= 0) return '';
-    final rate = (lowPrice.minorUnits * 10) ~/ originalPrice.minorUnits;
-    if (rate >= 10) return '';
-    if (rate % 10 == 0) return '${rate ~/ 10}折';
-    return '${rate / 10}折';
-  }
+  int get remainingHours => effectiveTo.difference(DateTime.now()).inHours;
 
   /// 节省金额。
   Money get savedAmount => originalPrice - lowPrice;
-
-  /// 状态文案。
-  String get statusLabel {
-    switch (status) {
-      case GroupBuyStatus.grouping:
-        return '拼团中';
-      case GroupBuyStatus.success:
-        return '拼团成功';
-      case GroupBuyStatus.failed:
-        return '拼团失败';
-      case GroupBuyStatus.cancelled:
-        return '已取消';
-    }
-  }
 }

@@ -154,28 +154,11 @@ final class ShowSummary {
   /// 购票须知（详情页「购买须知」段）。
   final List<String> purchaseNotice;
 
-  /// `9.8折` 角标文案；无折扣返回 `null`。
-  String? get discountLabel {
-    final permille = discountPermille;
-    if (permille == null || permille <= 0 || permille >= 1000) return null;
-    final tenth = permille / 100;
-    final text = tenth == tenth.roundToDouble()
-        ? tenth.toStringAsFixed(0)
-        : tenth.toStringAsFixed(1);
-    return '$text折';
-  }
-
   /// 起价文案（`¥680`），详情页与卡片都用它。
   String get priceFromText => priceFrom.format();
 
-  /// 首场时间：`11月8日 周日 19:30`。
-  String get firstSessionLabel => formatSessionLabel(firstSessionAt);
-
   /// 城市 + 场馆：`上海 · 上海大剧院`。
   String get venueLabel => '$city · $venue';
-
-  /// 演出状态文案（`售票中` / `暂时售罄` / `预售`）。
-  String get saleStatusLabel => soldOut ? '暂时售罄' : '售票中';
 
   /// 同分类判断（首页楼层按分类筛选时用）。
   bool belongsTo(int category) => categoryId == category;
@@ -220,11 +203,7 @@ final class ShowSummary {
     );
   }
 
-  ShowSummary copyWith({
-    Money? priceFrom,
-    bool? soldOut,
-    int? wishCount,
-  }) {
+  ShowSummary copyWith({Money? priceFrom, bool? soldOut, int? wishCount}) {
     return ShowSummary(
       id: id,
       title: title,
@@ -254,37 +233,11 @@ final class ShowSummary {
   }
 }
 
-/// 场次时间格式：`11月8日 周日 19:30`。
-///
-/// 不用 `intl` 的 `DateFormat`：这里只需要中文的固定格式，而 `DateFormat`
-/// 依赖 `Intl.defaultLocale` 被初始化（否则会静默回落到 en_US，
-/// 出现「Nov 8, 2026」这种中英混排）。
-String formatSessionLabel(DateTime time) {
-  const weekdays = <String>['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-  final hour = time.hour.toString().padLeft(2, '0');
-  final minute = time.minute.toString().padLeft(2, '0');
-  return '${time.month}月${time.day}日 ${weekdays[time.weekday - 1]} $hour:$minute';
-}
-
 /// 日期格式：`2026.11.08`（订单列表的场次行用）。
 String formatDate(DateTime time) {
   final month = time.month.toString().padLeft(2, '0');
   final day = time.day.toString().padLeft(2, '0');
   return '${time.year}.$month.$day';
-}
-
-/// 相对时间：`刚刚` / `5分钟前` / `昨天` / `11月1日`。
-String formatRelativeTime(DateTime time, {DateTime? now}) {
-  final reference = now ?? DateTime.now();
-  final delta = reference.difference(time);
-  if (delta.inMinutes < 1) return '刚刚';
-  if (delta.inMinutes < 60) return '${delta.inMinutes}分钟前';
-  if (delta.inHours < 24 && reference.day == time.day) {
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
-  }
-  if (delta.inDays == 1) return '昨天';
-  if (delta.inDays < 7) return '${delta.inDays}天前';
-  return '${time.month}月${time.day}日';
 }
 
 // ── JSON 辅助 ───────────────────────────────────────────────────────────

@@ -89,16 +89,4 @@ final class GiftCard {
       status == GiftCardStatus.active &&
       daysUntilExpiry >= 0 &&
       daysUntilExpiry <= 7;
-
-  /// 到期文案。
-  String get expiryLabel {
-    String two(int v) => v.toString().padLeft(2, '0');
-    return '${effectiveTo.year}-${two(effectiveTo.month)}-${two(effectiveTo.day)}到期';
-  }
-
-  /// 面值文案。
-  String get denominationLabel => '面值 ${denomination.format()}';
-
-  /// 余额文案。
-  String get balanceLabel => '余额 ${balance.format()}';
 }

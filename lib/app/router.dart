@@ -204,7 +204,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => CategoryHomePage(
           initialCategoryId: int.tryParse(
             state.pathParameters['categoryId'] ?? '',
-        ),
+          ),
         ),
       ),
       // 演出列表（分类 / 全部）。`category` 是可选的一级分类 id，

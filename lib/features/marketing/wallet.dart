@@ -52,9 +52,6 @@ final class WalletTransaction {
     return '-${amount.abs().format()}';
   }
 
-  /// 余额展示文案。
-  String get balanceLabel => '余额 ${balanceAfter.format()}';
-
   /// 时间展示文案。
   String get timeLabel {
     String two(int v) => v.toString().padLeft(2, '0');
@@ -65,10 +62,7 @@ final class WalletTransaction {
 
 /// 钱包账户信息。
 final class WalletAccount {
-  const WalletAccount({
-    required this.balance,
-    required this.transactions,
-  });
+  const WalletAccount({required this.balance, required this.transactions});
 
   /// 当前余额。
   final Money balance;

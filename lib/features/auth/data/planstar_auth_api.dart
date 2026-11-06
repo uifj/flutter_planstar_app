@@ -32,7 +32,7 @@ import 'dto/send_code_response_dto.dart';
 final class PlanstarAuthApi {
   /// 创建客户端。
   PlanstarAuthApi({required ApiClient client, this.clientType = 11})
-      : _client = client;
+    : _client = client;
 
   final ApiClient _client;
 
@@ -97,9 +97,8 @@ final class PlanstarAuthApi {
       data: body,
       // 这个接口是 200 + {success, needCaptcha, errorMsg}。
       envelope: const PassthroughEnvelope(),
-      parser: (Object? data) => SendCodeResponseDto.fromJson(
-        asStringKeyedMap(data, what: '发验证码响应'),
-      ),
+      parser: (Object? data) =>
+          SendCodeResponseDto.fromJson(asStringKeyedMap(data, what: '发验证码响应')),
     );
   }
 
@@ -119,8 +118,6 @@ final class PlanstarAuthApi {
   }
 
   static LoginResponseDto _parseLogin(Object? data) {
-    return LoginResponseDto.fromJson(
-      asStringKeyedMap(data, what: '登录响应'),
-    );
+    return LoginResponseDto.fromJson(asStringKeyedMap(data, what: '登录响应'));
   }
 }

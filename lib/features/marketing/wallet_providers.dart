@@ -64,9 +64,7 @@ final class DemoWallet {
 /// 钱包账户 Provider。
 ///
 /// 对齐 Android `MyWalletActivity` 的 `GET v1/moneyaccount`。
-final walletProvider = Provider<WalletAccount>(
-  (ref) => DemoWallet.generate(),
-);
+final walletProvider = Provider<WalletAccount>((ref) => DemoWallet.generate());
 
 /// 钱包余额 Provider（「我的」页资产卡用）。
 final walletBalanceProvider = Provider<Money>(

@@ -11,7 +11,10 @@ final class OrderNumber extends ValueObject {
   /// 生成：日期 + 当日序号。
   ///
   /// 序号由 `OrderNumberSequence` 端口提供，值对象本身不碰时钟/存储。
-  factory OrderNumber.generate({required DateTime date, required int sequence}) {
+  factory OrderNumber.generate({
+    required DateTime date,
+    required int sequence,
+  }) {
     if (sequence < 0 || sequence > 999999) {
       throw ArgumentError.value(sequence, 'sequence', '序号必须在 0..999999 之间');
     }

@@ -7,8 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../auth/application/auth_providers.dart';
 import 'application/profile_providers.dart';
-import '../../l10n/user_localizations.dart';
-import '../../l10n/app_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 编辑资料页（企划星 `EditProfileActivity` + `fragment_edit_profile.xml`）。
 ///
@@ -64,7 +63,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: UserLocalizations.of(context).editProfilePage_65),
+      appBar: AdaptiveAppBar(title: context.l10n.editProfilePage_65),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(15, 16, 15, 24),
         child: Column(
@@ -74,7 +73,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             Center(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => _toast(context, UserLocalizations.of(context).editProfilePage_75),
+                onTap: () => _toast(context, context.l10n.editProfilePage_75),
                 child: Column(
                   children: <Widget>[
                     ClipOval(
@@ -88,7 +87,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                 width: 80,
                                 height: 80,
                                 color: colors.brandSubtle,
-                                child: Icon(LucideIcons.user, size: 40, color: colors.brand),
+                                child: Icon(
+                                  LucideIcons.user,
+                                  size: 40,
+                                  color: colors.brand,
+                                ),
                               ),
                             )
                           : Image.network(
@@ -100,14 +103,21 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                 width: 80,
                                 height: 80,
                                 color: colors.brandSubtle,
-                                child: Icon(LucideIcons.user, size: 40, color: colors.brand),
+                                child: Icon(
+                                  LucideIcons.user,
+                                  size: 40,
+                                  color: colors.brand,
+                                ),
                               ),
                             ),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      UserLocalizations.of(context).editProfilePage_107,
-                      style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                      context.l10n.editProfilePage_107,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.textTertiary,
+                      ),
                     ),
                   ],
                 ),
@@ -115,7 +125,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             ),
             const SizedBox(height: 24),
             // 昵称
-            _Label(text: UserLocalizations.of(context).editProfilePage_116),
+            _Label(text: context.l10n.editProfilePage_116),
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
@@ -139,24 +149,24 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             ),
             const SizedBox(height: 20),
             // 性别
-            _Label(text: UserLocalizations.of(context).editProfilePage_140),
+            _Label(text: context.l10n.editProfilePage_140),
             const SizedBox(height: 8),
             Row(
               children: <Widget>[
                 _GenderChip(
-                  label: UserLocalizations.of(context).editProfilePage_145,
+                  label: context.l10n.editProfilePage_145,
                   selected: _gender == 0,
                   onTap: () => setState(() => _gender = 0),
                 ),
                 const SizedBox(width: 10),
                 _GenderChip(
-                  label: UserLocalizations.of(context).editProfilePage_151,
+                  label: context.l10n.editProfilePage_151,
                   selected: _gender == 1,
                   onTap: () => setState(() => _gender = 1),
                 ),
                 const SizedBox(width: 10),
                 _GenderChip(
-                  label: UserLocalizations.of(context).editProfilePage_157,
+                  label: context.l10n.editProfilePage_157,
                   selected: _gender == 2,
                   onTap: () => setState(() => _gender = 2),
                 ),
@@ -164,7 +174,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             ),
             const SizedBox(height: 20),
             // 个性签名
-            _Label(text: UserLocalizations.of(context).editProfilePage_165),
+            _Label(text: context.l10n.editProfilePage_165),
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
@@ -179,8 +189,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                 onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: UserLocalizations.of(context).editProfilePage_180,
-                  hintStyle: TextStyle(fontSize: 14, color: colors.textTertiary),
+                  hintText: context.l10n.editProfilePage_180,
+                  hintStyle: TextStyle(
+                    fontSize: 14,
+                    color: colors.textTertiary,
+                  ),
                   counterStyle: TextStyle(
                     fontSize: 11,
                     color: colors.textTertiary,
@@ -210,7 +223,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                   ),
                 ),
                 child: Text(
-                  AppLocalizations.of(context).actionSave,
+                  context.l10n.actionSave,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -227,14 +240,16 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
   void _save() {
     // 不实际提交：企划星走 POST v1/user/baseInfo，这里没有真实接口实现。
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(UserLocalizations.of(context).editProfilePage_229)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.editProfilePage_229)));
     context.pop();
   }
 
   static void _toast(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
@@ -281,9 +296,7 @@ class _GenderChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? colors.brandSubtle : colors.bgCard,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: selected ? colors.brand : colors.border,
-          ),
+          border: Border.all(color: selected ? colors.brand : colors.border),
         ),
         child: Text(
           label,

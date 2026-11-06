@@ -36,7 +36,9 @@ final class ShippingAddress extends ValueObject {
     required this.city,
     required this.detail,
   }) {
-    if (province.trim().isEmpty || city.trim().isEmpty || detail.trim().isEmpty) {
+    if (province.trim().isEmpty ||
+        city.trim().isEmpty ||
+        detail.trim().isEmpty) {
       throw ArgumentError('省 / 市 / 详细地址都不能为空');
     }
   }
@@ -75,21 +77,18 @@ final class Receiver extends ValueObject {
 /// 现场自取（无运费、无地址）。
 enum DeliveryMethod {
   /// 电子票：出票后直接进"我的票夹"。
-  electronic('电子票', requiresReceiver: false, requiresPostage: false),
+  electronic(requiresReceiver: false, requiresPostage: false),
 
   /// 纸质票快递。
-  express('快递配送', requiresReceiver: true, requiresPostage: true),
+  express(requiresReceiver: true, requiresPostage: true),
 
   /// 现场自取。
-  selfPickup('现场自取', requiresReceiver: false, requiresPostage: false);
+  selfPickup(requiresReceiver: false, requiresPostage: false);
 
-  const DeliveryMethod(
-    this.label, {
+  const DeliveryMethod({
     required this.requiresReceiver,
     required this.requiresPostage,
   });
-
-  final String label;
 
   /// 是否必须有收件人信息。
   final bool requiresReceiver;
@@ -103,16 +102,12 @@ enum DeliveryMethod {
 /// 运费是**订单总额的一部分**（企划星 `totalAmount = goodTotalAmount + postage + splitOrderFee`），
 /// 所以它必须跟着配送方式走，而不是散在页面状态里。
 final class DeliveryInfo extends ValueObject {
-  DeliveryInfo({
-    required this.method,
-    required this.postage,
-    this.receiver,
-  }) {
+  DeliveryInfo({required this.method, required this.postage, this.receiver}) {
     if (method.requiresReceiver && receiver == null) {
-      throw ArgumentError('${method.label}必须提供收件人信息');
+      throw ArgumentError('${method.name}必须提供收件人信息');
     }
     if (!method.requiresPostage && !postage.isZero) {
-      throw ArgumentError('${method.label}不应产生运费');
+      throw ArgumentError('${method.name}不应产生运费');
     }
     if (postage.isNegative) {
       throw ArgumentError.value(postage, 'postage', '运费不能为负');
@@ -130,10 +125,6 @@ final class DeliveryInfo extends ValueObject {
 
   /// 收件人（快递必填）。
   final Receiver? receiver;
-
-  /// 展示文案：`快递配送（¥12.00）`。
-  String describe() =>
-      postage.isZero ? method.label : '${method.label}（${postage.format()}）';
 
   @override
   List<Object?> get props => <Object?>[method, postage, receiver];

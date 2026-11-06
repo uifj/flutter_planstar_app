@@ -152,9 +152,7 @@ void main() {
 
     // system + 系统为暗 → 切到亮。
     container.read(themeModeProvider.notifier).set(ThemeMode.system);
-    container
-        .read(themeModeProvider.notifier)
-        .toggle(Brightness.dark);
+    container.read(themeModeProvider.notifier).toggle(Brightness.dark);
     expect(container.read(themeModeProvider), ThemeMode.light);
   });
 }

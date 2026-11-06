@@ -9,7 +9,8 @@ import '../../shared/ui/ps_tag.dart';
 import '../catalog/domain/show_summary.dart';
 import 'application/search_providers.dart';
 import 'domain/search_models.dart';
-import '../../l10n/search_localizations.dart';
+import 'search_l10n.dart';
+import '../../l10n/l10n.dart';
 
 /// 搜索页（企划星 `SearchActivity` + `SearchHintFragment` / `SearchSuggestFrgment`）。
 ///
@@ -38,8 +39,9 @@ class SearchPage extends ConsumerStatefulWidget {
 }
 
 class _SearchPageState extends ConsumerState<SearchPage> {
-  late final TextEditingController _controller =
-      TextEditingController(text: widget.initialQuery ?? '');
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.initialQuery ?? '',
+  );
   final FocusNode _focusNode = FocusNode();
 
   /// 当前输入（受控，用于切换"历史/联想"两个状态）。
@@ -96,7 +98,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               decoration: InputDecoration(
                 isDense: true,
                 border: InputBorder.none,
-                hintText: SearchLocalizations.of(context).searchPage_98,
+                hintText: context.l10n.searchPage_98,
                 hintStyle: TextStyle(fontSize: 13, color: colors.textTertiary),
               ),
               onChanged: (String value) => setState(() => _input = value),
@@ -112,7 +114,11 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Icon(LucideIcons.circleX, size: 15, color: colors.textDisabled),
+                child: Icon(
+                  LucideIcons.circleX,
+                  size: 15,
+                  color: colors.textDisabled,
+                ),
               ),
             ),
         ],
@@ -130,8 +136,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _SectionBar(
-          title: SearchLocalizations.of(context).searchPage_132,
-          action: SearchLocalizations.of(context).searchPage_133,
+          title: context.l10n.searchPage_132,
+          action: context.l10n.searchPage_133,
           onAction: () => ref.read(searchHistoryProvider.notifier).clear(),
         ),
         Padding(
@@ -148,7 +154,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   onLongPress: () {
                     ref.read(searchHistoryProvider.notifier).remove(word);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(SearchLocalizations.of(context).searchPage_150(word))),
+                      SnackBar(
+                        content: Text(context.l10n.searchPage_150(word)),
+                      ),
                     );
                   },
                   child: PsTag(
@@ -169,7 +177,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
           child: Text(
-            SearchLocalizations.of(context).searchPage_171,
+            context.l10n.searchPage_171,
             style: TextStyle(fontSize: 11, color: colors.textDisabled),
           ),
         ),
@@ -185,7 +193,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        _SectionBar(title: SearchLocalizations.of(context).searchPage_187),
+        _SectionBar(title: context.l10n.searchPage_187),
         for (final (int index, HotKeyword keyword) in keywords.indexed)
           GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -217,7 +225,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   ),
                   if (keyword.hot) ...<Widget>[
                     PsTag(
-                      label: SearchLocalizations.of(context).searchPage_219,
+                      label: context.l10n.searchPage_219,
                       tone: PsTagTone.solid,
                       color: colors.price,
                       fontSize: 9,
@@ -226,7 +234,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     const SizedBox(width: 6),
                   ],
                   Text(
-                    keyword.hitLabel,
+                    keyword.hitLabelOf(context),
                     style: TextStyle(fontSize: 11, color: colors.textDisabled),
                   ),
                 ],
@@ -240,8 +248,11 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   /// 联想列表。
   Widget _buildSuggestions(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final List<ShowSummary> suggestions =
-        ref.watch(searchResultsProvider(_input)).shows.take(6).toList();
+    final List<ShowSummary> suggestions = ref
+        .watch(searchResultsProvider(_input))
+        .shows
+        .take(6)
+        .toList();
 
     return ListView(
       padding: const EdgeInsets.only(bottom: 24),
@@ -260,7 +271,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   child: Text.rich(
                     TextSpan(
                       children: <InlineSpan>[
-                        TextSpan(text: SearchLocalizations.of(context).searchPage_262),
+                        TextSpan(text: context.l10n.searchPage_262),
                         TextSpan(
                           text: '「${_input.trim()}」',
                           style: TextStyle(
@@ -290,8 +301,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Row(
                 children: <Widget>[
-                  Icon(LucideIcons.drama,
-                      size: 16, color: colors.textTertiary),
+                  Icon(LucideIcons.drama, size: 16, color: colors.textTertiary),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Column(
@@ -302,19 +312,29 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           show.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 14, color: colors.textPrimary),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: colors.textPrimary,
+                          ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           '${show.artist} · ${show.venueLabel}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 11, color: colors.textTertiary),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: colors.textTertiary,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  Icon(LucideIcons.arrowUpLeft, size: 13, color: colors.textDisabled),
+                  Icon(
+                    LucideIcons.arrowUpLeft,
+                    size: 13,
+                    color: colors.textDisabled,
+                  ),
                 ],
               ),
             ),
@@ -323,7 +343,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 24),
             child: Text(
-              SearchLocalizations.of(context).searchPage_325,
+              context.l10n.searchPage_325,
               style: TextStyle(fontSize: 12, color: colors.textTertiary),
             ),
           ),

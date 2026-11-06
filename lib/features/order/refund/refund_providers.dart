@@ -35,10 +35,7 @@ class RefundController extends FamilyNotifier<RefundState, RefundArg> {
   Future<void> submit() async {
     if (!state.canSubmit) return;
 
-    state = state.copyWith(
-      status: RefundStatus.submitting,
-      errorMessage: null,
-    );
+    state = state.copyWith(status: RefundStatus.submitting, errorMessage: null);
 
     // 模拟网络延迟。
     await Future<void>.delayed(const Duration(milliseconds: 1000));
@@ -55,8 +52,8 @@ class RefundController extends FamilyNotifier<RefundState, RefundArg> {
 
 final refundControllerProvider =
     NotifierProvider.family<RefundController, RefundState, RefundArg>(
-  RefundController.new,
-);
+      RefundController.new,
+    );
 
 /// 计算退款金额。
 ///

@@ -5,7 +5,11 @@ import '../domain/domain.dart';
 
 /// 一个可选票档（展示 + 下单用）。
 final class TicketTierOffer {
-  const TicketTierOffer({required this.id, required this.name, required this.price});
+  const TicketTierOffer({
+    required this.id,
+    required this.name,
+    required this.price,
+  });
 
   final TicketTierId id;
   final String name;
@@ -66,7 +70,10 @@ final class OrderDraftSeed {
 ///
 /// 金额刻意选得能暴露精度问题（`680.00` / `580.00` / `380.00`），
 /// 优惠选得能覆盖两条分支（券 = 减固定额、活动 = 按比例 + 封顶）。
-final orderDraftSeedProvider = Provider.family<OrderDraftSeed, String>((ref, showId) {
+final orderDraftSeedProvider = Provider.family<OrderDraftSeed, String>((
+  ref,
+  showId,
+) {
   return OrderDraftSeed(
     showId: ShowId(showId),
     showTitle: '《剧院魅影》中文版',

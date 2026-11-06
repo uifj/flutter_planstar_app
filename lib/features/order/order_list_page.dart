@@ -10,10 +10,10 @@ import '../../shared/ui/ps_floating_tab_bar.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_summary.dart';
 import 'application/order_list_controller.dart';
+import 'order_l10n.dart';
 import 'domain/domain.dart';
 import 'widgets/order_list_card.dart';
-import '../../l10n/order_localizations.dart';
-import '../../l10n/app_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 我的订单（`activity_my_order.xml` + `fragment_my_activity_order.xml`）。
 ///
@@ -70,10 +70,10 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
                   error: (error, _) => PsEmptyState(
-                    title: OrderLocalizations.of(context).orderListPage_71,
+                    title: context.l10n.orderListPage_71,
                     description: '$error',
                     icon: LucideIcons.circleAlert,
-                    actionLabel: AppLocalizations.of(context).actionRetry,
+                    actionLabel: context.l10n.actionRetry,
                     onAction: () => ref.invalidate(orderListProvider),
                   ),
                   data: (orders) {
@@ -84,11 +84,13 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
                           const SizedBox(height: 80),
                           PsEmptyState(
                             title: filter == OrderListFilter.all
-                                ? OrderLocalizations.of(context).orderListPage_85
-                                : OrderLocalizations.of(context).orderListPage_87(filter.label),
-                            description: OrderLocalizations.of(context).orderListPage_88,
+                                ? context.l10n.orderListPage_85
+                                : context.l10n.orderListPage_87(
+                                    filter.labelOf(context),
+                                  ),
+                            description: context.l10n.orderListPage_88,
                             icon: LucideIcons.receiptText,
-                            actionLabel: OrderLocalizations.of(context).orderListPage_90,
+                            actionLabel: context.l10n.orderListPage_90,
                             onAction: () => context.go('/'),
                           ),
                         ],
@@ -113,11 +115,13 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
                           onCancel: () => _cancel(context, order, actions),
                           onConfirmReceipt: () =>
                               _confirmReceipt(context, order, actions),
-                          onReview: () => _toast(context, OrderLocalizations.of(context).orderListPage_115),
+                          onReview: () =>
+                              _toast(context, context.l10n.orderListPage_115),
                           onBuyAgain: () => context.push(
                             '/order/confirm?showId=${order.showId.value}',
                           ),
-                          onContactService: () => _toast(context, OrderLocalizations.of(context).orderListPage_119),
+                          onContactService: () =>
+                              _toast(context, context.l10n.orderListPage_119),
                         );
                       },
                     );
@@ -128,8 +132,8 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
           ] else
             Expanded(
               child: PsEmptyState(
-                title: OrderLocalizations.of(context).orderListPage_130,
-                description: OrderLocalizations.of(context).orderListPage_131,
+                title: context.l10n.orderListPage_130,
+                description: context.l10n.orderListPage_131,
                 icon: LucideIcons.shoppingBag,
               ),
             ),
@@ -179,27 +183,25 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(OrderLocalizations.of(context).orderListPage_181),
-        content: Text(OrderLocalizations.of(context).orderListPage_182),
+        title: Text(context.l10n.orderListPage_181),
+        content: Text(context.l10n.orderListPage_182),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(OrderLocalizations.of(context).orderListPage_186),
+            child: Text(context.l10n.orderListPage_186),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(OrderLocalizations.of(context).orderListPage_190),
+            child: Text(context.l10n.orderListPage_190),
           ),
         ],
       ),
     );
     if (!context.mounted) return;
     if (!(confirmed ?? false)) return;
-    final String reason =
-        OrderLocalizations.of(context).orderListPage_196;
-    final error = await actions.cancel(order, reason);
+    final error = await actions.cancel(order, OrderCancelReason.userCancelled);
     if (!context.mounted) return;
-    _toast(context, error ?? OrderLocalizations.of(context).orderListPage_198);
+    _toast(context, error ?? context.l10n.orderListPage_198);
   }
 
   Future<void> _confirmReceipt(
@@ -209,7 +211,7 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
   ) async {
     final error = await actions.confirmReceipt(order);
     if (!context.mounted) return;
-    _toast(context, error ?? OrderLocalizations.of(context).orderListPage_208);
+    _toast(context, error ?? context.l10n.orderListPage_208);
   }
 }
 
@@ -230,7 +232,10 @@ class _PrimaryTabs extends StatelessWidget {
         height: 40,
         child: Row(
           children: <Widget>[
-            for (final (index, label) in <String>[OrderLocalizations.of(context).orderListPage_229, OrderLocalizations.of(context).orderListPage_229_2].indexed)
+            for (final (index, label) in <String>[
+              context.l10n.orderListPage_229,
+              context.l10n.orderListPage_229_2,
+            ].indexed)
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () => onSelect(index),
@@ -295,7 +300,7 @@ class _StatusTabs extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      filter.label,
+                      filter.labelOf(context),
                       style: TextStyle(
                         fontSize: 14,
                         height: 1.2,

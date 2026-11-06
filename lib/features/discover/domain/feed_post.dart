@@ -57,23 +57,6 @@ final class FeedPost {
   /// 企划星的列表与详情返回的是同一个 `FeedBean`，只是详情多了 `content` 字段，
   /// 为它复制一个 20 字段的类不值当。
   final String body;
-
-  /// 浏览量文案：`1.2万` / `3862`。
-  String get viewCountLabel {
-    if (viewCount >= 10000) {
-      final wan = viewCount / 10000;
-      return '${wan.toStringAsFixed(1)}万';
-    }
-    return '$viewCount';
-  }
-
-  /// 点赞数文案：`1.2万` / `208`。
-  String get likeCountLabel {
-    if (likeCount >= 10000) {
-      return '${(likeCount / 10000).toStringAsFixed(1)}万';
-    }
-    return '$likeCount';
-  }
 }
 
 /// 一条评论（`item_feed_comment.xml`）。
@@ -108,15 +91,4 @@ final class FeedComment {
   final String text;
   final DateTime publishedAt;
   final int likeCount;
-
-  /// 时间文案：`3分钟前` / `昨天` / `11月1日`。
-  String timeLabel(DateTime now) {
-    final Duration delta = now.difference(publishedAt);
-    if (delta.inMinutes < 1) return '刚刚';
-    if (delta.inMinutes < 60) return '${delta.inMinutes}分钟前';
-    if (delta.inHours < 24) return '${delta.inHours}小时前';
-    if (delta.inDays == 1) return '昨天';
-    if (delta.inDays < 7) return '${delta.inDays}天前';
-    return '${publishedAt.month}月${publishedAt.day}日';
-  }
 }

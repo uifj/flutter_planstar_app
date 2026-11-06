@@ -30,11 +30,9 @@ import '../domain/auth_user.dart';
 /// 会话存储。
 final class AuthSessionStore {
   /// 创建存储。
-  AuthSessionStore({
-    required AppStore store,
-    required PsRequestContext context,
-  })  : _store = store,
-        _context = context;
+  AuthSessionStore({required AppStore store, required PsRequestContext context})
+    : _store = store,
+      _context = context;
 
   final AppStore _store;
   final PsRequestContext _context;

@@ -4,16 +4,15 @@ import 'ids.dart';
 
 /// 证件类型（对齐企划星 `IdCardTypes`，`wiki_zh/modules/order-and-payment` §6.1）。
 enum IdCardType {
-  idCard(1, '身份证'),
-  passport(2, '护照'),
-  hongKongPass(3, '港澳通行证'),
-  taiwanPass(4, '台湾通行证'),
-  hmtResidencePermit(5, '港澳台居住证');
+  idCard(1),
+  passport(2),
+  hongKongPass(3),
+  taiwanPass(4),
+  hmtResidencePermit(5);
 
-  const IdCardType(this.wireCode, this.label);
+  const IdCardType(this.wireCode);
 
   final int wireCode;
-  final String label;
 }
 
 /// 证件号。
@@ -26,9 +25,28 @@ enum IdCardType {
 /// 这里对身份证做 **GB 11643-1999 校验位**验算 + 出生日期合法性检查；
 /// 护照/通行证做长度与字符集检查（没有公开校验位算法，不假装能校验）。
 final class IdCardNumber extends ValueObject {
-  IdCardNumber({required this.type, required String number}) : value = _validate(type, number);
+  IdCardNumber({required this.type, required String number})
+    : value = _validate(type, number);
 
-  static const List<int> _weights = <int>[7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+  static const List<int> _weights = <int>[
+    7,
+    9,
+    10,
+    5,
+    8,
+    4,
+    2,
+    1,
+    6,
+    3,
+    7,
+    9,
+    10,
+    5,
+    8,
+    4,
+    2,
+  ];
   static const String _checkChars = '10X98765432';
   static final RegExp _idPattern = RegExp(r'^\d{17}[\dX]$');
   static final RegExp _travelPattern = RegExp(r'^[A-Z0-9]{5,20}$');
@@ -58,7 +76,11 @@ final class IdCardNumber extends ValueObject {
       case IdCardType.taiwanPass:
       case IdCardType.hmtResidencePermit:
         if (!_travelPattern.hasMatch(normalized)) {
-          throw ArgumentError.value(raw, 'number', '${type.label}号码应为 5–20 位字母数字');
+          throw ArgumentError.value(
+            raw,
+            'number',
+            '${type.name}号码应为 5–20 位字母数字',
+          );
         }
         return normalized;
     }
@@ -84,13 +106,14 @@ final class IdCardNumber extends ValueObject {
   }
 
   /// 脱敏展示：保留前 3 位与后 4 位。
-  String get masked => '${value.substring(0, 3)}***********${value.substring(value.length - 4)}';
+  String get masked =>
+      '${value.substring(0, 3)}***********${value.substring(value.length - 4)}';
 
   @override
   List<Object?> get props => <Object?>[type, value];
 
   @override
-  String toString() => '${type.label}($masked)';
+  String toString() => '${type.name}($masked)';
 }
 
 /// 实名观演人。

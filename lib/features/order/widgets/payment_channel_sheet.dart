@@ -3,7 +3,8 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 
 import '../domain/domain.dart';
-import '../../../l10n/order_localizations.dart';
+import '../order_l10n.dart';
+import '../../../l10n/l10n.dart';
 
 /// 支付渠道选择面板（`dialog_pay_channel.xml`）。
 ///
@@ -29,10 +30,10 @@ class PaymentChannelSheet extends StatelessWidget {
   /// （`CmbPayWebActivity`），不在这个面板里。
   static const List<(PaymentChannel, IconData)> _channels =
       <(PaymentChannel, IconData)>[
-    (PaymentChannel.wechat, LucideIcons.messageCircle),
-    (PaymentChannel.alipay, LucideIcons.wallet),
-    (PaymentChannel.unionPay, LucideIcons.creditCard),
-  ];
+        (PaymentChannel.wechat, LucideIcons.messageCircle),
+        (PaymentChannel.alipay, LucideIcons.wallet),
+        (PaymentChannel.unionPay, LucideIcons.creditCard),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,7 @@ class PaymentChannelSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              OrderLocalizations.of(context).paymentChannelSheet_52,
+              context.l10n.paymentChannelSheet_52,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -62,9 +63,15 @@ class PaymentChannelSheet extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(icon, color: colors.brand),
-                title: Text(channel.label, style: const TextStyle(fontSize: 15)),
-                trailing:
-                    Icon(LucideIcons.chevronRight, size: 18, color: colors.textDisabled),
+                title: Text(
+                  channel.labelOf(context),
+                  style: const TextStyle(fontSize: 15),
+                ),
+                trailing: Icon(
+                  LucideIcons.chevronRight,
+                  size: 18,
+                  color: colors.textDisabled,
+                ),
                 onTap: () => Navigator.of(context).pop(channel),
               ),
           ],

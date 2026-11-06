@@ -9,7 +9,7 @@ import '../../../shared/ui/ps_price.dart';
 import 'seat_map.dart';
 import 'seat_map_view.dart';
 import 'seat_selection_providers.dart';
-import '../../../l10n/goods_localizations.dart';
+import '../../../l10n/l10n.dart';
 
 /// 选座页（企划星 `SelectTicketSeatMapActivity` / `ChooseTicketSeatTableFragment`）。
 ///
@@ -43,7 +43,7 @@ class SeatSelectionPage extends ConsumerWidget {
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
       appBar: AdaptiveAppBar(
-        title: GoodsLocalizations.of(context).seatSelectionPage_45,
+        title: context.l10n.seatSelectionPage_45,
         subtitle: state.mapData.venueName,
       ),
       body: Column(
@@ -58,8 +58,9 @@ class SeatSelectionPage extends ConsumerWidget {
                 color: colors.bgSubtle,
                 child: SeatMapView(
                   state: state,
-                  onToggle: (seat) =>
-                      ref.read(seatSelectionProvider(showId).notifier).toggleSeat(seat),
+                  onToggle: (seat) => ref
+                      .read(seatSelectionProvider(showId).notifier)
+                      .toggleSeat(seat),
                 ),
               ),
             ),
@@ -69,8 +70,9 @@ class SeatSelectionPage extends ConsumerWidget {
             _SelectedSeatsBar(
               seats: state.selectedSeats,
               colors: colors,
-              onRemove: (seat) =>
-                  ref.read(seatSelectionProvider(showId).notifier).toggleSeat(seat),
+              onRemove: (seat) => ref
+                  .read(seatSelectionProvider(showId).notifier)
+                  .toggleSeat(seat),
               onClear: () =>
                   ref.read(seatSelectionProvider(showId).notifier).clear(),
             ),
@@ -83,13 +85,14 @@ class SeatSelectionPage extends ConsumerWidget {
               // 目前 order/confirm 只接受 showId，选座信息暂不传入
               // （需要扩展 OrderConfirmPage 以接受 seatIds 参数）。
               // P0 切片先跳转，P1 补齐参数传递。
-              context.push(
-                '/order/confirm?showId=$showId',
-              );
+              context.push('/order/confirm?showId=$showId');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    GoodsLocalizations.of(context).seatSelectionPage_91(state.count, state.totalPrice.format()),
+                    context.l10n.seatSelectionPage_91(
+                      state.count,
+                      state.totalPrice.format(),
+                    ),
                   ),
                 ),
               );
@@ -114,13 +117,25 @@ class _LegendBar extends StatelessWidget {
       color: colors.bgCard,
       child: Row(
         children: <Widget>[
-          _LegendDot(color: colors.bgSubtle, label: GoodsLocalizations.of(context).seatSelectionPage_116),
+          _LegendDot(
+            color: colors.bgSubtle,
+            label: context.l10n.seatSelectionPage_116,
+          ),
           const SizedBox(width: 12),
-          _LegendDot(color: colors.brand, label: GoodsLocalizations.of(context).seatSelectionPage_118),
+          _LegendDot(
+            color: colors.brand,
+            label: context.l10n.seatSelectionPage_118,
+          ),
           const SizedBox(width: 12),
-          _LegendDot(color: colors.textDisabled.withValues(alpha: 0.3), label: GoodsLocalizations.of(context).seatSelectionPage_120),
+          _LegendDot(
+            color: colors.textDisabled.withValues(alpha: 0.3),
+            label: context.l10n.seatSelectionPage_120,
+          ),
           const SizedBox(width: 12),
-          _LegendDot(color: const Color(0xFFFFB238), label: GoodsLocalizations.of(context).seatSelectionPage_122),
+          _LegendDot(
+            color: const Color(0xFFFFB238),
+            label: context.l10n.seatSelectionPage_122,
+          ),
         ],
       ),
     );
@@ -150,7 +165,8 @@ class _LegendDot extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 11,
-            color: Theme.of(context).extension<AppColors>()?.textTertiary ??
+            color:
+                Theme.of(context).extension<AppColors>()?.textTertiary ??
                 AppColors.light.textTertiary,
           ),
         ),
@@ -189,7 +205,10 @@ class _SelectedSeatsBar extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                GoodsLocalizations.of(context).seatSelectionPage_191(seats.length, SeatSelectionState.maxSeats),
+                context.l10n.seatSelectionPage_191(
+                  seats.length,
+                  SeatSelectionState.maxSeats,
+                ),
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -200,7 +219,7 @@ class _SelectedSeatsBar extends StatelessWidget {
               GestureDetector(
                 onTap: onClear,
                 child: Text(
-                  GoodsLocalizations.of(context).seatSelectionPage_202,
+                  context.l10n.seatSelectionPage_202,
                   style: TextStyle(fontSize: 12, color: colors.textTertiary),
                 ),
               ),
@@ -215,7 +234,10 @@ class _SelectedSeatsBar extends StatelessWidget {
                 GestureDetector(
                   onTap: () => onRemove(seat),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: colors.brandSubtle,
                       borderRadius: BorderRadius.circular(4),
@@ -224,7 +246,11 @@ class _SelectedSeatsBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          GoodsLocalizations.of(context).seatSelectionPage_226(seat.areaName ?? '', seat.row, seat.col),
+                          context.l10n.seatSelectionPage_226(
+                            seat.areaName ?? '',
+                            seat.row,
+                            seat.col,
+                          ),
                           style: TextStyle(fontSize: 11, color: colors.brand),
                         ),
                         const SizedBox(width: 4),
@@ -262,7 +288,12 @@ class _ConfirmBar extends StatelessWidget {
         color: colors.bgCard,
         border: Border(top: BorderSide(color: colors.divider, width: 1)),
       ),
-      padding: EdgeInsets.fromLTRB(15, 10, 15, 10 + MediaQuery.paddingOf(context).bottom),
+      padding: EdgeInsets.fromLTRB(
+        15,
+        10,
+        15,
+        10 + MediaQuery.paddingOf(context).bottom,
+      ),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -271,23 +302,30 @@ class _ConfirmBar extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
-                  GoodsLocalizations.of(context).seatSelectionPage_273(state.count),
+                  context.l10n.seatSelectionPage_273(state.count),
                   style: TextStyle(fontSize: 12, color: colors.textTertiary),
                 ),
                 if (state.count > 0)
                   Row(
                     children: <Widget>[
                       Text(
-                        GoodsLocalizations.of(context).seatSelectionPage_280,
-                        style: TextStyle(fontSize: 13, color: colors.textSecondary),
+                        context.l10n.seatSelectionPage_280,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: colors.textSecondary,
+                        ),
                       ),
                       PsPrice(amount: state.totalPrice, size: 18),
                     ],
                   )
                 else
                   Text(
-                    GoodsLocalizations.of(context).seatSelectionPage_288,
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: colors.textPrimary),
+                    context.l10n.seatSelectionPage_288,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: colors.textPrimary,
+                    ),
                   ),
               ],
             ),
@@ -304,8 +342,13 @@ class _ConfirmBar extends StatelessWidget {
                 ),
               ),
               child: Text(
-                canConfirm ? GoodsLocalizations.of(context).seatSelectionPage_306 : GoodsLocalizations.of(context).seatSelectionPage_306_2,
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                canConfirm
+                    ? context.l10n.seatSelectionPage_306
+                    : context.l10n.seatSelectionPage_306_2,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),

@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
-import '../../l10n/app_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 首页搜索栏（`home_search_bar.xml`）。
 ///
@@ -23,7 +23,7 @@ class PsSearchBar extends StatelessWidget {
     this.onTapCity,
     this.onTapSearch,
     this.onTapField,
-    this.hint = '搜索明星、演出、场馆',
+    this.hint,
   });
 
   final String city;
@@ -35,8 +35,8 @@ class PsSearchBar extends StatelessWidget {
   final VoidCallback? onTapSearch;
   final VoidCallback? onTapField;
 
-  /// 没有热搜词时显示的静态占位。
-  final String hint;
+  /// 没有热搜词时显示的静态占位；`null` 时用默认文案。
+  final String? hint;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,11 @@ class PsSearchBar extends StatelessWidget {
                       color: colors.textPrimary,
                     ),
                   ),
-                  Icon(LucideIcons.chevronDown, size: 16, color: colors.textPrimary),
+                  Icon(
+                    LucideIcons.chevronDown,
+                    size: 16,
+                    color: colors.textPrimary,
+                  ),
                 ],
               ),
             ),
@@ -81,10 +85,13 @@ class PsSearchBar extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: hints.isEmpty
                     ? Text(
-                        hint,
+                        hint ?? context.l10n.psSearchBar_25,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 13, color: colors.textTertiary),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: colors.textTertiary,
+                        ),
                       )
                     : _MarqueeHint(hints: hints),
               ),
@@ -102,7 +109,7 @@ class PsSearchBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
-                AppLocalizations.of(context).psSearchBar_104,
+                context.l10n.psSearchBar_104,
                 style: TextStyle(
                   fontSize: 13,
                   height: 1.1,

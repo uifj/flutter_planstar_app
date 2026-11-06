@@ -10,7 +10,7 @@ import 'application/message_providers.dart';
 import 'domain/chat_message.dart';
 import 'domain/message_thread.dart';
 import '../../shared/ui/ps_network_images.dart';
-import '../../l10n/message_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 会话详情页（企划星 `UserMsgDetailActivity` + `ChatListFragment` 的会话内页）。
 ///
@@ -65,23 +65,25 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final MessageThread? thread =
-        ref.watch(messageThreadByIdProvider(widget.threadId));
-    final List<ChatMessage> messages =
-        ref.watch(chatMessagesProvider(widget.threadId));
+    final MessageThread? thread = ref.watch(
+      messageThreadByIdProvider(widget.threadId),
+    );
+    final List<ChatMessage> messages = ref.watch(
+      chatMessagesProvider(widget.threadId),
+    );
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
       appBar: AdaptiveAppBar(
-        title: thread?.title ?? MessageLocalizations.of(context).chatPage_75,
-        subtitle: thread?.isOfficial ?? false ? MessageLocalizations.of(context).chatPage_76 : null,
+        title: thread?.title ?? context.l10n.chatPage_75,
+        subtitle: thread?.isOfficial ?? false ? context.l10n.chatPage_76 : null,
       ),
       body: thread == null
           ? PsEmptyState(
-              title: MessageLocalizations.of(context).chatPage_80,
-              description: MessageLocalizations.of(context).chatPage_81,
+              title: context.l10n.chatPage_80,
+              description: context.l10n.chatPage_81,
               icon: LucideIcons.messagesSquare,
-              actionLabel: MessageLocalizations.of(context).chatPage_83,
+              actionLabel: context.l10n.chatPage_83,
               onAction: () => context.go('/message'),
             )
           : Column(
@@ -89,8 +91,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 Expanded(
                   child: messages.isEmpty
                       ? PsEmptyState(
-                          title: MessageLocalizations.of(context).chatPage_91,
-                          description: MessageLocalizations.of(context).chatPage_92,
+                          title: context.l10n.chatPage_91,
+                          description: context.l10n.chatPage_92,
                           icon: LucideIcons.messageCircle,
                           compact: true,
                         )
@@ -100,24 +102,23 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           itemCount: messages.length,
                           itemBuilder: (BuildContext context, int index) {
                             final ChatMessage message = messages[index];
-                            final bool showTime = index == 0 ||
+                            final bool showTime =
+                                index == 0 ||
                                 message.sentAt
                                         .difference(messages[index - 1].sentAt)
                                         .abs() >
                                     _timeGap;
                             return Column(
                               children: <Widget>[
-                                if (showTime) _TimeDivider(label: message.timeLabel),
+                                if (showTime)
+                                  _TimeDivider(label: message.timeLabel),
                                 _Bubble(message: message),
                               ],
                             );
                           },
                         ),
                 ),
-                _Composer(
-                  controller: _controller,
-                  onSend: _send,
-                ),
+                _Composer(controller: _controller, onSend: _send),
               ],
             ),
     );
@@ -127,10 +128,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     final String text = _controller.text.trim();
     if (text.isEmpty) return;
 
-    final List<ChatMessage> current =
-        ref.read(chatMessagesProvider(widget.threadId));
-    ref.read(chatMessagesProvider(widget.threadId).notifier).state =
-        <ChatMessage>[
+    final List<ChatMessage> current = ref.read(
+      chatMessagesProvider(widget.threadId),
+    );
+    ref
+        .read(chatMessagesProvider(widget.threadId).notifier)
+        .state = <ChatMessage>[
       ...current,
       ChatMessage(
         id: 'm-${DateTime.now().microsecondsSinceEpoch}',
@@ -195,8 +198,9 @@ class _Bubble extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        mainAxisAlignment:
-            mine ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: mine
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           if (!mine) ...<Widget>[
@@ -206,34 +210,37 @@ class _Bubble extends StatelessWidget {
                 width: 32,
                 height: 32,
                 fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => Container(
-                  width: 32,
-                  height: 32,
-                  color: colors.brandSubtle,
-                ),
+                errorBuilder: (_, _, _) =>
+                    Container(width: 32, height: 32, color: colors.brandSubtle),
               ),
             ),
             const SizedBox(width: 8),
           ],
           Flexible(
             child: Column(
-              crossAxisAlignment:
-                  mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              crossAxisAlignment: mine
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: <Widget>[
                 if (!mine && message.senderName != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 3, left: 2),
                     child: Text(
                       message.senderName!,
-                      style: TextStyle(fontSize: 11, color: colors.textTertiary),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: colors.textTertiary,
+                      ),
                     ),
                   ),
                 Container(
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.sizeOf(context).width * 0.68,
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 9,
+                  ),
                   decoration: BoxDecoration(
                     color: mine ? colors.brand : colors.bgCard,
                     borderRadius: BorderRadius.only(
@@ -286,7 +293,7 @@ class _Composer extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 6),
               child: Text(
-                MessageLocalizations.of(context).chatPage_288,
+                context.l10n.chatPage_288,
                 style: TextStyle(fontSize: 10, color: colors.textDisabled),
               ),
             ),
@@ -304,11 +311,14 @@ class _Composer extends StatelessWidget {
                       child: TextField(
                         controller: controller,
                         textInputAction: TextInputAction.send,
-                        style: TextStyle(fontSize: 14, color: colors.textPrimary),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: colors.textPrimary,
+                        ),
                         decoration: InputDecoration(
                           isDense: true,
                           border: InputBorder.none,
-                          hintText: MessageLocalizations.of(context).chatPage_310,
+                          hintText: context.l10n.chatPage_310,
                           hintStyle: TextStyle(
                             fontSize: 14,
                             color: colors.textTertiary,
@@ -332,7 +342,7 @@ class _Composer extends StatelessWidget {
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: Text(
-                      MessageLocalizations.of(context).chatPage_334,
+                      context.l10n.chatPage_334,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,

@@ -28,5 +28,6 @@ final class AuthSession {
       AuthSession(user: next, token: token);
 
   @override
-  String toString() => 'AuthSession(${user.userId}, token: ${token == null ? '无' : '有'})';
+  String toString() =>
+      'AuthSession(${user.userId}, token: ${token == null ? '无' : '有'})';
 }

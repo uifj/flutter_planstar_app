@@ -21,38 +21,31 @@ import 'package:core/result.dart';
 /// 未知编码返回失败而不是静默兜底；状态之间只允许显式声明的迁移。
 enum OrderStatus {
   /// 客户端草稿：还没提交到服务端，**没有 wire code**。
-  draft(wireCode: null, label: '待提交', unpaid: true),
+  draft(wireCode: null, unpaid: true),
 
   /// 待支付。服务端的 `INIT(1)` 与 `PAYING(2)` 都归到这里——
   /// 两者对用户是同一件事（还没付钱），差别只在服务端内部流程。
-  awaitingPayment(wireCode: 2, label: '待付款', unpaid: true),
+  awaitingPayment(wireCode: 2, unpaid: true),
 
   /// 待发货（纸质票已支付、等待出票寄出）。
-  awaitingTickets(wireCode: 3, label: '待发货', unpaid: false),
+  awaitingTickets(wireCode: 3, unpaid: false),
 
   /// 待收货（已寄出 / 电子票待确认）。
-  ticketsInTransit(wireCode: 4, label: '待收货', unpaid: false),
+  ticketsInTransit(wireCode: 4, unpaid: false),
 
   /// 已完成。
-  completed(wireCode: 5, label: '已完成', unpaid: false),
+  completed(wireCode: 5, unpaid: false),
 
   /// 已关闭。
-  cancelled(wireCode: 6, label: '已关闭', unpaid: false),
+  cancelled(wireCode: 6, unpaid: false),
 
   /// 已退款。
-  refunded(wireCode: 7, label: '已退款', unpaid: false);
+  refunded(wireCode: 7, unpaid: false);
 
-  const OrderStatus({
-    required this.wireCode,
-    required this.label,
-    required this.unpaid,
-  });
+  const OrderStatus({required this.wireCode, required this.unpaid});
 
   /// 出站/入站用的服务端编码。`draft` 为 `null`。
   final int? wireCode;
-
-  /// 展示文案（与企划星订单列表的口径一致）。
-  final String label;
 
   /// 是否属于"还没付钱"。
   final bool unpaid;
@@ -62,9 +55,7 @@ enum OrderStatus {
 
   /// 是否已支付成功过（用于判断能否退款）。
   bool get isPaid =>
-      this == awaitingTickets ||
-      this == ticketsInTransit ||
-      this == completed;
+      this == awaitingTickets || this == ticketsInTransit || this == completed;
 
   /// 服务端编码 → 状态。
   ///
@@ -80,12 +71,12 @@ enum OrderStatus {
       6 => const Success<OrderStatus>(OrderStatus.cancelled),
       7 => const Success<OrderStatus>(OrderStatus.refunded),
       _ => Fail<OrderStatus>(
-          Failure(
-            code: 'ORDER_STATUS_UNKNOWN',
-            message: '未知订单状态编码：$code',
-            type: FailureType.data,
-          ),
+        Failure(
+          code: 'ORDER_STATUS_UNKNOWN',
+          message: '未知订单状态编码：$code',
+          type: FailureType.data,
         ),
+      ),
     };
   }
 
@@ -94,15 +85,29 @@ enum OrderStatus {
   /// 用白名单而不是"黑名单 + 一堆 if"：新增状态时**必须**在这里表态，
   /// 否则任何迁移都会被拒——编译期不报错，但测试会立刻挂。
   bool canTransitionTo(OrderStatus next) => switch (this) {
-        OrderStatus.draft => next == OrderStatus.awaitingPayment || next == OrderStatus.cancelled,
-        OrderStatus.awaitingPayment => next == OrderStatus.awaitingTickets ||
-            next == OrderStatus.cancelled,
-        OrderStatus.awaitingTickets => next == OrderStatus.ticketsInTransit ||
-            next == OrderStatus.completed ||
-            next == OrderStatus.refunded,
-        OrderStatus.ticketsInTransit => next == OrderStatus.completed || next == OrderStatus.refunded,
-        OrderStatus.completed => next == OrderStatus.refunded,
-        OrderStatus.cancelled => false,
-        OrderStatus.refunded => false,
-      };
+    OrderStatus.draft =>
+      next == OrderStatus.awaitingPayment || next == OrderStatus.cancelled,
+    OrderStatus.awaitingPayment =>
+      next == OrderStatus.awaitingTickets || next == OrderStatus.cancelled,
+    OrderStatus.awaitingTickets =>
+      next == OrderStatus.ticketsInTransit ||
+          next == OrderStatus.completed ||
+          next == OrderStatus.refunded,
+    OrderStatus.ticketsInTransit =>
+      next == OrderStatus.completed || next == OrderStatus.refunded,
+    OrderStatus.completed => next == OrderStatus.refunded,
+    OrderStatus.cancelled => false,
+    OrderStatus.refunded => false,
+  };
+}
+
+/// 订单关闭原因。
+///
+/// 领域层只保留语义，展示文案由 UI 层按 l10n 解析。
+enum OrderCancelReason {
+  /// 用户主动取消。
+  userCancelled,
+
+  /// 支付超时自动关闭。
+  timeout,
 }

@@ -93,7 +93,10 @@ Future<AppBootstrap> loadAppBootstrap({
     unawaited(_writeSafely(appStore.preferences, dvidStorageKey, dvid));
   }
 
-  final String? psSession = await _readSafely(appStore.secure, psSessionStorageKey);
+  final String? psSession = await _readSafely(
+    appStore.secure,
+    psSessionStorageKey,
+  );
 
   final context = PsRequestContext(dvid: dvid, psSession: psSession)
     ..onDeviceIdChanged = (String value) =>

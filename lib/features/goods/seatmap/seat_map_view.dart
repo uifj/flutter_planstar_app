@@ -1,6 +1,7 @@
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import 'seat_map.dart';
 import 'seat_selection_providers.dart';
 
@@ -22,11 +23,7 @@ import 'seat_selection_providers.dart';
 /// - aisle（不画）
 /// - blocked（画 ×）
 class SeatMapView extends StatelessWidget {
-  const SeatMapView({
-    super.key,
-    required this.state,
-    required this.onToggle,
-  });
+  const SeatMapView({super.key, required this.state, required this.onToggle});
 
   final SeatSelectionState state;
   final void Function(Seat) onToggle;
@@ -75,6 +72,8 @@ class SeatMapView extends StatelessWidget {
               rowLabelWidth: rowLabelWidth,
               colLabelHeight: colLabelHeight,
               areaGap: areaGap,
+              areaLabel: (area) =>
+                  context.l10n.seatMapView_212(area.name, area.availableCount),
             ),
           ),
         ),
@@ -141,6 +140,7 @@ class _SeatMapPainter extends CustomPainter {
     required this.rowLabelWidth,
     required this.colLabelHeight,
     required this.areaGap,
+    required this.areaLabel,
   });
 
   final SeatMapData mapData;
@@ -151,6 +151,7 @@ class _SeatMapPainter extends CustomPainter {
   final double rowLabelWidth;
   final double colLabelHeight;
   final double areaGap;
+  final String Function(SeatArea area) areaLabel;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -200,16 +201,13 @@ class _SeatMapPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     painter.layout();
-    painter.paint(
-      canvas,
-      Offset((size.width - painter.width) / 2, 0),
-    );
+    painter.paint(canvas, Offset((size.width - painter.width) / 2, 0));
   }
 
   void _drawAreaLabel(Canvas canvas, SeatArea area, double y) {
     final painter = TextPainter(
       text: TextSpan(
-        text: '${area.name} (${area.availableCount}席可选)',
+        text: areaLabel(area),
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w700,
@@ -233,7 +231,9 @@ class _SeatMapPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       );
       painter.layout();
-      final x = rowLabelWidth + seat.x * (seatSize + seatGap) +
+      final x =
+          rowLabelWidth +
+          seat.x * (seatSize + seatGap) +
           (seatSize - painter.width) / 2;
       painter.paint(canvas, Offset(x, y));
     }
@@ -243,15 +243,16 @@ class _SeatMapPainter extends CustomPainter {
     final painter = TextPainter(
       text: TextSpan(
         text: row.label,
-        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: colors.textTertiary),
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: colors.textTertiary,
+        ),
       ),
       textDirection: TextDirection.ltr,
     );
     painter.layout();
-    painter.paint(
-      canvas,
-      Offset(0, y + (seatSize - painter.height) / 2),
-    );
+    painter.paint(canvas, Offset(0, y + (seatSize - painter.height) / 2));
   }
 
   void _drawSeat(Canvas canvas, Rect rect, SeatStatus status, bool selected) {
@@ -297,7 +298,7 @@ class _SeatMapPainter extends CustomPainter {
         canvas.drawLine(rect.topRight, rect.bottomLeft, paint);
 
       case SeatStatus.aisle:
-        // 不画——留白即可。
+      // 不画——留白即可。
 
       case SeatStatus.blocked:
         paint.color = colors.textDisabled.withValues(alpha: 0.1);

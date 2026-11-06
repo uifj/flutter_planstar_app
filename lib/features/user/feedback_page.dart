@@ -3,7 +3,7 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../l10n/user_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 意见反馈页（企划星 `FeedbackActivity` + `fragment_feedback.xml`）。
 ///
@@ -30,11 +30,11 @@ class FeedbackPage extends ConsumerStatefulWidget {
 
 class _FeedbackPageState extends ConsumerState<FeedbackPage> {
   List<String> get _categories => <String>[
-    UserLocalizations.of(context).feedbackPage_32,
-    UserLocalizations.of(context).feedbackPage_33,
-    UserLocalizations.of(context).feedbackPage_34,
-    UserLocalizations.of(context).feedbackPage_35,
-    UserLocalizations.of(context).feedbackPage_36,
+    context.l10n.feedbackPage_32,
+    context.l10n.feedbackPage_33,
+    context.l10n.feedbackPage_34,
+    context.l10n.feedbackPage_35,
+    context.l10n.feedbackPage_36,
   ];
 
   int _selectedCategory = 0;
@@ -56,7 +56,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: UserLocalizations.of(context).feedbackPage_58),
+      appBar: AdaptiveAppBar(title: context.l10n.feedbackPage_58),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(15, 16, 15, 24),
         child: Column(
@@ -64,7 +64,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
           children: <Widget>[
             // 反馈类型
             Text(
-              UserLocalizations.of(context).feedbackPage_66,
+              context.l10n.feedbackPage_66,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -112,7 +112,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             const SizedBox(height: 24),
             // 反馈内容
             Text(
-              UserLocalizations.of(context).feedbackPage_114,
+              context.l10n.feedbackPage_114,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -121,7 +121,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             ),
             const SizedBox(height: 6),
             Text(
-              UserLocalizations.of(context).feedbackPage_123,
+              context.l10n.feedbackPage_123,
               style: TextStyle(fontSize: 12, color: colors.textTertiary),
             ),
             const SizedBox(height: 8),
@@ -138,7 +138,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
                 onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: UserLocalizations.of(context).feedbackPage_140,
+                  hintText: context.l10n.feedbackPage_140,
                   hintStyle: TextStyle(
                     fontSize: 14,
                     color: colors.textTertiary,
@@ -158,7 +158,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             const SizedBox(height: 24),
             // 联系方式
             Text(
-              UserLocalizations.of(context).feedbackPage_160,
+              context.l10n.feedbackPage_160,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -167,7 +167,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             ),
             const SizedBox(height: 6),
             Text(
-              UserLocalizations.of(context).feedbackPage_169,
+              context.l10n.feedbackPage_169,
               style: TextStyle(fontSize: 12, color: colors.textTertiary),
             ),
             const SizedBox(height: 8),
@@ -182,16 +182,13 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: UserLocalizations.of(context).feedbackPage_184,
+                  hintText: context.l10n.feedbackPage_184,
                   hintStyle: TextStyle(
                     fontSize: 14,
                     color: colors.textTertiary,
                   ),
                 ),
-                style: TextStyle(
-                  fontSize: 14,
-                  color: colors.textPrimary,
-                ),
+                style: TextStyle(fontSize: 14, color: colors.textPrimary),
               ),
             ),
             const SizedBox(height: 36),
@@ -209,7 +206,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
                   ),
                 ),
                 child: Text(
-                  UserLocalizations.of(context).feedbackPage_211,
+                  context.l10n.feedbackPage_211,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -226,11 +223,9 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
 
   void _submit() {
     // 不实际提交：企划星走 POST v1/feedback，这里没有真实接口实现。
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(UserLocalizations.of(context).feedbackPage_230),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.feedbackPage_230)));
     context.pop();
   }
 }

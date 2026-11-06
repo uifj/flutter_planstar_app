@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/data/demo_catalog.dart';
 import 'widgets/city_tile.dart';
-import '../../l10n/home_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 城市列表页（企划星 `CityListActivity`）。
 ///
@@ -42,28 +42,31 @@ class CityListPage extends ConsumerWidget {
     void select(String city) {
       ref.read(selectedCityProvider.notifier).select(city);
       if (!citiesWithData.contains(city)) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(HomeLocalizations.of(context).cityListPage_46(city))));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.cityListPage_46(city))),
+        );
       }
       context.pop();
     }
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: HomeLocalizations.of(context).cityListPage_53),
+      appBar: AdaptiveAppBar(title: context.l10n.cityListPage_53),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: <Widget>[
-          _LocatedCard(current: current, onUse: () => select(HomeLocalizations.of(context).cityListPage_57)),
+          _LocatedCard(
+            current: current,
+            onUse: () => select(context.l10n.cityListPage_57),
+          ),
           _Section(
-            title: HomeLocalizations.of(context).cityListPage_59,
+            title: context.l10n.cityListPage_59,
             cities: demoCities.take(8).toList(growable: false),
             current: current,
             onSelect: select,
           ),
           _Section(
-            title: HomeLocalizations.of(context).cityListPage_65,
+            title: context.l10n.cityListPage_65,
             cities: demoCities,
             current: current,
             onSelect: select,
@@ -71,7 +74,7 @@ class CityListPage extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 16, 15, 0),
             child: Text(
-              HomeLocalizations.of(context).cityListPage_73,
+              context.l10n.cityListPage_73,
               style: TextStyle(
                 fontSize: 12,
                 height: 1.5,
@@ -113,18 +116,18 @@ class _LocatedCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  HomeLocalizations.of(context).cityListPage_115,
+                  context.l10n.cityListPage_115,
                   style: TextStyle(fontSize: 15, color: colors.textPrimary),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  HomeLocalizations.of(context).cityListPage_120,
+                  context.l10n.cityListPage_120,
                   style: TextStyle(fontSize: 11, color: colors.textDisabled),
                 ),
               ],
             ),
           ),
-          if (current != HomeLocalizations.of(context).cityListPage_126)
+          if (current != context.l10n.cityListPage_126)
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: onUse,
@@ -138,7 +141,7 @@ class _LocatedCard extends StatelessWidget {
                   border: Border.all(color: colors.brand, width: 0.5),
                 ),
                 child: Text(
-                  HomeLocalizations.of(context).cityListPage_140,
+                  context.l10n.cityListPage_140,
                   style: TextStyle(fontSize: 12, color: colors.brand),
                 ),
               ),

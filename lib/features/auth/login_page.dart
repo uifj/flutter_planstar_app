@@ -13,7 +13,7 @@ import 'application/auth_controller.dart';
 import 'application/auth_providers.dart';
 import 'application/auth_state.dart';
 import 'domain/auth_failure.dart';
-import '../../l10n/auth_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 登录 / 注册页（`layout_login_register.xml`）。
 ///
@@ -81,9 +81,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   /// 协议文案里的两处可点片段。`TextSpan.recognizer` 需要自己释放。
   late final TapGestureRecognizer _registerTap = TapGestureRecognizer()
-    ..onTap = () => _showTerms(AuthLocalizations.of(context).authAgreementRegister);
+    ..onTap = () => _showTerms(context.l10n.authAgreementRegister);
   late final TapGestureRecognizer _privacyTap = TapGestureRecognizer()
-    ..onTap = () => _showTerms(AuthLocalizations.of(context).authAgreementPrivacy);
+    ..onTap = () => _showTerms(context.l10n.authAgreementPrivacy);
 
   bool _passwordMode = false;
   bool _agreed = false;
@@ -151,7 +151,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   /// 发登录验证码。
   Future<void> _sendCode() async {
-    final AuthLocalizations l10n = AuthLocalizations.of(context);
+    final l10n = context.l10n;
     if (!_phoneValid) {
       _toast(l10n.authPhoneInvalid);
       return;
@@ -185,7 +185,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   /// 提交登录。
   Future<void> _submit() async {
-    final AuthLocalizations l10n = AuthLocalizations.of(context);
+    final l10n = context.l10n;
     if (!_phoneValid) {
       _toast(l10n.authPhoneInvalid);
       return;
@@ -264,7 +264,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   /// 把失败翻译成 UI 动作（弹框 / toast）。
   void _report(AuthFailure failure) {
-    final AuthLocalizations l10n = AuthLocalizations.of(context);
+    final l10n = context.l10n;
     switch (failure.kind) {
       case AuthFailureKind.accountLocked:
         unawaited(_showAccountLocked(failure.message));
@@ -277,13 +277,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       case AuthFailureKind.unauthorized:
       case AuthFailureKind.unknown:
         // 服务端原文优先：企划星的错误体是 `text/plain` 中文，翻译只会更差。
-        _toast(failure.message.isEmpty ? l10n.authUnknownError : failure.message);
+        _toast(
+          failure.message.isEmpty ? l10n.authUnknownError : failure.message,
+        );
     }
   }
 
   /// 账号锁定：来源是**不可取消**的对话框，只有"我知道了"能关。
   Future<void> _showAccountLocked(String message) {
-    final AuthLocalizations l10n = AuthLocalizations.of(context);
+    final l10n = context.l10n;
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -311,7 +313,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   void _showTerms(String title) {
-    final AuthLocalizations l10n = AuthLocalizations.of(context);
+    final l10n = context.l10n;
     showDialog<void>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -339,7 +341,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthLocalizations l10n = AuthLocalizations.of(context);
+    final l10n = context.l10n;
     final AppColors colors = context.appColors;
     final EdgeInsets safe = MediaQuery.paddingOf(context);
     final AuthState auth = ref.watch(authControllerProvider);
@@ -363,7 +365,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                   // 手机号：来源 marginTop 10dp，左右 20dp。
                   Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                    padding: const EdgeInsets.only(
+                      top: 10,
+                      left: 20,
+                      right: 20,
+                    ),
                     child: _LoginField(
                       controller: _phone,
                       hint: l10n.authPhoneHint,
@@ -382,7 +388,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         controller: _password,
                         hint: l10n.authPasswordHint,
                         obscureText: true,
-                          inputFormatters: <TextInputFormatter>[
+                        inputFormatters: <TextInputFormatter>[
                           LengthLimitingTextInputFormatter(20),
                         ],
                       ),
@@ -399,7 +405,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 controller: _code,
                                 hint: l10n.authCodeHint,
                                 keyboardType: TextInputType.number,
-                                          inputFormatters: <TextInputFormatter>[
+                                inputFormatters: <TextInputFormatter>[
                                   FilteringTextInputFormatter.digitsOnly,
                                   LengthLimitingTextInputFormatter(6),
                                 ],
@@ -410,8 +416,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               label: auth.sendingCode
                                   ? l10n.authSendingCode
                                   : countdown > 0
-                                      ? l10n.authResendCode(countdown)
-                                      : l10n.authSendCode,
+                                  ? l10n.authResendCode(countdown)
+                                  : l10n.authSendCode,
                               enabled: countdown == 0 && _phoneValid && !busy,
                               onTap: _sendCode,
                             ),
@@ -421,9 +427,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   const _LoginDivider(),
                   Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                    padding: const EdgeInsets.only(
+                      top: 20,
+                      left: 20,
+                      right: 20,
+                    ),
                     child: _LoginButton(
-                      label: auth.loggingIn ? l10n.authLoggingIn : l10n.authTitle,
+                      label: auth.loggingIn
+                          ? l10n.authLoggingIn
+                          : l10n.authTitle,
                       enabled: _canSubmit && !busy,
                       onTap: _submit,
                     ),
@@ -452,13 +464,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     TextSpan(text: l10n.authAgreementPrefix),
                                     TextSpan(
                                       text: l10n.authAgreementRegister,
-                                      style: TextStyle(color: colors.textPrimary),
+                                      style: TextStyle(
+                                        color: colors.textPrimary,
+                                      ),
                                       recognizer: _registerTap,
                                     ),
                                     TextSpan(text: l10n.authAgreementAnd),
                                     TextSpan(
                                       text: l10n.authAgreementPrivacy,
-                                      style: TextStyle(color: colors.textPrimary),
+                                      style: TextStyle(
+                                        color: colors.textPrimary,
+                                      ),
                                       recognizer: _privacyTap,
                                     ),
                                   ],
@@ -475,7 +491,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             onTap: () =>
                                 setState(() => _passwordMode = !_passwordMode),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 2,
+                              ),
                               child: Text(
                                 _passwordMode
                                     ? l10n.authSwitchToCode
@@ -551,11 +569,13 @@ class _CaptchaDialogState extends ConsumerState<_CaptchaDialog> {
       _error = null;
     });
 
-    final result = await ref.read(authControllerProvider.notifier).fetchCaptcha();
+    final result = await ref
+        .read(authControllerProvider.notifier)
+        .fetchCaptcha();
     if (!mounted) {
       return;
     }
-    final AuthLocalizations l10n = AuthLocalizations.of(context);
+    final l10n = context.l10n;
     result.fold(
       onFailure: (_) => setState(() {
         _loading = false;
@@ -573,7 +593,7 @@ class _CaptchaDialogState extends ConsumerState<_CaptchaDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthLocalizations l10n = AuthLocalizations.of(context);
+    final l10n = context.l10n;
     final AppColors colors = context.appColors;
 
     return AlertDialog(
@@ -709,7 +729,7 @@ class _Header extends StatelessWidget {
                 Icon(LucideIcons.sparkles, size: 20, color: colors.brand),
                 const SizedBox(width: 6),
                 Text(
-                  '企划星',
+                  context.l10n.appTitle,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -772,10 +792,7 @@ class _LoginField extends StatelessWidget {
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
                 hintText: hint,
-                hintStyle: TextStyle(
-                  fontSize: 15,
-                  color: colors.textDisabled,
-                ),
+                hintStyle: TextStyle(fontSize: 15, color: colors.textDisabled),
               ),
             ),
           ),
@@ -930,7 +947,11 @@ class _AgreementCheckbox extends StatelessWidget {
             border: checked ? null : Border.all(color: colors.textDisabled),
           ),
           child: checked
-              ? const Icon(LucideIcons.check, size: 10, color: Color(0xFFFFFFFF))
+              ? const Icon(
+                  LucideIcons.check,
+                  size: 10,
+                  color: Color(0xFFFFFFFF),
+                )
               : null,
         ),
       ),

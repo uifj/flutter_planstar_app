@@ -11,11 +11,12 @@ import '../../shared/ui/ps_poster.dart';
 import '../../shared/ui/ps_tag.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_summary.dart';
+import '../catalog/ui/catalog_l10n.dart';
+import 'order_l10n.dart';
 import 'application/order_list_controller.dart';
 import 'domain/domain.dart';
 import 'widgets/payment_channel_sheet.dart';
-import '../../l10n/order_localizations.dart';
-import '../../l10n/app_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 订单详情页（企划星 `MyOrderActivity` 的详情 + `OrderDetailWebFragment` 的原生化）。
 ///
@@ -46,28 +47,29 @@ class OrderDetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final AsyncValue<TicketOrder?> orderAsync =
-        ref.watch(orderByNumberProvider(orderNumber));
+    final AsyncValue<TicketOrder?> orderAsync = ref.watch(
+      orderByNumberProvider(orderNumber),
+    );
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: OrderLocalizations.of(context).orderDetailPage_52),
+      appBar: AdaptiveAppBar(title: context.l10n.orderDetailPage_52),
       body: orderAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (Object error, StackTrace _) => PsEmptyState(
-          title: OrderLocalizations.of(context).orderDetailPage_56,
+          title: context.l10n.orderDetailPage_56,
           description: '$error',
           icon: LucideIcons.circleAlert,
-          actionLabel: AppLocalizations.of(context).actionRetry,
+          actionLabel: context.l10n.actionRetry,
           onAction: () => ref.invalidate(orderListProvider),
         ),
         data: (TicketOrder? order) {
           if (order == null) {
             return PsEmptyState(
-              title: OrderLocalizations.of(context).orderDetailPage_65,
-              description: OrderLocalizations.of(context).orderDetailPage_66,
+              title: context.l10n.orderDetailPage_65,
+              description: context.l10n.orderDetailPage_66,
               icon: LucideIcons.receiptText,
-              actionLabel: OrderLocalizations.of(context).orderDetailPage_68,
+              actionLabel: context.l10n.orderDetailPage_68,
               onAction: () => context.go('/order'),
             );
           }
@@ -100,19 +102,22 @@ class _OrderDetailBody extends ConsumerWidget {
               if (show != null) _ShowSection(show: show),
               _Card(
                 children: <Widget>[
-                  _SectionTitle(title: OrderLocalizations.of(context).orderDetailPage_101),
+                  _SectionTitle(title: context.l10n.orderDetailPage_101),
                   for (final OrderLine line in order.lines)
                     _InfoRow(
                       label: line.tierName,
-                      value: OrderLocalizations.of(context).orderDetailPage_105(line.quantity.value, line.subtotal.format()),
+                      value: context.l10n.orderDetailPage_105(
+                        line.quantity.value,
+                        line.subtotal.format(),
+                      ),
                     ),
                   _InfoRow(
-                    label: OrderLocalizations.of(context).orderDetailPage_108,
-                    value: order.delivery.describe(),
+                    label: context.l10n.orderDetailPage_108,
+                    value: order.delivery.describeOf(context),
                   ),
                   if (order.visitors.isNotEmpty) ...<Widget>[
                     const Divider(height: 20),
-                    _SectionTitle(title: OrderLocalizations.of(context).orderDetailPage_113),
+                    _SectionTitle(title: context.l10n.orderDetailPage_113),
                     for (final Visitor visitor in order.visitors)
                       _InfoRow(
                         label: visitor.name,
@@ -124,22 +129,22 @@ class _OrderDetailBody extends ConsumerWidget {
               if (order.quote != null)
                 _Card(
                   children: <Widget>[
-                    _SectionTitle(title: OrderLocalizations.of(context).orderDetailPage_125),
+                    _SectionTitle(title: context.l10n.orderDetailPage_125),
                     for (final QuoteLine line in order.quote!.breakdown)
                       _InfoRow(
-                        label: line.label,
+                        label: line.labelOf(context),
                         value: line.isDeduction
                             ? '-${line.amount.format()}'
                             : line.amount.format(),
-                        emphasize: line.label == OrderLocalizations.of(context).orderDetailPage_133,
+                        emphasize: line.kind == QuoteLineKind.discount,
                       ),
                   ],
                 ),
               _Card(
                 children: <Widget>[
-                  _SectionTitle(title: OrderLocalizations.of(context).orderDetailPage_139),
+                  _SectionTitle(title: context.l10n.orderDetailPage_139),
                   _InfoRow(
-                    label: OrderLocalizations.of(context).orderDetailPage_141,
+                    label: context.l10n.orderDetailPage_141,
                     value: order.number.value,
                     trailing: GestureDetector(
                       behavior: HitTestBehavior.opaque,
@@ -148,7 +153,9 @@ class _OrderDetailBody extends ConsumerWidget {
                           ClipboardData(text: order.number.value),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(OrderLocalizations.of(context).orderDetailPage_150)),
+                          SnackBar(
+                            content: Text(context.l10n.orderDetailPage_150),
+                          ),
                         );
                       },
                       child: Padding(
@@ -161,11 +168,20 @@ class _OrderDetailBody extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  _InfoRow(label: OrderLocalizations.of(context).orderDetailPage_163, value: _formatTime(order.placedAt)),
+                  _InfoRow(
+                    label: context.l10n.orderDetailPage_163,
+                    value: _formatTime(order.placedAt),
+                  ),
                   if (order.paidAt != null)
-                    _InfoRow(label: OrderLocalizations.of(context).orderDetailPage_165, value: _formatTime(order.paidAt!)),
+                    _InfoRow(
+                      label: context.l10n.orderDetailPage_165,
+                      value: _formatTime(order.paidAt!),
+                    ),
                   if (order.cancelReason != null)
-                    _InfoRow(label: OrderLocalizations.of(context).orderDetailPage_167, value: order.cancelReason!),
+                    _InfoRow(
+                      label: context.l10n.orderDetailPage_167,
+                      value: order.cancelReason!.labelOf(context),
+                    ),
                 ],
               ),
             ],
@@ -197,16 +213,31 @@ class _StatusHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final (String hint, Color tint) = switch (order.status) {
-      OrderStatus.draft => (OrderLocalizations.of(context).orderDetailPage_199, colors.warning),
+      OrderStatus.draft => (context.l10n.orderDetailPage_199, colors.warning),
       OrderStatus.awaitingPayment => (
-          OrderLocalizations.of(context).orderDetailPage_201(_deadline),
-          colors.warning,
-        ),
-      OrderStatus.awaitingTickets => (OrderLocalizations.of(context).orderDetailPage_204, colors.brand),
-      OrderStatus.ticketsInTransit => (OrderLocalizations.of(context).orderDetailPage_205, colors.brand),
-      OrderStatus.completed => (OrderLocalizations.of(context).orderDetailPage_206, colors.success),
-      OrderStatus.cancelled => (OrderLocalizations.of(context).orderDetailPage_207, colors.textTertiary),
-      OrderStatus.refunded => (OrderLocalizations.of(context).orderDetailPage_208, colors.textTertiary),
+        context.l10n.orderDetailPage_201(_deadline),
+        colors.warning,
+      ),
+      OrderStatus.awaitingTickets => (
+        context.l10n.orderDetailPage_204,
+        colors.brand,
+      ),
+      OrderStatus.ticketsInTransit => (
+        context.l10n.orderDetailPage_205,
+        colors.brand,
+      ),
+      OrderStatus.completed => (
+        context.l10n.orderDetailPage_206,
+        colors.success,
+      ),
+      OrderStatus.cancelled => (
+        context.l10n.orderDetailPage_207,
+        colors.textTertiary,
+      ),
+      OrderStatus.refunded => (
+        context.l10n.orderDetailPage_208,
+        colors.textTertiary,
+      ),
     };
 
     return Container(
@@ -219,7 +250,7 @@ class _StatusHeader extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                order.status.label,
+                order.status.labelOf(context),
                 style: TextStyle(
                   fontSize: 20,
                   height: 1.2,
@@ -229,7 +260,7 @@ class _StatusHeader extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               PsTag(
-                label: order.orderType.label,
+                label: order.orderType.labelOf(context),
                 tone: PsTagTone.soft,
                 fontSize: 10,
                 radius: 3,
@@ -289,7 +320,7 @@ class _ShowSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    show.firstSessionLabel,
+                    show.firstSessionLabelOf(context),
                     style: TextStyle(fontSize: 12, color: colors.textSecondary),
                   ),
                   const SizedBox(height: 3),
@@ -300,7 +331,11 @@ class _ShowSection extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(LucideIcons.chevronRight, size: 18, color: colors.textDisabled),
+            Icon(
+              LucideIcons.chevronRight,
+              size: 18,
+              color: colors.textDisabled,
+            ),
           ],
         ),
       ),
@@ -322,66 +357,81 @@ class _ActionBar extends ConsumerWidget {
     // 状态 → 动作。`switch` 穷举，新增状态时编译期就会提醒这里要补。
     final List<_Action> buttons = switch (order.status) {
       OrderStatus.awaitingPayment => <_Action>[
-          _Action(
-            label: OrderLocalizations.of(context).orderDetailPage_325,
-            onTap: () => _cancel(context, actions),
-          ),
-          _Action(
-            label: OrderLocalizations.of(context).orderDetailPage_329,
-            primary: true,
-            onTap: () => _pay(context, actions),
-          ),
-        ],
+        _Action(
+          label: context.l10n.orderDetailPage_325,
+          onTap: () => _cancel(context, actions),
+        ),
+        _Action(
+          label: context.l10n.orderDetailPage_329,
+          primary: true,
+          onTap: () => _pay(context, actions),
+        ),
+      ],
       OrderStatus.ticketsInTransit => <_Action>[
-          _Action(label: OrderLocalizations.of(context).orderDetailPage_335, onTap: () => _toast(context, OrderLocalizations.of(context).orderDetailPage_335_2)),
-          _Action(
-            label: OrderLocalizations.of(context).orderDetailPage_337,
-            primary: true,
-            onTap: () => _confirmReceipt(context, actions),
+        _Action(
+          label: context.l10n.orderDetailPage_335,
+          onTap: () => _toast(context, context.l10n.orderDetailPage_335_2),
+        ),
+        _Action(
+          label: context.l10n.orderDetailPage_337,
+          primary: true,
+          onTap: () => _confirmReceipt(context, actions),
+        ),
+        _Action(
+          label: context.l10n.orderDetailPage_342,
+          onTap: () => context.push(
+            '/order/refund'
+            '?number=${Uri.encodeComponent(order.number.value)}'
+            '&amount=${order.goodsTotal.minorUnits}',
           ),
-          _Action(
-            label: OrderLocalizations.of(context).orderDetailPage_342,
-            onTap: () => context.push(
-              '/order/refund'
-              '?number=${Uri.encodeComponent(order.number.value)}'
-              '&amount=${order.goodsTotal.minorUnits}',
-            ),
-          ),
-        ],
+        ),
+      ],
       OrderStatus.completed => <_Action>[
-          _Action(label: OrderLocalizations.of(context).orderDetailPage_351, onTap: () => _toast(context, OrderLocalizations.of(context).orderDetailPage_351_2)),
-          _Action(
-            label: OrderLocalizations.of(context).orderDetailPage_353,
-            primary: true,
-            onTap: () => context.push('/order/confirm?showId=${order.showId.value}'),
-          ),
-        ],
+        _Action(
+          label: context.l10n.orderDetailPage_351,
+          onTap: () => _toast(context, context.l10n.orderDetailPage_351_2),
+        ),
+        _Action(
+          label: context.l10n.orderDetailPage_353,
+          primary: true,
+          onTap: () =>
+              context.push('/order/confirm?showId=${order.showId.value}'),
+        ),
+      ],
       OrderStatus.draft => <_Action>[
-          _Action(
-            label: OrderLocalizations.of(context).orderDetailPage_360,
-            primary: true,
-            onTap: () => context.push('/order/confirm?showId=${order.showId.value}'),
-          ),
-        ],
+        _Action(
+          label: context.l10n.orderDetailPage_360,
+          primary: true,
+          onTap: () =>
+              context.push('/order/confirm?showId=${order.showId.value}'),
+        ),
+      ],
       OrderStatus.awaitingTickets => <_Action>[
-          _Action(label: OrderLocalizations.of(context).orderDetailPage_366, onTap: () => _toast(context, OrderLocalizations.of(context).orderDetailPage_366_2)),
-          _Action(label: OrderLocalizations.of(context).orderDetailPage_367, onTap: () => _toast(context, OrderLocalizations.of(context).orderDetailPage_367_2)),
-          _Action(
-            label: OrderLocalizations.of(context).orderDetailPage_369,
-            onTap: () => context.push(
-              '/order/refund'
-              '?number=${Uri.encodeComponent(order.number.value)}'
-              '&amount=${order.goodsTotal.minorUnits}',
-            ),
+        _Action(
+          label: context.l10n.orderDetailPage_366,
+          onTap: () => _toast(context, context.l10n.orderDetailPage_366_2),
+        ),
+        _Action(
+          label: context.l10n.orderDetailPage_367,
+          onTap: () => _toast(context, context.l10n.orderDetailPage_367_2),
+        ),
+        _Action(
+          label: context.l10n.orderDetailPage_369,
+          onTap: () => context.push(
+            '/order/refund'
+            '?number=${Uri.encodeComponent(order.number.value)}'
+            '&amount=${order.goodsTotal.minorUnits}',
           ),
-        ],
+        ),
+      ],
       OrderStatus.cancelled || OrderStatus.refunded => <_Action>[
-          _Action(
-            label: OrderLocalizations.of(context).orderDetailPage_379,
-            primary: true,
-            onTap: () => context.push('/order/confirm?showId=${order.showId.value}'),
-          ),
-        ],
+        _Action(
+          label: context.l10n.orderDetailPage_379,
+          primary: true,
+          onTap: () =>
+              context.push('/order/confirm?showId=${order.showId.value}'),
+        ),
+      ],
     };
 
     return Container(
@@ -416,9 +466,12 @@ class _ActionBar extends ConsumerWidget {
                       action.label,
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight:
-                            action.primary ? FontWeight.w700 : FontWeight.w400,
-                        color: action.primary ? colors.onBrand : colors.textSecondary,
+                        fontWeight: action.primary
+                            ? FontWeight.w700
+                            : FontWeight.w400,
+                        color: action.primary
+                            ? colors.onBrand
+                            : colors.textSecondary,
                       ),
                     ),
                   ),
@@ -435,34 +488,35 @@ class _ActionBar extends ConsumerWidget {
     if (channel == null) return;
     final String? error = await actions.pay(order, channel);
     if (!context.mounted) return;
-    _toast(context, error ?? OrderLocalizations.of(context).orderDetailPage_437);
+    _toast(context, error ?? context.l10n.orderDetailPage_437);
   }
 
   Future<void> _cancel(BuildContext context, OrderActions actions) async {
     final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
-        title: Text(OrderLocalizations.of(context).orderDetailPage_444),
-        content: Text(OrderLocalizations.of(context).orderDetailPage_445),
+        title: Text(context.l10n.orderDetailPage_444),
+        content: Text(context.l10n.orderDetailPage_445),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(OrderLocalizations.of(context).orderDetailPage_449),
+            child: Text(context.l10n.orderDetailPage_449),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(OrderLocalizations.of(context).orderDetailPage_453),
+            child: Text(context.l10n.orderDetailPage_453),
           ),
         ],
       ),
     );
     if (!context.mounted) return;
     if (!(confirmed ?? false)) return;
-    final String reason =
-        OrderLocalizations.of(context).orderDetailPage_459;
-    final String? error = await actions.cancel(order, reason);
+    final String? error = await actions.cancel(
+      order,
+      OrderCancelReason.userCancelled,
+    );
     if (!context.mounted) return;
-    _toast(context, error ?? OrderLocalizations.of(context).orderDetailPage_461);
+    _toast(context, error ?? context.l10n.orderDetailPage_461);
   }
 
   Future<void> _confirmReceipt(
@@ -471,17 +525,23 @@ class _ActionBar extends ConsumerWidget {
   ) async {
     final String? error = await actions.confirmReceipt(order);
     if (!context.mounted) return;
-    _toast(context, error ?? OrderLocalizations.of(context).orderDetailPage_470);
+    _toast(context, error ?? context.l10n.orderDetailPage_470);
   }
 
   static void _toast(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
 /// 一个底部动作。
 final class _Action {
-  const _Action({required this.label, required this.onTap, this.primary = false});
+  const _Action({
+    required this.label,
+    required this.onTap,
+    this.primary = false,
+  });
 
   final String label;
   final VoidCallback onTap;

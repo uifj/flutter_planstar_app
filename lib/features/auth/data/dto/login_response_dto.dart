@@ -46,9 +46,7 @@ final class LoginResponseDto {
       needCaptcha: _asBool(json['needCaptcha']),
       newUser: _asBool(json['newUser']),
       user: rawUser is Map<Object?, Object?>
-          ? AuthUser.fromJson(
-              asStringKeyedMap(rawUser, what: '登录响应的 user 字段'),
-            )
+          ? AuthUser.fromJson(asStringKeyedMap(rawUser, what: '登录响应的 user 字段'))
           : null,
     );
   }

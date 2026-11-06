@@ -90,7 +90,10 @@ Future<void> main(List<String> args) async {
       PsNetworkInterceptor(context: context, userAgent: config.userAgent),
     ],
   );
-  final api = PlanstarAuthApi(client: ApiClient(dio), clientType: config.clientType);
+  final api = PlanstarAuthApi(
+    client: ApiClient(dio),
+    clientType: config.clientType,
+  );
 
   _banner('企划星登录接口联调', <String, String>{
     'base': baseUrl,
@@ -134,7 +137,8 @@ Future<CheckResult> _checkCaptcha(PlanstarAuthApi api) async {
       detail: '失败：${failure.type.name} / ${failure.message}',
     ),
     onSuccess: (List<int> bytes) {
-      final bool isPng = bytes.length > 8 &&
+      final bool isPng =
+          bytes.length > 8 &&
           bytes[0] == 0x89 &&
           bytes[1] == 0x50 &&
           bytes[2] == 0x4E &&
@@ -145,7 +149,7 @@ Future<CheckResult> _checkCaptcha(PlanstarAuthApi api) async {
         detail: isPng
             ? '${bytes.length} 字节，PNG 魔数正确'
             : '返回了 ${bytes.length} 字节，但不是 PNG（头 4 字节：'
-                '${bytes.take(4).map((int b) => b.toRadixString(16)).join(' ')}）',
+                  '${bytes.take(4).map((int b) => b.toRadixString(16)).join(' ')}）',
       );
     },
   );
@@ -162,8 +166,9 @@ Future<({CheckResult result, bool needCaptcha})> _checkSendCode(
   String phone,
 ) async {
   const String name = '发送登录验证码 POST v3/user/sendLoginCode';
-  final Result<SendCodeResponseDto> result =
-      await api.sendLoginCode(phone: phone);
+  final Result<SendCodeResponseDto> result = await api.sendLoginCode(
+    phone: phone,
+  );
   return result.fold(
     onFailure: (Failure failure) => (
       result: CheckResult(
@@ -182,8 +187,8 @@ Future<({CheckResult result, bool needCaptcha})> _checkSendCode(
         detail: dto.success
             ? 'success=true，短信已下发'
             : 'success=false needCaptcha=${dto.needCaptcha} '
-                'errorMsg=${dto.errorMsg ?? '(空)'}'
-                '（契约形状正确）',
+                  'errorMsg=${dto.errorMsg ?? '(空)'}'
+                  '（契约形状正确）',
       ),
       needCaptcha: dto.needCaptcha,
     ),
@@ -195,7 +200,10 @@ Future<({CheckResult result, bool needCaptcha})> _checkSendCode(
 /// 这一条是 [AuthController] 那个"补码重放"循环的依据——如果服务端在这里
 /// 回的是 `发送失败` 而不是 `图形验证码错误`，对话框就该被判为无效（用户
 /// 怎么输都过不去），UI 得改成"直接放弃"而不是继续弹框。
-Future<CheckResult> _checkCaptchaRetry(PlanstarAuthApi api, String phone) async {
+Future<CheckResult> _checkCaptchaRetry(
+  PlanstarAuthApi api,
+  String phone,
+) async {
   const String name = '错误图形码 POST v3/user/sendLoginCode (captcha)';
   final Result<SendCodeResponseDto> result = await api.sendLoginCode(
     phone: phone,
@@ -213,7 +221,8 @@ Future<CheckResult> _checkCaptchaRetry(PlanstarAuthApi api, String phone) async 
       return CheckResult(
         name: name,
         passed: ok,
-        detail: 'success=${dto.success} needCaptcha=${dto.needCaptcha} '
+        detail:
+            'success=${dto.success} needCaptcha=${dto.needCaptcha} '
             'errorMsg=${message.isEmpty ? '(空)' : '「$message」'}'
             '${ok ? ' ← 补码重放循环有效' : ' ← 期望 needCaptcha=true 且文案含「图形验证码」'}',
       );
@@ -234,12 +243,14 @@ Future<CheckResult> _checkWrongCode(PlanstarAuthApi api, String phone) async {
   return result.fold(
     onFailure: (Failure failure) {
       final AuthFailure auth = AuthFailure.fromFailure(failure);
-      final bool ok = failure.message.contains('验证码') &&
+      final bool ok =
+          failure.message.contains('验证码') &&
           auth.kind == AuthFailureKind.business;
       return CheckResult(
         name: name,
         passed: ok,
-        detail: 'HTTP ${failure.statusCode ?? '-'} → '
+        detail:
+            'HTTP ${failure.statusCode ?? '-'} → '
             '「${failure.message}」（kind=${auth.kind.name}）'
             '${ok ? '' : ' ← 期望含「验证码」且归类为 business'}',
       );
@@ -247,7 +258,8 @@ Future<CheckResult> _checkWrongCode(PlanstarAuthApi api, String phone) async {
     onSuccess: (LoginResponseDto dto) => CheckResult(
       name: name,
       passed: false,
-      detail: '居然登录成功了（userId=${dto.user?.userId}）——'
+      detail:
+          '居然登录成功了（userId=${dto.user?.userId}）——'
           '000000 不可能是有效验证码，契约已变',
     ),
   );
@@ -266,14 +278,15 @@ Future<CheckResult> _checkPasswordDisabled(
   return result.fold(
     onFailure: (Failure failure) => CheckResult(
       name: name,
-      passed: failure.message.contains('验证码登录') ||
-          failure.message.contains('密码'),
+      passed:
+          failure.message.contains('验证码登录') || failure.message.contains('密码'),
       detail: 'HTTP ${failure.statusCode ?? '-'} → 「${failure.message}」',
     ),
     onSuccess: (LoginResponseDto dto) => CheckResult(
       name: name,
       passed: false,
-      detail: '登录成功了（userId=${dto.user?.userId}）——'
+      detail:
+          '登录成功了（userId=${dto.user?.userId}）——'
           '说明服务端已重新开启密码登录，UI 文案要跟着改',
     ),
   );
@@ -289,11 +302,8 @@ Future<CheckResult> _checkEmptyCode(PlanstarAuthApi api, String phone) async {
       passed: failure.message.isNotEmpty,
       detail: 'HTTP ${failure.statusCode ?? '-'} → 「${failure.message}」',
     ),
-    onSuccess: (_) => const CheckResult(
-      name: name,
-      passed: false,
-      detail: '空凭证登录成功，不可能',
-    ),
+    onSuccess: (_) =>
+        const CheckResult(name: name, passed: false, detail: '空凭证登录成功，不可能'),
   );
 }
 
@@ -305,8 +315,10 @@ Future<CheckResult> _checkRealLogin(
   String code,
 ) async {
   const String name = '真实登录 POST v1/user/login (code)';
-  final Result<LoginResponseDto> result =
-      await api.login(phone: phone, code: code);
+  final Result<LoginResponseDto> result = await api.login(
+    phone: phone,
+    code: code,
+  );
   return result.fold(
     onFailure: (Failure failure) => CheckResult(
       name: name,
@@ -320,7 +332,8 @@ Future<CheckResult> _checkRealLogin(
       return CheckResult(
         name: name,
         passed: ok,
-        detail: 'userId=${user?.userId} 昵称=${user?.displayName} '
+        detail:
+            'userId=${user?.userId} 昵称=${user?.displayName} '
             'newUser=${dto.newUser} '
             'psSession=${token == null ? '（缺失！）' : '已捕获(${token.length} 字符)'} '
             'avatar=${(user?.avatar ?? '').isEmpty ? '(空)' : '有'}',
@@ -353,14 +366,20 @@ void _summary(List<CheckResult> results, PsRequestContext context) {
   }
 
   final int failures = results.where((CheckResult r) => r.failed).length;
-  final int observations = results.where((CheckResult r) => r.observation).length;
+  final int observations = results
+      .where((CheckResult r) => r.observation)
+      .length;
   stdout.writeln('');
   if (failures == 0) {
-    stdout.writeln('✓ 断言全部通过'
-        '（另有 $observations 条观测项不计入断言）');
+    stdout.writeln(
+      '✓ 断言全部通过'
+      '（另有 $observations 条观测项不计入断言）',
+    );
     if (context.psSession == null) {
-      stdout.writeln('  提示：本次没有拿到 psSession（未登录）。要验证成功路径，'
-          '请带 --code=<真实验证码> 重跑。');
+      stdout.writeln(
+        '  提示：本次没有拿到 psSession（未登录）。要验证成功路径，'
+        '请带 --code=<真实验证码> 重跑。',
+      );
     }
   } else {
     stdout.writeln('✗ $failures 条断言未通过');

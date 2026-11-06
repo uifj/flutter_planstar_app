@@ -318,6 +318,18 @@
   "@delivery_84": {
     "description": "来源：lib/features/order/domain/value_objects/delivery.dart:84；原文：'现场自取'"
   },
+  "delivery_136": "{method}（{postage}）",
+  "@delivery_136": {
+    "description": "来源：lib/features/order/order_l10n.dart:68；原文：'${method.labelOf(context)}（${postage.format()}）'",
+    "placeholders": {
+      "method": {
+        "type": "Object"
+      },
+      "postage": {
+        "type": "Object"
+      }
+    }
+  },
   "discount_71": "-{percent}%（封顶 {format}）",
   "@discount_71": {
     "description": "来源：lib/features/order/domain/value_objects/discount.dart:71；原文：'-$percent%（封顶 ${ceiling.format()}）'",
@@ -898,6 +910,10 @@
   "orderListPage_196": "用户主动取消",
   "@orderListPage_196": {
     "description": "来源：lib/features/order/order_list_page.dart:196；原文：'用户主动取消'"
+  },
+  "orderCancelTimeout": "支付超时，订单已关闭",
+  "@orderCancelTimeout": {
+    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:534；原文：'支付超时，订单已关闭'"
   },
   "orderListPage_198": "订单已取消",
   "@orderListPage_198": {

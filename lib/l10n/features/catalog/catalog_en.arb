@@ -19,6 +19,7 @@
   "showSummary_286": "{inDays}天前",
   "showSummary_287": "{month}月{day}日",
   "categoryHomePage_116": "{city} 暂无{name}演出",
+  "categoryHomePage_unknownCategory": "该分类",
   "categoryHomePage_117": "试试切换城市或查看其他分类",
   "categoryHomePage_119": "去首页",
   "categoryHomePage_403": "起",

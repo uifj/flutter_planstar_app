@@ -80,6 +80,9 @@ class CatalogLocalizationsEn extends CatalogLocalizations {
   }
 
   @override
+  String get categoryHomePage_unknownCategory => '该分类';
+
+  @override
   String get categoryHomePage_117 => '试试切换城市或查看其他分类';
 
   @override

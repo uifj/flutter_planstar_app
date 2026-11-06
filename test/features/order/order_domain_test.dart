@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// 测试夹具：一张草稿订单 + 一个报价服务。
 final class _Fixture {
   _Fixture({int requiredVisitorCount = 0, PurchaseLimit? limit})
-      : _now = DateTime(2026, 11, 1, 10) {
+    : _now = DateTime(2026, 11, 1, 10) {
     order = TicketOrder.create(
       id: const TicketOrderId('order-1'),
       number: OrderNumber('PN20261101000123'),
@@ -27,13 +27,12 @@ final class _Fixture {
     String name = '内场 A 区',
     num price = 680,
     int quantity = 1,
-  }) =>
-      OrderLine(
-        id: TicketTierId(tierId),
-        tierName: name,
-        unitPrice: Money.fromYuan(price),
-        quantity: Quantity(quantity),
-      );
+  }) => OrderLine(
+    id: TicketTierId(tierId),
+    tierName: name,
+    unitPrice: Money.fromYuan(price),
+    quantity: Quantity(quantity),
+  );
 
   /// 算报价并挂到聚合上（模拟控制器的动作）。
   OrderQuote requote({DiscountSelection discount = DiscountSelection.none}) {
@@ -188,7 +187,10 @@ void main() {
       );
       expect(
         quote.paymentAmount,
-        quote.totalAmount - quote.discountApplied - quote.giftCardApplied + quote.speedPackCash,
+        quote.totalAmount -
+            quote.discountApplied -
+            quote.giftCardApplied +
+            quote.speedPackCash,
       );
     });
   });
@@ -214,9 +216,18 @@ void main() {
     });
 
     test('终态不可迁移', () {
-      expect(OrderStatus.cancelled.canTransitionTo(OrderStatus.awaitingPayment), isFalse);
-      expect(OrderStatus.refunded.canTransitionTo(OrderStatus.completed), isFalse);
-      expect(OrderStatus.draft.canTransitionTo(OrderStatus.awaitingPayment), isTrue);
+      expect(
+        OrderStatus.cancelled.canTransitionTo(OrderStatus.awaitingPayment),
+        isFalse,
+      );
+      expect(
+        OrderStatus.refunded.canTransitionTo(OrderStatus.completed),
+        isFalse,
+      );
+      expect(
+        OrderStatus.draft.canTransitionTo(OrderStatus.awaitingPayment),
+        isTrue,
+      );
     });
   });
 
@@ -231,15 +242,20 @@ void main() {
     });
 
     test('身份证校验位（企划星侧只判空，M5-07）', () {
-      final valid = IdCardNumber(type: IdCardType.idCard, number: '310101199003074511');
+      final valid = IdCardNumber(
+        type: IdCardType.idCard,
+        number: '310101199003074511',
+      );
       expect(valid.masked, '310***********4511');
 
       expect(
-        () => IdCardNumber(type: IdCardType.idCard, number: '310101199003074510'),
+        () =>
+            IdCardNumber(type: IdCardType.idCard, number: '310101199003074510'),
         throwsArgumentError,
       );
       expect(
-        () => IdCardNumber(type: IdCardType.idCard, number: '31010119900307451'),
+        () =>
+            IdCardNumber(type: IdCardType.idCard, number: '31010119900307451'),
         throwsArgumentError,
       );
     });
@@ -273,9 +289,7 @@ void main() {
     });
 
     test('单笔限购 6 张', () {
-      final f = _Fixture(
-        limit: PurchaseLimit(maxPerOrder: Quantity(6)),
-      );
+      final f = _Fixture(limit: PurchaseLimit(maxPerOrder: Quantity(6)));
       final result = f.order.addLine(_Fixture.line(quantity: 7));
       expect(result.isFailure, isTrue);
       expect(result.failure!.code, 'ORDER_LIMIT_PER_ORDER');
@@ -301,7 +315,7 @@ void main() {
       final result = f.order.submit(f.now);
       expect(result.isFailure, isTrue);
       expect(result.failure!.code, 'ORDER_AGREEMENT_REQUIRED');
-      expect(result.failure!.message, contains('《票务服务协议》'));
+      expect(result.failure!.message, contains('normal协议'));
     });
 
     test('没有报价不能提交', () {
@@ -336,18 +350,28 @@ void main() {
       final one = Visitor(
         id: const VisitorId('v1'),
         name: '张票友',
-        idCard: IdCardNumber(type: IdCardType.idCard, number: '310101199003074511'),
+        idCard: IdCardNumber(
+          type: IdCardType.idCard,
+          number: '310101199003074511',
+        ),
       );
-      expect(f.order.assignVisitors(<Visitor>[one]).failure!.code,
-          'ORDER_VISITOR_COUNT_MISMATCH');
+      expect(
+        f.order.assignVisitors(<Visitor>[one]).failure!.code,
+        'ORDER_VISITOR_COUNT_MISMATCH',
+      );
 
-      expect(f.order.assignVisitors(<Visitor>[one, one]).failure!.code,
-          'ORDER_VISITOR_DUPLICATED');
+      expect(
+        f.order.assignVisitors(<Visitor>[one, one]).failure!.code,
+        'ORDER_VISITOR_DUPLICATED',
+      );
 
       final two = Visitor(
         id: const VisitorId('v2'),
         name: '李看戏',
-        idCard: IdCardNumber(type: IdCardType.idCard, number: '11010519491231002X'),
+        idCard: IdCardNumber(
+          type: IdCardType.idCard,
+          number: '11010519491231002X',
+        ),
       );
       expect(f.order.assignVisitors(<Visitor>[one, two]).isSuccess, isTrue);
       expect(f.order.submit(f.now).isSuccess, isTrue);
@@ -379,9 +403,14 @@ void main() {
       f.order.acceptAgreement();
       f.order.submit(f.now);
 
-      expect(f.order.addLine(_Fixture.line()).failure!.code, 'ORDER_NOT_EDITABLE');
-      expect(f.order.selectDiscount(DiscountSelection.none).failure!.code,
-          'ORDER_NOT_EDITABLE');
+      expect(
+        f.order.addLine(_Fixture.line()).failure!.code,
+        'ORDER_NOT_EDITABLE',
+      );
+      expect(
+        f.order.selectDiscount(DiscountSelection.none).failure!.code,
+        'ORDER_NOT_EDITABLE',
+      );
     });
 
     test('支付：待支付 → 待发货，并发 OrderPaid', () {
@@ -420,15 +449,19 @@ void main() {
       f.order.submit(f.now);
 
       expect(
-        f.order.refund(amount: Money.fromYuan(680), reason: '不想要了', now: f.now)
+        f.order
+            .refund(amount: Money.fromYuan(680), reason: '不想要了', now: f.now)
             .failure!
             .code,
         'ORDER_NOT_REFUNDABLE',
       );
 
       f.order.markPaid(now: f.now, channel: PaymentChannel.alipay);
-      final refunded =
-          f.order.refund(amount: Money.fromYuan(680), reason: '演出取消', now: f.now);
+      final refunded = f.order.refund(
+        amount: Money.fromYuan(680),
+        reason: '演出取消',
+        now: f.now,
+      );
       expect(refunded.isSuccess, isTrue);
       expect(f.order.status, OrderStatus.refunded);
       expect(f.order.pullDomainEvents().last, isA<OrderRefunded>());
@@ -442,11 +475,15 @@ void main() {
       f.order.submit(f.now);
 
       expect(
-        f.order.expireIfUnpaid(f.now.add(const Duration(minutes: 5))).requireData,
+        f.order
+            .expireIfUnpaid(f.now.add(const Duration(minutes: 5)))
+            .requireData,
         isFalse,
       );
 
-      final expired = f.order.expireIfUnpaid(f.now.add(const Duration(minutes: 16)));
+      final expired = f.order.expireIfUnpaid(
+        f.now.add(const Duration(minutes: 16)),
+      );
       expect(expired.requireData, isTrue);
       expect(f.order.status, OrderStatus.cancelled);
 

@@ -3,8 +3,7 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/ui/ps_search_bar.dart';
-import '../../../l10n/home_localizations.dart';
-import '../../../l10n/app_localizations.dart';
+import '../../../l10n/l10n.dart';
 
 /// 首页顶部（`view_home_header.xml` + `view_home_toolbar.xml`）。
 ///
@@ -42,7 +41,8 @@ class HomeHeader extends SliverPersistentHeaderDelegate {
   static const double _searchHeight = 36;
   static const double _horizontal = 12;
 
-  double get _expandedSearchTop => topPadding + _logoRowTop + _logoRowHeight + _searchGap;
+  double get _expandedSearchTop =>
+      topPadding + _logoRowTop + _logoRowHeight + _searchGap;
   double get _collapsedSearchTop => topPadding + 3;
 
   @override
@@ -52,12 +52,17 @@ class HomeHeader extends SliverPersistentHeaderDelegate {
   double get minExtent => _collapsedSearchTop + _searchHeight + 3;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final range = maxExtent - minExtent;
     final t = range <= 0 ? 1.0 : (shrinkOffset / range).clamp(0.0, 1.0);
 
-    final searchTop = _expandedSearchTop + (_collapsedSearchTop - _expandedSearchTop) * t;
+    final searchTop =
+        _expandedSearchTop + (_collapsedSearchTop - _expandedSearchTop) * t;
 
     return SizedBox(
       height: maxExtent,
@@ -94,7 +99,7 @@ class HomeHeader extends SliverPersistentHeaderDelegate {
                       Icon(LucideIcons.sparkles, size: 18, color: colors.brand),
                       const SizedBox(width: 4),
                       Text(
-                        AppLocalizations.of(context).appTitle,
+                        context.l10n.appTitle,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -104,15 +109,22 @@ class HomeHeader extends SliverPersistentHeaderDelegate {
                     ],
                   ),
                   const Spacer(),
-                  Icon(LucideIcons.shieldCheck, size: 14, color: colors.textTertiary),
+                  Icon(
+                    LucideIcons.shieldCheck,
+                    size: 14,
+                    color: colors.textTertiary,
+                  ),
                   const SizedBox(width: 2),
                   Flexible(
                     child: Text(
-                      HomeLocalizations.of(context).homeHeader_108,
+                      context.l10n.homeHeader_108,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.right,
-                      style: TextStyle(fontSize: 11, color: colors.textTertiary),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: colors.textTertiary,
+                      ),
                     ),
                   ),
                 ],

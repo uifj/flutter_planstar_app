@@ -56,7 +56,11 @@ class PsCell extends StatelessWidget {
                     Expanded(
                       child: Text(
                         label,
-                        style: TextStyle(fontSize: 16, height: 1.2, color: colors.textPrimary),
+                        style: TextStyle(
+                          fontSize: 16,
+                          height: 1.2,
+                          color: colors.textPrimary,
+                        ),
                       ),
                     ),
                     if (value != null)
@@ -64,7 +68,10 @@ class PsCell extends StatelessWidget {
                         padding: const EdgeInsets.only(right: 4),
                         child: Text(
                           value!,
-                          style: TextStyle(fontSize: 13, color: colors.textTertiary),
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: colors.textTertiary,
+                          ),
                         ),
                       ),
                     trailing ??

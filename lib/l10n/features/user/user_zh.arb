@@ -326,6 +326,10 @@
   "@settingsPage_164": {
     "description": "来源：lib/features/user/settings_page.dart:164；原文：'开启'"
   },
+  "settingsPageDarkModeOff": "关闭",
+  "@settingsPageDarkModeOff": {
+    "description": "来源：lib/features/user/settings_page.dart:164；原文：'关闭'"
+  },
   "settingsPage_172": "退出后需要重新登录才能查看订单，确定继续吗？",
   "@settingsPage_172": {
     "description": "来源：lib/features/user/settings_page.dart:172；原文：'退出后需要重新登录才能查看订单，确定继续吗？'"

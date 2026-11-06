@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'group_buy.dart';
 import 'group_buy_providers.dart';
-import '../../l10n/group_buy_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 拼团详情页。
 ///
@@ -31,23 +31,23 @@ class GroupBuyDetailPage extends ConsumerWidget {
     ref.listen<JoinGroupState>(joinGroupControllerProvider, (prev, next) {
       if (next is JoinGroupSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.message)),
+          SnackBar(content: Text(context.l10n.groupBuyProviders_59)),
         );
         ref.read(joinGroupControllerProvider.notifier).reset();
       } else if (next is JoinGroupError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(next.message)));
         ref.read(joinGroupControllerProvider.notifier).reset();
       }
     });
 
     if (group == null) {
       return AdaptiveScaffold(
-        appBar: AdaptiveAppBar(title: GroupBuyLocalizations.of(context).groupBuyDetailPage_46),
+        appBar: AdaptiveAppBar(title: context.l10n.groupBuyDetailPage_46),
         body: Center(
           child: Text(
-            GroupBuyLocalizations.of(context).groupBuyDetailPage_49,
+            context.l10n.groupBuyDetailPage_49,
             style: TextStyle(fontSize: 14, color: colors.textTertiary),
           ),
         ),
@@ -58,7 +58,7 @@ class GroupBuyDetailPage extends ConsumerWidget {
     final canJoin = group.status == GroupBuyStatus.grouping && !group.isFull;
 
     return AdaptiveScaffold(
-      appBar: AdaptiveAppBar(title: GroupBuyLocalizations.of(context).groupBuyDetailPage_60),
+      appBar: AdaptiveAppBar(title: context.l10n.groupBuyDetailPage_60),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -77,9 +77,8 @@ class GroupBuyDetailPage extends ConsumerWidget {
             _BottomBar(
               group: group,
               isJoining: isJoining,
-              onJoin: () => ref
-                  .read(joinGroupControllerProvider.notifier)
-                  .join(groupId),
+              onJoin: () =>
+                  ref.read(joinGroupControllerProvider.notifier).join(groupId),
             ),
         ],
       ),
@@ -170,11 +169,8 @@ class _ShowInfoCard extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Text(
-                  GroupBuyLocalizations.of(context).groupBuyDetailPage_172,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: colors.textSecondary,
-                  ),
+                  context.l10n.groupBuyDetailPage_172,
+                  style: TextStyle(fontSize: 12, color: colors.textSecondary),
                 ),
                 Text(
                   group.lowPrice.format(),
@@ -206,7 +202,9 @@ class _ShowInfoCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: Text(
-                      GroupBuyLocalizations.of(context).groupBuyDetailPage_208(group.savedAmount.format(withSymbol: false)),
+                      context.l10n.groupBuyDetailPage_208(
+                        group.savedAmount.format(withSymbol: false),
+                      ),
                       style: const TextStyle(
                         fontSize: 10,
                         color: Colors.white,
@@ -247,7 +245,7 @@ class _ProgressCard extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                GroupBuyLocalizations.of(context).groupBuyDetailPage_249(group.succeedNum),
+                context.l10n.groupBuyDetailPage_249(group.succeedNum),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -257,7 +255,9 @@ class _ProgressCard extends StatelessWidget {
               const Spacer(),
               if (group.status == GroupBuyStatus.grouping)
                 Text(
-                  group.isFull ? GroupBuyLocalizations.of(context).groupBuyDetailPage_259 : GroupBuyLocalizations.of(context).groupBuyDetailPage_259_2(group.remaining),
+                  group.isFull
+                      ? context.l10n.groupBuyDetailPage_259
+                      : context.l10n.groupBuyDetailPage_259_2(group.remaining),
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -281,11 +281,8 @@ class _ProgressCard extends StatelessWidget {
           const SizedBox(height: 8),
           if (group.status == GroupBuyStatus.grouping && !group.isExpired)
             Text(
-              GroupBuyLocalizations.of(context).groupBuyDetailPage_283(group.remainingHours),
-              style: TextStyle(
-                fontSize: 12,
-                color: colors.textTertiary,
-              ),
+              context.l10n.groupBuyDetailPage_283(group.remainingHours),
+              style: TextStyle(fontSize: 12, color: colors.textTertiary),
             ),
         ],
       ),
@@ -314,7 +311,10 @@ class _MembersCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            GroupBuyLocalizations.of(context).groupBuyDetailPage_316(group.currentMembers, group.succeedNum),
+            context.l10n.groupBuyDetailPage_316(
+              group.currentMembers,
+              group.succeedNum,
+            ),
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -326,11 +326,9 @@ class _MembersCard extends StatelessWidget {
             spacing: 12,
             runSpacing: 12,
             children: <Widget>[
-              for (final member in group.members)
-                _MemberAvatar(member: member),
+              for (final member in group.members) _MemberAvatar(member: member),
               // 空位占位
-              for (int i = 0; i < group.remaining; i++)
-                _EmptySlot(),
+              for (int i = 0; i < group.remaining; i++) _EmptySlot(),
             ],
           ),
         ],
@@ -371,11 +369,7 @@ class _MemberAvatar extends StatelessWidget {
                         ),
                       ),
                     )
-                  : Icon(
-                      LucideIcons.user,
-                      size: 22,
-                      color: colors.brand,
-                    ),
+                  : Icon(LucideIcons.user, size: 22, color: colors.brand),
             ),
             if (member.isLeader)
               Positioned(
@@ -392,7 +386,7 @@ class _MemberAvatar extends StatelessWidget {
                     border: Border.all(color: Colors.white, width: 1),
                   ),
                   child: Text(
-                    GroupBuyLocalizations.of(context).groupBuyDetailPage_394,
+                    context.l10n.groupBuyDetailPage_394,
                     style: TextStyle(
                       fontSize: 8,
                       color: Colors.white,
@@ -406,10 +400,7 @@ class _MemberAvatar extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           member.nickname,
-          style: TextStyle(
-            fontSize: 11,
-            color: colors.textSecondary,
-          ),
+          style: TextStyle(fontSize: 11, color: colors.textSecondary),
         ),
       ],
     );
@@ -434,19 +425,12 @@ class _EmptySlot extends StatelessWidget {
               strokeAlign: BorderSide.strokeAlignOutside,
             ),
           ),
-          child: Icon(
-            LucideIcons.plus,
-            size: 18,
-            color: colors.textDisabled,
-          ),
+          child: Icon(LucideIcons.plus, size: 18, color: colors.textDisabled),
         ),
         const SizedBox(height: 4),
         Text(
-          GroupBuyLocalizations.of(context).groupBuyDetailPage_444,
-          style: TextStyle(
-            fontSize: 11,
-            color: colors.textDisabled,
-          ),
+          context.l10n.groupBuyDetailPage_444,
+          style: TextStyle(fontSize: 11, color: colors.textDisabled),
         ),
       ],
     );
@@ -470,7 +454,7 @@ class _RuleCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            GroupBuyLocalizations.of(context).groupBuyDetailPage_472,
+            context.l10n.groupBuyDetailPage_472,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -479,7 +463,7 @@ class _RuleCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            GroupBuyLocalizations.of(context).groupBuyDetailPage_481,
+            context.l10n.groupBuyDetailPage_481,
             style: TextStyle(
               fontSize: 12,
               height: 1.7,
@@ -527,11 +511,8 @@ class _BottomBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  GroupBuyLocalizations.of(context).groupBuyDetailPage_533,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: colors.textTertiary,
-                  ),
+                  context.l10n.groupBuyDetailPage_533,
+                  style: TextStyle(fontSize: 11, color: colors.textTertiary),
                 ),
                 Text(
                   group.lowPrice.format(),
@@ -550,8 +531,9 @@ class _BottomBar extends StatelessWidget {
               onPressed: isJoining ? null : onJoin,
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFFD7700),
-                disabledBackgroundColor:
-                    const Color(0xFFFD7700).withValues(alpha: 0.4),
+                disabledBackgroundColor: const Color(
+                  0xFFFD7700,
+                ).withValues(alpha: 0.4),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
@@ -567,7 +549,7 @@ class _BottomBar extends StatelessWidget {
                       ),
                     )
                   : Text(
-                      GroupBuyLocalizations.of(context).groupBuyDetailPage_573,
+                      context.l10n.groupBuyDetailPage_573,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,

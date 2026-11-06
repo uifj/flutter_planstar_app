@@ -23,10 +23,7 @@ import 'ps_request_context.dart';
 /// 请求头 + 会话拦截器。
 final class PsNetworkInterceptor extends Interceptor {
   /// 创建拦截器。
-  PsNetworkInterceptor({
-    required this.context,
-    required this.userAgent,
-  });
+  PsNetworkInterceptor({required this.context, required this.userAgent});
 
   /// 运行时上下文（`dvid` / `psSession` / 经纬度）。
   final PsRequestContext context;
@@ -61,17 +58,19 @@ final class PsNetworkInterceptor extends Interceptor {
     final String? psSession = context.psSession;
     if (psSession != null && psSession.isNotEmpty) {
       final Object? existing = options.headers['Cookie'];
-      options.headers['Cookie'] =
-          existing is String && existing.isNotEmpty
-              ? '$existing; $sessionHeader=$psSession'
-              : '$sessionHeader=$psSession';
+      options.headers['Cookie'] = existing is String && existing.isNotEmpty
+          ? '$existing; $sessionHeader=$psSession'
+          : '$sessionHeader=$psSession';
     }
 
     handler.next(options);
   }
 
   @override
-  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
     _capture(response.headers);
     handler.next(response);
   }
@@ -99,13 +98,15 @@ final class PsNetworkInterceptor extends Interceptor {
   /// 服务端把 cookie 的 `Path/Domain` 配对——两处都读最稳。
   void _capture(Headers headers) {
     final String? psSession =
-        _nonEmpty(headers.value(sessionHeader)) ?? _cookieValue(headers, sessionHeader);
+        _nonEmpty(headers.value(sessionHeader)) ??
+        _cookieValue(headers, sessionHeader);
     if (psSession != null && psSession != context.psSession) {
       context.psSession = psSession;
     }
 
     final String? dvid =
-        _nonEmpty(headers.value(deviceHeader)) ?? _cookieValue(headers, deviceHeader);
+        _nonEmpty(headers.value(deviceHeader)) ??
+        _cookieValue(headers, deviceHeader);
     if (dvid != null && dvid != context.dvid) {
       context.dvid = dvid;
       context.onDeviceIdChanged?.call(dvid);

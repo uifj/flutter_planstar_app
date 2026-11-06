@@ -89,7 +89,10 @@ class _PsShortcutGridState extends State<PsShortcutGrid> {
               onPageChanged: (page) => setState(() => _page = page),
               itemBuilder: (context, page) {
                 final start = page * _perPage;
-                final slice = widget.items.skip(start).take(_perPage).toList(growable: false);
+                final slice = widget.items
+                    .skip(start)
+                    .take(_perPage)
+                    .toList(growable: false);
                 return _ShortcutPage(
                   items: slice,
                   columns: widget.columns,
@@ -154,16 +157,18 @@ class _ShortcutPage extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
       child: Column(
         children: <Widget>[
-          for (var row = 0; row < (items.length / columns).ceil(); row++) ...<Widget>[
+          for (
+            var row = 0;
+            row < (items.length / columns).ceil();
+            row++
+          ) ...<Widget>[
             if (row > 0) SizedBox(height: rowGap),
             SizedBox(
               height: itemHeight,
               child: Row(
                 children: <Widget>[
                   for (var column = 0; column < columns; column++)
-                    Expanded(
-                      child: _slot(row * columns + column),
-                    ),
+                    Expanded(child: _slot(row * columns + column)),
                 ],
               ),
             ),
@@ -197,7 +202,10 @@ class _ShortcutItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final hash = item.label.codeUnits.fold<int>(0, (acc, unit) => (acc * 31 + unit) & 0x7FFFFFFF);
+    final hash = item.label.codeUnits.fold<int>(
+      0,
+      (acc, unit) => (acc * 31 + unit) & 0x7FFFFFFF,
+    );
     final (background, foreground) = _tones[hash % _tones.length];
 
     return GestureDetector(

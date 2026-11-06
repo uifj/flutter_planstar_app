@@ -11,7 +11,8 @@ import '../../shared/ui/ps_price.dart';
 import '../../shared/ui/ps_tag.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_summary.dart';
-import '../../l10n/goods_localizations.dart';
+import '../catalog/ui/catalog_l10n.dart';
+import '../../l10n/l10n.dart';
 
 /// 选票页（企划星 `ChooseTicketB2CActivity` + 3 个 Fragment）。
 ///
@@ -58,7 +59,9 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
     // 企划星的限购通常是 6 张（见 `purchase_limit_policy.dart`）。
     // 如果余票更少，以余票为准。
     final remaining = tier.remaining;
-    if (remaining != null && remaining > 0) return remaining < 6 ? remaining : 6;
+    if (remaining != null && remaining > 0) {
+      return remaining < 6 ? remaining : 6;
+    }
     return 6;
   }
 
@@ -69,12 +72,12 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
 
     if (show == null) {
       return AdaptiveScaffold(
-        appBar: AdaptiveAppBar(title: GoodsLocalizations.of(context).chooseTicketPage_71),
+        appBar: AdaptiveAppBar(title: context.l10n.chooseTicketPage_71),
         body: PsEmptyState(
-          title: GoodsLocalizations.of(context).chooseTicketPage_73,
-          description: GoodsLocalizations.of(context).chooseTicketPage_74(widget.showId),
+          title: context.l10n.chooseTicketPage_73,
+          description: context.l10n.chooseTicketPage_74(widget.showId),
           icon: LucideIcons.calendarX,
-          actionLabel: GoodsLocalizations.of(context).chooseTicketPage_76,
+          actionLabel: context.l10n.chooseTicketPage_76,
           onAction: () => context.pop(),
         ),
       );
@@ -86,7 +89,9 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
       appBar: AdaptiveAppBar(
-        title: show.title.length > 14 ? '${show.title.substring(0, 14)}…' : show.title,
+        title: show.title.length > 14
+            ? '${show.title.substring(0, 14)}…'
+            : show.title,
       ),
       body: Column(
         children: <Widget>[
@@ -98,7 +103,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
                 children: <Widget>[
                   _ShowInfoCard(show: show),
                   if (sessions.isNotEmpty) ...<Widget>[
-                    _SectionTitle(title: GoodsLocalizations.of(context).chooseTicketPage_100),
+                    _SectionTitle(title: context.l10n.chooseTicketPage_100),
                     _SessionList(
                       sessions: sessions,
                       selectedIndex: _selectedSession,
@@ -107,11 +112,11 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
                       }),
                     ),
                   ] else ...<Widget>[
-                    _SectionTitle(title: GoodsLocalizations.of(context).chooseTicketPage_109),
+                    _SectionTitle(title: context.l10n.chooseTicketPage_109),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(15, 8, 15, 0),
                       child: Text(
-                        show.firstSessionLabel,
+                        show.firstSessionLabelOf(context),
                         style: TextStyle(
                           fontSize: 14,
                           color: colors.textSecondary,
@@ -120,13 +125,16 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
                     ),
                     const SizedBox(height: 8),
                   ],
-                  _SectionTitle(title: GoodsLocalizations.of(context).chooseTicketPage_122),
+                  _SectionTitle(title: context.l10n.chooseTicketPage_122),
                   if (tiers.isEmpty)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(15, 8, 15, 0),
                       child: Text(
-                        GoodsLocalizations.of(context).chooseTicketPage_127,
-                        style: TextStyle(fontSize: 14, color: colors.textTertiary),
+                        context.l10n.chooseTicketPage_127,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: colors.textTertiary,
+                        ),
                       ),
                     )
                   else
@@ -140,7 +148,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
                       }),
                     ),
                   if (_selectedTier >= 0) ...<Widget>[
-                    _SectionTitle(title: GoodsLocalizations.of(context).chooseTicketPage_142),
+                    _SectionTitle(title: context.l10n.chooseTicketPage_142),
                     _QuantitySelector(
                       quantity: _quantity,
                       min: 1,
@@ -169,11 +177,11 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
 
   void _proceed(BuildContext context, ShowSummary show) {
     if (_selectedTier < 0) {
-      _toast(context, GoodsLocalizations.of(context).chooseTicketPage_171);
+      _toast(context, context.l10n.chooseTicketPage_171);
       return;
     }
     if (show.soldOut) {
-      _toast(context, GoodsLocalizations.of(context).chooseTicketPage_175);
+      _toast(context, context.l10n.chooseTicketPage_175);
       return;
     }
     // 把选好的参数带到确认订单页。企划星走 scheme 参数，这里用 query。
@@ -186,7 +194,9 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
   }
 
   static void _toast(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
@@ -228,14 +238,21 @@ class _ShowInfoCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 Row(
                   children: <Widget>[
-                    Icon(LucideIcons.mapPin, size: 12, color: colors.textTertiary),
+                    Icon(
+                      LucideIcons.mapPin,
+                      size: 12,
+                      color: colors.textTertiary,
+                    ),
                     const SizedBox(width: 2),
                     Expanded(
                       child: Text(
                         '${show.city} · ${show.venue}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colors.textTertiary,
+                        ),
                       ),
                     ),
                   ],
@@ -243,13 +260,20 @@ class _ShowInfoCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: <Widget>[
-                    Icon(LucideIcons.clock, size: 12, color: colors.textTertiary),
+                    Icon(
+                      LucideIcons.clock,
+                      size: 12,
+                      color: colors.textTertiary,
+                    ),
                     const SizedBox(width: 2),
                     Text(
-                      '${show.firstSessionLabel} · ${show.duration}',
+                      '${show.firstSessionLabelOf(context)} · ${show.duration}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.textTertiary,
+                      ),
                     ),
                   ],
                 ),
@@ -340,20 +364,22 @@ class _SessionList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    formatSessionLabel(session.startsAt),
+                    formatSessionLabelL10n(context, session.startsAt),
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
                       color: session.soldOut
                           ? colors.textDisabled
                           : selected
-                              ? colors.brand
-                              : colors.textPrimary,
+                          ? colors.brand
+                          : colors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    session.soldOut ? GoodsLocalizations.of(context).chooseTicketPage_355 : session.tierSummary,
+                    session.soldOut
+                        ? context.l10n.chooseTicketPage_355
+                        : session.tierSummary,
                     style: TextStyle(
                       fontSize: 11,
                       color: session.soldOut
@@ -396,9 +422,14 @@ class _TierList extends StatelessWidget {
               onTap: tiers[i].soldOut ? null : () => onSelect(i),
               child: Container(
                 margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 14,
+                ),
                 decoration: BoxDecoration(
-                  color: i == selectedIndex ? colors.brandSubtle : colors.bgCard,
+                  color: i == selectedIndex
+                      ? colors.brandSubtle
+                      : colors.bgCard,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: i == selectedIndex ? colors.brand : colors.border,
@@ -433,11 +464,15 @@ class _TierList extends StatelessWidget {
                               ],
                             ],
                           ),
-                          if (tiers[i].remaining != null && tiers[i].remaining! > 0 && tiers[i].remaining! <= 10)
+                          if (tiers[i].remaining != null &&
+                              tiers[i].remaining! > 0 &&
+                              tiers[i].remaining! <= 10)
                             Padding(
                               padding: const EdgeInsets.only(top: 4),
                               child: Text(
-                                GoodsLocalizations.of(context).chooseTicketPage_439(tiers[i].remaining!),
+                                context.l10n.chooseTicketPage_439(
+                                  tiers[i].remaining!,
+                                ),
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: colors.price,
@@ -449,14 +484,19 @@ class _TierList extends StatelessWidget {
                     ),
                     if (tiers[i].soldOut)
                       Text(
-                        GoodsLocalizations.of(context).chooseTicketPage_451,
-                        style: TextStyle(fontSize: 14, color: colors.textDisabled),
+                        context.l10n.chooseTicketPage_451,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: colors.textDisabled,
+                        ),
                       )
                     else
                       PsPrice(
                         amount: tiers[i].price,
                         size: 18,
-                        suffix: i == selectedIndex ? GoodsLocalizations.of(context).chooseTicketPage_458 : null,
+                        suffix: i == selectedIndex
+                            ? context.l10n.chooseTicketPage_458
+                            : null,
                       ),
                   ],
                 ),
@@ -518,7 +558,7 @@ class _QuantitySelector extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            GoodsLocalizations.of(context).chooseTicketPage_520(max),
+            context.l10n.chooseTicketPage_520(max),
             style: TextStyle(fontSize: 12, color: colors.textTertiary),
           ),
         ],
@@ -567,9 +607,9 @@ class _PurchaseNoticeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final notices = <String>[
-      GoodsLocalizations.of(context).chooseTicketPage_569,
-      GoodsLocalizations.of(context).chooseTicketPage_570,
-      GoodsLocalizations.of(context).chooseTicketPage_571,
+      context.l10n.chooseTicketPage_569,
+      context.l10n.chooseTicketPage_570,
+      context.l10n.chooseTicketPage_571,
     ];
     return Container(
       margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -586,7 +626,7 @@ class _PurchaseNoticeCard extends StatelessWidget {
               Icon(LucideIcons.info, size: 14, color: colors.textTertiary),
               const SizedBox(width: 4),
               Text(
-                GoodsLocalizations.of(context).chooseTicketPage_588,
+                context.l10n.chooseTicketPage_588,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -602,11 +642,18 @@ class _PurchaseNoticeCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('· ', style: TextStyle(fontSize: 12, color: colors.textTertiary)),
+                  Text(
+                    '· ',
+                    style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                  ),
                   Expanded(
                     child: Text(
                       notice,
-                      style: TextStyle(fontSize: 12, height: 1.5, color: colors.textTertiary),
+                      style: TextStyle(
+                        fontSize: 12,
+                        height: 1.5,
+                        color: colors.textTertiary,
+                      ),
                     ),
                   ),
                 ],
@@ -642,9 +689,7 @@ class _BottomBar extends StatelessWidget {
 
     // 选中票档时显示单价 × 数量；否则显示起价。
     final tier = tierIndex >= 0 ? show.tiers[tierIndex] : null;
-    final amount = tier != null
-        ? tier.price * quantity
-        : show.priceFrom;
+    final amount = tier != null ? tier.price * quantity : show.priceFrom;
 
     return Container(
       color: colors.bgCard,
@@ -667,7 +712,7 @@ class _BottomBar extends StatelessWidget {
                     Icon(LucideIcons.armchair, size: 14, color: colors.brand),
                     const SizedBox(width: 4),
                     Text(
-                      GoodsLocalizations.of(context).chooseTicketPage_669,
+                      context.l10n.chooseTicketPage_669,
                       style: TextStyle(fontSize: 13, color: colors.brand),
                     ),
                   ],
@@ -695,7 +740,7 @@ class _BottomBar extends StatelessWidget {
                         )
                       else
                         Text(
-                          GoodsLocalizations.of(context).chooseTicketPage_697,
+                          context.l10n.chooseTicketPage_697,
                           style: TextStyle(
                             fontSize: 12,
                             color: colors.textTertiary,
@@ -705,7 +750,7 @@ class _BottomBar extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(
-                            GoodsLocalizations.of(context).chooseTicketPage_707,
+                            context.l10n.chooseTicketPage_707,
                             style: TextStyle(
                               fontSize: 13,
                               color: colors.textSecondary,
@@ -729,7 +774,7 @@ class _BottomBar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: Text(
-                      GoodsLocalizations.of(context).chooseTicketPage_731,
+                      context.l10n.chooseTicketPage_731,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,

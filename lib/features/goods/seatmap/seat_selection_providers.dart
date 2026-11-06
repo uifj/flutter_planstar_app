@@ -8,8 +8,7 @@ import 'seat_map.dart';
 ///
 /// 企划星的 `SelectTicketSeatMapActivity` 调 `GET v5/ticketCategories` 拿座位图。
 /// 本演示模式用 [DemoSeatMap.generate] 生成。
-final seatMapDataProvider =
-    Provider.family<SeatMapData, String>((ref, showId) {
+final seatMapDataProvider = Provider.family<SeatMapData, String>((ref, showId) {
   return DemoSeatMap.generate();
 });
 
@@ -76,7 +75,8 @@ class SeatSelectionState {
 /// - **不做连座**：企划星的 `isContinuousSeat` 参数要求选连续座位。
 ///   这里允许任意选——连座逻辑需要根据 `x` 坐标判断相邻性，
 ///   作为 P0 切片先不做，留 P1 补齐。
-class SeatSelectionController extends FamilyNotifier<SeatSelectionState, String> {
+class SeatSelectionController
+    extends FamilyNotifier<SeatSelectionState, String> {
   @override
   SeatSelectionState build(arg) {
     final mapData = ref.read(seatMapDataProvider(arg));
@@ -109,6 +109,8 @@ class SeatSelectionController extends FamilyNotifier<SeatSelectionState, String>
 
 /// 选座控制器 Provider。
 final seatSelectionProvider =
-    NotifierProvider.family<SeatSelectionController, SeatSelectionState, String>(
-  SeatSelectionController.new,
-);
+    NotifierProvider.family<
+      SeatSelectionController,
+      SeatSelectionState,
+      String
+    >(SeatSelectionController.new);

@@ -41,7 +41,11 @@ List<ShowSummary> buildDemoCatalog({DateTime? now}) {
   final today = now ?? DateTime.now();
 
   DateTime at(int days, {int hour = 19, int minute = 30}) {
-    final day = DateTime(today.year, today.month, today.day).add(Duration(days: days));
+    final day = DateTime(
+      today.year,
+      today.month,
+      today.day,
+    ).add(Duration(days: days));
     return DateTime(day.year, day.month, day.day, hour, minute);
   }
 
@@ -56,7 +60,12 @@ List<ShowSummary> buildDemoCatalog({DateTime? now}) {
       venue: '梅赛德斯-奔驰文化中心',
       venueAddress: '浦东新区世博大道1200号',
       days: at(12),
-      tiers: <(String, int)>[('内场 A 区', 2580), ('内场 B 区', 1880), ('看台 1 层', 980), ('看台 2 层', 680)],
+      tiers: <(String, int)>[
+        ('内场 A 区', 2580),
+        ('内场 B 区', 1880),
+        ('看台 1 层', 980),
+        ('看台 2 层', 680),
+      ],
       listPrice: 800,
       discountPermille: 850,
       tags: <String>['电子票', '实名购票', '无票赔付'],
@@ -85,7 +94,12 @@ List<ShowSummary> buildDemoCatalog({DateTime? now}) {
       venue: '上海体育场',
       venueAddress: '徐汇区天钥桥路666号',
       days: at(20, hour: 19, minute: 0),
-      tiers: <(String, int)>[('内场摇滚区', 1280), ('内场看台', 780), ('看台 1 层', 480), ('看台 2 层', 355)],
+      tiers: <(String, int)>[
+        ('内场摇滚区', 1280),
+        ('内场看台', 780),
+        ('看台 1 层', 480),
+        ('看台 2 层', 355),
+      ],
       tags: <String>['电子票', '实名购票'],
       wishCount: 96_200,
       rating: 4.8,
@@ -102,7 +116,12 @@ List<ShowSummary> buildDemoCatalog({DateTime? now}) {
       venue: '浦发银行东方体育中心',
       venueAddress: '浦东新区耀龙路100号',
       days: at(35),
-      tiers: <(String, int)>[('内场 A 区', 1680), ('内场 B 区', 1280), ('看台 1 层', 880), ('看台 2 层', 480)],
+      tiers: <(String, int)>[
+        ('内场 A 区', 1680),
+        ('内场 B 区', 1280),
+        ('看台 1 层', 880),
+        ('看台 2 层', 480),
+      ],
       tags: <String>['电子票', '实名购票', '无票赔付'],
       wishCount: 74_900,
       rating: 4.9,
@@ -137,7 +156,12 @@ List<ShowSummary> buildDemoCatalog({DateTime? now}) {
       venue: '虹口足球场',
       venueAddress: '虹口区东江湾路444号',
       days: at(62),
-      tiers: <(String, int)>[('内场 A 区', 1580), ('内场 B 区', 1080), ('看台 1 层', 680), ('看台 2 层', 380)],
+      tiers: <(String, int)>[
+        ('内场 A 区', 1580),
+        ('内场 B 区', 1080),
+        ('看台 1 层', 680),
+        ('看台 2 层', 380),
+      ],
       listPrice: 480,
       discountPermille: 920,
       tags: <String>['电子票', '实名购票'],
@@ -228,10 +252,7 @@ List<ShowSummary> buildDemoCatalog({DateTime? now}) {
       ratingCount: 9_330,
       duration: '约 180 分钟',
       intro: '戴着面具在五层楼里自由行走，每条动线都是一个不同的故事。',
-      purchaseNotice: <String>[
-        '演出全程需佩戴面具，请穿着便于行走的鞋子。',
-        '场内禁止拍照与录像。',
-      ],
+      purchaseNotice: <String>['演出全程需佩戴面具，请穿着便于行走的鞋子。', '场内禁止拍照与录像。'],
     ),
     _show(
       id: '2005',
@@ -634,10 +655,18 @@ ShowSummary _show({
 }) {
   final tierList = <TicketTier>[
     for (final (name, price) in tiers)
-      TicketTier(name: name, price: Money.fromYuan(price), remaining: 20 + price % 60),
+      TicketTier(
+        name: name,
+        price: Money.fromYuan(price),
+        remaining: 20 + price % 60,
+      ),
   ];
-  final priceFrom = tierList.map((tier) => tier.price).reduce((a, b) => a.min(b));
-  final tierSummary = tierList.map((tier) => tier.price.minorUnits ~/ 100).join('/');
+  final priceFrom = tierList
+      .map((tier) => tier.price)
+      .reduce((a, b) => a.min(b));
+  final tierSummary = tierList
+      .map((tier) => tier.price.minorUnits ~/ 100)
+      .join('/');
 
   return ShowSummary(
     id: id,
@@ -665,8 +694,14 @@ ShowSummary _show({
     purchaseNotice: purchaseNotice,
     sessions: <ShowSession>[
       ShowSession(startsAt: days, tierSummary: tierSummary),
-      ShowSession(startsAt: days.add(const Duration(days: 1)), tierSummary: tierSummary),
-      ShowSession(startsAt: days.add(const Duration(days: 2)), tierSummary: tierSummary),
+      ShowSession(
+        startsAt: days.add(const Duration(days: 1)),
+        tierSummary: tierSummary,
+      ),
+      ShowSession(
+        startsAt: days.add(const Duration(days: 2)),
+        tierSummary: tierSummary,
+      ),
     ],
   );
 }

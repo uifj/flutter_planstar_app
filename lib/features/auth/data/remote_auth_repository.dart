@@ -24,9 +24,9 @@ final class RemoteAuthRepository implements AuthRepository {
     required PlanstarAuthApi api,
     required AuthSessionStore store,
     required PsRequestContext context,
-  })  : _api = api,
-        _store = store,
-        _context = context;
+  }) : _api = api,
+       _store = store,
+       _context = context;
 
   final PlanstarAuthApi _api;
   final AuthSessionStore _store;
@@ -73,16 +73,14 @@ final class RemoteAuthRepository implements AuthRepository {
     String phone,
     String code, {
     String? captcha,
-  }) =>
-      _login(phone: phone, code: code, captcha: captcha);
+  }) => _login(phone: phone, code: code, captcha: captcha);
 
   @override
   Future<Result<AuthSession>> loginWithPassword(
     String phone,
     String password, {
     String? captcha,
-  }) =>
-      _login(phone: phone, password: password, captcha: captcha);
+  }) => _login(phone: phone, password: password, captcha: captcha);
 
   @override
   Future<Result<List<int>>> fetchCaptchaImage() => _api.fetchCaptchaImage();

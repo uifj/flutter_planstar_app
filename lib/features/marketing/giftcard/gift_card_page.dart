@@ -8,7 +8,8 @@ import 'package:go_router/go_router.dart';
 import '../../../shared/ui/ps_empty_state.dart';
 import 'gift_card.dart';
 import 'gift_card_providers.dart';
-import '../../../l10n/marketing_localizations.dart';
+import '../marketing_l10n.dart';
+import '../../../l10n/l10n.dart';
 
 /// 礼品卡列表页。
 ///
@@ -28,26 +29,26 @@ class GiftCardPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
-        title: MarketingLocalizations.of(context).giftCardPage_30,
+        title: context.l10n.giftCardPage_30,
         actions: <AdaptiveAppBarAction>[
           AdaptiveAppBarAction(
             icon: LucideIcons.plus,
-            label: MarketingLocalizations.of(context).giftCardPage_34,
+            label: context.l10n.giftCardPage_34,
             onPressed: () => context.push('/giftcards/add'),
           ),
         ],
       ),
       body: activeCards.isEmpty && inactiveCards.isEmpty
           ? PsEmptyState(
-              title: MarketingLocalizations.of(context).giftCardPage_41,
-              description: MarketingLocalizations.of(context).giftCardPage_42,
+              title: context.l10n.giftCardPage_41,
+              description: context.l10n.giftCardPage_42,
               icon: LucideIcons.gift,
             )
           : ListView(
               children: <Widget>[
                 if (activeCards.isNotEmpty) ...<Widget>[
                   _SectionHeader(
-                    title: MarketingLocalizations.of(context).giftCardPage_49,
+                    title: context.l10n.giftCardPage_49,
                     count: activeCards.length,
                   ),
                   for (final card in activeCards) _GiftCardItem(card: card),
@@ -55,7 +56,7 @@ class GiftCardPage extends ConsumerWidget {
                 ],
                 if (inactiveCards.isNotEmpty) ...<Widget>[
                   _SectionHeader(
-                    title: MarketingLocalizations.of(context).giftCardPage_57,
+                    title: context.l10n.giftCardPage_57,
                     count: inactiveCards.length,
                   ),
                   for (final card in inactiveCards) _GiftCardItem(card: card),
@@ -156,7 +157,7 @@ class _GiftCardItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  MarketingLocalizations.of(context).giftCardPage_158,
+                  context.l10n.giftCardPage_158,
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.white.withValues(alpha: 0.8),
@@ -185,16 +186,13 @@ class _GiftCardItem extends StatelessWidget {
                     card.desc,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: colors.textTertiary,
-                    ),
+                    style: TextStyle(fontSize: 12, color: colors.textTertiary),
                   ),
                   const SizedBox(height: 6),
                   Row(
                     children: <Widget>[
                       Text(
-                        MarketingLocalizations.of(context).giftCardPage_196,
+                        context.l10n.giftCardPage_196,
                         style: TextStyle(
                           fontSize: 12,
                           color: colors.textTertiary,
@@ -222,7 +220,7 @@ class _GiftCardItem extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            MarketingLocalizations.of(context).giftCardPage_224,
+                            context.l10n.giftCardPage_224,
                             style: TextStyle(
                               fontSize: 10,
                               color: colors.warning,
@@ -233,11 +231,8 @@ class _GiftCardItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    card.expiryLabel,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: colors.textDisabled,
-                    ),
+                    card.expiryLabelOf(context),
+                    style: TextStyle(fontSize: 11, color: colors.textDisabled),
                   ),
                 ],
               ),

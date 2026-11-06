@@ -14,7 +14,8 @@ final class MessageThread {
   });
 
   factory MessageThread.fromJson(Map<String, dynamic> json) {
-    final String? atRaw = json['updatedAt'] ?? json['updateTime'] ?? json['createTime'];
+    final String? atRaw =
+        json['updatedAt'] ?? json['updateTime'] ?? json['createTime'];
     return MessageThread(
       id: json['id']?.toString() ?? json['messageId']?.toString() ?? '',
       title: json['title']?.toString() ?? json['subject']?.toString() ?? '',
@@ -46,7 +47,9 @@ final class MessageThread {
   /// 时间文案：今天显示 `HH:mm`，否则 `MM-dd`。
   String timeLabel(DateTime now) {
     final sameDay =
-        now.year == updatedAt.year && now.month == updatedAt.month && now.day == updatedAt.day;
+        now.year == updatedAt.year &&
+        now.month == updatedAt.month &&
+        now.day == updatedAt.day;
     if (sameDay) {
       final hour = updatedAt.hour.toString().padLeft(2, '0');
       final minute = updatedAt.minute.toString().padLeft(2, '0');

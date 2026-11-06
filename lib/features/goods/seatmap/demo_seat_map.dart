@@ -48,11 +48,7 @@ class DemoSeatMap {
       ),
     ];
 
-    return SeatMapData(
-      areas: areas,
-      venueName: venueName,
-      stageLabel: '舞台',
-    );
+    return SeatMapData(areas: areas, venueName: venueName, stageLabel: '舞台');
   }
 
   /// 构建一个区域。
@@ -78,15 +74,17 @@ class DemoSeatMap {
         final colLabel = '${c + 1}';
 
         if (c == aisleIndex) {
-          seats.add(Seat(
-            id: seatId,
-            row: rowLabels[r],
-            col: colLabel,
-            x: c,
-            y: startY + r,
-            status: SeatStatus.aisle,
-            areaName: name,
-          ));
+          seats.add(
+            Seat(
+              id: seatId,
+              row: rowLabels[r],
+              col: colLabel,
+              x: c,
+              y: startY + r,
+              status: SeatStatus.aisle,
+              areaName: name,
+            ),
+          );
           continue;
         }
 
@@ -103,24 +101,22 @@ class DemoSeatMap {
           status = SeatStatus.blocked;
         }
 
-        seats.add(Seat(
-          id: seatId,
-          row: rowLabels[r],
-          col: colLabel,
-          x: c,
-          y: startY + r,
-          status: status,
-          areaName: name,
-          price: pricePerSeat,
-          categoryId: id,
-        ));
+        seats.add(
+          Seat(
+            id: seatId,
+            row: rowLabels[r],
+            col: colLabel,
+            x: c,
+            y: startY + r,
+            status: status,
+            areaName: name,
+            price: pricePerSeat,
+            categoryId: id,
+          ),
+        );
       }
 
-      rows.add(SeatRow(
-        label: rowLabels[r],
-        seats: seats,
-        y: startY + r,
-      ));
+      rows.add(SeatRow(label: rowLabels[r], seats: seats, y: startY + r));
     }
 
     return SeatArea(

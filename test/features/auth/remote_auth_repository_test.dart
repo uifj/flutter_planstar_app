@@ -39,14 +39,16 @@ void main() {
     AppStore appStore,
     PsRequestContext context,
     List<RequestOptions> requests,
-  }) buildRepository(
+  })
+  buildRepository(
     Future<ResponseBody> Function(RequestOptions options) responder, {
     AppStore? appStore,
     PsRequestContext? requestContext,
   }) {
     final requests = <RequestOptions>[];
     final context = requestContext ?? PsRequestContext(dvid: generateDvid());
-    final resolvedStore = appStore ??
+    final resolvedStore =
+        appStore ??
         AppStore(
           preferences: MemoryKeyValueStore(),
           secure: MemorySecureStore(),
@@ -61,7 +63,8 @@ void main() {
       interceptors: <Interceptor>[
         PsNetworkInterceptor(
           context: context,
-          userAgent: 'PlanstarApi (com.planstar.app/9.9.39 Xiaomi '
+          userAgent:
+              'PlanstarApi (com.planstar.app/9.9.39 Xiaomi '
               'developer-default Android/14)',
         ),
       ],
@@ -80,7 +83,8 @@ void main() {
   }
 
   /// 抓包原文：登录成功（`LoginBean`，字段取自 `UserBean`）。
-  const String kLoginSuccessBody = '{"needCaptcha":false,"newUser":true,'
+  const String kLoginSuccessBody =
+      '{"needCaptcha":false,"newUser":true,'
       '"user":{"userId":90012345,"userName":"票友小张","avatar":'
       '"https://p1.planstar.com/avatar/90012345.jpg","bio":"爱看话剧",'
       '"gender":1,"birthday":946656000000,"mobileNo":"13800138000",'
@@ -108,7 +112,9 @@ void main() {
           kLoginSuccessBody,
           200,
           headers: <String, List<String>>{
-            Headers.contentTypeHeader: <String>['application/json;charset=UTF-8'],
+            Headers.contentTypeHeader: <String>[
+              'application/json;charset=UTF-8',
+            ],
             // 来源 `BaseLoginActivity` 就是从响应头取 `psSession`
             // （`AccountService.getInstance().setPner(response.headers().get("psSession"))`）。
             'psSession': <String>['tok_abc123'],
@@ -116,12 +122,14 @@ void main() {
         );
       });
 
-      final Result<AuthSession> result =
-          await env.repository.loginWithCode('13800138000', '123456');
+      final Result<AuthSession> result = await env.repository.loginWithCode(
+        '13800138000',
+        '123456',
+      );
 
-      final session = result.getOrElse((Failure failure) => throw StateError(
-            '登录应该成功，实际失败：${failure.message}',
-          ));
+      final session = result.getOrElse(
+        (Failure failure) => throw StateError('登录应该成功，实际失败：${failure.message}'),
+      );
       expect(session.user.userId, 90012345);
       expect(session.user.displayName, '票友小张');
       expect(session.user.level, 3);
@@ -138,15 +146,18 @@ void main() {
       final RequestOptions request = env.requests.single;
       expect(request.path, 'v1/user/login');
       expect(request.method, 'POST');
-      final Map<String, Object?> body =
-          (request.data as Map<Object?, Object?>).cast<String, Object?>();
+      final Map<String, Object?> body = (request.data as Map<Object?, Object?>)
+          .cast<String, Object?>();
       expect(body['ua'], '13800138000');
       expect(body['code'], '123456');
       expect(body['ct'], 11);
       // 密码分支才带 `pw`，验证码分支不能带——带了服务端会走密码校验。
       expect(body.containsKey('pw'), isFalse);
       expect(request.headers['dvid'], isNotNull);
-      expect(request.headers['User-Agent'], contains('PlanstarApi (com.planstar.app'));
+      expect(
+        request.headers['User-Agent'],
+        contains('PlanstarApi (com.planstar.app'),
+      );
     });
 
     test('登录成功后的下一个请求自动带 Cookie: psSession', () async {
@@ -195,10 +206,16 @@ void main() {
         contains('票友小张'),
         reason: '资料应写进普通偏好',
       );
-      expect(await appStore.secure.read('psSession'), 'tok_abc123',
-          reason: '令牌必须在安全存储里');
-      expect(await appStore.secure.read(AuthSessionStore.profileKey), isNull,
-          reason: '资料不该进安全存储');
+      expect(
+        await appStore.secure.read('psSession'),
+        'tok_abc123',
+        reason: '令牌必须在安全存储里',
+      );
+      expect(
+        await appStore.secure.read(AuthSessionStore.profileKey),
+        isNull,
+        reason: '资料不该进安全存储',
+      );
 
       final restored = AuthSessionStore(
         store: appStore,
@@ -217,7 +234,9 @@ void main() {
             const AuthUser(userId: 90012345, userName: '票友小张').toJson(),
           ),
         }),
-        secure: MemorySecureStore(<String, String>{'psSession': 'tok_from_disk'}),
+        secure: MemorySecureStore(<String, String>{
+          'psSession': 'tok_from_disk',
+        }),
       );
       final context = PsRequestContext();
       final store = AuthSessionStore(store: appStore, context: context);
@@ -239,8 +258,10 @@ void main() {
         ),
       );
 
-      final Result<AuthSession> result =
-          await env.repository.loginWithCode('13800138000', '000000');
+      final Result<AuthSession> result = await env.repository.loginWithCode(
+        '13800138000',
+        '000000',
+      );
 
       final failure = result.failure;
       expect(failure, isNotNull);
@@ -264,8 +285,10 @@ void main() {
         ),
       );
 
-      final Result<AuthSession> result =
-          await env.repository.loginWithCode('13800138000', '123456');
+      final Result<AuthSession> result = await env.repository.loginWithCode(
+        '13800138000',
+        '123456',
+      );
 
       final failure = result.failure!;
       expect(failure.code, AuthFailureCodes.accountLocked);
@@ -286,14 +309,16 @@ void main() {
         ),
       );
 
-      final Result<AuthSession> result =
-          await env.repository.loginWithPassword('13800138000', 'a1234567');
+      final Result<AuthSession> result = await env.repository.loginWithPassword(
+        '13800138000',
+        'a1234567',
+      );
 
       expect(result.failure!.message, kPasswordDisabledBody);
       expect(result.failure!.code, AuthFailureCodes.business);
       // 请求体走的是 pw 分支。
-      final body =
-          (env.requests.single.data as Map<Object?, Object?>).cast<String, Object?>();
+      final body = (env.requests.single.data as Map<Object?, Object?>)
+          .cast<String, Object?>();
       expect(body['pw'], 'a1234567');
       expect(body.containsKey('code'), isFalse);
     });
@@ -309,8 +334,10 @@ void main() {
         ),
       );
 
-      final Result<AuthSession> result =
-          await env.repository.loginWithCode('13800138000', '123456');
+      final Result<AuthSession> result = await env.repository.loginWithCode(
+        '13800138000',
+        '123456',
+      );
 
       expect(result.failure!.code, AuthFailureCodes.needsCaptcha);
       expect(AuthFailure.fromFailure(result.failure!).needsCaptcha, isTrue);
@@ -327,8 +354,10 @@ void main() {
         ),
       );
 
-      final Result<AuthSession> result =
-          await env.repository.loginWithCode('13800138000', '123456');
+      final Result<AuthSession> result = await env.repository.loginWithCode(
+        '13800138000',
+        '123456',
+      );
 
       expect(result.failure!.code, 'AUTH_NO_USER');
       expect(env.context.psSession, isNull);
@@ -342,8 +371,10 @@ void main() {
         );
       });
 
-      final Result<AuthSession> result =
-          await env.repository.loginWithCode('13800138000', '123456');
+      final Result<AuthSession> result = await env.repository.loginWithCode(
+        '13800138000',
+        '123456',
+      );
 
       final failure = result.failure!;
       expect(failure.type, FailureType.timeout);
@@ -360,8 +391,10 @@ void main() {
         );
       });
 
-      final Result<AuthSession> result =
-          await env.repository.loginWithCode('13800138000', '123456');
+      final Result<AuthSession> result = await env.repository.loginWithCode(
+        '13800138000',
+        '123456',
+      );
 
       final auth = AuthFailure.fromFailure(result.failure!);
       expect(auth.kind, AuthFailureKind.network);
@@ -381,10 +414,14 @@ void main() {
         ),
       );
 
-      final Result<SendCodeOutcome> result =
-          await env.repository.sendLoginCode('13800138000');
+      final Result<SendCodeOutcome> result = await env.repository.sendLoginCode(
+        '13800138000',
+      );
 
-      expect(result.getOrElse((_) => const SendCodeOutcome()).cooldownSeconds, 60);
+      expect(
+        result.getOrElse((_) => const SendCodeOutcome()).cooldownSeconds,
+        60,
+      );
       expect(env.requests.single.path, 'v3/user/sendLoginCode');
     });
 
@@ -399,8 +436,9 @@ void main() {
         ),
       );
 
-      final Result<SendCodeOutcome> result =
-          await env.repository.sendLoginCode('13800138000');
+      final Result<SendCodeOutcome> result = await env.repository.sendLoginCode(
+        '13800138000',
+      );
 
       final failure = result.failure!;
       expect(failure.code, AuthFailureCodes.needsCaptcha);
@@ -419,13 +457,15 @@ void main() {
         ),
       );
 
-      final Result<SendCodeOutcome> result =
-          await env.repository.sendLoginCode('13800138000', captcha: 'zzzz');
+      final Result<SendCodeOutcome> result = await env.repository.sendLoginCode(
+        '13800138000',
+        captcha: 'zzzz',
+      );
 
       expect(result.failure!.code, AuthFailureCodes.needsCaptcha);
       expect(result.failure!.message, '图形验证码错误');
-      final body =
-          (env.requests.single.data as Map<Object?, Object?>).cast<String, Object?>();
+      final body = (env.requests.single.data as Map<Object?, Object?>)
+          .cast<String, Object?>();
       expect(body['captcha'], 'zzzz');
     });
   });
@@ -434,8 +474,18 @@ void main() {
     test('返回 PNG 字节（不是 base64、不是 URL）', () async {
       // 真图前 8 字节的 PNG 魔数。
       final bytes = Uint8List.fromList(<int>[
-        0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
-        0x00, 0x00, 0x00, 0x0D,
+        0x89,
+        0x50,
+        0x4E,
+        0x47,
+        0x0D,
+        0x0A,
+        0x1A,
+        0x0A,
+        0x00,
+        0x00,
+        0x00,
+        0x0D,
       ]);
       final env = buildRepository(
         (RequestOptions options) async => ResponseBody.fromBytes(
@@ -481,7 +531,10 @@ void main() {
 
       expect(env.context.psSession, isNull);
       expect(await appStore.secure.read('psSession'), isNull);
-      expect(await appStore.preferences.read(AuthSessionStore.profileKey), isNull);
+      expect(
+        await appStore.preferences.read(AuthSessionStore.profileKey),
+        isNull,
+      );
       expect(await env.repository.restoreSession(), isNull);
     });
   });
@@ -498,8 +551,7 @@ final class _FakeAdapter implements HttpClientAdapter {
     RequestOptions options,
     Stream<Uint8List>? requestStream,
     Future<void>? cancelFuture,
-  ) =>
-      _responder(options);
+  ) => _responder(options);
 
   @override
   void close({bool force = false}) {}

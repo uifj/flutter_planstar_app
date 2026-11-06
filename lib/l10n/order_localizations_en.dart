@@ -220,6 +220,11 @@ class OrderLocalizationsEn extends OrderLocalizations {
   String get delivery_84 => '现场自取';
 
   @override
+  String delivery_136(Object method, Object postage) {
+    return '$method（$postage）';
+  }
+
+  @override
   String discount_71(Object percent, Object format) {
     return '-$percent%（封顶 $format）';
   }
@@ -607,6 +612,9 @@ class OrderLocalizationsEn extends OrderLocalizations {
 
   @override
   String get orderListPage_196 => '用户主动取消';
+
+  @override
+  String get orderCancelTimeout => '支付超时，订单已关闭';
 
   @override
   String get orderListPage_198 => '订单已取消';

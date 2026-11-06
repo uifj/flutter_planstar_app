@@ -24,7 +24,11 @@ final class SpeedPack extends ValueObject {
       throw ArgumentError.value(unitPrice, 'unitPrice', '加速包单价不能为负');
     }
     if (balanceAvailable.isNegative) {
-      throw ArgumentError.value(balanceAvailable, 'balanceAvailable', '加速包余额不能为负');
+      throw ArgumentError.value(
+        balanceAvailable,
+        'balanceAvailable',
+        '加速包余额不能为负',
+      );
     }
   }
 
@@ -33,8 +37,11 @@ final class SpeedPack extends ValueObject {
     required int tickets,
     required Money unitPrice,
     required Money balanceAvailable,
-  }) =>
-      SpeedPack(units: tickets, unitPrice: unitPrice, balanceAvailable: balanceAvailable);
+  }) => SpeedPack(
+    units: tickets,
+    unitPrice: unitPrice,
+    balanceAvailable: balanceAvailable,
+  );
 
   /// 份数（= 票数）。
   final int units;
@@ -58,7 +65,8 @@ final class SpeedPack extends ValueObject {
   List<Object?> get props => <Object?>[units, unitPrice, balanceAvailable];
 
   @override
-  String toString() => '加速包 $units 份（现金 ${cashPortion.format()} / 余额 ${balancePortion.format()}）';
+  String toString() =>
+      '加速包 $units 份（现金 ${cashPortion.format()} / 余额 ${balancePortion.format()}）';
 }
 
 /// 礼品卡（本单用于抵扣的一张卡）。

@@ -9,21 +9,24 @@ import 'gift_card.dart';
 /// 对齐 Android `GiftCardService.fetchGiftCards()` → `GiftCardInfo`：
 /// - Android 返回 `enableGiftCards` + `disableGiftCards`。
 /// - 这里返回统一列表，由 `GiftCardStatus` 区分。
-final giftCardListProvider =
-    Provider<List<GiftCard>>((ref) => DemoGiftCards.all);
+final giftCardListProvider = Provider<List<GiftCard>>(
+  (ref) => DemoGiftCards.all,
+);
 
 /// 可用礼品卡 Provider。
 final activeGiftCardsProvider = Provider<List<GiftCard>>(
-  (ref) => ref.watch(giftCardListProvider).where(
-        (GiftCard c) => c.status == GiftCardStatus.active,
-      ).toList(),
+  (ref) => ref
+      .watch(giftCardListProvider)
+      .where((GiftCard c) => c.status == GiftCardStatus.active)
+      .toList(),
 );
 
 /// 不可用礼品卡 Provider。
 final inactiveGiftCardsProvider = Provider<List<GiftCard>>(
-  (ref) => ref.watch(giftCardListProvider).where(
-        (GiftCard c) => c.status != GiftCardStatus.active,
-      ).toList(),
+  (ref) => ref
+      .watch(giftCardListProvider)
+      .where((GiftCard c) => c.status != GiftCardStatus.active)
+      .toList(),
 );
 
 /// 可用礼品卡数量。
@@ -33,10 +36,9 @@ final giftCardCountProvider = Provider<int>(
 
 /// 礼品卡总余额。
 final giftCardTotalBalanceProvider = Provider<Money>(
-  (ref) => ref.watch(activeGiftCardsProvider).fold(
-        Money.zero(),
-        (Money sum, GiftCard c) => sum + c.balance,
-      ),
+  (ref) => ref
+      .watch(activeGiftCardsProvider)
+      .fold(Money.zero(), (Money sum, GiftCard c) => sum + c.balance),
 );
 
 /// 绑定礼品卡的 Controller。
@@ -51,7 +53,7 @@ class AddGiftCardController extends Notifier<AddGiftCardState> {
   /// 提交卡号绑定。
   Future<void> bind(String serialNumber) async {
     if (serialNumber.trim().isEmpty) {
-      state = const AddGiftCardState.error('请输入礼品卡卡号');
+      state = const AddGiftCardState.error();
       return;
     }
 
@@ -61,9 +63,7 @@ class AddGiftCardController extends Notifier<AddGiftCardState> {
     await Future<void>.delayed(const Duration(milliseconds: 800));
 
     // 模拟成功（真实场景调 POST v1/giftCards）
-    state = AddGiftCardState.success(
-      '礼品卡绑定成功，已添加 ¥200 余额',
-    );
+    state = const AddGiftCardState.success();
   }
 
   /// 重置状态。
@@ -76,8 +76,8 @@ sealed class AddGiftCardState {
 
   const factory AddGiftCardState.initial() = AddGiftCardInitial;
   const factory AddGiftCardState.submitting() = AddGiftCardSubmitting;
-  const factory AddGiftCardState.success(String message) = AddGiftCardSuccess;
-  const factory AddGiftCardState.error(String message) = AddGiftCardError;
+  const factory AddGiftCardState.success() = AddGiftCardSuccess;
+  const factory AddGiftCardState.error() = AddGiftCardError;
 }
 
 class AddGiftCardInitial extends AddGiftCardState {
@@ -89,16 +89,14 @@ class AddGiftCardSubmitting extends AddGiftCardState {
 }
 
 class AddGiftCardSuccess extends AddGiftCardState {
-  const AddGiftCardSuccess(this.message);
-  final String message;
+  const AddGiftCardSuccess();
 }
 
 class AddGiftCardError extends AddGiftCardState {
-  const AddGiftCardError(this.message);
-  final String message;
+  const AddGiftCardError();
 }
 
 final addGiftCardControllerProvider =
     NotifierProvider<AddGiftCardController, AddGiftCardState>(
-  AddGiftCardController.new,
-);
+      AddGiftCardController.new,
+    );

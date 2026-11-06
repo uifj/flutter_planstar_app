@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 final class PrefsKeyValueStore implements KeyValueStore {
   /// 创建适配器。可注入自定义实例（测试用）。
   PrefsKeyValueStore({SharedPreferencesAsync? prefs})
-      : _prefs = prefs ?? SharedPreferencesAsync();
+    : _prefs = prefs ?? SharedPreferencesAsync();
 
   final SharedPreferencesAsync _prefs;
 

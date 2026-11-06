@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../l10n/app_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 隐私协议同意状态。
 ///
@@ -116,7 +116,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
                     ),
                     child: Center(
                       child: Text(
-                        AppLocalizations.of(context).appTitle,
+                        context.l10n.appTitle,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w900,
@@ -127,11 +127,8 @@ class _SplashPageState extends ConsumerState<SplashPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    AppLocalizations.of(context).splashPage_129,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
+                    context.l10n.splashPage_129,
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
               ),
@@ -144,7 +141,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    AppLocalizations.of(context).splashPage_146,
+                    context.l10n.splashPage_146,
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.white.withValues(alpha: 0.6),
@@ -178,26 +175,22 @@ class _PrivacyDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(AppLocalizations.of(context).splashPage_180),
+      title: Text(context.l10n.splashPage_180),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).splashPage_187,
+              context.l10n.splashPage_187,
               style: TextStyle(fontSize: 14, height: 1.5),
             ),
             const SizedBox(height: 12),
-            _Bullet(
-              text: AppLocalizations.of(context).splashPage_192,
-            ),
-            _Bullet(
-              text: AppLocalizations.of(context).splashPage_195,
-            ),
+            _Bullet(text: context.l10n.splashPage_192),
+            _Bullet(text: context.l10n.splashPage_195),
             const SizedBox(height: 12),
             Text(
-              AppLocalizations.of(context).splashPage_199,
+              context.l10n.splashPage_199,
               style: TextStyle(fontSize: 13, color: Colors.grey),
             ),
           ],
@@ -206,11 +199,11 @@ class _PrivacyDialog extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           onPressed: onDisagree,
-          child: Text(AppLocalizations.of(context).splashPage_208),
+          child: Text(context.l10n.splashPage_208),
         ),
         FilledButton(
           onPressed: onAgree,
-          child: Text(AppLocalizations.of(context).splashPage_212),
+          child: Text(context.l10n.splashPage_212),
         ),
       ],
     );

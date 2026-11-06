@@ -54,9 +54,9 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     required this.requiredVisitorCount,
     required DeliveryInfo delivery,
     required PurchaseLimitPolicy limitPolicy,
-  })  : _delivery = delivery,
-        _limitPolicy = limitPolicy,
-        super(id);
+  }) : _delivery = delivery,
+       _limitPolicy = limitPolicy,
+       super(id);
 
   /// 创建一张草稿订单。
   ///
@@ -141,7 +141,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
   bool _agreementAccepted = false;
   DateTime? _submittedAt;
   DateTime? _paidAt;
-  String? _cancelReason;
+  OrderCancelReason? _cancelReason;
 
   /// 当前状态。
   OrderStatus get status => _status;
@@ -177,7 +177,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
   DateTime? get paidAt => _paidAt;
 
   /// 关闭原因。
-  String? get cancelReason => _cancelReason;
+  OrderCancelReason? get cancelReason => _cancelReason;
 
   /// 是否还能编辑（只有草稿可编辑）。
   bool get isEditable => _status == OrderStatus.draft;
@@ -391,10 +391,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
       return _fail('ORDER_EMPTY', '请先选择票档');
     }
     if (!_agreementAccepted) {
-      return _fail(
-        'ORDER_AGREEMENT_REQUIRED',
-        '请阅读并勾选${buyType.agreementTitle}',
-      );
+      return _fail('ORDER_AGREEMENT_REQUIRED', '请阅读并勾选${buyType.name}协议');
     }
 
     final currentQuote = _quote;
@@ -437,7 +434,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     required PaymentChannel channel,
   }) {
     if (_status != OrderStatus.awaitingPayment) {
-      return _fail('ORDER_NOT_PAYABLE', '当前状态（${_status.label}）不可支付');
+      return _fail('ORDER_NOT_PAYABLE', '当前状态（${_status.name}）不可支付');
     }
     final currentQuote = _quote;
     if (currentQuote == null) {
@@ -466,7 +463,11 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     if (transition.isFailure) return transition;
 
     raiseDomainEvent(
-      OrderShipped(orderId: id, trackingNumber: trackingNumber, occurredAt: now),
+      OrderShipped(
+        orderId: id,
+        trackingNumber: trackingNumber,
+        occurredAt: now,
+      ),
     );
     return const Success<void>(null);
   }
@@ -480,11 +481,11 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     return const Success<void>(null);
   }
 
-  /// 关闭订单（用户取消 / 超时 / 风控）。
-  Result<void> cancel({required String reason, required DateTime now}) {
-    if (reason.trim().isEmpty) {
-      return _fail('ORDER_CANCEL_REASON_REQUIRED', '关闭原因不能为空');
-    }
+  /// 关闭订单（用户取消 / 超时）。
+  Result<void> cancel({
+    required OrderCancelReason reason,
+    required DateTime now,
+  }) {
     final transition = _transitionTo(OrderStatus.cancelled);
     if (transition.isFailure) return transition;
 
@@ -531,7 +532,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     if (_status != OrderStatus.awaitingPayment || !now.isAfter(payDeadline)) {
       return const Success<bool>(false);
     }
-    final result = cancel(reason: '支付超时，订单已关闭', now: now);
+    final result = cancel(reason: OrderCancelReason.timeout, now: now);
     if (result.isFailure) return Fail<bool>(result.failure!);
     return const Success<bool>(true);
   }
@@ -556,7 +557,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     if (!_status.canTransitionTo(next)) {
       return _fail(
         'ORDER_STATUS_ILLEGAL',
-        '订单状态不允许从「${_status.label}」变为「${next.label}」',
+        '订单状态不允许从「${_status.name}」变为「${next.name}」',
       );
     }
     _status = next;
@@ -564,6 +565,6 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
   }
 
   static Result<T> _fail<T>(String code, String message) => Fail<T>(
-        Failure(code: code, message: message, type: FailureType.validation),
-      );
+    Failure(code: code, message: message, type: FailureType.validation),
+  );
 }

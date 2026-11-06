@@ -6,10 +6,7 @@ import 'package:core/domain.dart';
 /// - `endValue`（int）：截止阈值
 /// - `endValueDesc`（String）：展示文案
 final class ProxyBuyDeadline {
-  const ProxyBuyDeadline({
-    required this.endValue,
-    required this.desc,
-  });
+  const ProxyBuyDeadline({required this.endValue, required this.desc});
 
   /// 截止阈值（Android `endValue`）。
   final int endValue;
@@ -24,10 +21,7 @@ final class ProxyBuyDeadline {
 /// - `title`：场次标题
 /// - `timeStr`：时间描述
 final class ProxyBuyTurn {
-  const ProxyBuyTurn({
-    required this.title,
-    required this.timeStr,
-  });
+  const ProxyBuyTurn({required this.title, required this.timeStr});
 
   final String title;
   final String timeStr;
@@ -134,20 +128,4 @@ final class ProxyBuyOrder {
 
   /// 是否开启赔付。
   final bool compensationEnabled;
-
-  /// 状态文案。
-  String get statusLabel {
-    switch (status) {
-      case ProxyBuyStatus.pending:
-        return '待抢票';
-      case ProxyBuyStatus.inProgress:
-        return '抢票中';
-      case ProxyBuyStatus.success:
-        return '抢票成功';
-      case ProxyBuyStatus.failed:
-        return '抢票失败';
-      case ProxyBuyStatus.cancelled:
-        return '已取消';
-    }
-  }
 }

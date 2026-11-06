@@ -1,6 +1,7 @@
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
+import '../../l10n/l10n.dart';
 
 /// 空态。
 ///
@@ -10,35 +11,46 @@ import 'package:flutter/material.dart';
 class PsEmptyState extends StatelessWidget {
   const PsEmptyState({
     super.key,
-    this.title = '暂无内容',
+    this.title,
     this.description,
     this.actionLabel,
     this.onAction,
     this.icon = LucideIcons.inbox,
     this.compact = false,
+    this.isSearch = false,
   });
 
-  final String title;
+  /// 标题；`null` 时按 [isSearch] 取默认文案。
+  final String? title;
   final String? description;
   final String? actionLabel;
   final VoidCallback? onAction;
   final IconData icon;
+
+  /// 搜索无结果的默认文案标记（由 [PsEmptyState.search] 设置）。
+  final bool isSearch;
 
   /// 紧凑模式（嵌在卡片里时用，减少上下留白）。
   final bool compact;
 
   /// 搜索无结果。
   factory PsEmptyState.search({VoidCallback? onAction}) => PsEmptyState(
-        title: '没有找到相关演出',
-        description: '换个关键词或城市试试',
-        icon: LucideIcons.searchX,
-        actionLabel: onAction == null ? null : '重新搜索',
-        onAction: onAction,
-      );
+    icon: LucideIcons.searchX,
+    isSearch: true,
+    onAction: onAction,
+  );
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final l10n = context.l10n;
+    final effectiveTitle =
+        title ?? (isSearch ? l10n.psEmptyState_32 : l10n.stateEmpty);
+    final effectiveDescription =
+        description ?? (isSearch ? l10n.psEmptyState_33 : null);
+    final effectiveActionLabel =
+        actionLabel ??
+        (isSearch && onAction != null ? l10n.psEmptyState_35 : null);
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -51,22 +63,22 @@ class PsEmptyState extends StatelessWidget {
             Icon(icon, size: compact ? 40 : 64, color: colors.skeleton),
             SizedBox(height: compact ? 8 : 16),
             Text(
-              title,
+              effectiveTitle,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: compact ? 13 : 15,
                 color: colors.textTertiary,
               ),
             ),
-            if (description != null) ...<Widget>[
+            if (effectiveDescription != null) ...<Widget>[
               const SizedBox(height: 6),
               Text(
-                description!,
+                effectiveDescription,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12, color: colors.textDisabled),
               ),
             ],
-            if (actionLabel != null && onAction != null) ...<Widget>[
+            if (effectiveActionLabel != null && onAction != null) ...<Widget>[
               const SizedBox(height: 16),
               OutlinedButton(
                 onPressed: onAction,
@@ -76,9 +88,15 @@ class PsEmptyState extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
                 ),
-                child: Text(actionLabel!, style: const TextStyle(fontSize: 13)),
+                child: Text(
+                  effectiveActionLabel,
+                  style: const TextStyle(fontSize: 13),
+                ),
               ),
             ],
           ],

@@ -15,14 +15,18 @@ class FeedController extends Notifier<List<FeedPost>> {
   ///
   /// 真实实现应该是 `POST v1/feed/publish` → 用返回的实体替换临时项；
   /// 这里插入一条 `p-<timestamp>` 的临时项，行为上等价于"发布成功"。
-  FeedPost publish(String title, {String author = '我'}) {
+  FeedPost publish(
+    String title, {
+    required String author,
+    required String tag,
+  }) {
     final post = FeedPost(
       id: 'p-${DateTime.now().microsecondsSinceEpoch}',
       title: title.trim(),
       author: author,
       viewCount: 0,
       publishedAt: DateTime.now(),
-      tag: '刚刚发布',
+      tag: tag,
     );
     state = <FeedPost>[post, ...state];
     return post;
@@ -46,8 +50,10 @@ final feedPostByIdProvider = Provider.family<FeedPost?, String>((ref, id) {
 ///
 /// 演示数据只给前几条动态造了评论，其余返回空（见 `buildDemoComments`）。
 /// 接真实接口时换成 `AsyncValue` + 分页即可，页面结构不用动。
-final feedCommentsProvider =
-    Provider.family<List<FeedComment>, String>((ref, postId) {
+final feedCommentsProvider = Provider.family<List<FeedComment>, String>((
+  ref,
+  postId,
+) {
   return buildDemoComments(postId);
 });
 

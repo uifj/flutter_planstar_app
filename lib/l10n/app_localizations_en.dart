@@ -78,29 +78,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get splashPage_199 => '点击「同意并继续」表示您已阅读并同意以上协议。';
 
   @override
-  String get splashPage_208 => '不同意';
+  String get splashPage_208 => 'Decline';
 
   @override
-  String get splashPage_212 => '同意并继续';
+  String get splashPage_212 => 'Agree and continue';
 
   @override
-  String get psEmptyState_32 => '没有找到相关演出';
+  String get psEmptyState_32 => 'No matching shows';
 
   @override
-  String get psEmptyState_33 => '换个关键词或城市试试';
+  String get psEmptyState_33 => 'Try another keyword or city';
 
   @override
-  String get psEmptyState_35 => '重新搜索';
+  String get psEmptyState_35 => 'Search again';
 
   @override
-  String get psPoster_136 => '企';
+  String get psPoster_136 => 'P';
 
   @override
-  String get psSearchBar_25 => '搜索明星、演出、场馆';
+  String get psSearchBar_25 => 'Search stars, shows, venues';
 
   @override
-  String get psSearchBar_104 => '搜索';
+  String get psSearchBar_104 => 'Search';
 
   @override
-  String get psSectionHeader_16 => '全部';
+  String get psSectionHeader_16 => 'All';
 }

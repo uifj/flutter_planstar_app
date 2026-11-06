@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'coupon_providers.dart';
-import '../../l10n/marketing_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 兑换码输入页。
 ///
@@ -30,7 +30,9 @@ class ExchangeCouponPage extends ConsumerWidget {
       if (next.result != null && (previous?.result == null)) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(MarketingLocalizations.of(context).exchangeCouponPage_32(next.result!.title)),
+            content: Text(
+              context.l10n.exchangeCouponPage_32(next.result!.title),
+            ),
             duration: const Duration(seconds: 2),
           ),
         );
@@ -45,7 +47,7 @@ class ExchangeCouponPage extends ConsumerWidget {
     });
 
     return AdaptiveScaffold(
-      appBar: AdaptiveAppBar(title: MarketingLocalizations.of(context).exchangeCouponPage_47),
+      appBar: AdaptiveAppBar(title: context.l10n.exchangeCouponPage_47),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -61,15 +63,11 @@ class ExchangeCouponPage extends ConsumerWidget {
               ),
               child: Row(
                 children: <Widget>[
-                  Icon(
-                    LucideIcons.info,
-                    size: 18,
-                    color: colors.brand,
-                  ),
+                  Icon(LucideIcons.info, size: 18, color: colors.brand),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      MarketingLocalizations.of(context).exchangeCouponPage_71,
+                      context.l10n.exchangeCouponPage_71,
                       style: TextStyle(
                         fontSize: 12,
                         color: colors.textSecondary,
@@ -82,7 +80,7 @@ class ExchangeCouponPage extends ConsumerWidget {
             const SizedBox(height: 28),
             // 输入框
             Text(
-              MarketingLocalizations.of(context).exchangeCouponPage_84,
+              context.l10n.exchangeCouponPage_84,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
@@ -91,9 +89,11 @@ class ExchangeCouponPage extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             TextField(
-              onChanged: ref.read(exchangeControllerProvider.notifier).updateCode,
+              onChanged: ref
+                  .read(exchangeControllerProvider.notifier)
+                  .updateCode,
               decoration: InputDecoration(
-                hintText: MarketingLocalizations.of(context).exchangeCouponPage_95,
+                hintText: context.l10n.exchangeCouponPage_95,
                 hintStyle: TextStyle(color: colors.textDisabled),
                 filled: true,
                 fillColor: colors.bgCard,
@@ -114,16 +114,13 @@ class ExchangeCouponPage extends ConsumerWidget {
                   vertical: 14,
                 ),
               ),
-              style: TextStyle(
-                fontSize: 16,
-                color: colors.textPrimary,
-              ),
+              style: TextStyle(fontSize: 16, color: colors.textPrimary),
             ),
             // 错误提示
             if (state.error != null) ...<Widget>[
               const SizedBox(height: 8),
               Text(
-                state.error!,
+                context.l10n.couponProviders_124,
                 style: TextStyle(fontSize: 12, color: colors.error),
               ),
             ],
@@ -134,7 +131,8 @@ class ExchangeCouponPage extends ConsumerWidget {
               height: 46,
               child: FilledButton(
                 onPressed: state.canSubmit
-                    ? () => ref.read(exchangeControllerProvider.notifier).submit()
+                    ? () =>
+                          ref.read(exchangeControllerProvider.notifier).submit()
                     : null,
                 style: FilledButton.styleFrom(
                   backgroundColor: colors.brand,
@@ -153,7 +151,7 @@ class ExchangeCouponPage extends ConsumerWidget {
                         ),
                       )
                     : Text(
-                        MarketingLocalizations.of(context).exchangeCouponPage_155,
+                        context.l10n.exchangeCouponPage_155,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,

@@ -7,24 +7,23 @@ import 'package:core/result.dart';
 /// 枚举里：本枚举对应支付渠道，下单类型见 `OrderType`。
 enum PaymentChannel {
   /// 微信支付。
-  wechat('wxpay', '微信支付'),
+  wechat('wxpay'),
 
   /// 支付宝。
-  alipay('alipay', '支付宝'),
+  alipay('alipay'),
 
   /// 云闪付 / 银行卡。
-  unionPay('unionpay', '银行卡'),
+  unionPay('unionpay'),
 
   /// 信用付（花呗分期 / 企划星信用购）。
-  creditPay('creditpay', '信用付'),
+  creditPay('creditpay'),
 
   /// 余额 / 礼品卡全额支付。
-  balance('balance', '余额支付');
+  balance('balance');
 
-  const PaymentChannel(this.wireCode, this.label);
+  const PaymentChannel(this.wireCode);
 
   final String wireCode;
-  final String label;
 
   static Result<PaymentChannel> fromWire(String code) {
     for (final channel in PaymentChannel.values) {

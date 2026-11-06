@@ -8,7 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../shared/ui/ps_empty_state.dart';
 import 'wallet.dart';
 import 'wallet_providers.dart';
-import '../../l10n/marketing_localizations.dart';
+import 'marketing_l10n.dart';
+import '../../l10n/l10n.dart';
 
 /// 钱包页面。
 ///
@@ -29,25 +30,25 @@ class WalletPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: MarketingLocalizations.of(context).walletPage_31),
+      appBar: AdaptiveAppBar(title: context.l10n.walletPage_31),
       body: Column(
         children: <Widget>[
           _BalanceHeader(balance: account.balance),
-          _ActionBar(onTapDeposit: () => _toast(context, MarketingLocalizations.of(context).walletPage_35), onTapWithdraw: () => _toast(context, MarketingLocalizations.of(context).walletPage_35_2)),
+          _ActionBar(
+            onTapDeposit: () => _toast(context, context.l10n.walletPage_35),
+            onTapWithdraw: () => _toast(context, context.l10n.walletPage_35_2),
+          ),
           Expanded(
             child: account.transactions.isEmpty
                 ? PsEmptyState(
-                    title: MarketingLocalizations.of(context).walletPage_39,
-                    description: MarketingLocalizations.of(context).walletPage_40,
+                    title: context.l10n.walletPage_39,
+                    description: context.l10n.walletPage_40,
                     icon: LucideIcons.receiptText,
                   )
                 : ListView.separated(
                     itemCount: account.transactions.length,
-                    separatorBuilder: (_, _) => Divider(
-                      height: 1,
-                      indent: 16,
-                      color: colors.divider,
-                    ),
+                    separatorBuilder: (_, _) =>
+                        Divider(height: 1, indent: 16, color: colors.divider),
                     itemBuilder: (_, int index) {
                       return _TransactionItem(
                         transaction: account.transactions[index],
@@ -61,7 +62,9 @@ class WalletPage extends ConsumerWidget {
   }
 
   static void _toast(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
@@ -82,17 +85,14 @@ class _BalanceHeader extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: <Color>[
-            colors.brand,
-            colors.brand.withValues(alpha: 0.8),
-          ],
+          colors: <Color>[colors.brand, colors.brand.withValues(alpha: 0.8)],
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            MarketingLocalizations.of(context).walletPage_94,
+            context.l10n.walletPage_94,
             style: TextStyle(
               fontSize: 13,
               color: colors.onBrand.withValues(alpha: 0.8),
@@ -121,10 +121,7 @@ class _BalanceHeader extends StatelessWidget {
 
 /// 充值 / 提现按钮栏。
 class _ActionBar extends StatelessWidget {
-  const _ActionBar({
-    required this.onTapDeposit,
-    required this.onTapWithdraw,
-  });
+  const _ActionBar({required this.onTapDeposit, required this.onTapWithdraw});
 
   final VoidCallback onTapDeposit;
   final VoidCallback onTapWithdraw;
@@ -141,7 +138,7 @@ class _ActionBar extends StatelessWidget {
           Expanded(
             child: _ActionButton(
               icon: LucideIcons.circlePlus,
-              label: MarketingLocalizations.of(context).walletPage_143,
+              label: context.l10n.walletPage_143,
               onTap: onTapDeposit,
               primary: true,
             ),
@@ -150,7 +147,7 @@ class _ActionBar extends StatelessWidget {
           Expanded(
             child: _ActionButton(
               icon: LucideIcons.landmark,
-              label: MarketingLocalizations.of(context).walletPage_152,
+              label: context.l10n.walletPage_152,
               onTap: onTapWithdraw,
               primary: false,
             ),
@@ -186,9 +183,7 @@ class _ActionButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: primary ? colors.brand : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: primary
-              ? null
-              : Border.all(color: colors.border, width: 0.5),
+          border: primary ? null : Border.all(color: colors.border, width: 0.5),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -250,19 +245,13 @@ class _TransactionItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  transaction.balanceLabel,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: colors.textTertiary,
-                  ),
+                  transaction.balanceLabelOf(context),
+                  style: TextStyle(fontSize: 12, color: colors.textTertiary),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   transaction.timeLabel,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: colors.textDisabled,
-                  ),
+                  style: TextStyle(fontSize: 11, color: colors.textDisabled),
                 ),
               ],
             ),

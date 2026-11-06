@@ -21,10 +21,9 @@ final orderPricingServiceProvider = Provider<OrderPricingService>(
 /// 换真实实现时只改这一行：`ref.watch(apiClientProvider)` 构造
 /// `HttpTicketOrderRepository`，种子数据一并删掉。
 final ticketOrderRepositoryProvider = Provider<TicketOrderRepository>((ref) {
-  return InMemoryTicketOrderRepository()
-    ..seed(
-      buildDemoOrderHistory(pricing: ref.watch(orderPricingServiceProvider)),
-    );
+  return InMemoryTicketOrderRepository()..seed(
+    buildDemoOrderHistory(pricing: ref.watch(orderPricingServiceProvider)),
+  );
 });
 
 /// 订单号序列。

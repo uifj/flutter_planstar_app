@@ -99,11 +99,7 @@ class SeatArea {
 
 /// 一排座位。
 class SeatRow {
-  const SeatRow({
-    required this.label,
-    required this.seats,
-    required this.y,
-  });
+  const SeatRow({required this.label, required this.seats, required this.y});
 
   /// 排号标签（如 "A" / "1"）。
   final String label;
@@ -141,8 +137,9 @@ class SeatMapData {
       areas.fold(0, (sum, area) => sum + area.availableCount);
 
   /// 网格总宽度（取最大区域宽度）。
-  int get gridWidth =>
-      areas.isEmpty ? 0 : areas.map((a) => a.width).reduce((a, b) => a > b ? a : b);
+  int get gridWidth => areas.isEmpty
+      ? 0
+      : areas.map((a) => a.width).reduce((a, b) => a > b ? a : b);
 
   /// 网格总高度（所有区域行数之和 + 间距）。
   int get gridHeight =>
@@ -151,10 +148,7 @@ class SeatMapData {
 
 /// 选座结果。
 class SeatSelection {
-  const SeatSelection({
-    required this.seats,
-    required this.totalPrice,
-  });
+  const SeatSelection({required this.seats, required this.totalPrice});
 
   /// 选中的座位列表。
   final List<Seat> seats;

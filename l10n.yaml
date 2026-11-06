@@ -13,6 +13,10 @@
 # `flutter build` / `flutter run` 在 generate: true 下会自动重跑本文件的配置，
 # 但**不会**管 feature 级，所以生成产物需要入库。
 #
+# 调用侧统一走 `lib/l10n/l10n.dart` 的 `context.l10n.xxx`：`dart tool/gen_l10n.dart`
+# 在生成各 feature 类之后，还会把它们的文案拍平成一个 `AppL10n` 门面（key 全局
+# 唯一会校验），因此页面里不用再写 `OrderLocalizations.of(context)` 这类长前缀。
+#
 # `⚠` 相对来源的刻意改动：来源 `app_common` 有**两套** l10n
 # （`lib/l10n/` 的 ARB 驱动 + `lib/localizations/` 的手写分文件，30-11）。
 # 这里只有一套：ARB → gen-l10n 生成，手写的那套不要。

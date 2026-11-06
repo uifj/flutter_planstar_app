@@ -21,12 +21,7 @@ library;
 /// 请求上下文。
 final class PsRequestContext {
   /// 创建上下文。
-  PsRequestContext({
-    this.dvid,
-    this.psSession,
-    this.longitude,
-    this.latitude,
-  });
+  PsRequestContext({this.dvid, this.psSession, this.longitude, this.latitude});
 
   /// 设备标识。
   ///

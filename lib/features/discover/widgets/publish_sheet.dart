@@ -1,7 +1,6 @@
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
-import '../../../l10n/discover_localizations.dart';
-import '../../../l10n/app_localizations.dart';
+import '../../../l10n/l10n.dart';
 
 /// 发布动态面板（对应企划星发现页右下角的 `btnNewPost`）。
 ///
@@ -68,7 +67,7 @@ class _PublishSheetState extends State<PublishSheet> {
               Row(
                 children: <Widget>[
                   Text(
-                    DiscoverLocalizations.of(context).publishSheet_69,
+                    context.l10n.publishSheet_69,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
@@ -78,7 +77,10 @@ class _PublishSheetState extends State<PublishSheet> {
                   const Spacer(),
                   TextButton(
                     onPressed: () => Navigator.of(context).maybePop(),
-                    child: Text(AppLocalizations.of(context).actionCancel, style: TextStyle(color: colors.textTertiary)),
+                    child: Text(
+                      context.l10n.actionCancel,
+                      style: TextStyle(color: colors.textTertiary),
+                    ),
                   ),
                 ],
               ),
@@ -97,7 +99,7 @@ class _PublishSheetState extends State<PublishSheet> {
                   style: TextStyle(fontSize: 14, color: colors.textPrimary),
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: DiscoverLocalizations.of(context).publishSheet_98,
+                    hintText: context.l10n.publishSheet_98,
                     counterStyle: TextStyle(fontSize: 11),
                   ),
                 ),
@@ -121,7 +123,7 @@ class _PublishSheetState extends State<PublishSheet> {
                     ),
                   ),
                   child: Text(
-                    DiscoverLocalizations.of(context).publishSheet_122,
+                    context.l10n.publishSheet_122,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                 ),

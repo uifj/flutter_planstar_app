@@ -90,7 +90,4 @@ final class VenueSummary {
 
   /// 该场馆近期演出 id（最多取 2 个用于卡片）。
   final List<String> showIds;
-
-  /// 副标题：`浦东新区 · 12 场演出`。
-  String get subtitle => '$address · $showCount 场演出';
 }

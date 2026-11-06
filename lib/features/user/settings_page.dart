@@ -7,8 +7,7 @@ import '../../app/theme.dart';
 import '../../shared/ui/ps_cell.dart';
 import '../auth/application/auth_providers.dart';
 import 'application/profile_providers.dart';
-import '../../l10n/user_localizations.dart';
-import '../../l10n/app_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 设置页（企划星 `MoreSettingActivity` + `MoreSettingFragment`）。
 ///
@@ -52,40 +51,44 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: UserLocalizations.of(context).settingsPage_53),
+      appBar: AdaptiveAppBar(title: context.l10n.settingsPage_53),
       body: ListView(
         padding: const EdgeInsets.only(top: 8, bottom: 32),
         children: <Widget>[
           _Group(
             children: <Widget>[
               PsCell(
-                label: UserLocalizations.of(context).settingsPage_60,
-                value: profile.nickname,
+                label: context.l10n.settingsPage_60,
+                value: profile.nickname.isEmpty
+                    ? (loggedIn
+                          ? context.l10n.authUser_119
+                          : context.l10n.profileProviders_58)
+                    : profile.nickname,
                 onTap: loggedIn
                     ? () => context.push('/me/edit-profile')
-                    : () => _toast(UserLocalizations.of(context).settingsPage_64),
+                    : () => _toast(context.l10n.settingsPage_64),
               ),
               PsCell(
-                label: UserLocalizations.of(context).settingsPage_67,
-                value: profile.mobileLabel ?? UserLocalizations.of(context).settingsPage_68,
-                onTap: () => _toast(UserLocalizations.of(context).settingsPage_69),
+                label: context.l10n.settingsPage_67,
+                value: profile.mobileLabel ?? context.l10n.settingsPage_68,
+                onTap: () => _toast(context.l10n.settingsPage_69),
               ),
               PsCell(
-                label: UserLocalizations.of(context).settingsPage_72,
+                label: context.l10n.settingsPage_72,
                 onTap: () => context.push('/feedback'),
               ),
               PsCell(
-                label: UserLocalizations.of(context).settingsPage_76,
-                value: UserLocalizations.of(context).settingsPage_77,
+                label: context.l10n.settingsPage_76,
+                value: context.l10n.settingsPage_77,
                 showDivider: false,
-                onTap: () => _toast(UserLocalizations.of(context).settingsPage_79),
+                onTap: () => _toast(context.l10n.settingsPage_79),
               ),
             ],
           ),
           _Group(
             children: <Widget>[
               PsCell(
-                label: UserLocalizations.of(context).settingsPage_86,
+                label: context.l10n.settingsPage_86,
                 trailing: Switch.adaptive(
                   value: _pushEnabled,
                   activeTrackColor: colors.brand,
@@ -94,7 +97,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 ),
               ),
               PsCell(
-                label: UserLocalizations.of(context).settingsPage_95,
+                label: context.l10n.settingsPage_95,
                 value: _themeModeLabel(themeMode),
                 // 三态循环：跟随系统 → 亮 → 暗 → 跟随系统。
                 onTap: () => ref.read(themeModeProvider.notifier).set(
@@ -106,28 +109,28 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 ),
               ),
               PsCell(
-                label: UserLocalizations.of(context).settingsPage_107,
-                value: UserLocalizations.of(context).settingsPage_108,
+                label: context.l10n.settingsPage_107,
+                value: context.l10n.settingsPage_108,
                 showDivider: false,
-                onTap: () => _toast(UserLocalizations.of(context).settingsPage_110),
+                onTap: () => _toast(context.l10n.settingsPage_110),
               ),
             ],
           ),
           _Group(
             children: <Widget>[
               PsCell(
-                label: UserLocalizations.of(context).settingsPage_117,
+                label: context.l10n.settingsPage_117,
                 value: _appVersion,
-                onTap: () => _toast(UserLocalizations.of(context).settingsPage_119),
+                onTap: () => _toast(context.l10n.settingsPage_119),
               ),
               PsCell(
-                label: UserLocalizations.of(context).settingsPage_122,
-                onTap: () => _toast(UserLocalizations.of(context).settingsPage_123),
+                label: context.l10n.settingsPage_122,
+                onTap: () => _toast(context.l10n.settingsPage_123),
               ),
               PsCell(
-                label: UserLocalizations.of(context).settingsPage_126,
+                label: context.l10n.settingsPage_126,
                 showDivider: false,
-                onTap: () => _toast(UserLocalizations.of(context).settingsPage_128),
+                onTap: () => _toast(context.l10n.settingsPage_128),
               ),
             ],
           ),
@@ -145,7 +148,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     borderRadius: BorderRadius.circular(AppRadius.lg),
                   ),
                   child: Text(
-                    UserLocalizations.of(context).userLogout,
+                    context.l10n.userLogout,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -161,25 +164,25 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   }
 
   String _themeModeLabel(ThemeMode mode) => switch (mode) {
-    ThemeMode.system => UserLocalizations.of(context).settingsPage_162,
-    ThemeMode.light => '关闭',
-    ThemeMode.dark => UserLocalizations.of(context).settingsPage_164,
+    ThemeMode.system => context.l10n.settingsPage_162,
+    ThemeMode.light => context.l10n.settingsPageDarkModeOff,
+    ThemeMode.dark => context.l10n.settingsPage_164,
   };
 
   Future<void> _confirmLogout() async {
     final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
-        title: Text(UserLocalizations.of(context).userLogout),
-        content: Text(UserLocalizations.of(context).settingsPage_172),
+        title: Text(context.l10n.userLogout),
+        content: Text(context.l10n.settingsPage_172),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(AppLocalizations.of(context).actionCancel),
+            child: Text(context.l10n.actionCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(UserLocalizations.of(context).settingsPage_180),
+            child: Text(context.l10n.settingsPage_180),
           ),
         ],
       ),
@@ -187,7 +190,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     if (!(confirmed ?? false)) return;
     await ref.read(authControllerProvider.notifier).logout();
     if (!mounted) return;
-    _toast(UserLocalizations.of(context).settingsPage_188);
+    _toast(context.l10n.settingsPage_188);
     context.go('/me');
   }
 

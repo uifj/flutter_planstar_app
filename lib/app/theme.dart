@@ -7,13 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// L2 ThemeData）。视觉风格来自 TUIKit（`atomic-x`）：品牌蓝 #1C66E5、
 /// 中性灰阶、药丸主按钮、8/12/16/20 圆角。
 export 'package:core_design_system/core_design_system.dart'
-    show
-        AppColors,
-        AppRadius,
-        AppSpacing,
-        AppTheme,
-        AppTypography,
-        BasePalette;
+    show AppColors, AppRadius, AppSpacing, AppTheme, AppTypography, BasePalette;
 
 /// 主题模式控制器。`system` / `light` / `dark` 三态，默认跟随系统。
 ///
@@ -32,9 +26,10 @@ final class ThemeModeController extends Notifier<ThemeMode> {
     state = switch (state) {
       ThemeMode.light => ThemeMode.dark,
       ThemeMode.dark => ThemeMode.light,
-      ThemeMode.system => platformBrightness == Brightness.dark
-          ? ThemeMode.light
-          : ThemeMode.dark,
+      ThemeMode.system =>
+        platformBrightness == Brightness.dark
+            ? ThemeMode.light
+            : ThemeMode.dark,
     };
   }
 }

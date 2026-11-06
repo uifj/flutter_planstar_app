@@ -5,24 +5,19 @@
 /// 原因选项由服务端下发。这里枚举常见原因，等接口接上后改为服务端下发。
 enum RefundReason {
   /// 不需要了（计划变更）。
-  notNeeded('不需要了', '计划变更，暂时不需要了'),
+  notNeeded,
 
   /// 买错了（买错场次 / 票档）。
-  boughtWrong('买错了', '买错了场次或票档'),
+  boughtWrong,
 
   /// 票价太贵。
-  tooExpensive('票价太贵', '价格超出预算'),
+  tooExpensive,
 
   /// 找到更好的票源。
-  foundBetter('找到更好的票源', '通过其他渠道购买了'),
+  foundBetter,
 
   /// 其他原因。
-  other('其他原因', '自定义说明');
-
-  const RefundReason(this.label, this.description);
-
-  final String label;
-  final String description;
+  other,
 }
 
 /// 退款状态。
@@ -61,24 +56,15 @@ class RefundState {
   bool get canSubmit =>
       status == RefundStatus.idle || status == RefundStatus.failed;
 
-  /// 原因文案。
-  String get reasonText {
-    if (reason == RefundReason.other && customReason.isNotEmpty) {
-      return customReason;
-    }
-    return reason.label;
-  }
-
   RefundState copyWith({
     RefundReason? reason,
     String? customReason,
     RefundStatus? status,
     String? errorMessage,
-  }) =>
-      RefundState(
-        reason: reason ?? this.reason,
-        customReason: customReason ?? this.customReason,
-        status: status ?? this.status,
-        errorMessage: errorMessage,
-      );
+  }) => RefundState(
+    reason: reason ?? this.reason,
+    customReason: customReason ?? this.customReason,
+    status: status ?? this.status,
+    errorMessage: errorMessage,
+  );
 }

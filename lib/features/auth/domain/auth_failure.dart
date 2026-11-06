@@ -71,13 +71,13 @@ final class AuthFailure {
       AuthFailureCodes.accountLocked => AuthFailureKind.accountLocked,
       AuthFailureCodes.business => AuthFailureKind.business,
       _ => switch (failure.type) {
-          FailureType.network => AuthFailureKind.network,
-          FailureType.timeout => AuthFailureKind.timeout,
-          FailureType.authentication => AuthFailureKind.unauthorized,
-          FailureType.data => AuthFailureKind.unknown,
-          FailureType.validation => AuthFailureKind.business,
-          FailureType.server => AuthFailureKind.business,
-        },
+        FailureType.network => AuthFailureKind.network,
+        FailureType.timeout => AuthFailureKind.timeout,
+        FailureType.authentication => AuthFailureKind.unauthorized,
+        FailureType.data => AuthFailureKind.unknown,
+        FailureType.validation => AuthFailureKind.business,
+        FailureType.server => AuthFailureKind.business,
+      },
     };
     return AuthFailure(
       kind: kind,

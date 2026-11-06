@@ -97,33 +97,13 @@ final class Coupon {
       DateTime.now().isAfter(validFrom) && DateTime.now().isBefore(validTo);
 
   /// 距离到期还有多少天（负数表示已过期）。
-  int get daysUntilExpiry =>
-      validTo.difference(DateTime.now()).inDays;
+  int get daysUntilExpiry => validTo.difference(DateTime.now()).inDays;
 
   /// 是否即将过期（7 天内）。
   bool get isExpiringSoon =>
-      status == CouponStatus.usable && daysUntilExpiry >= 0 && daysUntilExpiry <= 7;
-
-  /// 抵扣金额文案。
-  ///
-  /// 固定金额：`¥30`；折扣率：`8.5折`。
-  String get discountLabel {
-    if (discountType == CouponDiscountType.amount) {
-      return discountAmount.format();
-    }
-    final rate = discountRate / 10;
-    return '${rate.toStringAsFixed(rate * 10 % 10 == 0 ? 0 : 1)}折';
-  }
-
-  /// 门槛文案。`满¥100可用` 或 `无门槛`。
-  String get thresholdLabel =>
-      requireAmount.minorUnits > 0 ? '满${requireAmount.format()}可用' : '无门槛';
-
-  /// 到期文案。`2026-12-31到期`。
-  String get expiryLabel {
-    String two(int v) => v.toString().padLeft(2, '0');
-    return '${validTo.year}-${two(validTo.month)}-${two(validTo.day)}到期';
-  }
+      status == CouponStatus.usable &&
+      daysUntilExpiry >= 0 &&
+      daysUntilExpiry <= 7;
 
   /// 在给定金额上算抵扣额。
   ///

@@ -10,8 +10,7 @@ import '../../shared/ui/ps_empty_state.dart';
 import '../../shared/ui/ps_floating_tab_bar.dart';
 import 'application/message_providers.dart';
 import 'domain/message_thread.dart';
-import '../../l10n/message_localizations.dart';
-import '../../l10n/app_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 消息 Tab（`layout_user_message.xml`）。
 ///
@@ -61,7 +60,11 @@ class MessagePage extends ConsumerWidget {
                     onTap: (entry) {
                       controller.markEntryRead(entry.id);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(MessageLocalizations.of(context).messagePage_62(entry.title))),
+                        SnackBar(
+                          content: Text(
+                            context.l10n.messagePage_62(entry.title),
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -71,8 +74,8 @@ class MessagePage extends ConsumerWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 24),
                     child: PsEmptyState(
-                      title: MessageLocalizations.of(context).messagePage_72,
-                      description: MessageLocalizations.of(context).messagePage_73,
+                      title: context.l10n.messagePage_72,
+                      description: context.l10n.messagePage_73,
                       icon: LucideIcons.messagesSquare,
                     ),
                   )
@@ -121,16 +124,16 @@ class MessagePage extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(MessageLocalizations.of(context).messagePage_122),
-        content: Text(MessageLocalizations.of(context).messagePage_123),
+        title: Text(context.l10n.messagePage_122),
+        content: Text(context.l10n.messagePage_123),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(AppLocalizations.of(context).actionCancel),
+            child: Text(context.l10n.actionCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(MessageLocalizations.of(context).messagePage_131),
+            child: Text(context.l10n.messagePage_131),
           ),
         ],
       ),
@@ -159,7 +162,7 @@ class _MessageTopBar extends StatelessWidget {
               children: <Widget>[
                 Center(
                   child: Text(
-                    MessageLocalizations.of(context).messagePage_160,
+                    context.l10n.messagePage_160,
                     style: TextStyle(fontSize: 16, color: colors.textPrimary),
                   ),
                 ),
@@ -357,7 +360,7 @@ class _ThreadRow extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                                 child: Text(
-                                  MessageLocalizations.of(context).messagePage_358,
+                                  context.l10n.messagePage_358,
                                   style: TextStyle(
                                     fontSize: 9,
                                     height: 1.1,

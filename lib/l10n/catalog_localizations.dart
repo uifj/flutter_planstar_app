@@ -209,6 +209,12 @@ abstract class CatalogLocalizations {
   /// **'{city} 暂无{name}演出'**
   String categoryHomePage_116(Object city, Object name);
 
+  /// 来源：lib/features/catalog/ui/category_home_page.dart:116；原文：'该分类'
+  ///
+  /// In zh, this message translates to:
+  /// **'该分类'**
+  String get categoryHomePage_unknownCategory;
+
   /// 来源：lib/features/catalog/ui/category_home_page.dart:117；原文：'试试切换城市或查看其他分类'
   ///
   /// In zh, this message translates to:

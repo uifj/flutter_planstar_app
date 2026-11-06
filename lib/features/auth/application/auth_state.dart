@@ -33,7 +33,7 @@ final class AuthState {
 
   /// 未登录。
   const AuthState.guest({AuthFailure? failure})
-      : this(status: AuthStatus.guest, failure: failure);
+    : this(status: AuthStatus.guest, failure: failure);
 
   /// 状态。
   final AuthStatus status;

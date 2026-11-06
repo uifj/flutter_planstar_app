@@ -12,10 +12,7 @@ import '../../../shared/ui/ps_network_images.dart';
 /// 接真实通道时把 `build()` 换成订阅 `imClientProvider` 的流即可，
 /// 页面读的接口不变。
 final class MessageCenterState {
-  const MessageCenterState({
-    required this.entries,
-    required this.threads,
-  });
+  const MessageCenterState({required this.entries, required this.threads});
 
   final List<SystemMessageEntry> entries;
   final List<MessageThread> threads;
@@ -45,9 +42,24 @@ class MessageCenterController extends Notifier<MessageCenterState> {
     final now = DateTime.now();
     return MessageCenterState(
       entries: const <SystemMessageEntry>[
-        SystemMessageEntry(id: 'activity', title: '活动通知', icon: 'campaign', unreadCount: 2),
-        SystemMessageEntry(id: 'reply', title: '回复我的', icon: 'reply', unreadCount: 5),
-        SystemMessageEntry(id: 'like', title: '赞和关注', icon: 'like', unreadCount: 0),
+        SystemMessageEntry(
+          id: 'activity',
+          title: '活动通知',
+          icon: 'campaign',
+          unreadCount: 2,
+        ),
+        SystemMessageEntry(
+          id: 'reply',
+          title: '回复我的',
+          icon: 'reply',
+          unreadCount: 5,
+        ),
+        SystemMessageEntry(
+          id: 'like',
+          title: '赞和关注',
+          icon: 'like',
+          unreadCount: 0,
+        ),
       ],
       threads: <MessageThread>[
         MessageThread(
@@ -160,8 +172,8 @@ class MessageCenterController extends Notifier<MessageCenterState> {
 /// 消息中心。
 final messageCenterProvider =
     NotifierProvider<MessageCenterController, MessageCenterState>(
-  MessageCenterController.new,
-);
+      MessageCenterController.new,
+    );
 
 /// 底部 tab 的未读角标数。
 final messageUnreadProvider = Provider<int>(
@@ -169,8 +181,10 @@ final messageUnreadProvider = Provider<int>(
 );
 
 /// 按 id 取会话。查不到返回 `null`（深链带脏 id 是正常情况）。
-final messageThreadByIdProvider =
-    Provider.family<MessageThread?, String>((ref, String id) {
+final messageThreadByIdProvider = Provider.family<MessageThread?, String>((
+  ref,
+  String id,
+) {
   for (final MessageThread thread in ref.watch(messageCenterProvider).threads) {
     if (thread.id == id) return thread;
   }
@@ -186,7 +200,9 @@ final messageThreadByIdProvider =
 /// 推送即可——页面读的仍然是 `List<ChatMessage>`，结构不变。
 ///
 /// `family` 的键是会话 id：每个会话一份独立状态，切走再回来消息还在。
-final chatMessagesProvider =
-    StateProvider.family<List<ChatMessage>, String>((ref, String threadId) {
+final chatMessagesProvider = StateProvider.family<List<ChatMessage>, String>((
+  ref,
+  String threadId,
+) {
   return buildDemoChat(threadId);
 });

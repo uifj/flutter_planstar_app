@@ -31,5 +31,5 @@ final class OrderPaid extends DomainEvent {
 
   @override
   String toString() =>
-      'order.paid(${orderNumber.value}, ${paidAmount.format()} via ${channel.label})';
+      'order.paid(${orderNumber.value}, ${paidAmount.format()} via ${channel.wireCode})';
 }

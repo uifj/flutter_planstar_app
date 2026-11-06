@@ -35,9 +35,14 @@ void main() {
     test('37 字符：UUID 再追加一次第 4 位', () {
       final dvid = generateDvid();
       expect(dvid.length, 37);
-      expect(RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-'
-              r'[0-9a-f]{12}[0-9a-f]$')
-          .hasMatch(dvid), isTrue, reason: dvid);
+      expect(
+        RegExp(
+          r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-'
+          r'[0-9a-f]{12}[0-9a-f]$',
+        ).hasMatch(dvid),
+        isTrue,
+        reason: dvid,
+      );
     });
 
     test('每次生成都不一样（否则所有设备共用一个 id）', () {

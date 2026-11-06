@@ -8,7 +8,8 @@ import 'package:go_router/go_router.dart';
 
 import 'refund_providers.dart';
 import 'refund_state.dart';
-import '../../../l10n/order_localizations.dart';
+import '../order_l10n.dart';
+import '../../../l10n/l10n.dart';
 
 /// 退款申请页。
 ///
@@ -41,7 +42,7 @@ class RefundPage extends ConsumerWidget {
           previous?.status != RefundStatus.submitted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(OrderLocalizations.of(context).refundPage_43),
+            content: Text(context.l10n.refundPage_43),
             duration: Duration(seconds: 2),
           ),
         );
@@ -60,7 +61,7 @@ class RefundPage extends ConsumerWidget {
       canPop: state.status != RefundStatus.submitting,
       child: AdaptiveScaffold(
         backgroundColor: colors.bgPage,
-        appBar: AdaptiveAppBar(title: OrderLocalizations.of(context).refundPage_62),
+        appBar: AdaptiveAppBar(title: context.l10n.refundPage_62),
         body: state.status == RefundStatus.submitted
             ? _SuccessView(amount: refundAmount)
             : ListView(
@@ -95,13 +96,14 @@ class RefundPage extends ConsumerWidget {
                   const SizedBox(height: 24),
                   _SubmitButton(
                     label: switch (state.status) {
-                      RefundStatus.submitting => OrderLocalizations.of(context).refundPage_97,
-                      RefundStatus.submitted => OrderLocalizations.of(context).refundPage_98,
-                      _ => OrderLocalizations.of(context).refundPage_99,
+                      RefundStatus.submitting => context.l10n.refundPage_97,
+                      RefundStatus.submitted => context.l10n.refundPage_98,
+                      _ => context.l10n.refundPage_99,
                     },
                     enabled: state.canSubmit,
-                    onTap: () =>
-                        ref.read(refundControllerProvider(arg).notifier).submit(),
+                    onTap: () => ref
+                        .read(refundControllerProvider(arg).notifier)
+                        .submit(),
                   ),
                   const SizedBox(height: 16),
                   _RefundPolicy(),
@@ -136,7 +138,7 @@ class _RefundAmountCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            OrderLocalizations.of(context).refundPage_138,
+            context.l10n.refundPage_138,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -148,7 +150,7 @@ class _RefundAmountCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                OrderLocalizations.of(context).refundPage_150,
+                context.l10n.refundPage_150,
                 style: TextStyle(fontSize: 13, color: colors.textTertiary),
               ),
               Text(
@@ -162,7 +164,7 @@ class _RefundAmountCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                OrderLocalizations.of(context).refundPage_164,
+                context.l10n.refundPage_164,
                 style: TextStyle(fontSize: 13, color: colors.textTertiary),
               ),
               Text(
@@ -205,7 +207,7 @@ class _ReasonSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            OrderLocalizations.of(context).refundPage_207,
+            context.l10n.refundPage_207,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -242,7 +244,7 @@ class _CustomReasonInput extends StatelessWidget {
         onChanged: onChanged,
         maxLines: 3,
         decoration: InputDecoration(
-          hintText: OrderLocalizations.of(context).refundPage_244,
+          hintText: context.l10n.refundPage_244,
           hintStyle: TextStyle(color: colors.textDisabled),
           filled: true,
           fillColor: colors.bgCard,
@@ -293,16 +295,11 @@ class _SubmitButton extends StatelessWidget {
         style: FilledButton.styleFrom(
           backgroundColor: colors.price,
           disabledBackgroundColor: colors.price.withValues(alpha: 0.3),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: Text(
           label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
       ),
     );
@@ -329,7 +326,7 @@ class _RefundPolicy extends StatelessWidget {
               Icon(LucideIcons.info, size: 14, color: colors.warning),
               const SizedBox(width: 4),
               Text(
-                OrderLocalizations.of(context).refundPage_331,
+                context.l10n.refundPage_331,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -340,7 +337,7 @@ class _RefundPolicy extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            OrderLocalizations.of(context).refundPage_342,
+            context.l10n.refundPage_342,
             style: TextStyle(
               fontSize: 12,
               height: 1.6,
@@ -369,14 +366,10 @@ class _SuccessView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Icon(
-              LucideIcons.circleCheck,
-              size: 64,
-              color: colors.success,
-            ),
+            Icon(LucideIcons.circleCheck, size: 64, color: colors.success),
             const SizedBox(height: 16),
             Text(
-              OrderLocalizations.of(context).refundPage_382,
+              context.l10n.refundPage_382,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -385,20 +378,15 @@ class _SuccessView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              OrderLocalizations.of(context).refundPage_391(amount.format()),
+              context.l10n.refundPage_391(amount.format()),
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                color: colors.textTertiary,
-              ),
+              style: TextStyle(fontSize: 13, color: colors.textTertiary),
             ),
             const SizedBox(height: 24),
             FilledButton(
               onPressed: () => context.go('/order'),
-              style: FilledButton.styleFrom(
-                backgroundColor: colors.brand,
-              ),
-              child: Text(OrderLocalizations.of(context).refundPage_404),
+              style: FilledButton.styleFrom(backgroundColor: colors.brand),
+              child: Text(context.l10n.refundPage_404),
             ),
           ],
         ),
@@ -435,9 +423,7 @@ class _ReasonRadioRow extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Icon(
-              isSelected
-                  ? LucideIcons.circleDot
-                  : LucideIcons.circle,
+              isSelected ? LucideIcons.circleDot : LucideIcons.circle,
               size: 18,
               color: isSelected ? colors.brand : colors.textDisabled,
             ),
@@ -447,19 +433,13 @@ class _ReasonRadioRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    reason.label,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: colors.textPrimary,
-                    ),
+                    reason.labelOf(context),
+                    style: TextStyle(fontSize: 14, color: colors.textPrimary),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    reason.description,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: colors.textTertiary,
-                    ),
+                    reason.descriptionOf(context),
+                    style: TextStyle(fontSize: 11, color: colors.textTertiary),
                   ),
                 ],
               ),

@@ -60,11 +60,9 @@ class AuthController extends Notifier<AuthState> {
     }
     state = state.copyWith(sendingCode: true, clearFailure: true);
 
-    final Result<SendCodeOutcome> result =
-        await ref.read(authRepositoryProvider).sendLoginCode(
-              phone,
-              captcha: captcha,
-            );
+    final Result<SendCodeOutcome> result = await ref
+        .read(authRepositoryProvider)
+        .sendLoginCode(phone, captcha: captcha);
     if (_disposed) {
       return null;
     }
@@ -88,11 +86,9 @@ class AuthController extends Notifier<AuthState> {
     String? captcha,
   }) {
     return _login(
-      () => ref.read(authRepositoryProvider).loginWithCode(
-            phone,
-            code,
-            captcha: captcha,
-          ),
+      () => ref
+          .read(authRepositoryProvider)
+          .loginWithCode(phone, code, captcha: captcha),
     );
   }
 
@@ -103,18 +99,17 @@ class AuthController extends Notifier<AuthState> {
     String? captcha,
   }) {
     return _login(
-      () => ref.read(authRepositoryProvider).loginWithPassword(
-            phone,
-            password,
-            captcha: captcha,
-          ),
+      () => ref
+          .read(authRepositoryProvider)
+          .loginWithPassword(phone, password, captcha: captcha),
     );
   }
 
   /// 拉图形验证码（PNG 字节）。失败时把失败写进状态。
   Future<Result<List<int>>> fetchCaptcha() async {
-    final Result<List<int>> result =
-        await ref.read(authRepositoryProvider).fetchCaptchaImage();
+    final Result<List<int>> result = await ref
+        .read(authRepositoryProvider)
+        .fetchCaptchaImage();
     final Failure? failure = result.failure;
     if (failure != null && !_disposed) {
       state = state.copyWith(failure: AuthFailure.fromFailure(failure));
@@ -138,7 +133,9 @@ class AuthController extends Notifier<AuthState> {
     }
   }
 
-  Future<AuthFailure?> _login(Future<Result<AuthSession>> Function() run) async {
+  Future<AuthFailure?> _login(
+    Future<Result<AuthSession>> Function() run,
+  ) async {
     if (state.loggingIn) {
       return null;
     }
@@ -151,18 +148,16 @@ class AuthController extends Notifier<AuthState> {
     return result.fold(
       onFailure: (Failure failure) => _fail(failure, loggingIn: true),
       onSuccess: (AuthSession session) {
-        state = AuthState(
-          status: AuthStatus.authenticated,
-          user: session.user,
-        );
+        state = AuthState(status: AuthStatus.authenticated, user: session.user);
         return null;
       },
     );
   }
 
   Future<void> _restore() async {
-    final AuthSession? session =
-        await ref.read(authRepositoryProvider).restoreSession();
+    final AuthSession? session = await ref
+        .read(authRepositoryProvider)
+        .restoreSession();
     if (_disposed) {
       return;
     }

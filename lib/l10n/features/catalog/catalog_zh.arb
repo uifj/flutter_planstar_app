@@ -132,6 +132,10 @@
       }
     }
   },
+  "categoryHomePage_unknownCategory": "该分类",
+  "@categoryHomePage_unknownCategory": {
+    "description": "来源：lib/features/catalog/ui/category_home_page.dart:116；原文：'该分类'"
+  },
   "categoryHomePage_117": "试试切换城市或查看其他分类",
   "@categoryHomePage_117": {
     "description": "来源：lib/features/catalog/ui/category_home_page.dart:117；原文：'试试切换城市或查看其他分类'"

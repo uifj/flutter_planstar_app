@@ -7,8 +7,10 @@ import '../../../shared/ui/ps_poster.dart';
 import '../../../shared/ui/ps_price.dart';
 import '../../../shared/ui/ps_tag.dart';
 import '../../catalog/domain/show_summary.dart';
+import '../../catalog/ui/catalog_l10n.dart';
+import '../order_l10n.dart';
 import '../domain/domain.dart';
-import '../../../l10n/order_localizations.dart';
+import '../../../l10n/l10n.dart';
 
 /// 订单卡片（`item_order_ticket.xml`）。
 ///
@@ -50,8 +52,10 @@ class OrderListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final title = show?.title ?? OrderLocalizations.of(context).orderListCard_52(order.showId.value);
-    final sessionLabel = show?.firstSessionLabel ?? OrderLocalizations.of(context).orderListCard_53;
+    final title =
+        show?.title ?? context.l10n.orderListCard_52(order.showId.value);
+    final sessionLabel =
+        show?.firstSessionLabelOf(context) ?? context.l10n.orderListCard_53;
     final payable = order.quote?.paymentAmount;
 
     return GestureDetector(
@@ -71,16 +75,24 @@ class OrderListCard extends StatelessWidget {
                     title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 16, height: 1.2, color: colors.textPrimary),
+                    style: TextStyle(
+                      fontSize: 16,
+                      height: 1.2,
+                      color: colors.textPrimary,
+                    ),
                   ),
                 ),
                 if (order.buyType == BuyType.proxy) ...<Widget>[
                   const SizedBox(width: 8),
-                  PsTag(label: OrderLocalizations.of(context).orderListCard_78, tone: PsTagTone.outline, fontSize: 10),
+                  PsTag(
+                    label: context.l10n.orderListCard_78,
+                    tone: PsTagTone.outline,
+                    fontSize: 10,
+                  ),
                 ],
                 const Spacer(),
                 Text(
-                  order.status.label,
+                  order.status.labelOf(context),
                   style: TextStyle(
                     fontSize: 12,
                     height: 1.2,
@@ -109,7 +121,11 @@ class OrderListCard extends StatelessWidget {
                         sessionLabel,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 13, height: 1.3, color: colors.textSecondary),
+                        style: TextStyle(
+                          fontSize: 13,
+                          height: 1.3,
+                          color: colors.textSecondary,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       for (final line in order.lines)
@@ -128,7 +144,9 @@ class OrderListCard extends StatelessWidget {
                         ),
                       if (order.visitors.isNotEmpty)
                         Text(
-                          OrderLocalizations.of(context).orderListCard_130(order.visitors.map((v) => v.name).join('、')),
+                          context.l10n.orderListCard_130(
+                            order.visitors.map((v) => v.name).join('、'),
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -139,24 +157,31 @@ class OrderListCard extends StatelessWidget {
                         ),
                       const SizedBox(height: 2),
                       Text(
-                        OrderLocalizations.of(context).orderListCard_141(order.number.value),
+                        context.l10n.orderListCard_141(order.number.value),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 11, color: colors.textDisabled),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: colors.textDisabled,
+                        ),
                       ),
                       if (order.status == OrderStatus.awaitingPayment)
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: _PaymentCountdown(deadline: order.payDeadline),
                         ),
-                      if (order.status == OrderStatus.cancelled && order.cancelReason != null)
+                      if (order.status == OrderStatus.cancelled &&
+                          order.cancelReason != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            order.cancelReason!,
+                            order.cancelReason!.labelOf(context),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 11, color: colors.textDisabled),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: colors.textDisabled,
+                            ),
                           ),
                         ),
                     ],
@@ -182,10 +207,15 @@ class OrderListCard extends StatelessWidget {
                       children: <Widget>[
                         Flexible(
                           child: Text(
-                            OrderLocalizations.of(context).orderListCard_184(order.totalTickets.value),
+                            context.l10n.orderListCard_184(
+                              order.totalTickets.value,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: colors.textTertiary,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 4),
@@ -194,7 +224,10 @@ class OrderListCard extends StatelessWidget {
                         else
                           Text(
                             '—',
-                            style: TextStyle(fontSize: 14, color: colors.textTertiary),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: colors.textTertiary,
+                            ),
                           ),
                       ],
                     ),
@@ -215,40 +248,75 @@ class OrderListCard extends StatelessWidget {
       case OrderStatus.draft:
       case OrderStatus.awaitingPayment:
         return <Widget>[
-          if (onCancel != null) _OrderButton(label: OrderLocalizations.of(context).orderListCard_217, onTap: onCancel),
+          if (onCancel != null)
+            _OrderButton(
+              label: context.l10n.orderListCard_217,
+              onTap: onCancel,
+            ),
           if (onPay != null) ...<Widget>[
             const SizedBox(width: 8),
-            _OrderButton(label: OrderLocalizations.of(context).orderListCard_220, primary: true, onTap: onPay),
+            _OrderButton(
+              label: context.l10n.orderListCard_220,
+              primary: true,
+              onTap: onPay,
+            ),
           ],
         ];
       case OrderStatus.awaitingTickets:
         return <Widget>[
-          if (onContactService != null) _OrderButton(label: OrderLocalizations.of(context).orderListCard_225, onTap: onContactService),
+          if (onContactService != null)
+            _OrderButton(
+              label: context.l10n.orderListCard_225,
+              onTap: onContactService,
+            ),
           if (onCancel != null) ...<Widget>[
             const SizedBox(width: 8),
-            _OrderButton(label: OrderLocalizations.of(context).orderListCard_228, onTap: onCancel),
+            _OrderButton(
+              label: context.l10n.orderListCard_228,
+              onTap: onCancel,
+            ),
           ],
         ];
       case OrderStatus.ticketsInTransit:
         return <Widget>[
-          if (onContactService != null) _OrderButton(label: OrderLocalizations.of(context).orderListCard_233, onTap: onContactService),
+          if (onContactService != null)
+            _OrderButton(
+              label: context.l10n.orderListCard_233,
+              onTap: onContactService,
+            ),
           if (onConfirmReceipt != null) ...<Widget>[
             const SizedBox(width: 8),
-            _OrderButton(label: OrderLocalizations.of(context).orderListCard_236, primary: true, onTap: onConfirmReceipt),
+            _OrderButton(
+              label: context.l10n.orderListCard_236,
+              primary: true,
+              onTap: onConfirmReceipt,
+            ),
           ],
         ];
       case OrderStatus.completed:
         return <Widget>[
-          if (onBuyAgain != null) _OrderButton(label: OrderLocalizations.of(context).orderListCard_241, onTap: onBuyAgain),
+          if (onBuyAgain != null)
+            _OrderButton(
+              label: context.l10n.orderListCard_241,
+              onTap: onBuyAgain,
+            ),
           if (onReview != null) ...<Widget>[
             const SizedBox(width: 8),
-            _OrderButton(label: OrderLocalizations.of(context).orderListCard_244, primary: true, onTap: onReview),
+            _OrderButton(
+              label: context.l10n.orderListCard_244,
+              primary: true,
+              onTap: onReview,
+            ),
           ],
         ];
       case OrderStatus.cancelled:
       case OrderStatus.refunded:
         return <Widget>[
-          if (onBuyAgain != null) _OrderButton(label: OrderLocalizations.of(context).orderListCard_250, onTap: onBuyAgain),
+          if (onBuyAgain != null)
+            _OrderButton(
+              label: context.l10n.orderListCard_250,
+              onTap: onBuyAgain,
+            ),
         ];
     }
   }
@@ -296,14 +364,14 @@ class _PaymentCountdownState extends State<_PaymentCountdown> {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     if (_left == Duration.zero) {
       return Text(
-        OrderLocalizations.of(context).orderListCard_298,
+        context.l10n.orderListCard_298,
         style: TextStyle(fontSize: 11, color: colors.textDisabled),
       );
     }
     final minutes = _left.inMinutes.toString().padLeft(2, '0');
     final seconds = (_left.inSeconds % 60).toString().padLeft(2, '0');
     return Text(
-      OrderLocalizations.of(context).orderListCard_305(minutes, seconds),
+      context.l10n.orderListCard_305(minutes, seconds),
       style: TextStyle(fontSize: 11, color: colors.price),
     );
   }
@@ -311,7 +379,11 @@ class _PaymentCountdownState extends State<_PaymentCountdown> {
 
 /// 订单卡上的小按钮（28dp 高、圆角 14、描边或实心）。
 class _OrderButton extends StatelessWidget {
-  const _OrderButton({required this.label, required this.onTap, this.primary = false});
+  const _OrderButton({
+    required this.label,
+    required this.onTap,
+    this.primary = false,
+  });
 
   final String label;
   final VoidCallback? onTap;

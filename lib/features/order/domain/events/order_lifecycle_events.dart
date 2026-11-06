@@ -2,6 +2,7 @@ import 'package:core/domain.dart';
 
 import '../value_objects/ids.dart';
 import '../value_objects/order_number.dart';
+import '../value_objects/order_status.dart';
 
 /// 订单已关闭（用户取消 / 超时未支付 / 风控关闭）。
 final class OrderCancelled extends DomainEvent {
@@ -15,11 +16,11 @@ final class OrderCancelled extends DomainEvent {
   final TicketOrderId orderId;
   final OrderNumber orderNumber;
 
-  /// 关闭原因（可直接展示）。
-  final String reason;
+  /// 关闭原因（展示文案由 UI 层按 l10n 解析）。
+  final OrderCancelReason reason;
 
   /// 是否因为支付超时自动关闭。
-  bool get isTimeout => reason.contains('超时');
+  bool get isTimeout => reason == OrderCancelReason.timeout;
 
   @override
   String get eventName => 'order.cancelled';
@@ -45,7 +46,8 @@ final class OrderShipped extends DomainEvent {
   String get eventName => 'order.shipped';
 
   @override
-  String toString() => 'order.shipped(${orderId.value}, ${trackingNumber ?? '无单号'})';
+  String toString() =>
+      'order.shipped(${orderId.value}, ${trackingNumber ?? '无单号'})';
 }
 
 /// 订单已完成（票已确认收货 / 演出已结束）。

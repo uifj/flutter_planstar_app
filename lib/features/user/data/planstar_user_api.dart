@@ -86,8 +86,10 @@ final class PlanstarUserApi {
       id: json['id']?.toString() ?? '',
       name: json['name']?.toString() ?? json['consignee']?.toString() ?? '',
       mobile: json['mobile']?.toString() ?? json['phone']?.toString() ?? '',
-      region: json['region']?.toString() ??
-          '${json['province']?.toString() ?? ''} ${json['city']?.toString() ?? ''} ${json['district']?.toString() ?? ''}'.trim(),
+      region:
+          json['region']?.toString() ??
+          '${json['province']?.toString() ?? ''} ${json['city']?.toString() ?? ''} ${json['district']?.toString() ?? ''}'
+              .trim(),
       detail: json['detail']?.toString() ?? json['address']?.toString() ?? '',
       isDefault: json['isDefault'] == true || json['default'] == true,
     );
@@ -135,7 +137,8 @@ final class UserProfileDto {
   factory UserProfileDto.fromJson(Map<String, dynamic> json) {
     return UserProfileDto(
       userId: json['userId']?.toString() ?? json['id']?.toString() ?? '',
-      nickname: json['nickname']?.toString() ?? json['userName']?.toString() ?? '',
+      nickname:
+          json['nickname']?.toString() ?? json['userName']?.toString() ?? '',
       avatarUrl: json['avatar']?.toString() ?? json['headImg']?.toString(),
       mobile: json['mobile']?.toString() ?? json['phone']?.toString(),
       level: json['level'] ?? json['userLevel'] ?? 0,

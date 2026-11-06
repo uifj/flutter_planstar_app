@@ -7,8 +7,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../shared/ui/ps_empty_state.dart';
 import 'group_buy.dart';
+import 'group_buy_l10n.dart';
 import 'group_buy_providers.dart';
-import '../../l10n/group_buy_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 拼团列表页。
 ///
@@ -26,11 +27,11 @@ class GroupBuyPage extends ConsumerWidget {
     final list = ref.watch(groupBuyListProvider);
 
     return AdaptiveScaffold(
-      appBar: AdaptiveAppBar(title: GroupBuyLocalizations.of(context).groupBuyPage_28),
+      appBar: AdaptiveAppBar(title: context.l10n.groupBuyPage_28),
       body: list.isEmpty
           ? PsEmptyState(
-              title: GroupBuyLocalizations.of(context).groupBuyPage_31,
-              description: GroupBuyLocalizations.of(context).groupBuyPage_32,
+              title: context.l10n.groupBuyPage_31,
+              description: context.l10n.groupBuyPage_32,
               icon: LucideIcons.users,
             )
           : ListView(
@@ -101,7 +102,7 @@ class _GroupBuyCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: Text(
-                      group.tag,
+                      group.tagLabelOf(context),
                       style: const TextStyle(
                         fontSize: 10,
                         color: Colors.white,
@@ -111,7 +112,7 @@ class _GroupBuyCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    group.statusLabel,
+                    group.statusLabelOf(context),
                     style: TextStyle(fontSize: 12, color: statusColor),
                   ),
                 ],
@@ -136,10 +137,7 @@ class _GroupBuyCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     '${group.venue} · ${group.eventTime}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: colors.textTertiary,
-                    ),
+                    style: TextStyle(fontSize: 12, color: colors.textTertiary),
                   ),
                   const SizedBox(height: 10),
                   // 价格行
@@ -148,7 +146,7 @@ class _GroupBuyCard extends StatelessWidget {
                     textBaseline: TextBaseline.alphabetic,
                     children: <Widget>[
                       Text(
-                        GroupBuyLocalizations.of(context).groupBuyPage_150,
+                        context.l10n.groupBuyPage_150,
                         style: TextStyle(
                           fontSize: 11,
                           color: colors.textTertiary,
@@ -174,9 +172,9 @@ class _GroupBuyCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        if (group.discountLabel.isNotEmpty)
+                        if (group.discountLabelOf(context).isNotEmpty)
                           Text(
-                            group.discountLabel,
+                            group.discountLabelOf(context),
                             style: TextStyle(
                               fontSize: 11,
                               color: const Color(0xFFFD7700),
@@ -196,10 +194,8 @@ class _GroupBuyCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(3),
                             child: LinearProgressIndicator(
                               value: group.progress,
-                              backgroundColor:
-                                  colors.divider,
-                              valueColor:
-                                  const AlwaysStoppedAnimation<Color>(
+                              backgroundColor: colors.divider,
+                              valueColor: const AlwaysStoppedAnimation<Color>(
                                 Color(0xFFFD7700),
                               ),
                               minHeight: 4,
@@ -208,7 +204,10 @@ class _GroupBuyCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          GroupBuyLocalizations.of(context).groupBuyPage_210(group.currentMembers, group.succeedNum),
+                          context.l10n.groupBuyPage_210(
+                            group.currentMembers,
+                            group.succeedNum,
+                          ),
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,

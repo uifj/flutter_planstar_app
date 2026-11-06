@@ -1,6 +1,7 @@
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
+import '../../l10n/l10n.dart';
 import 'ps_network_images.dart';
 
 /// 海报位。
@@ -93,7 +94,7 @@ class PsPoster extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      _initial(seed),
+                      _initial(seed, context.l10n.psPoster_136),
                       maxLines: 1,
                       style: TextStyle(
                         fontSize: watermarkSize,
@@ -130,9 +131,9 @@ class PsPoster extends StatelessWidget {
     return hash;
   }
 
-  static String _initial(String value) {
+  static String _initial(String value, String fallback) {
     final trimmed = value.trim();
-    if (trimmed.isEmpty) return '企';
+    if (trimmed.isEmpty) return fallback;
     // 标题常以书名号/引号开头（《剧院魅影》），取第一个"字"更好看。
     final match = RegExp(r'[\u4e00-\u9fa5A-Za-z0-9]').firstMatch(trimmed);
     return match?.group(0) ?? trimmed.substring(0, 1);

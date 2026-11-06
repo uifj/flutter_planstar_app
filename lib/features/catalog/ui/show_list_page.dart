@@ -10,7 +10,7 @@ import '../application/catalog_providers.dart';
 import '../domain/show_category.dart';
 import '../domain/show_summary.dart';
 import 'show_cards.dart';
-import '../../../l10n/catalog_localizations.dart';
+import '../../../l10n/l10n.dart';
 
 /// 演出列表页（企划星 `CategoryHomeActivity` / `HotListActivity` 的合并版）。
 ///
@@ -53,7 +53,9 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final shows = _sorted(ref.watch(cityShowsProvider).valueOrNull ?? const <ShowSummary>[]);
+    final shows = _sorted(
+      ref.watch(cityShowsProvider).valueOrNull ?? const <ShowSummary>[],
+    );
     final categories =
         ref.watch(showCategoriesProvider).valueOrNull ?? const <ShowCategory>[];
 
@@ -76,10 +78,10 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
           Expanded(
             child: shows.isEmpty
                 ? PsEmptyState(
-                    title: CatalogLocalizations.of(context).showListPage_78,
-                    description: CatalogLocalizations.of(context).showListPage_79,
+                    title: context.l10n.showListPage_78,
+                    description: context.l10n.showListPage_79,
                     icon: LucideIcons.drama,
-                    actionLabel: CatalogLocalizations.of(context).showListPage_81,
+                    actionLabel: context.l10n.showListPage_81,
                     onAction: () => setState(() => _categoryId = null),
                   )
                 : ListView.separated(
@@ -110,7 +112,7 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
         if (category.id == id) return category.name;
       }
     }
-    return CatalogLocalizations.of(context).showListPage_112;
+    return context.l10n.showListPage_112;
   }
 
   /// 先按分类过滤，再按当前排序规则排。
@@ -130,7 +132,9 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
       case _SortMode.soonest:
         filtered.sort((a, b) => a.firstSessionAt.compareTo(b.firstSessionAt));
       case _SortMode.priceAsc:
-        filtered.sort((a, b) => a.priceFrom.minorUnits.compareTo(b.priceFrom.minorUnits));
+        filtered.sort(
+          (a, b) => a.priceFrom.minorUnits.compareTo(b.priceFrom.minorUnits),
+        );
     }
     return filtered;
   }
@@ -138,13 +142,15 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
 
 /// 排序方式。
 enum _SortMode {
-  recommended('推荐'),
-  soonest('最近开演'),
-  priceAsc('价格最低');
+  recommended,
+  soonest,
+  priceAsc;
 
-  const _SortMode(this.label);
-
-  final String label;
+  String labelOf(BuildContext context) => switch (this) {
+    _SortMode.recommended => context.l10n.showListPage_140,
+    _SortMode.soonest => context.l10n.showListPage_141,
+    _SortMode.priceAsc => context.l10n.showListPage_142,
+  };
 }
 
 /// 分类筛选条（`view_show_list_filter.xml` 的横向 tab）。
@@ -170,7 +176,7 @@ class _CategoryBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         children: <Widget>[
           _CategoryChip(
-            label: CatalogLocalizations.of(context).showListPage_172,
+            label: context.l10n.showListPage_172,
             selected: selected == null,
             onTap: () => onSelect(null),
           ),
@@ -247,7 +253,7 @@ class _SortBar extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Text(
-            CatalogLocalizations.of(context).showListPage_249(total),
+            context.l10n.showListPage_249(total),
             style: TextStyle(fontSize: 12, color: colors.textTertiary),
           ),
           const Spacer(),
@@ -258,13 +264,16 @@ class _SortBar extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                 child: Text(
-                  mode.label,
+                  mode.labelOf(context),
                   style: TextStyle(
                     fontSize: 13,
                     height: 1.2,
-                    fontWeight:
-                        mode == selected ? FontWeight.w700 : FontWeight.w400,
-                    color: mode == selected ? colors.brand : colors.textTertiary,
+                    fontWeight: mode == selected
+                        ? FontWeight.w700
+                        : FontWeight.w400,
+                    color: mode == selected
+                        ? colors.brand
+                        : colors.textTertiary,
                   ),
                 ),
               ),

@@ -1,11 +1,25 @@
 import 'package:core/domain.dart';
 
+/// 费用明细的项目类型。
+enum QuoteLineKind {
+  goodsTotal,
+  postage,
+  splitFee,
+  discount,
+  giftCard,
+  speedPack,
+}
+
 /// 费用明细的一行（对应企划星 `ExpenseDetailsView` 的弹窗）。
 final class QuoteLine extends ValueObject {
-  const QuoteLine({required this.label, required this.amount, this.isDeduction = false});
+  const QuoteLine({
+    required this.kind,
+    required this.amount,
+    this.isDeduction = false,
+  });
 
-  /// 项目名：`商品总额` / `运费` / `优惠券` …
-  final String label;
+  /// 项目类型（展示文案由 UI 层按 l10n 解析）。
+  final QuoteLineKind kind;
 
   /// 金额（抵扣项为负）。
   final Money amount;
@@ -14,7 +28,7 @@ final class QuoteLine extends ValueObject {
   final bool isDeduction;
 
   @override
-  List<Object?> get props => <Object?>[label, amount, isDeduction];
+  List<Object?> get props => <Object?>[kind, amount, isDeduction];
 }
 
 /// 一次报价：**下单时发给服务端的两个金额 + 拆解**。
@@ -58,7 +72,8 @@ final class OrderQuote extends ValueObject {
     if (totalAmount != goodsTotal + postage + splitFee) {
       throw ArgumentError('totalAmount 必须等于 商品总额 + 运费 + 拆单费');
     }
-    if (paymentAmount != payableBeforeTender - giftCardApplied + speedPackCash) {
+    if (paymentAmount !=
+        payableBeforeTender - giftCardApplied + speedPackCash) {
       throw ArgumentError('paymentAmount 与拆解项不自洽');
     }
   }
@@ -91,7 +106,8 @@ final class OrderQuote extends ValueObject {
   final Money paymentAmount;
 
   /// 抵扣优惠后、礼品卡之前的应付。
-  Money get payableBeforeTender => (totalAmount - discountApplied).atLeastZero();
+  Money get payableBeforeTender =>
+      (totalAmount - discountApplied).atLeastZero();
 
   /// 是否需要在线支付（实付 0 元时可以直接成单）。
   bool get requiresPayment => paymentAmount.isPositive;
@@ -104,28 +120,39 @@ final class OrderQuote extends ValueObject {
 
   /// 费用明细（按企划星弹窗的顺序）。
   List<QuoteLine> get breakdown => <QuoteLine>[
-        QuoteLine(label: '商品总额', amount: goodsTotal),
-        if (!postage.isZero) QuoteLine(label: '运费', amount: postage),
-        if (!splitFee.isZero) QuoteLine(label: '拆单费', amount: splitFee),
-        if (!discountApplied.isZero)
-          QuoteLine(label: '优惠', amount: discountApplied.negated(), isDeduction: true),
-        if (!giftCardApplied.isZero)
-          QuoteLine(label: '礼品卡', amount: giftCardApplied.negated(), isDeduction: true),
-        if (!speedPackCash.isZero) QuoteLine(label: '加速包', amount: speedPackCash),
-      ];
+    QuoteLine(kind: QuoteLineKind.goodsTotal, amount: goodsTotal),
+    if (!postage.isZero)
+      QuoteLine(kind: QuoteLineKind.postage, amount: postage),
+    if (!splitFee.isZero)
+      QuoteLine(kind: QuoteLineKind.splitFee, amount: splitFee),
+    if (!discountApplied.isZero)
+      QuoteLine(
+        kind: QuoteLineKind.discount,
+        amount: discountApplied.negated(),
+        isDeduction: true,
+      ),
+    if (!giftCardApplied.isZero)
+      QuoteLine(
+        kind: QuoteLineKind.giftCard,
+        amount: giftCardApplied.negated(),
+        isDeduction: true,
+      ),
+    if (!speedPackCash.isZero)
+      QuoteLine(kind: QuoteLineKind.speedPack, amount: speedPackCash),
+  ];
 
   @override
   List<Object?> get props => <Object?>[
-        goodsTotal,
-        postage,
-        splitFee,
-        discountApplied,
-        totalAmount,
-        giftCardApplied,
-        speedPackCash,
-        speedPackBalance,
-        paymentAmount,
-      ];
+    goodsTotal,
+    postage,
+    splitFee,
+    discountApplied,
+    totalAmount,
+    giftCardApplied,
+    speedPackCash,
+    speedPackBalance,
+    paymentAmount,
+  ];
 
   static void _assertNotNegative(Money money, String name) {
     if (money.isNegative) {

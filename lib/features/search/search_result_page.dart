@@ -13,7 +13,8 @@ import '../discover/domain/feed_post.dart';
 import '../discover/widgets/feed_card.dart';
 import 'application/search_providers.dart';
 import 'domain/search_models.dart';
-import '../../l10n/search_localizations.dart';
+import 'search_l10n.dart';
+import '../../l10n/l10n.dart';
 
 /// 搜索结果页（企划星 `SearchResultActivity` + 5 个 `SearchResult*Fragment`）。
 ///
@@ -50,7 +51,9 @@ class _SearchResultPageState extends ConsumerState<SearchResultPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final SearchResults results = ref.watch(searchResultsProvider(widget.query));
+    final SearchResults results = ref.watch(
+      searchResultsProvider(widget.query),
+    );
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
@@ -123,11 +126,11 @@ class _SearchResultPageState extends ConsumerState<SearchResultPage> {
     return <Widget>[
       if (shows.isNotEmpty) ...<Widget>[
         _SectionHeader(
-          title: SearchLocalizations.of(context).searchResultPage_125,
+          title: context.l10n.searchResultPage_125,
           count: results.shows.length,
-          moreLabel: _scope == SearchScope.all &&
-                  results.shows.length > _previewCount
-              ? SearchLocalizations.of(context).searchResultPage_129
+          moreLabel:
+              _scope == SearchScope.all && results.shows.length > _previewCount
+              ? context.l10n.searchResultPage_129
               : null,
           onMore: () => setState(() => _scope = SearchScope.shows),
         ),
@@ -139,11 +142,11 @@ class _SearchResultPageState extends ConsumerState<SearchResultPage> {
       ],
       if (feeds.isNotEmpty) ...<Widget>[
         _SectionHeader(
-          title: SearchLocalizations.of(context).searchResultPage_142,
+          title: context.l10n.searchResultPage_142,
           count: results.feeds.length,
-          moreLabel: _scope == SearchScope.all &&
-                  results.feeds.length > _previewCount
-              ? SearchLocalizations.of(context).searchResultPage_146
+          moreLabel:
+              _scope == SearchScope.all && results.feeds.length > _previewCount
+              ? context.l10n.searchResultPage_146
               : null,
           onMore: () => setState(() => _scope = SearchScope.feeds),
         ),
@@ -192,7 +195,7 @@ class _ScopeTabs extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      '${scope.label} ${results.countOf(scope)}',
+                      '${scope.labelOf(context)} ${results.countOf(scope)}',
                       style: TextStyle(
                         fontSize: 14,
                         height: 1.2,
@@ -208,7 +211,9 @@ class _ScopeTabs extends StatelessWidget {
                     Container(
                       width: 24,
                       height: 2,
-                      color: scope == selected ? colors.brand : Colors.transparent,
+                      color: scope == selected
+                          ? colors.brand
+                          : Colors.transparent,
                     ),
                   ],
                 ),
@@ -265,7 +270,11 @@ class _SectionHeader extends StatelessWidget {
                     moreLabel!,
                     style: TextStyle(fontSize: 11, color: colors.textTertiary),
                   ),
-                  Icon(LucideIcons.chevronRight, size: 12, color: colors.textTertiary),
+                  Icon(
+                    LucideIcons.chevronRight,
+                    size: 12,
+                    color: colors.textTertiary,
+                  ),
                 ],
               ),
             ),

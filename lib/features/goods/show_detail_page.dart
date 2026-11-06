@@ -11,8 +11,9 @@ import '../../shared/ui/ps_price.dart';
 import '../../shared/ui/ps_tag.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_summary.dart';
+import '../catalog/ui/catalog_l10n.dart';
 import '../../shared/ui/ps_network_images.dart';
-import '../../l10n/goods_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 演出详情（`layout_show_detail.xml`）。
 ///
@@ -42,7 +43,11 @@ class ShowDetailPage extends ConsumerStatefulWidget {
 }
 
 class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
-  List<String> get _tabs => <String>[GoodsLocalizations.of(context).showDetailPage_44, GoodsLocalizations.of(context).showDetailPage_44_2, GoodsLocalizations.of(context).showDetailPage_44_3];
+  List<String> get _tabs => <String>[
+    context.l10n.showDetailPage_44,
+    context.l10n.showDetailPage_44_2,
+    context.l10n.showDetailPage_44_3,
+  ];
 
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _introKey = GlobalKey();
@@ -80,12 +85,12 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
 
     if (show == null) {
       return AdaptiveScaffold(
-        appBar: const AdaptiveAppBar(title: '演出详情'),
+        appBar: AdaptiveAppBar(title: context.l10n.homeEntryShowDetail),
         body: PsEmptyState(
-          title: GoodsLocalizations.of(context).showDetailPage_84,
-          description: GoodsLocalizations.of(context).showDetailPage_85(widget.showId),
+          title: context.l10n.showDetailPage_84,
+          description: context.l10n.showDetailPage_85(widget.showId),
           icon: LucideIcons.calendarX,
-          actionLabel: GoodsLocalizations.of(context).showDetailPage_87,
+          actionLabel: context.l10n.showDetailPage_87,
           onAction: () => context.go('/'),
         ),
       );
@@ -108,7 +113,7 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
                     topPadding: topPadding,
                     onBack: () => context.pop(),
                     onShare: () => ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(GoodsLocalizations.of(context).showDetailPage_110)),
+                      SnackBar(content: Text(context.l10n.showDetailPage_110)),
                     ),
                   ),
                 ),
@@ -123,7 +128,10 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
                 SliverList(
                   delegate: SliverChildListDelegate(<Widget>[
                     _InfoSection(key: _introKey, show: show),
-                    _GuaranteeBanner(onTap: () => _toast(context, GoodsLocalizations.of(context).showDetailPage_125)),
+                    _GuaranteeBanner(
+                      onTap: () =>
+                          _toast(context, context.l10n.showDetailPage_125),
+                    ),
                     _TierSection(
                       key: _tiersKey,
                       show: show,
@@ -141,8 +149,8 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
           ),
           _PurchaseBar(
             show: show,
-            onService: () => _toast(context, GoodsLocalizations.of(context).showDetailPage_143),
-            onWish: () => _toast(context, GoodsLocalizations.of(context).showDetailPage_144),
+            onService: () => _toast(context, context.l10n.showDetailPage_143),
+            onWish: () => _toast(context, context.l10n.showDetailPage_144),
             onBuy: () => _buy(context),
           ),
         ],
@@ -152,7 +160,7 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
 
   void _buy(BuildContext context) {
     if (ref.watch(showByIdProvider(widget.showId))?.soldOut ?? false) {
-      _toast(context, GoodsLocalizations.of(context).showDetailPage_154);
+      _toast(context, context.l10n.showDetailPage_154);
       return;
     }
     // 详情页 → 选票页 → 确认订单。
@@ -162,7 +170,9 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
   }
 
   static void _toast(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
@@ -187,13 +197,22 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
   double get minExtent => topPadding + 48;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     final t = ((shrinkOffset) / (maxExtent - minExtent)).clamp(0.0, 1.0);
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
         // 背景：海报放大 + 40% 透明压暗（`iv_bg` alpha=0.4 + `ivBgMask` #66000000）。
-        PsPoster(seed: show.title, width: double.infinity, height: double.infinity, radius: 0),
+        PsPoster(
+          seed: show.title,
+          width: double.infinity,
+          height: double.infinity,
+          radius: 0,
+        ),
         const ColoredBox(color: Color(0x8C000000)),
         // 内容：海报 + 标题 + 评分 + 价格。
         Positioned(
@@ -226,7 +245,9 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
                       Row(
                         children: <Widget>[
                           Text(
-                            show.rating > 0 ? show.rating.toStringAsFixed(1) : GoodsLocalizations.of(context).showDetailPage_228,
+                            show.rating > 0
+                                ? show.rating.toStringAsFixed(1)
+                                : context.l10n.showDetailPage_228,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
@@ -236,8 +257,11 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
                           const SizedBox(width: 6),
                           if (show.ratingCount > 0)
                             Text(
-                              GoodsLocalizations.of(context).showDetailPage_238(show.ratingCount),
-                              style: const TextStyle(fontSize: 11, color: Color(0xCCFFFFFF)),
+                              context.l10n.showDetailPage_238(show.ratingCount),
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Color(0xCCFFFFFF),
+                              ),
                             ),
                         ],
                       ),
@@ -257,12 +281,19 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
                       ),
                       const SizedBox(height: 10),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 3,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: PsPrice(amount: show.priceFrom, size: 18, suffix: GoodsLocalizations.of(context).showDetailPage_264),
+                        child: PsPrice(
+                          amount: show.priceFrom,
+                          size: 18,
+                          suffix: context.l10n.showDetailPage_264,
+                        ),
                       ),
                     ],
                   ),
@@ -280,7 +311,9 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
             ),
             child: const SizedBox.expand(),
           ),
@@ -291,7 +324,11 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
           top: topPadding + 2,
           child: IconButton(
             onPressed: onBack,
-            icon: const Icon(LucideIcons.chevronLeft, size: 18, color: Colors.white),
+            icon: const Icon(
+              LucideIcons.chevronLeft,
+              size: 18,
+              color: Colors.white,
+            ),
           ),
         ),
         Positioned(
@@ -313,7 +350,11 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
 
 /// 42dp 锚点 tab。
 class _AnchorTabs extends SliverPersistentHeaderDelegate {
-  _AnchorTabs({required this.tabs, required this.selected, required this.onSelect});
+  _AnchorTabs({
+    required this.tabs,
+    required this.selected,
+    required this.onSelect,
+  });
 
   final List<String> tabs;
   final int selected;
@@ -326,7 +367,11 @@ class _AnchorTabs extends SliverPersistentHeaderDelegate {
   double get minExtent => 42;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     return Container(
       color: colors.bgCard,
@@ -345,8 +390,12 @@ class _AnchorTabs extends SliverPersistentHeaderDelegate {
                       style: TextStyle(
                         fontSize: 14,
                         height: 1.2,
-                        fontWeight: i == selected ? FontWeight.w700 : FontWeight.w400,
-                        color: i == selected ? colors.brand : colors.textTertiary,
+                        fontWeight: i == selected
+                            ? FontWeight.w700
+                            : FontWeight.w400,
+                        color: i == selected
+                            ? colors.brand
+                            : colors.textTertiary,
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -354,7 +403,9 @@ class _AnchorTabs extends SliverPersistentHeaderDelegate {
                       width: 24,
                       height: 2,
                       decoration: BoxDecoration(
-                        color: i == selected ? colors.brand : Colors.transparent,
+                        color: i == selected
+                            ? colors.brand
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(1),
                       ),
                     ),
@@ -390,7 +441,7 @@ class _InfoSection extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  '${show.firstSessionLabel} · ${show.duration}',
+                  '${show.firstSessionLabelOf(context)} · ${show.duration}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -401,7 +452,7 @@ class _InfoSection extends StatelessWidget {
                 ),
               ),
               Text(
-                show.saleStatusLabel,
+                show.saleStatusLabelOf(context),
                 style: TextStyle(fontSize: 12, color: colors.price),
               ),
             ],
@@ -431,12 +482,19 @@ class _InfoSection extends StatelessWidget {
                       show.venueAddress,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.textTertiary,
+                      ),
                     ),
                   ],
                 ),
               ),
-              Icon(LucideIcons.navigation, size: 22, color: colors.textSecondary),
+              Icon(
+                LucideIcons.navigation,
+                size: 22,
+                color: colors.textSecondary,
+              ),
             ],
           ),
         ],
@@ -471,7 +529,7 @@ class _GuaranteeBanner extends StatelessWidget {
               Icon(LucideIcons.badgeCheck, size: 20, color: colors.price),
               const SizedBox(width: 4),
               Text(
-                GoodsLocalizations.of(context).showDetailPage_473,
+                context.l10n.showDetailPage_473,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -486,7 +544,7 @@ class _GuaranteeBanner extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  GoodsLocalizations.of(context).showDetailPage_488,
+                  context.l10n.showDetailPage_488,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 12, color: colors.textSecondary),
@@ -517,7 +575,7 @@ class _TierSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            GoodsLocalizations.of(context).showDetailPage_519,
+            context.l10n.showDetailPage_519,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -531,7 +589,10 @@ class _TierSection extends StatelessWidget {
               onTap: tier.soldOut ? null : onBuy,
               child: Container(
                 margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: colors.bgSubtle,
                   borderRadius: BorderRadius.circular(8),
@@ -544,13 +605,19 @@ class _TierSection extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             tier.name,
-                            style: TextStyle(fontSize: 14, color: colors.textPrimary),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: colors.textPrimary,
+                            ),
                           ),
                           if (tier.note != null) ...<Widget>[
                             const SizedBox(height: 2),
                             Text(
                               tier.note!,
-                              style: TextStyle(fontSize: 11, color: colors.textTertiary),
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: colors.textTertiary,
+                              ),
                             ),
                           ],
                         ],
@@ -558,8 +625,11 @@ class _TierSection extends StatelessWidget {
                     ),
                     if (tier.soldOut)
                       Text(
-                        GoodsLocalizations.of(context).showDetailPage_560,
-                        style: TextStyle(fontSize: 13, color: colors.textDisabled),
+                        context.l10n.showDetailPage_560,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: colors.textDisabled,
+                        ),
                       )
                     else
                       PsPrice(amount: tier.price, size: 16),
@@ -588,7 +658,7 @@ class _LineupSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            GoodsLocalizations.of(context).showDetailPage_590,
+            context.l10n.showDetailPage_590,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -625,7 +695,10 @@ class _LineupSection extends StatelessWidget {
                         show.lineup[index],
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 11, color: colors.textSecondary),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: colors.textSecondary,
+                        ),
                       ),
                     ],
                   ),
@@ -655,7 +728,7 @@ class _IntroSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '演出详情',
+            context.l10n.homeEntryShowDetail,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -665,7 +738,11 @@ class _IntroSection extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             show.intro,
-            style: TextStyle(fontSize: 14, height: 1.7, color: colors.textSecondary),
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.7,
+              color: colors.textSecondary,
+            ),
           ),
         ],
       ),
@@ -683,7 +760,10 @@ class _NoticeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final notices = show.purchaseNotice.isEmpty
-        ? <String>[GoodsLocalizations.of(context).showDetailPage_685, GoodsLocalizations.of(context).showDetailPage_685_2]
+        ? <String>[
+            context.l10n.showDetailPage_685,
+            context.l10n.showDetailPage_685_2,
+          ]
         : show.purchaseNotice;
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 24, 15, 0),
@@ -691,7 +771,7 @@ class _NoticeSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            GoodsLocalizations.of(context).showDetailPage_693,
+            context.l10n.showDetailPage_693,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -705,11 +785,18 @@ class _NoticeSection extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('· ', style: TextStyle(fontSize: 14, color: colors.textTertiary)),
+                  Text(
+                    '· ',
+                    style: TextStyle(fontSize: 14, color: colors.textTertiary),
+                  ),
                   Expanded(
                     child: Text(
                       notice,
-                      style: TextStyle(fontSize: 13, height: 1.6, color: colors.textSecondary),
+                      style: TextStyle(
+                        fontSize: 13,
+                        height: 1.6,
+                        color: colors.textSecondary,
+                      ),
                     ),
                   ),
                 ],
@@ -723,16 +810,22 @@ class _NoticeSection extends StatelessWidget {
 
 /// 服务保障（`view_show_detail_guarantee.xml`）。
 class _ServiceGuaranteeSection extends StatelessWidget {
-  static const List<(IconData, String)> _items = <(IconData, String)>[
-    (LucideIcons.creditCard, '先看后付'),
-    (LucideIcons.shieldCheck, '无票赔付'),
-    (LucideIcons.ticket, '出票保真'),
-    (LucideIcons.truck, '配送保障'),
+  static const List<IconData> _icons = <IconData>[
+    LucideIcons.creditCard,
+    LucideIcons.shieldCheck,
+    LucideIcons.ticket,
+    LucideIcons.truck,
   ];
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final labels = <String>[
+      context.l10n.showDetailPage_726,
+      context.l10n.showDetailPage_727,
+      context.l10n.showDetailPage_728,
+      context.l10n.showDetailPage_729,
+    ];
     return Container(
       margin: const EdgeInsets.only(top: 24),
       padding: const EdgeInsets.only(top: 20, bottom: 20),
@@ -746,7 +839,7 @@ class _ServiceGuaranteeSection extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
-                  GoodsLocalizations.of(context).showDetailPage_748,
+                  context.l10n.showDetailPage_748,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -760,15 +853,18 @@ class _ServiceGuaranteeSection extends StatelessWidget {
           const SizedBox(height: 20),
           Row(
             children: <Widget>[
-              for (final (icon, label) in _items)
+              for (var i = 0; i < _icons.length; i++)
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      Icon(icon, size: 30, color: colors.textTertiary),
+                      Icon(_icons[i], size: 30, color: colors.textTertiary),
                       const SizedBox(height: 10),
                       Text(
-                        label,
-                        style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                        labels[i],
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colors.textTertiary,
+                        ),
                       ),
                     ],
                   ),
@@ -818,10 +914,14 @@ class _PurchaseBar extends StatelessWidget {
             height: 66,
             child: Row(
               children: <Widget>[
-                _BarAction(icon: LucideIcons.headset, label: GoodsLocalizations.of(context).showDetailPage_820, onTap: onService),
+                _BarAction(
+                  icon: LucideIcons.headset,
+                  label: context.l10n.showDetailPage_820,
+                  onTap: onService,
+                ),
                 _BarAction(
                   icon: LucideIcons.heart,
-                  label: GoodsLocalizations.of(context).showDetailPage_823,
+                  label: context.l10n.showDetailPage_823,
                   color: colors.price,
                   onTap: onWish,
                 ),
@@ -834,11 +934,15 @@ class _PurchaseBar extends StatelessWidget {
                         height: 46,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: show.soldOut ? colors.brandDisabled : colors.price,
+                          color: show.soldOut
+                              ? colors.brandDisabled
+                              : colors.price,
                           borderRadius: BorderRadius.circular(25),
                         ),
                         child: Text(
-                          show.soldOut ? GoodsLocalizations.of(context).showDetailPage_840 : GoodsLocalizations.of(context).showDetailPage_840_2,
+                          show.soldOut
+                              ? context.l10n.showDetailPage_840
+                              : context.l10n.showDetailPage_840_2,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
@@ -885,7 +989,11 @@ class _BarAction extends StatelessWidget {
             Icon(icon, size: 26, color: color ?? colors.textPrimary),
             Text(
               label,
-              style: TextStyle(fontSize: 12, height: 1.1, color: color ?? colors.textPrimary),
+              style: TextStyle(
+                fontSize: 12,
+                height: 1.1,
+                color: color ?? colors.textPrimary,
+              ),
             ),
           ],
         ),

@@ -5,7 +5,8 @@ import '../../../shared/ui/ps_poster.dart';
 import '../../../shared/ui/ps_price.dart';
 import '../../../shared/ui/ps_tag.dart';
 import '../domain/show_summary.dart';
-import '../../../l10n/catalog_localizations.dart';
+import '../../../l10n/l10n.dart';
+import 'catalog_l10n.dart';
 
 /// 精选卡片（`item_home_choiceness.xml`）。
 ///
@@ -27,6 +28,7 @@ class ShowCardChoiceness extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final discountLabel = show.discountLabelOf(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -42,13 +44,13 @@ class ShowCardChoiceness extends StatelessWidget {
               height: 140,
               radius: 2,
               dimmed: show.soldOut,
-              overlay: show.discountLabel == null
+              overlay: discountLabel == null
                   ? null
                   : Padding(
                       padding: const EdgeInsets.only(left: 6, top: 3),
                       child: Align(
                         alignment: Alignment.topLeft,
-                        child: PsDiscountCorner(text: show.discountLabel!),
+                        child: PsDiscountCorner(text: discountLabel),
                       ),
                     ),
             ),
@@ -70,10 +72,17 @@ class ShowCardChoiceness extends StatelessWidget {
                 Expanded(
                   child: show.soldOut
                       ? Text(
-                          CatalogLocalizations.of(context).showCards_72,
-                          style: TextStyle(fontSize: 11, color: colors.textTertiary),
+                          context.l10n.showCards_72,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: colors.textTertiary,
+                          ),
                         )
-                      : PsPrice(amount: show.priceFrom, size: 16, suffix: CatalogLocalizations.of(context).showCards_75),
+                      : PsPrice(
+                          amount: show.priceFrom,
+                          size: 16,
+                          suffix: context.l10n.showCards_75,
+                        ),
                 ),
                 if (show.tags.isNotEmpty)
                   Flexible(
@@ -81,7 +90,10 @@ class ShowCardChoiceness extends StatelessWidget {
                       label: show.tags.first,
                       fontSize: 9,
                       radius: 2,
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 3,
+                      ),
                     ),
                   ),
               ],
@@ -108,6 +120,7 @@ class ShowCardFloor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final discountLabel = show.discountLabelOf(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -154,7 +167,7 @@ class ShowCardFloor extends StatelessWidget {
             const SizedBox(height: 4),
             if (show.soldOut)
               Text(
-                CatalogLocalizations.of(context).showCards_156,
+                context.l10n.showCards_156,
                 style: TextStyle(fontSize: 11, color: colors.textTertiary),
               )
             else
@@ -171,9 +184,11 @@ class ShowCardFloor extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     PsPrice(amount: show.priceFrom, size: 12),
-                    if (show.discountLabel != null) ...<Widget>[
+                    if (discountLabel != null) ...<Widget>[
                       const SizedBox(width: 2),
-                      PsDiscountTag(label: CatalogLocalizations.of(context).showCards_175(show.discountLabel!)),
+                      PsDiscountTag(
+                        label: context.l10n.showCards_175(discountLabel),
+                      ),
                     ],
                   ],
                 ),
@@ -199,6 +214,7 @@ class ShowCardRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final discountLabel = show.discountLabelOf(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -213,13 +229,13 @@ class ShowCardRow extends StatelessWidget {
               height: 120,
               radius: 4,
               dimmed: show.soldOut,
-              overlay: show.discountLabel == null
+              overlay: discountLabel == null
                   ? null
                   : Padding(
                       padding: const EdgeInsets.only(left: 4, top: 4),
                       child: Align(
                         alignment: Alignment.topLeft,
-                        child: PsDiscountCorner(text: show.discountLabel!),
+                        child: PsDiscountCorner(text: discountLabel),
                       ),
                     ),
             ),
@@ -246,21 +262,30 @@ class ShowCardRow extends StatelessWidget {
                       show.artist,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.textTertiary,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      show.firstSessionLabel,
+                      show.firstSessionLabelOf(context),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.textTertiary,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       show.venueLabel,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.textTertiary,
+                      ),
                     ),
                     const Spacer(),
                     Row(
@@ -268,14 +293,17 @@ class ShowCardRow extends StatelessWidget {
                       children: <Widget>[
                         if (show.soldOut)
                           Text(
-                            CatalogLocalizations.of(context).showCards_270,
-                            style: TextStyle(fontSize: 13, color: colors.textTertiary),
+                            context.l10n.showCards_270,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: colors.textTertiary,
+                            ),
                           )
                         else
                           PsPrice(
                             amount: show.priceFrom,
                             size: 17,
-                            suffix: CatalogLocalizations.of(context).showCards_277,
+                            suffix: context.l10n.showCards_277,
                             strikeThroughAmount: show.listPriceFrom,
                           ),
                         const Spacer(),

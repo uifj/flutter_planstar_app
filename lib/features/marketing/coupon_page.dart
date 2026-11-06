@@ -8,7 +8,8 @@ import 'package:go_router/go_router.dart';
 import '../../shared/ui/ps_empty_state.dart';
 import 'coupon.dart';
 import 'coupon_providers.dart';
-import '../../l10n/marketing_localizations.dart';
+import 'marketing_l10n.dart';
+import '../../l10n/l10n.dart';
 
 /// 我的优惠券页面。
 ///
@@ -28,11 +29,11 @@ class CouponPage extends ConsumerWidget {
       length: 3,
       child: AdaptiveScaffold(
         appBar: AdaptiveAppBar(
-          title: MarketingLocalizations.of(context).couponPage_30,
+          title: context.l10n.couponPage_30,
           actions: <AdaptiveAppBarAction>[
             AdaptiveAppBarAction(
               icon: LucideIcons.circlePlus,
-              label: MarketingLocalizations.of(context).couponPage_34,
+              label: context.l10n.couponPage_34,
               onPressed: () => context.push('/coupons/exchange'),
             ),
           ],
@@ -58,7 +59,7 @@ class _TabBar extends StatelessWidget {
       color: colors.bgCard,
       child: TabBar(
         tabs: <Widget>[
-          for (final tab in CouponTab.values) Tab(text: tab.label),
+          for (final tab in CouponTab.values) Tab(text: tab.labelOf(context)),
         ],
         labelColor: colors.textPrimary,
         unselectedLabelColor: colors.textTertiary,
@@ -95,17 +96,19 @@ class _CouponList extends ConsumerWidget {
     if (coupons.isEmpty) {
       return PsEmptyState(
         title: switch (tab) {
-          CouponTab.usable => MarketingLocalizations.of(context).couponPage_97,
-          CouponTab.used => MarketingLocalizations.of(context).couponPage_98,
-          CouponTab.expired => MarketingLocalizations.of(context).couponPage_99,
+          CouponTab.usable => context.l10n.couponPage_97,
+          CouponTab.used => context.l10n.couponPage_98,
+          CouponTab.expired => context.l10n.couponPage_99,
         },
         description: switch (tab) {
-          CouponTab.usable => MarketingLocalizations.of(context).couponPage_102,
-          CouponTab.used => MarketingLocalizations.of(context).couponPage_103,
-          CouponTab.expired => MarketingLocalizations.of(context).couponPage_104,
+          CouponTab.usable => context.l10n.couponPage_102,
+          CouponTab.used => context.l10n.couponPage_103,
+          CouponTab.expired => context.l10n.couponPage_104,
         },
         icon: LucideIcons.ticket,
-        actionLabel: tab == CouponTab.usable ? MarketingLocalizations.of(context).couponPage_107 : null,
+        actionLabel: tab == CouponTab.usable
+            ? context.l10n.couponPage_107
+            : null,
         onAction: tab == CouponTab.usable ? () => context.go('/') : null,
       );
     }
@@ -138,9 +141,7 @@ class _CouponCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.bgCard,
         borderRadius: BorderRadius.circular(12),
-        border: isUsable
-            ? null
-            : Border.all(color: colors.divider, width: 0.5),
+        border: isUsable ? null : Border.all(color: colors.divider, width: 0.5),
       ),
       clipBehavior: Clip.antiAlias,
       child: Row(
@@ -171,24 +172,18 @@ class _CouponCard extends StatelessWidget {
                     coupon.desc,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: colors.textTertiary,
-                    ),
+                    style: TextStyle(fontSize: 12, color: colors.textTertiary),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    coupon.thresholdLabel,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: colors.textSecondary,
-                    ),
+                    coupon.thresholdLabelOf(context),
+                    style: TextStyle(fontSize: 11, color: colors.textSecondary),
                   ),
                   const SizedBox(height: 4),
                   Row(
                     children: <Widget>[
                       Text(
-                        coupon.expiryLabel,
+                        coupon.expiryLabelOf(context),
                         style: TextStyle(
                           fontSize: 11,
                           color: colors.textTertiary,
@@ -206,7 +201,7 @@ class _CouponCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(2),
                           ),
                           child: Text(
-                            MarketingLocalizations.of(context).couponPage_208(coupon.daysUntilExpiry),
+                            context.l10n.couponPage_208(coupon.daysUntilExpiry),
                             style: TextStyle(
                               fontSize: 10,
                               color: colors.warning,
@@ -242,9 +237,7 @@ class _AmountSection extends StatelessWidget {
       width: 100,
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: isUsable
-            ? colors.brand.withValues(alpha: 0.06)
-            : colors.bgPage,
+        color: isUsable ? colors.brand.withValues(alpha: 0.06) : colors.bgPage,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -280,7 +273,9 @@ class _AmountSection extends StatelessWidget {
               textBaseline: TextBaseline.alphabetic,
               children: <Widget>[
                 Text(
-                  (coupon.discountRate / 10).toStringAsFixed(coupon.discountRate % 10 == 0 ? 0 : 1),
+                  (coupon.discountRate / 10).toStringAsFixed(
+                    coupon.discountRate % 10 == 0 ? 0 : 1,
+                  ),
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w700,
@@ -288,7 +283,7 @@ class _AmountSection extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  MarketingLocalizations.of(context).couponPage_290,
+                  context.l10n.couponPage_290,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -300,7 +295,7 @@ class _AmountSection extends StatelessWidget {
           ],
           const SizedBox(height: 4),
           Text(
-            MarketingLocalizations.of(context).couponPage_302,
+            context.l10n.couponPage_302,
             style: TextStyle(
               fontSize: 10,
               color: accentColor.withValues(alpha: 0.7),

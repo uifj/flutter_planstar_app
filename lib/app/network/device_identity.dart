@@ -33,7 +33,8 @@ String generateDvid([Random? random]) {
       .map((int b) => b.toRadixString(16).padLeft(2, '0'))
       .join();
 
-  final uuid = '${hex(0, 4)}-${hex(4, 6)}-${hex(6, 8)}-'
+  final uuid =
+      '${hex(0, 4)}-${hex(4, 6)}-${hex(6, 8)}-'
       '${hex(8, 10)}-${hex(10, 16)}';
   return '$uuid${uuid[3]}';
 }

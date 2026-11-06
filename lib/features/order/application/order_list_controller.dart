@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/domain.dart';
 import 'order_providers.dart';
+
 /// 订单列表的状态筛选。
 ///
 /// ## 为什么单独建一个枚举
@@ -24,15 +25,11 @@ import 'order_providers.dart';
 /// 并显式声明它和领域状态的关系（[matches]）。领域层不需要知道"待评论"
 /// 这种纯展示口径。
 enum OrderListFilter {
-  all('全部'),
-  awaitingPayment('待付款'),
-  awaitingTickets('待发货'),
-  ticketsInTransit('待收货'),
-  awaitingReview('待评论');
-
-  const OrderListFilter(this.label);
-
-  final String label;
+  all,
+  awaitingPayment,
+  awaitingTickets,
+  ticketsInTransit,
+  awaitingReview;
 
   /// 该筛选是否命中某个订单状态。
   ///
@@ -41,12 +38,12 @@ enum OrderListFilter {
   /// 走的是评价接口而不是订单接口。这里退一步用"已完成"近似，
   /// 并在卡片上把按钮换成「去评价」——行为对得上，语义不假装。
   bool matches(OrderStatus status) => switch (this) {
-        OrderListFilter.all => true,
-        OrderListFilter.awaitingPayment => status == OrderStatus.awaitingPayment,
-        OrderListFilter.awaitingTickets => status == OrderStatus.awaitingTickets,
-        OrderListFilter.ticketsInTransit => status == OrderStatus.ticketsInTransit,
-        OrderListFilter.awaitingReview => status == OrderStatus.completed,
-      };
+    OrderListFilter.all => true,
+    OrderListFilter.awaitingPayment => status == OrderStatus.awaitingPayment,
+    OrderListFilter.awaitingTickets => status == OrderStatus.awaitingTickets,
+    OrderListFilter.ticketsInTransit => status == OrderStatus.ticketsInTransit,
+    OrderListFilter.awaitingReview => status == OrderStatus.completed,
+  };
 }
 
 /// 当前选中的筛选。
@@ -62,10 +59,16 @@ final orderListProvider = FutureProvider<List<TicketOrder>>((ref) async {
 });
 
 /// 按当前筛选过滤后的订单。
-final filteredOrderListProvider = Provider<AsyncValue<List<TicketOrder>>>((ref) {
+final filteredOrderListProvider = Provider<AsyncValue<List<TicketOrder>>>((
+  ref,
+) {
   final filter = ref.watch(orderListFilterProvider);
-  return ref.watch(orderListProvider).whenData(
-        (orders) => orders.where((order) => filter.matches(order.status)).toList(growable: false),
+  return ref
+      .watch(orderListProvider)
+      .whenData(
+        (orders) => orders
+            .where((order) => filter.matches(order.status))
+            .toList(growable: false),
       );
 });
 
@@ -74,7 +77,8 @@ final filteredOrderListProvider = Provider<AsyncValue<List<TicketOrder>>>((ref) 
 /// 只算 `awaitingPayment` / `awaitingTickets` / `ticketsInTransit` / `awaitingReview`
 /// 四个"需要用户处理"的态——「全部」不给数字，企划星也没给。
 final orderStatusCountsProvider = Provider<Map<OrderListFilter, int>>((ref) {
-  final orders = ref.watch(orderListProvider).valueOrNull ?? const <TicketOrder>[];
+  final orders =
+      ref.watch(orderListProvider).valueOrNull ?? const <TicketOrder>[];
   return <OrderListFilter, int>{
     for (final filter in OrderListFilter.values)
       filter: filter == OrderListFilter.all
@@ -91,15 +95,16 @@ final orderStatusCountsProvider = Provider<Map<OrderListFilter, int>>((ref) {
 /// 复用 [orderListProvider] 而不是新增仓储方法：详情页与列表页必须看到
 /// **同一份**订单状态——如果详情单独 `findByNumber`，用户从详情返回列表时
 /// 就可能看到两个不同的状态。
-final orderByNumberProvider =
-    Provider.family<AsyncValue<TicketOrder?>, String>((ref, String number) {
-  return ref.watch(orderListProvider).whenData((List<TicketOrder> orders) {
-    for (final TicketOrder order in orders) {
-      if (order.number.value == number) return order;
-    }
-    return null;
-  });
-});
+final orderByNumberProvider = Provider.family<AsyncValue<TicketOrder?>, String>(
+  (ref, String number) {
+    return ref.watch(orderListProvider).whenData((List<TicketOrder> orders) {
+      for (final TicketOrder order in orders) {
+        if (order.number.value == number) return order;
+      }
+      return null;
+    });
+  },
+);
 
 /// 订单列表上的动作（支付 / 取消 / 确认收货）。
 ///
@@ -127,7 +132,7 @@ final class OrderActions {
   }
 
   /// 取消订单。
-  Future<String?> cancel(TicketOrder order, String reason) async {
+  Future<String?> cancel(TicketOrder order, OrderCancelReason reason) async {
     final result = order.cancel(reason: reason, now: DateTime.now());
     if (result.isFailure) return result.failure!.message;
     return _persist(order);

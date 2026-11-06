@@ -43,8 +43,8 @@ class SearchHistoryController extends Notifier<List<String>> {
 /// 搜索历史。
 final searchHistoryProvider =
     NotifierProvider<SearchHistoryController, List<String>>(
-  SearchHistoryController.new,
-);
+      SearchHistoryController.new,
+    );
 
 /// 热搜榜。
 ///
@@ -77,10 +77,10 @@ final class SearchResults {
 
   /// 按分域取数量（tab 角标）。
   int countOf(SearchScope scope) => switch (scope) {
-        SearchScope.all => total,
-        SearchScope.shows => shows.length,
-        SearchScope.feeds => feeds.length,
-      };
+    SearchScope.all => total,
+    SearchScope.shows => shows.length,
+    SearchScope.feeds => feeds.length,
+  };
 }
 
 /// 搜索结果，**按查询词分族**（`family`）。
@@ -98,21 +98,21 @@ final class SearchResults {
 /// 对演出匹配 标题 / 艺人 / 场馆 / 城市 / 分类名 / 角标；对动态匹配
 /// 标题 / 作者 / 角标。**不做拼音与分词**——企划星那套是服务端的
 /// Elasticsearch，客户端复刻不出等价结果，假装能搜只会让"搜不到"变成 bug。
-final searchResultsProvider =
-    Provider.family<SearchResults, String>((ref, String rawQuery) {
+final searchResultsProvider = Provider.family<SearchResults, String>((
+  ref,
+  String rawQuery,
+) {
   final String query = rawQuery.trim().toLowerCase();
   if (query.isEmpty) {
-    return const SearchResults(
-      shows: <ShowSummary>[],
-      feeds: <FeedPost>[],
-    );
+    return const SearchResults(shows: <ShowSummary>[], feeds: <FeedPost>[]);
   }
 
-  final List<ShowSummary> shows = ref
-      .watch(cityShowsProvider)
-      .valueOrNull
-      ?.where((ShowSummary show) => _matchesShow(show, query))
-      .toList(growable: false) ??
+  final List<ShowSummary> shows =
+      ref
+          .watch(cityShowsProvider)
+          .valueOrNull
+          ?.where((ShowSummary show) => _matchesShow(show, query))
+          .toList(growable: false) ??
       const <ShowSummary>[];
 
   final List<FeedPost> feeds = ref

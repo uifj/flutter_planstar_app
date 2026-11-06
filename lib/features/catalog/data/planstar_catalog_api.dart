@@ -36,7 +36,10 @@ final class PlanstarCatalogApi {
   }
 
   /// 热门演出。
-  Future<Result<List<ShowSummary>>> fetchHotShows({int page = 1, int pageSize = 20}) {
+  Future<Result<List<ShowSummary>>> fetchHotShows({
+    int page = 1,
+    int pageSize = 20,
+  }) {
     return _client.get<List<ShowSummary>>(
       'v1/activities/hot',
       queryParameters: <String, dynamic>{'page': page, 'pageSize': pageSize},

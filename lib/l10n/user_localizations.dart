@@ -581,6 +581,12 @@ abstract class UserLocalizations {
   /// **'开启'**
   String get settingsPage_164;
 
+  /// 来源：lib/features/user/settings_page.dart:164；原文：'关闭'
+  ///
+  /// In zh, this message translates to:
+  /// **'关闭'**
+  String get settingsPageDarkModeOff;
+
   /// 来源：lib/features/user/settings_page.dart:172；原文：'退出后需要重新登录才能查看订单，确定继续吗？'
   ///
   /// In zh, this message translates to:

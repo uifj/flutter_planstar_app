@@ -7,17 +7,13 @@ import 'demo_coupons.dart';
 /// 优惠券列表筛选 Tab。
 enum CouponTab {
   /// 可使用。
-  usable('可使用'),
+  usable,
 
   /// 已使用。
-  used('已使用'),
+  used,
 
   /// 已过期。
-  expired('已过期');
-
-  const CouponTab(this.label);
-
-  final String label;
+  expired,
 }
 
 /// 优惠券列表 Provider。
@@ -25,21 +21,24 @@ enum CouponTab {
 /// 对齐 Android `CouponActivity` 的 `GET v1/coupons` 调用。
 /// 接口接上后把这里改成 `FutureProvider` 即可——
 /// 返回值类型不变，页面不需要改。
-final couponListProvider =
-    Provider<List<Coupon>>((ref) => DemoCoupons.generate());
+final couponListProvider = Provider<List<Coupon>>(
+  (ref) => DemoCoupons.generate(),
+);
 
 /// 按 Tab 筛选后的券列表。
-final filteredCouponsProvider =
-    Provider.family<List<Coupon>, CouponTab>((ref, tab) {
+final filteredCouponsProvider = Provider.family<List<Coupon>, CouponTab>((
+  ref,
+  tab,
+) {
   final all = ref.watch(couponListProvider);
   return all.where((c) => c.status == _statusOf(tab)).toList();
 });
 
 CouponStatus _statusOf(CouponTab tab) => switch (tab) {
-      CouponTab.usable => CouponStatus.usable,
-      CouponTab.used => CouponStatus.used,
-      CouponTab.expired => CouponStatus.expired,
-    };
+  CouponTab.usable => CouponStatus.usable,
+  CouponTab.used => CouponStatus.used,
+  CouponTab.expired => CouponStatus.expired,
+};
 
 /// 可用券数量（「我的」页资产卡用）。
 final couponCountProvider = Provider<int>((ref) {
@@ -68,13 +67,12 @@ class ExchangeState {
     bool? submitting,
     Coupon? result,
     String? error,
-  }) =>
-      ExchangeState(
-        code: code ?? this.code,
-        submitting: submitting ?? this.submitting,
-        result: result ?? this.result,
-        error: error,
-      );
+  }) => ExchangeState(
+    code: code ?? this.code,
+    submitting: submitting ?? this.submitting,
+    result: result ?? this.result,
+    error: error,
+  );
 }
 
 /// 兑换码输入 Controller。
@@ -119,10 +117,7 @@ class ExchangeController extends Notifier<ExchangeState> {
       );
       state = ExchangeState(result: coupon);
     } else {
-      state = state.copyWith(
-        submitting: false,
-        error: '兑换码无效，请检查后重试',
-      );
+      state = state.copyWith(submitting: false, error: 'invalid');
     }
   }
 
@@ -132,6 +127,4 @@ class ExchangeController extends Notifier<ExchangeState> {
 }
 
 final exchangeControllerProvider =
-    NotifierProvider<ExchangeController, ExchangeState>(
-  ExchangeController.new,
-);
+    NotifierProvider<ExchangeController, ExchangeState>(ExchangeController.new);

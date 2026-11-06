@@ -113,11 +113,8 @@ final class AuthUser {
   /// 这里把 `<= 0` 一律当成无效，避免把"空用户"当成已登录。
   bool get isValid => userId > 0;
 
-  /// 展示名。昵称为空时回落到"票友"（来源的默认昵称）。
-  String get displayName {
-    final name = (userName ?? '').trim();
-    return name.isEmpty ? '票友' : name;
-  }
+  /// 展示名。昵称为空时返回空串，由 UI 层按 l10n 决定兜底文案。
+  String get displayName => (userName ?? '').trim();
 
   /// 脱敏手机号：`138****8000`。没有手机号时返回 `null`。
   String? get maskedMobile {
@@ -132,8 +129,7 @@ final class AuthUser {
   ///
   /// 口径与来源一致：头像非空、性别已填、生日已填。
   /// `birthday == 0` 视为未填（它确实是 epoch，但业务上就是"没填"）。
-  bool get isComplete =>
-      avatar.isNotEmpty && gender != 0 && birthday != 0;
+  bool get isComplete => avatar.isNotEmpty && gender != 0 && birthday != 0;
 
   /// 资料是否相同（用于"只刷新资料"vs"换账号"的区分）。
   bool isSame(AuthUser? other) {

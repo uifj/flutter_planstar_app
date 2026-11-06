@@ -258,6 +258,9 @@ class UserLocalizationsEn extends UserLocalizations {
   String get settingsPage_164 => '开启';
 
   @override
+  String get settingsPageDarkModeOff => '关闭';
+
+  @override
   String get settingsPage_172 => '退出后需要重新登录才能查看订单，确定继续吗？';
 
   @override

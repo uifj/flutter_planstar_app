@@ -3,19 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../l10n/app_localizations.dart';
-import '../l10n/auth_localizations.dart';
-import '../l10n/catalog_localizations.dart';
-import '../l10n/discover_localizations.dart';
-import '../l10n/goods_localizations.dart';
-import '../l10n/group_buy_localizations.dart';
-import '../l10n/home_localizations.dart';
-import '../l10n/marketing_localizations.dart';
-import '../l10n/message_localizations.dart';
-import '../l10n/order_localizations.dart';
-import '../l10n/proxy_buy_localizations.dart';
-import '../l10n/search_localizations.dart';
-import '../l10n/user_localizations.dart';
+import '../l10n/l10n.dart';
 import 'router.dart';
 import 'sdk/sdk_bootstrap.dart';
 import 'theme.dart';
@@ -86,8 +74,7 @@ class PlanstarApp extends ConsumerWidget {
     return MaterialApp.router(
       // 用 onGenerateTitle 而不是 title：title 拿不到 BuildContext，
       // 无法读取本地化文案。
-      onGenerateTitle: (BuildContext context) =>
-          AppLocalizations.of(context).appTitle,
+      onGenerateTitle: (BuildContext context) => context.l10n.appTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),

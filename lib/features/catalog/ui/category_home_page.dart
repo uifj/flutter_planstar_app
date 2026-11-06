@@ -13,7 +13,8 @@ import '../../../shared/ui/ps_tag.dart';
 import '../application/catalog_providers.dart';
 import '../domain/show_category.dart';
 import '../domain/show_summary.dart';
-import '../../../l10n/catalog_localizations.dart';
+import 'catalog_l10n.dart';
+import '../../../l10n/l10n.dart';
 
 /// 分类首页（企划星 `CategoryHomeActivity` + `CategoryHomeFragment`）。
 ///
@@ -67,7 +68,8 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
         .firstOrNull;
 
     final city = ref.watch(selectedCityProvider);
-    final allShows = ref.watch(cityShowsProvider).valueOrNull ?? const <ShowSummary>[];
+    final allShows =
+        ref.watch(cityShowsProvider).valueOrNull ?? const <ShowSummary>[];
 
     // 按分类 + 二级标签筛选。
     final filteredShows = allShows.where((show) {
@@ -114,10 +116,14 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
           Expanded(
             child: filteredShows.isEmpty
                 ? PsEmptyState(
-                    title: CatalogLocalizations.of(context).categoryHomePage_116(city, selectedCategory?.name ?? '该分类'),
-                    description: CatalogLocalizations.of(context).categoryHomePage_117,
+                    title: context.l10n.categoryHomePage_116(
+                      city,
+                      selectedCategory?.name ??
+                          context.l10n.categoryHomePage_unknownCategory,
+                    ),
+                    description: context.l10n.categoryHomePage_117,
                     icon: LucideIcons.calendarCheck,
-                    actionLabel: CatalogLocalizations.of(context).categoryHomePage_119,
+                    actionLabel: context.l10n.categoryHomePage_119,
                     onAction: () => context.go('/'),
                   )
                 : ListView.builder(
@@ -180,7 +186,11 @@ class _CategoryTopBar extends StatelessWidget {
                         color: colors.textPrimary,
                       ),
                     ),
-                    Icon(LucideIcons.chevronDown, size: 18, color: colors.textTertiary),
+                    Icon(
+                      LucideIcons.chevronDown,
+                      size: 18,
+                      color: colors.textTertiary,
+                    ),
                   ],
                 ),
               ),
@@ -191,7 +201,11 @@ class _CategoryTopBar extends StatelessWidget {
               onTap: onTapSearch,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Icon(LucideIcons.search, size: 22, color: colors.textSecondary),
+                child: Icon(
+                  LucideIcons.search,
+                  size: 22,
+                  color: colors.textSecondary,
+                ),
               ),
             ),
           ],
@@ -327,6 +341,7 @@ class _CategoryShowCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final discountLabel = show.discountLabelOf(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -363,12 +378,16 @@ class _CategoryShowCard extends StatelessWidget {
                       runSpacing: 4,
                       children: <Widget>[
                         for (final tag in show.tags.take(3))
-                          PsTag(label: tag, tone: PsTagTone.outline, fontSize: 9),
+                          PsTag(
+                            label: tag,
+                            tone: PsTagTone.outline,
+                            fontSize: 9,
+                          ),
                       ],
                     ),
                   const SizedBox(height: 6),
                   Text(
-                    '${show.firstSessionLabel} · ${show.duration}',
+                    '${show.firstSessionLabelOf(context)} · ${show.duration}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 12, color: colors.textTertiary),
@@ -376,14 +395,21 @@ class _CategoryShowCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: <Widget>[
-                      Icon(LucideIcons.mapPin, size: 12, color: colors.textTertiary),
+                      Icon(
+                        LucideIcons.mapPin,
+                        size: 12,
+                        color: colors.textTertiary,
+                      ),
                       const SizedBox(width: 2),
                       Expanded(
                         child: Text(
                           '${show.city} · ${show.venue}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: colors.textTertiary,
+                          ),
                         ),
                       ),
                     ],
@@ -391,21 +417,28 @@ class _CategoryShowCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: <Widget>[
-                      if (show.discountLabel != null)
+                      if (discountLabel != null)
                         Padding(
                           padding: const EdgeInsets.only(right: 6),
                           child: PsTag(
-                            label: show.discountLabel!,
+                            label: discountLabel,
                             tone: PsTagTone.solid,
                             color: colors.price,
                             fontSize: 9,
                           ),
                         ),
-                      PsPrice(amount: show.priceFrom, size: 16, suffix: CatalogLocalizations.of(context).categoryHomePage_403),
+                      PsPrice(
+                        amount: show.priceFrom,
+                        size: 16,
+                        suffix: context.l10n.categoryHomePage_403,
+                      ),
                       const Spacer(),
                       Text(
-                        CatalogLocalizations.of(context).categoryHomePage_406(show.wishCount),
-                        style: TextStyle(fontSize: 11, color: colors.textTertiary),
+                        context.l10n.categoryHomePage_406(show.wishCount),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: colors.textTertiary,
+                        ),
                       ),
                     ],
                   ),

@@ -6,9 +6,7 @@ import 'proxy_buy.dart';
 
 /// 代抢信息 Provider。
 /// 对齐 Android `ActivityBean.proxyBuyInfo`。
-final proxyBuyInfoProvider = Provider<ProxyBuyInfo>(
-  (ref) => DemoProxyBuy.info,
-);
+final proxyBuyInfoProvider = Provider<ProxyBuyInfo>((ref) => DemoProxyBuy.info);
 
 /// 代抢订单列表 Provider。
 /// 对齐 Android `v1/proxyBuyOrder/myOrders`（模拟）。
@@ -17,8 +15,10 @@ final proxyBuyOrdersProvider = Provider<List<ProxyBuyOrder>>(
 );
 
 /// 代抢订单详情。
-final proxyBuyOrderByIdProvider =
-    Provider.family<ProxyBuyOrder?, int>((ref, id) {
+final proxyBuyOrderByIdProvider = Provider.family<ProxyBuyOrder?, int>((
+  ref,
+  id,
+) {
   final orders = ref.watch(proxyBuyOrdersProvider);
   return orders.where((ProxyBuyOrder o) => o.id == id).firstOrNull;
 });
@@ -78,5 +78,5 @@ class ProxyBuySubmitController extends Notifier<ProxyBuySubmitState> {
 
 final proxyBuySubmitControllerProvider =
     NotifierProvider<ProxyBuySubmitController, ProxyBuySubmitState>(
-  ProxyBuySubmitController.new,
-);
+      ProxyBuySubmitController.new,
+    );

@@ -13,8 +13,8 @@ final class OrderLine extends Entity<TicketTierId> {
     required this.tierName,
     required this.unitPrice,
     required Quantity quantity,
-  })  : _quantity = quantity,
-        super(id) {
+  }) : _quantity = quantity,
+       super(id) {
     if (tierName.trim().isEmpty) {
       throw ArgumentError.value(tierName, 'tierName', '票档名不能为空');
     }

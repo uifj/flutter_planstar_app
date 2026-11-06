@@ -11,8 +11,7 @@ final groupBuyListProvider = Provider<List<GroupBuyInfo>>(
 
 /// 拼团详情 Provider（按 ID）。
 /// 对齐 Android `v1/pinTuanCampaign/{id}`。
-final groupBuyByIdProvider =
-    Provider.family<GroupBuyInfo?, int>((ref, id) {
+final groupBuyByIdProvider = Provider.family<GroupBuyInfo?, int>((ref, id) {
   final list = ref.watch(groupBuyListProvider);
   return list.where((GroupBuyInfo g) => g.id == id).firstOrNull;
 });
@@ -22,7 +21,7 @@ sealed class JoinGroupState {
   const JoinGroupState();
   const factory JoinGroupState.initial() = JoinGroupInitial;
   const factory JoinGroupState.submitting() = JoinGroupSubmitting;
-  const factory JoinGroupState.success(String message) = JoinGroupSuccess;
+  const factory JoinGroupState.success() = JoinGroupSuccess;
   const factory JoinGroupState.error(String message) = JoinGroupError;
 }
 
@@ -35,8 +34,7 @@ class JoinGroupSubmitting extends JoinGroupState {
 }
 
 class JoinGroupSuccess extends JoinGroupState {
-  const JoinGroupSuccess(this.message);
-  final String message;
+  const JoinGroupSuccess();
 }
 
 class JoinGroupError extends JoinGroupState {
@@ -56,7 +54,7 @@ class JoinGroupController extends Notifier<JoinGroupState> {
 
     await Future<void>.delayed(const Duration(milliseconds: 800));
 
-    state = const JoinGroupState.success('参团成功！等待拼团完成');
+    state = const JoinGroupState.success();
   }
 
   void reset() => state = const JoinGroupState.initial();
@@ -64,5 +62,5 @@ class JoinGroupController extends Notifier<JoinGroupState> {
 
 final joinGroupControllerProvider =
     NotifierProvider<JoinGroupController, JoinGroupState>(
-  JoinGroupController.new,
-);
+      JoinGroupController.new,
+    );

@@ -21,7 +21,8 @@ void main() {
   OrderConfirmController controller() =>
       container.read(orderConfirmControllerProvider('10086').notifier);
 
-  OrderConfirmState state() => container.read(orderConfirmControllerProvider('10086'));
+  OrderConfirmState state() =>
+      container.read(orderConfirmControllerProvider('10086'));
 
   group('确认页控制器', () {
     test('初始状态：1 张内场 A 区，应付 ¥680.00，协议未勾', () {
@@ -75,7 +76,8 @@ void main() {
       for (var i = 0; i < 6; i++) {
         controller().increase(const TicketTierId('tier-1'));
       }
-      expect(state().notice, contains('每单最多购买 6 张'));
+      expect(state().notice!.code, OrderNoticeCode.failure);
+      expect(state().notice!.detail, contains('每单最多购买 6 张'));
       expect(state().order.totalTickets, Quantity(6));
     });
 
@@ -94,7 +96,8 @@ void main() {
       await controller().submit();
 
       expect(state().submitted, isFalse);
-      expect(state().notice, contains('请选择 1 位观演人'));
+      expect(state().notice!.code, OrderNoticeCode.failure);
+      expect(state().notice!.detail, contains('请选择 1 位观演人'));
       expect(state().order.status, OrderStatus.draft, reason: '失败不应改状态');
     });
 
@@ -106,8 +109,9 @@ void main() {
 
       expect(state().canSubmit, isTrue);
 
-      final TicketOrderRepository repository =
-          container.read(ticketOrderRepositoryProvider);
+      final TicketOrderRepository repository = container.read(
+        ticketOrderRepositoryProvider,
+      );
       expect(repository, isA<InMemoryTicketOrderRepository>());
       final memory = repository as InMemoryTicketOrderRepository;
       // 仓储不是空的：`ticketOrderRepositoryProvider` 会
@@ -121,7 +125,7 @@ void main() {
       final after = state();
       expect(after.submitted, isTrue);
       expect(after.order.status, OrderStatus.awaitingPayment);
-      expect(after.notice, contains('订单已提交'));
+      expect(after.notice!.code, OrderNoticeCode.submitted);
       expect(after.recentEvents, contains('order.placed'));
 
       expect(memory.count, before + 1);

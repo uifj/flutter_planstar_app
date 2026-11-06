@@ -6,8 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../shared/ui/ps_empty_state.dart';
 import 'proxy_buy.dart';
+import 'proxy_buy_l10n.dart';
 import 'proxy_buy_providers.dart';
-import '../../l10n/proxy_buy_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 代抢页面。
 ///
@@ -28,17 +29,17 @@ class ProxyBuyPage extends ConsumerWidget {
     final orders = ref.watch(proxyBuyOrdersProvider);
 
     return AdaptiveScaffold(
-      appBar: AdaptiveAppBar(title: ProxyBuyLocalizations.of(context).proxyBuyPage_30),
+      appBar: AdaptiveAppBar(title: context.l10n.proxyBuyPage_30),
       body: ListView(
         children: <Widget>[
           _RuleBanner(info: info),
           _DeadlineSelector(deadlines: info.deadlines),
           const SizedBox(height: 12),
-          _SectionTitle(title: ProxyBuyLocalizations.of(context).proxyBuyPage_36),
+          _SectionTitle(title: context.l10n.proxyBuyPage_36),
           if (orders.isEmpty)
             PsEmptyState(
-              title: ProxyBuyLocalizations.of(context).proxyBuyPage_39,
-              description: ProxyBuyLocalizations.of(context).proxyBuyPage_40,
+              title: context.l10n.proxyBuyPage_39,
+              description: context.l10n.proxyBuyPage_40,
               icon: LucideIcons.clipboardList,
             )
           else
@@ -79,7 +80,7 @@ class _RuleBanner extends StatelessWidget {
               Icon(LucideIcons.info, size: 16, color: colors.warning),
               const SizedBox(width: 6),
               Text(
-                ProxyBuyLocalizations.of(context).proxyBuyPage_81,
+                context.l10n.proxyBuyPage_81,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -89,14 +90,16 @@ class _RuleBanner extends StatelessWidget {
               if (info.compensationEnabled) ...<Widget>[
                 const SizedBox(width: 8),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 1,
+                  ),
                   decoration: BoxDecoration(
                     color: colors.warning.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(3),
                   ),
                   child: Text(
-                    ProxyBuyLocalizations.of(context).proxyBuyPage_98,
+                    context.l10n.proxyBuyPage_98,
                     style: TextStyle(fontSize: 10, color: colors.warning),
                   ),
                 ),
@@ -116,11 +119,11 @@ class _RuleBanner extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                ProxyBuyLocalizations.of(context).proxyBuyPage_118,
+                context.l10n.proxyBuyPage_118,
                 style: TextStyle(fontSize: 12, color: colors.textTertiary),
               ),
               Text(
-                ProxyBuyLocalizations.of(context).proxyBuyPage_122(info.proxyBuyFee.format()),
+                context.l10n.proxyBuyPage_122(info.proxyBuyFee.format()),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -163,7 +166,7 @@ class _DeadlineSelectorState extends State<_DeadlineSelector> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            ProxyBuyLocalizations.of(context).proxyBuyPage_165,
+            context.l10n.proxyBuyPage_165,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -287,44 +290,46 @@ class _OrderItem extends StatelessWidget {
               ),
               const Spacer(),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: statusColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  order.statusLabel,
+                  order.statusLabelOf(context),
                   style: TextStyle(fontSize: 11, color: statusColor),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          _InfoRow(label: ProxyBuyLocalizations.of(context).proxyBuyPage_303, value: order.venue),
+          _InfoRow(label: context.l10n.proxyBuyPage_303, value: order.venue),
           const SizedBox(height: 4),
-          _InfoRow(label: ProxyBuyLocalizations.of(context).proxyBuyPage_305, value: order.eventTime),
+          _InfoRow(
+            label: context.l10n.proxyBuyPage_305,
+            value: order.eventTime,
+          ),
           const SizedBox(height: 4),
-          _InfoRow(label: ProxyBuyLocalizations.of(context).proxyBuyPage_307, value: order.deadline.desc),
+          _InfoRow(
+            label: context.l10n.proxyBuyPage_307,
+            value: order.deadline.desc,
+          ),
           const SizedBox(height: 8),
           Divider(height: 1, color: colors.divider),
           const SizedBox(height: 8),
           Row(
             children: <Widget>[
               Text(
-                ProxyBuyLocalizations.of(context).proxyBuyPage_314(order.quantity, order.ticketPrice.format()),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: colors.textTertiary,
+                context.l10n.proxyBuyPage_314(
+                  order.quantity,
+                  order.ticketPrice.format(),
                 ),
+                style: TextStyle(fontSize: 12, color: colors.textTertiary),
               ),
               const Spacer(),
               Text(
-                ProxyBuyLocalizations.of(context).proxyBuyPage_322(order.proxyBuyFee.format()),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: colors.textTertiary,
-                ),
+                context.l10n.proxyBuyPage_322(order.proxyBuyFee.format()),
+                style: TextStyle(fontSize: 12, color: colors.textTertiary),
               ),
             ],
           ),
@@ -332,7 +337,7 @@ class _OrderItem extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                ProxyBuyLocalizations.of(context).proxyBuyPage_334,
+                context.l10n.proxyBuyPage_334,
                 style: TextStyle(fontSize: 13, color: colors.textSecondary),
               ),
               Text(

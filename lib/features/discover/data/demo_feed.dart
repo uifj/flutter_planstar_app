@@ -46,7 +46,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '网友热议',
       showId: '2001',
       likeCount: 1_208,
-      body: '序曲一响就知道这版是认真的。吊灯升起的段落用的是原版机械结构，'
+      body:
+          '序曲一响就知道这版是认真的。吊灯升起的段落用的是原版机械结构，'
           '从头顶掠过时能听到轨道滑动的声音。\n\n'
           '中文唱词比我预期自然，几个关键段落没有被翻译腔拖住。'
           '二层楼座中区是性价比最高的位置，能同时看到乐池和舞台深度。',
@@ -61,7 +62,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       showId: '1001',
       likeCount: 4_560,
       hasVideo: true,
-      body: '开票后 15 分钟、开演前 7 天、开演前 48 小时——'
+      body:
+          '开票后 15 分钟、开演前 7 天、开演前 48 小时——'
           '这三个时间点是退票回流最集中的窗口。\n\n'
           '前两个靠蹲，第三个靠"回流提醒"。'
           '另外内场 A 区靠后的位置其实视野被前区挡住，别为了区域名多花钱。',
@@ -75,7 +77,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '观演repo',
       showId: '5001',
       likeCount: 902,
-      body: '工作日上午 10 点第一场人最少，光影馆基本能空场拍。\n\n'
+      body:
+          '工作日上午 10 点第一场人最少，光影馆基本能空场拍。\n\n'
           '推荐机位：镜像球体区（低角度）、水晶宇宙（贴近地面仰拍）、'
           '以及出口前的花与人房间。手机记得关自动测光，不然会过曝。',
     ),
@@ -88,7 +91,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '网友热议',
       showId: '2004',
       likeCount: 431,
-      body: '面具戴上之后没人说话，全靠眼神和跟随。建议第一轮先跟着主线，'
+      body:
+          '面具戴上之后没人说话，全靠眼神和跟随。建议第一轮先跟着主线，'
           '第二轮再单独追一个角色——不然会在楼梯间迷路。\n\n'
           '穿好走的鞋，全程三小时基本在站和走。',
     ),
@@ -101,7 +105,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '攻略',
       showId: '2002',
       likeCount: 1_540,
-      body: '大剧院的池座后排有遮挡，楼座 2 层虽然远但视线完整，'
+      body:
+          '大剧院的池座后排有遮挡，楼座 2 层虽然远但视线完整，'
           '而且票价比池座后排低一档。\n\n'
           '看话剧优先选正对舞台的楼座 1 层前区；看舞剧选偏一点的侧区，'
           '因为调度会用到舞台深处。',
@@ -116,7 +121,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       showId: '1002',
       likeCount: 3_320,
       hasVideo: true,
-      body: '安可第三首才是《温柔》，全场自动打开手机灯。\n\n'
+      body:
+          '安可第三首才是《温柔》，全场自动打开手机灯。\n\n'
           '内场站区很挤，体力不好的建议看台。音响这次调得不错，'
           '低音没有糊。',
     ),
@@ -129,7 +135,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '亲子',
       showId: '4001',
       likeCount: 288,
-      body: '读过绘本的孩子能认出角色，全程注意力明显更集中。\n\n'
+      body:
+          '读过绘本的孩子能认出角色，全程注意力明显更集中。\n\n'
           '演出 70 分钟没有中场，5 岁以下建议坐靠走道的位置，'
           '方便中途出去。',
     ),
@@ -142,7 +149,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '观演repo',
       showId: '8001',
       likeCount: 640,
-      body: '主场看台的助威是有组织的，跟着喊两轮就上手了。\n\n'
+      body:
+          '主场看台的助威是有组织的，跟着喊两轮就上手了。\n\n'
           '散场地铁比想象中快，建议走 2 号口。',
     ),
     post(
@@ -154,7 +162,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '网友热议',
       showId: '2003',
       likeCount: 812,
-      body: '开场《大教堂时代》的合唱层次比录音版更厚，'
+      body:
+          '开场《大教堂时代》的合唱层次比录音版更厚，'
           '现场乐队的铜管是加分项。\n\n'
           '字幕屏位置偏高，坐前区需要抬头，介意的话选后区。',
     ),
@@ -167,7 +176,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '观演repo',
       showId: '7002',
       likeCount: 356,
-      body: '线上的段子到了现场有一半是新的，互动环节才是主场优势。\n\n'
+      body:
+          '线上的段子到了现场有一半是新的，互动环节才是主场优势。\n\n'
           '前排会被点名，社恐请坐中后区。',
     ),
     post(
@@ -179,7 +189,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '观演repo',
       showId: '6001',
       likeCount: 1_102,
-      body: '黑天鹅双人舞的挥鞭转是全场顶点，乐团跟着加快了半拍。\n\n'
+      body:
+          '黑天鹅双人舞的挥鞭转是全场顶点，乐团跟着加快了半拍。\n\n'
           '看芭蕾建议选侧前方，能看清足尖和手臂线条。',
     ),
     post(
@@ -191,7 +202,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '网友热议',
       showId: '7001',
       likeCount: 2_204,
-      body: '返场比正活还长，观众接梗接得比演员还快。\n\n'
+      body:
+          '返场比正活还长，观众接梗接得比演员还快。\n\n'
           '园子小，最后一排也听得清，不用抢前排。',
     ),
     post(
@@ -203,7 +215,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '攻略',
       showId: '3001',
       likeCount: 240,
-      body: '布鲁克纳第七的慢乐章是这场的关键，'
+      body:
+          '布鲁克纳第七的慢乐章是这场的关键，'
           '建议提前听两遍再进场，现场的信息量会大很多。\n\n'
           '乐章之间不要鼓掌，这是这类音乐会的基本礼仪。',
     ),
@@ -217,7 +230,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       showId: '1004',
       likeCount: 1_680,
       hasVideo: true,
-      body: '主舞台压轴之外，第二天下午的微风舞台是隐藏彩蛋。\n\n'
+      body:
+          '主舞台压轴之外，第二天下午的微风舞台是隐藏彩蛋。\n\n'
           '两天通票比单日划算，但体力要留够。草地早晚温差大，带件外套。',
     ),
     post(
@@ -229,7 +243,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '观演repo',
       showId: '8002',
       likeCount: 2_460,
-      body: '大屏导播切得比直播快，团战能提前半秒看到结果。\n\n'
+      body:
+          '大屏导播切得比直播快，团战能提前半秒看到结果。\n\n'
           '场馆内餐饮偏贵，建议提前吃。',
     ),
     post(
@@ -241,7 +256,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '观演repo',
       showId: '2005',
       likeCount: 198,
-      body: '"你是我温暖的手套，冰冷的啤酒"——这句一出来就没绷住。\n\n'
+      body:
+          '"你是我温暖的手套，冰冷的啤酒"——这句一出来就没绷住。\n\n'
           '小剧场第一排会有互动，想安静看戏的选后排。',
     ),
     post(
@@ -253,7 +269,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '亲子',
       showId: '3003',
       likeCount: 312,
-      body: '曲目选了《千与千寻》《龙猫》这些熟悉的段落，孩子能跟上。\n\n'
+      body:
+          '曲目选了《千与千寻》《龙猫》这些熟悉的段落，孩子能跟上。\n\n'
           '亲子场允许小声说话，不用担心被侧目，这点很友好。',
     ),
     post(
@@ -265,7 +282,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '观演repo',
       showId: '5002',
       likeCount: 146,
-      body: '投影区大概 20 分钟一轮，建议进去就坐下等完整一轮。\n\n'
+      body:
+          '投影区大概 20 分钟一轮，建议进去就坐下等完整一轮。\n\n'
           '静态展区的真迹不多，主要看氛围。',
     ),
     post(
@@ -278,7 +296,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       showId: '1003',
       likeCount: 2_980,
       hasVideo: true,
-      body: '舞台是环绕式投影，四面台都能看到完整视觉。\n\n'
+      body:
+          '舞台是环绕式投影，四面台都能看到完整视觉。\n\n'
           '歌单偏后期作品，想听老歌的要有心理准备。',
     ),
     post(
@@ -290,7 +309,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       tag: '观演repo',
       showId: '7003',
       likeCount: 88,
-      body: '三折戏里《三岔口》的哑剧段落最精彩，全靠身段。\n\n'
+      body:
+          '三折戏里《三岔口》的哑剧段落最精彩，全靠身段。\n\n'
           '剧场不大，最后一排也看得清脸谱。',
     ),
   ];
@@ -322,69 +342,69 @@ List<FeedComment> buildDemoComments(String postId, {DateTime? now}) {
 
   return switch (postId) {
     'f1' => <FeedComment>[
-        comment(
-          id: 'c1-1',
-          author: '剧场钉子户',
-          text: '同场！吊灯那段我旁边的观众直接"哇"出声了。',
-          ago: const Duration(minutes: 42),
-          likeCount: 36,
-        ),
-        comment(
-          id: 'c1-2',
-          author: '第一次看音乐剧',
-          text: '请问二楼楼座的字幕看得清吗？在犹豫买哪一档。',
-          ago: const Duration(hours: 2),
-          likeCount: 8,
-        ),
-        comment(
-          id: 'c1-3',
-          author: '剧院常驻民',
-          text: '楼座中区没问题，边角位会挡到一点。',
-          ago: const Duration(hours: 1),
-          likeCount: 21,
-        ),
-      ],
+      comment(
+        id: 'c1-1',
+        author: '剧场钉子户',
+        text: '同场！吊灯那段我旁边的观众直接"哇"出声了。',
+        ago: const Duration(minutes: 42),
+        likeCount: 36,
+      ),
+      comment(
+        id: 'c1-2',
+        author: '第一次看音乐剧',
+        text: '请问二楼楼座的字幕看得清吗？在犹豫买哪一档。',
+        ago: const Duration(hours: 2),
+        likeCount: 8,
+      ),
+      comment(
+        id: 'c1-3',
+        author: '剧院常驻民',
+        text: '楼座中区没问题，边角位会挡到一点。',
+        ago: const Duration(hours: 1),
+        likeCount: 21,
+      ),
+    ],
     'f2' => <FeedComment>[
-        comment(
-          id: 'c2-1',
-          author: '抢到票的人',
-          text: '开演前 48 小时那条是真的，我就是这么捡到的。',
-          ago: const Duration(hours: 3),
-          likeCount: 64,
-        ),
-        comment(
-          id: 'c2-2',
-          author: '陪跑三年',
-          text: '回流提醒在哪里设置？没找到入口。',
-          ago: const Duration(hours: 4),
-          likeCount: 12,
-        ),
-      ],
+      comment(
+        id: 'c2-1',
+        author: '抢到票的人',
+        text: '开演前 48 小时那条是真的，我就是这么捡到的。',
+        ago: const Duration(hours: 3),
+        likeCount: 64,
+      ),
+      comment(
+        id: 'c2-2',
+        author: '陪跑三年',
+        text: '回流提醒在哪里设置？没找到入口。',
+        ago: const Duration(hours: 4),
+        likeCount: 12,
+      ),
+    ],
     'f3' => <FeedComment>[
-        comment(
-          id: 'c3-1',
-          author: '拍照的鱼',
-          text: '水晶宇宙真的要好早去，晚了全是人头。',
-          ago: const Duration(hours: 6),
-          likeCount: 19,
-        ),
-      ],
+      comment(
+        id: 'c3-1',
+        author: '拍照的鱼',
+        text: '水晶宇宙真的要好早去，晚了全是人头。',
+        ago: const Duration(hours: 6),
+        likeCount: 19,
+      ),
+    ],
     'f5' => <FeedComment>[
-        comment(
-          id: 'c5-1',
-          author: '话剧爱好者',
-          text: '楼座 2 层视野确实完整，就是离得远，看表情有点勉强。',
-          ago: const Duration(hours: 20),
-          likeCount: 27,
-        ),
-        comment(
-          id: 'c5-2',
-          author: '选座研究所',
-          text: '看表情的话选楼座 1 层前区，价格差不太多。',
-          ago: const Duration(hours: 18),
-          likeCount: 15,
-        ),
-      ],
+      comment(
+        id: 'c5-1',
+        author: '话剧爱好者',
+        text: '楼座 2 层视野确实完整，就是离得远，看表情有点勉强。',
+        ago: const Duration(hours: 20),
+        likeCount: 27,
+      ),
+      comment(
+        id: 'c5-2',
+        author: '选座研究所',
+        text: '看表情的话选楼座 1 层前区，价格差不太多。',
+        ago: const Duration(hours: 18),
+        likeCount: 15,
+      ),
+    ],
     _ => const <FeedComment>[],
   };
 }

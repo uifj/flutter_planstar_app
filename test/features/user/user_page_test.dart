@@ -148,21 +148,18 @@ final class _RestoreOnlyRepository implements AuthRepository {
     String phone,
     String code, {
     String? captcha,
-  }) async =>
-      throw StateError('「我的」页不该发起登录');
+  }) async => throw StateError('「我的」页不该发起登录');
 
   @override
   Future<Result<AuthSession>> loginWithPassword(
     String phone,
     String password, {
     String? captcha,
-  }) async =>
-      throw StateError('「我的」页不该发起登录');
+  }) async => throw StateError('「我的」页不该发起登录');
 
   @override
   Future<Result<SendCodeOutcome>> sendLoginCode(
     String phone, {
     String? captcha,
-  }) async =>
-      throw StateError('「我的」页不该发验证码');
+  }) async => throw StateError('「我的」页不该发验证码');
 }

@@ -39,12 +39,22 @@ class PsTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final accent = color ?? (tone == PsTagTone.outline ? colors.textTertiary : colors.brand);
+    final accent =
+        color ??
+        (tone == PsTagTone.outline ? colors.textTertiary : colors.brand);
 
     final (Color background, Color border, Color foreground) = switch (tone) {
-      PsTagTone.outline => (Colors.transparent, accent.withValues(alpha: 0.5), accent),
+      PsTagTone.outline => (
+        Colors.transparent,
+        accent.withValues(alpha: 0.5),
+        accent,
+      ),
       PsTagTone.solid => (accent, accent, Colors.white),
-      PsTagTone.soft => (accent.withValues(alpha: 0.1), Colors.transparent, accent),
+      PsTagTone.soft => (
+        accent.withValues(alpha: 0.1),
+        Colors.transparent,
+        accent,
+      ),
     };
 
     return Container(
@@ -52,7 +62,9 @@ class PsTag extends StatelessWidget {
       decoration: BoxDecoration(
         color: background,
         borderRadius: BorderRadius.circular(radius),
-        border: border == Colors.transparent ? null : Border.all(color: border, width: 0.5),
+        border: border == Colors.transparent
+            ? null
+            : Border.all(color: border, width: 0.5),
       ),
       child: Text(
         label,

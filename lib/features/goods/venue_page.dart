@@ -11,7 +11,7 @@ import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_category.dart';
 import '../catalog/domain/show_summary.dart';
 import '../catalog/ui/show_cards.dart';
-import '../../l10n/goods_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 场馆详情页（企划星 `VenueDetailActivity` + `VenueDetailFragment`）。
 ///
@@ -37,30 +37,37 @@ class VenuePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final VenueSummary? venue = ref.watch(venueByNameProvider(venueName)).valueOrNull;
-    final List<ShowSummary> shows = ref.watch(venueShowsProvider(venueName)).valueOrNull ?? const <ShowSummary>[];
+    final VenueSummary? venue = ref
+        .watch(venueByNameProvider(venueName))
+        .valueOrNull;
+    final List<ShowSummary> shows =
+        ref.watch(venueShowsProvider(venueName)).valueOrNull ??
+        const <ShowSummary>[];
     final String city = ref.watch(selectedCityProvider);
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: GoodsLocalizations.of(context).venuePage_45),
+      appBar: AdaptiveAppBar(title: context.l10n.venuePage_45),
       body: venue == null
           ? PsEmptyState(
-              title: GoodsLocalizations.of(context).venuePage_48,
-              description: GoodsLocalizations.of(context).venuePage_49,
+              title: context.l10n.venuePage_48,
+              description: context.l10n.venuePage_49,
               icon: LucideIcons.mapPinOff,
-              actionLabel: GoodsLocalizations.of(context).venuePage_51,
+              actionLabel: context.l10n.venuePage_51,
               onAction: () => context.pop(),
             )
           : ListView(
               padding: const EdgeInsets.only(bottom: 24),
               children: <Widget>[
                 _VenueHeader(venue: venue, city: city),
-                _SectionBar(title: GoodsLocalizations.of(context).venuePage_58, count: shows.length),
+                _SectionBar(
+                  title: context.l10n.venuePage_58,
+                  count: shows.length,
+                ),
                 if (shows.isEmpty)
                   PsEmptyState(
-                    title: GoodsLocalizations.of(context).venuePage_61,
-                    description: GoodsLocalizations.of(context).venuePage_62,
+                    title: context.l10n.venuePage_61,
+                    description: context.l10n.venuePage_62,
                     icon: LucideIcons.calendarX,
                     compact: true,
                   )
@@ -120,9 +127,11 @@ class _VenueHeader extends StatelessWidget {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  Clipboard.setData(ClipboardData(text: '$city ${venue.address}'));
+                  Clipboard.setData(
+                    ClipboardData(text: '$city ${venue.address}'),
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(GoodsLocalizations.of(context).venuePage_124)),
+                    SnackBar(content: Text(context.l10n.venuePage_124)),
                   );
                 },
                 child: Padding(
@@ -132,7 +141,7 @@ class _VenueHeader extends StatelessWidget {
                       Icon(LucideIcons.copy, size: 13, color: colors.brand),
                       const SizedBox(width: 2),
                       Text(
-                        GoodsLocalizations.of(context).venuePage_134,
+                        context.l10n.venuePage_134,
                         style: TextStyle(fontSize: 12, color: colors.brand),
                       ),
                     ],
@@ -144,9 +153,15 @@ class _VenueHeader extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: <Widget>[
-              _Metric(value: '${venue.showCount}', label: GoodsLocalizations.of(context).venuePage_146),
+              _Metric(
+                value: '${venue.showCount}',
+                label: context.l10n.venuePage_146,
+              ),
               const SizedBox(width: 24),
-              _Metric(value: '${venue.showIds.length}', label: GoodsLocalizations.of(context).venuePage_148),
+              _Metric(
+                value: '${venue.showIds.length}',
+                label: context.l10n.venuePage_148,
+              ),
             ],
           ),
         ],
@@ -206,7 +221,10 @@ class _SectionBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 6),
-          Text('$count', style: TextStyle(fontSize: 12, color: colors.textTertiary)),
+          Text(
+            '$count',
+            style: TextStyle(fontSize: 12, color: colors.textTertiary),
+          ),
         ],
       ),
     );

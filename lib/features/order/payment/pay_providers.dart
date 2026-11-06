@@ -12,15 +12,16 @@ import 'pay_info.dart';
 /// 本演示模式里用 [PayInfo.demo] 生成，金额由路由参数传入。
 /// 接真实接口时改成 `FutureProvider.family`，走 `PayRepository`。
 final payInfoProvider =
-    Provider.family<PayInfo, ({String orderNumber, Money amount, String showTitle})>(
-  (ref, params) {
-    return PayInfo.demo(
-      orderNumber: params.orderNumber,
-      payAmount: params.amount,
-      showTitle: params.showTitle,
-    );
-  },
-);
+    Provider.family<
+      PayInfo,
+      ({String orderNumber, Money amount, String showTitle})
+    >((ref, params) {
+      return PayInfo.demo(
+        orderNumber: params.orderNumber,
+        payAmount: params.amount,
+        showTitle: params.showTitle,
+      );
+    });
 
 /// 支付页面状态。
 class PayState {
@@ -80,7 +81,12 @@ class PayState {
 ///   接 SDK 时只需替换 `_invokeSdk` 方法。
 /// - **倒计时**：企划星用 `leftTime` 字段做订单超时倒计时。这里也实现了，
 ///   超时后自动标记为 failure。
-class PayController extends FamilyNotifier<PayState, ({String orderNumber, Money amount, String showTitle})> {
+class PayController
+    extends
+        FamilyNotifier<
+          PayState,
+          ({String orderNumber, Money amount, String showTitle})
+        > {
   Timer? _countdownTimer;
 
   @override
@@ -130,7 +136,10 @@ class PayController extends FamilyNotifier<PayState, ({String orderNumber, Money
         state = state.copyWith(status: PayStatus.success);
         _countdownTimer?.cancel();
       case PayFailure(:final message):
-        state = state.copyWith(status: PayStatus.failure, errorMessage: message);
+        state = state.copyWith(
+          status: PayStatus.failure,
+          errorMessage: message,
+        );
       case PayCancelled():
         state = state.copyWith(status: PayStatus.cancelled);
     }
@@ -187,6 +196,8 @@ class PayController extends FamilyNotifier<PayState, ({String orderNumber, Money
 
 /// 支付页面控制器 Provider。
 final payControllerProvider =
-    NotifierProvider.family<PayController, PayState, ({String orderNumber, Money amount, String showTitle})>(
-  PayController.new,
-);
+    NotifierProvider.family<
+      PayController,
+      PayState,
+      ({String orderNumber, Money amount, String showTitle})
+    >(PayController.new);

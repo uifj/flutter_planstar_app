@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'gift_card_providers.dart';
-import '../../../l10n/marketing_localizations.dart';
+import '../../../l10n/l10n.dart';
 
 /// 绑定礼品卡页。
 ///
@@ -48,7 +48,7 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
     ref.listen<AddGiftCardState>(addGiftCardControllerProvider, (prev, next) {
       if (next is AddGiftCardSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.message)),
+          SnackBar(content: Text(context.l10n.giftCardProviders_65)),
         );
         // 延迟返回让用户看到提示
         final navigator = Navigator.of(context);
@@ -57,7 +57,7 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
         });
       } else if (next is AddGiftCardError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.message)),
+          SnackBar(content: Text(context.l10n.giftCardProviders_54)),
         );
       }
     });
@@ -65,18 +65,15 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
     final isSubmitting = state is AddGiftCardSubmitting;
 
     return AdaptiveScaffold(
-      appBar: AdaptiveAppBar(title: MarketingLocalizations.of(context).addGiftCardPage_67),
+      appBar: AdaptiveAppBar(title: context.l10n.addGiftCardPage_67),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              MarketingLocalizations.of(context).addGiftCardPage_74,
-              style: TextStyle(
-                fontSize: 14,
-                color: colors.textSecondary,
-              ),
+              context.l10n.addGiftCardPage_74,
+              style: TextStyle(fontSize: 14, color: colors.textSecondary),
             ),
             const SizedBox(height: 12),
             Container(
@@ -89,7 +86,7 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
                 controller: _controller,
                 enabled: !isSubmitting,
                 decoration: InputDecoration(
-                  hintText: MarketingLocalizations.of(context).addGiftCardPage_91,
+                  hintText: context.l10n.addGiftCardPage_91,
                   hintStyle: TextStyle(
                     fontSize: 14,
                     color: colors.textDisabled,
@@ -100,10 +97,7 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
                     vertical: 14,
                   ),
                 ),
-                style: TextStyle(
-                  fontSize: 15,
-                  color: colors.textPrimary,
-                ),
+                style: TextStyle(fontSize: 15, color: colors.textPrimary),
               ),
             ),
             const SizedBox(height: 24),
@@ -113,8 +107,8 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
               child: FilledButton(
                 onPressed: (_canSubmit && !isSubmitting)
                     ? () => ref
-                        .read(addGiftCardControllerProvider.notifier)
-                        .bind(_controller.text)
+                          .read(addGiftCardControllerProvider.notifier)
+                          .bind(_controller.text)
                     : null,
                 style: FilledButton.styleFrom(
                   backgroundColor: colors.brand,
@@ -133,7 +127,7 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
                         ),
                       )
                     : Text(
-                        MarketingLocalizations.of(context).addGiftCardPage_135,
+                        context.l10n.addGiftCardPage_135,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -153,7 +147,7 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    MarketingLocalizations.of(context).addGiftCardPage_155,
+                    context.l10n.addGiftCardPage_155,
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
@@ -162,7 +156,7 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    MarketingLocalizations.of(context).addGiftCardPage_164,
+                    context.l10n.addGiftCardPage_164,
                     style: TextStyle(
                       fontSize: 12,
                       height: 1.8,

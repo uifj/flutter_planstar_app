@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../shared/ui/ps_poster.dart';
 import '../../catalog/domain/show_summary.dart';
 import '../domain/feed_post.dart';
+import '../feed_l10n.dart';
 import '../../../shared/ui/ps_network_images.dart';
 
 /// 发现流卡片（`home_item_waterfall_feed.xml`）。
@@ -92,7 +93,10 @@ class FeedCard extends StatelessWidget {
                       left: 8,
                       bottom: -8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFE600),
                           borderRadius: BorderRadius.circular(2),
@@ -157,8 +161,12 @@ class FeedCard extends StatelessWidget {
                   Icon(LucideIcons.eye, size: 11, color: colors.textTertiary),
                   const SizedBox(width: 2),
                   Text(
-                    post.viewCountLabel,
-                    style: TextStyle(fontSize: 10, height: 1.1, color: colors.textTertiary),
+                    post.viewCountLabelOf(context),
+                    style: TextStyle(
+                      fontSize: 10,
+                      height: 1.1,
+                      color: colors.textTertiary,
+                    ),
                   ),
                 ],
               ),

@@ -20,8 +20,7 @@ import 'widgets/home_guarantee_floor.dart';
 import 'widgets/home_header.dart';
 import 'widgets/home_show_floor.dart';
 import 'widgets/home_venues_floor.dart';
-import '../../l10n/app_localizations.dart';
-import '../../l10n/home_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 首页（`layout_home.xml` + `HomeFragment`）。
 ///
@@ -48,13 +47,8 @@ import '../../l10n/home_localizations.dart';
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
-  /// 分类楼层（分类 id + 副标题）。
-  static const List<(int, String)> _categoryFloors = <(int, String)>[
-    (1, '演唱会 · 音乐节 · 巡演'),
-    (2, '话剧 · 音乐剧 · 沉浸式'),
-    (3, '交响 · 独奏 · 室内乐'),
-    (4, '儿童剧 · 亲子活动'),
-  ];
+  /// 分类楼层（分类 id）。
+  static const List<int> _categoryFloorIds = <int>[1, 2, 3, 4];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -130,7 +124,9 @@ class HomePage extends ConsumerWidget {
                       ref.read(selectedCityProvider.notifier).select(next);
                       if (!citiesWithData.contains(next)) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('$next 暂无演出数据（演示数据仅覆盖部分城市）')),
+                          SnackBar(
+                            content: Text(context.l10n.homePage_132(next)),
+                          ),
                         );
                       }
                     },
@@ -161,7 +157,9 @@ class HomePage extends ConsumerWidget {
                       context.push('/show/${slide.showId}');
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${slide.title} · 运营活动页（演示）')),
+                        SnackBar(
+                          content: Text(context.l10n.homePage_163(slide.title)),
+                        ),
                       );
                     }
                   },
@@ -173,12 +171,13 @@ class HomePage extends ConsumerWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 40),
                     child: PsEmptyState(
-                      title: '$city 暂无演出',
-                      description: HomeLocalizations.of(context).homePage_176,
+                      title: context.l10n.homePage_175(city),
+                      description: context.l10n.homePage_176,
                       icon: LucideIcons.building2,
-                      actionLabel: HomeLocalizations.of(context).homePage_178,
-                      onAction: () =>
-                          ref.read(selectedCityProvider.notifier).select(HomeLocalizations.of(context).cityListPage_57),
+                      actionLabel: context.l10n.homePage_178,
+                      onAction: () => ref
+                          .read(selectedCityProvider.notifier)
+                          .select(context.l10n.cityListPage_57),
                     ),
                   ),
                 )
@@ -191,25 +190,25 @@ class HomePage extends ConsumerWidget {
                 ),
                 SliverToBoxAdapter(
                   child: HomeShowFloor(
-                    title: HomeLocalizations.of(context).homePage_193,
-                    description: HomeLocalizations.of(context).homePage_194,
+                    title: context.l10n.homePage_193,
+                    description: context.l10n.homePage_194,
                     shows: hotShows.take(8).toList(growable: false),
                     onTapShow: openShow,
                     onTapMore: () => openShows(),
                   ),
                 ),
-                for (final (categoryId, desc) in _categoryFloors)
+                for (final categoryId in _categoryFloorIds)
                   SliverToBoxAdapter(
                     child: HomeShowFloor(
-                      title: _floorTitle(categoryId),
-                      description: desc,
+                      title: _floorTitle(context, categoryId),
+                      description: _categoryDescription(context, categoryId),
                       shows: shows
                           .where((show) => show.categoryId == categoryId)
                           .toList(growable: false),
                       onTapShow: openShow,
                       onTapMore: () => openShows(
                         categoryId: categoryId,
-                        title: _floorTitle(categoryId),
+                        title: _floorTitle(context, categoryId),
                       ),
                     ),
                   ),
@@ -235,11 +234,14 @@ class HomePage extends ConsumerWidget {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Icon(LucideIcons.sparkles,
-                              size: 14, color: colors.textDisabled),
+                          Icon(
+                            LucideIcons.sparkles,
+                            size: 14,
+                            color: colors.textDisabled,
+                          ),
                           const SizedBox(width: 4),
                           Text(
-                            HomeLocalizations.of(context).homePage_241,
+                            context.l10n.homePage_241,
                             style: TextStyle(
                               fontSize: 11,
                               color: colors.textDisabled,
@@ -249,7 +251,7 @@ class HomePage extends ConsumerWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        HomeLocalizations.of(context).homePage_251,
+                        context.l10n.homePage_251,
                         style: TextStyle(
                           fontSize: 11,
                           color: colors.textDisabled,
@@ -266,13 +268,22 @@ class HomePage extends ConsumerWidget {
     );
   }
 
-  static String _floorTitle(int categoryId) {
+  static String _floorTitle(BuildContext context, int categoryId) {
     return switch (categoryId) {
-      1 => '演唱会',
-      2 => '话剧歌剧',
-      3 => '音乐会',
-      4 => '儿童亲子',
-      _ => '演出',
+      1 => context.l10n.homePage_270,
+      2 => context.l10n.homePage_271,
+      3 => context.l10n.homePage_272,
+      4 => context.l10n.homePage_273,
+      _ => context.l10n.homePage_274,
+    };
+  }
+
+  static String _categoryDescription(BuildContext context, int categoryId) {
+    return switch (categoryId) {
+      1 => context.l10n.homePage_51,
+      2 => context.l10n.homePage_52,
+      3 => context.l10n.homePage_53,
+      _ => context.l10n.homePage_54,
     };
   }
 
@@ -320,7 +331,7 @@ class _LoadingScaffold extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      '正在加载 $city 的演出…',
+                      context.l10n.homePage_323(city),
                       style: TextStyle(
                         fontSize: 14,
                         color: colors.textSecondary,
@@ -360,10 +371,10 @@ class _ErrorScaffold extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(top: topPadding + 60),
               child: PsEmptyState(
-                title: HomeLocalizations.of(context).homePage_363,
-                description: '无法获取 $city 的演出数据\n${error.toString()}',
+                title: context.l10n.homePage_363,
+                description: context.l10n.homePage_364(city, error.toString()),
                 icon: LucideIcons.wifiOff,
-                actionLabel: AppLocalizations.of(context).actionRetry,
+                actionLabel: context.l10n.actionRetry,
                 onAction: onRetry,
               ),
             ),

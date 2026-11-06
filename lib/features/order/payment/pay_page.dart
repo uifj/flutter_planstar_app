@@ -8,9 +8,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../shared/ui/ps_price.dart';
 import '../domain/domain.dart';
+import '../order_l10n.dart';
 import 'pay_info.dart';
 import 'pay_providers.dart';
-import '../../../l10n/order_localizations.dart';
+import '../../../l10n/l10n.dart';
 
 /// 支付页（企划星 `PayActivity`）。
 ///
@@ -72,14 +73,13 @@ class PayPage extends ConsumerWidget {
 
     return PopScope(
       // 支付进行中时不允许返回。
-      canPop: state.status != PayStatus.requesting && state.status != PayStatus.paying,
+      canPop:
+          state.status != PayStatus.requesting &&
+          state.status != PayStatus.paying,
       child: AdaptiveScaffold(
         backgroundColor: colors.bgPage,
-        appBar: AdaptiveAppBar(title: OrderLocalizations.of(context).payPage_77),
-        body: _PayBody(
-          state: state,
-          arg: arg,
-        ),
+        appBar: AdaptiveAppBar(title: context.l10n.payPage_77),
+        body: _PayBody(state: state, arg: arg),
       ),
     );
   }
@@ -100,19 +100,13 @@ class _PayBody extends ConsumerWidget {
       children: <Widget>[
         // 倒计时条
         if (state.leftSeconds != null && state.leftSeconds! > 0)
-          _CountdownBar(
-            seconds: state.leftSeconds!,
-            colors: colors,
-          ),
+          _CountdownBar(seconds: state.leftSeconds!, colors: colors),
         Expanded(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(15, 12, 15, 0),
             children: <Widget>[
               // 订单摘要卡
-              _OrderCard(
-                info: state.info,
-                colors: colors,
-              ),
+              _OrderCard(info: state.info, colors: colors),
               const SizedBox(height: 12),
               // 支付渠道列表
               _ChannelSection(
@@ -123,16 +117,17 @@ class _PayBody extends ConsumerWidget {
               const SizedBox(height: 12),
               // 错误信息
               if (state.errorMessage != null)
-                _ErrorBar(
-                  message: state.errorMessage!,
-                  colors: colors,
-                ),
+                _ErrorBar(message: state.errorMessage!, colors: colors),
               // 说明
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  OrderLocalizations.of(context).payPage_133,
-                  style: TextStyle(fontSize: 12, height: 1.5, color: colors.textDisabled),
+                  context.l10n.payPage_133,
+                  style: TextStyle(
+                    fontSize: 12,
+                    height: 1.5,
+                    color: colors.textDisabled,
+                  ),
                 ),
               ),
             ],
@@ -159,13 +154,13 @@ class _PayBody extends ConsumerWidget {
         // 成功跳转由 build 里的 PostFrameCallback 处理。
         break;
       case PayFailure(:final message):
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
       case PayCancelled():
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(OrderLocalizations.of(context).payPage_166)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(context.l10n.payPage_166)));
     }
   }
 }
@@ -183,7 +178,9 @@ class _CountdownBar extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: isUrgent ? colors.error.withValues(alpha: 0.08) : colors.brandSubtle,
+      color: isUrgent
+          ? colors.error.withValues(alpha: 0.08)
+          : colors.brandSubtle,
       child: Row(
         children: <Widget>[
           Icon(
@@ -193,7 +190,7 @@ class _CountdownBar extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            OrderLocalizations.of(context).payPage_195(PayController.formatCountdown(seconds)),
+            context.l10n.payPage_195(PayController.formatCountdown(seconds)),
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
@@ -232,8 +229,11 @@ class _OrderCard extends StatelessWidget {
                   SizedBox(
                     width: 64,
                     child: Text(
-                      line.label,
-                      style: TextStyle(fontSize: 14, color: colors.textTertiary),
+                      line.labelOf(context),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: colors.textTertiary,
+                      ),
                     ),
                   ),
                   Expanded(
@@ -257,14 +257,11 @@ class _OrderCard extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                OrderLocalizations.of(context).payPage_259,
+                context.l10n.payPage_259,
                 style: TextStyle(fontSize: 14, color: colors.textSecondary),
               ),
               const Spacer(),
-              PsPrice(
-                amount: info.payAmount,
-                size: 22,
-              ),
+              PsPrice(amount: info.payAmount, size: 22),
             ],
           ),
         ],
@@ -299,7 +296,7 @@ class _ChannelSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
             child: Text(
-              OrderLocalizations.of(context).payPage_301,
+              context.l10n.payPage_301,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
@@ -350,25 +347,34 @@ class _ChannelTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: <Widget>[
-            Icon(icon, size: 24, color: option.available ? colors.brand : colors.textDisabled),
+            Icon(
+              icon,
+              size: 24,
+              color: option.available ? colors.brand : colors.textDisabled,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    option.channel.label,
+                    option.channel.labelOf(context),
                     style: TextStyle(
                       fontSize: 15,
-                      color: option.available ? colors.textPrimary : colors.textDisabled,
+                      color: option.available
+                          ? colors.textPrimary
+                          : colors.textDisabled,
                     ),
                   ),
-                  if (option.tip.isNotEmpty)
+                  if (option.tipOf(context) != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 2),
                       child: Text(
-                        option.tip,
-                        style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                        option.tipOf(context)!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colors.textTertiary,
+                        ),
                       ),
                     ),
                 ],
@@ -421,7 +427,11 @@ class _ErrorBar extends StatelessWidget {
 
 /// 底部确认支付按钮。
 class _PayButton extends StatelessWidget {
-  const _PayButton({required this.state, required this.colors, required this.onTap});
+  const _PayButton({
+    required this.state,
+    required this.colors,
+    required this.onTap,
+  });
 
   final PayState state;
   final AppColors colors;
@@ -429,16 +439,17 @@ class _PayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isProcessing = state.status == PayStatus.requesting ||
+    final isProcessing =
+        state.status == PayStatus.requesting ||
         state.status == PayStatus.paying;
 
     String label;
     if (state.status == PayStatus.requesting) {
-      label = OrderLocalizations.of(context).payPage_436;
+      label = context.l10n.payPage_436;
     } else if (state.status == PayStatus.paying) {
-      label = OrderLocalizations.of(context).payPage_438;
+      label = context.l10n.payPage_438;
     } else {
-      label = OrderLocalizations.of(context).payPage_440(state.info.payAmount.format());
+      label = context.l10n.payPage_440(state.info.payAmount.format());
     }
 
     return Container(
@@ -446,7 +457,12 @@ class _PayButton extends StatelessWidget {
         color: colors.bgCard,
         border: Border(top: BorderSide(color: colors.divider, width: 1)),
       ),
-      padding: EdgeInsets.fromLTRB(15, 10, 15, 10 + MediaQuery.paddingOf(context).bottom),
+      padding: EdgeInsets.fromLTRB(
+        15,
+        10,
+        15,
+        10 + MediaQuery.paddingOf(context).bottom,
+      ),
       child: SizedBox(
         width: double.infinity,
         height: 48,

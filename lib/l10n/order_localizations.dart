@@ -449,6 +449,12 @@ abstract class OrderLocalizations {
   /// **'现场自取'**
   String get delivery_84;
 
+  /// 来源：lib/features/order/order_l10n.dart:68；原文：'${method.labelOf(context)}（${postage.format()}）'
+  ///
+  /// In zh, this message translates to:
+  /// **'{method}（{postage}）'**
+  String delivery_136(Object method, Object postage);
+
   /// 来源：lib/features/order/domain/value_objects/discount.dart:71；原文：'-$percent%（封顶 ${ceiling.format()}）'
   ///
   /// In zh, this message translates to:
@@ -1150,6 +1156,12 @@ abstract class OrderLocalizations {
   /// In zh, this message translates to:
   /// **'用户主动取消'**
   String get orderListPage_196;
+
+  /// 来源：lib/features/order/domain/aggregates/ticket_order.dart:534；原文：'支付超时，订单已关闭'
+  ///
+  /// In zh, this message translates to:
+  /// **'支付超时，订单已关闭'**
+  String get orderCancelTimeout;
 
   /// 来源：lib/features/order/order_list_page.dart:198；原文：'订单已取消'
   ///

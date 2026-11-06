@@ -19,11 +19,12 @@ import '../../../shared/ui/ps_network_images.dart';
 final class UserProfile {
   const UserProfile({
     required this.nickname,
-    required this.levelLabel,
+    this.levelLabel = '',
     required this.wannaSeeCount,
     required this.followCount,
     required this.couponCount,
     required this.walletBalance,
+    this.level = 0,
     this.avatarFallbackUrl = PsImages.defaultAvatar,
     this.avatarUrl,
     this.mobileLabel,
@@ -32,8 +33,11 @@ final class UserProfile {
 
   final String nickname;
 
-  /// 等级标（`V3 资深票友`）。
+  /// 服务端返回的等级标；为空时 UI 用 [level] 生成默认文案。
   final String levelLabel;
+
+  /// 会员等级，0 表示没有等级。
+  final int level;
 
   final int wannaSeeCount;
   final int followCount;
@@ -55,7 +59,7 @@ final class UserProfile {
 
   /// 未登录时的占位资料。
   static const UserProfile guest = UserProfile(
-    nickname: '登录更精彩',
+    nickname: '',
     levelLabel: '',
     wannaSeeCount: 0,
     followCount: 0,
@@ -83,7 +87,7 @@ final userProfileProvider = Provider<UserProfile>((ref) {
   return UserProfile(
     nickname: user.displayName,
     // 等级为 0 表示"还没等级"，不要硬编一个 V3 出来。
-    levelLabel: user.level > 0 ? 'V${user.level} 资深票友' : '',
+    level: user.level,
     wannaSeeCount: user.wantWatchNum,
     followCount: user.followingNum,
     couponCount: couponCount,
@@ -101,9 +105,12 @@ final userProfileProvider = Provider<UserProfile>((ref) {
 final userOrderBadgesProvider = Provider<Map<OrderListFilter, int>>((ref) {
   final counts = ref.watch(orderStatusCountsProvider);
   return <OrderListFilter, int>{
-    OrderListFilter.awaitingPayment: counts[OrderListFilter.awaitingPayment] ?? 0,
-    OrderListFilter.awaitingTickets: counts[OrderListFilter.awaitingTickets] ?? 0,
-    OrderListFilter.ticketsInTransit: counts[OrderListFilter.ticketsInTransit] ?? 0,
+    OrderListFilter.awaitingPayment:
+        counts[OrderListFilter.awaitingPayment] ?? 0,
+    OrderListFilter.awaitingTickets:
+        counts[OrderListFilter.awaitingTickets] ?? 0,
+    OrderListFilter.ticketsInTransit:
+        counts[OrderListFilter.ticketsInTransit] ?? 0,
     OrderListFilter.awaitingReview: counts[OrderListFilter.awaitingReview] ?? 0,
   };
 });

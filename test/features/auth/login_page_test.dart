@@ -2,13 +2,14 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:core/result.dart';
 import 'package:flutter/material.dart';
 import 'package:planstar/app/theme.dart';
+import 'package:planstar/app/app.dart';
 import 'package:planstar/features/auth/application/auth_providers.dart';
 import 'package:planstar/features/auth/application/auth_state.dart';
 import 'package:planstar/features/auth/domain/auth_failure.dart';
 import 'package:planstar/features/auth/domain/auth_repository.dart';
 import 'package:planstar/features/auth/domain/auth_session.dart';
 import 'package:planstar/features/auth/domain/auth_user.dart';
-import 'package:planstar/l10n/auth_localizations.dart';
+import 'package:planstar/l10n/app_localizations.dart';
 import 'package:planstar/features/auth/login_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -45,9 +46,7 @@ void main() {
 
     final repo = repository ?? _FakeAuthRepository();
     final ProviderContainer container = ProviderContainer(
-      overrides: <Override>[
-        authRepositoryProvider.overrideWithValue(repo),
-      ],
+      overrides: <Override>[authRepositoryProvider.overrideWithValue(repo)],
     );
     addTearDown(container.dispose);
 
@@ -76,8 +75,8 @@ void main() {
         child: MaterialApp.router(
           routerConfig: router,
           theme: AppTheme.light(),
-          localizationsDelegates: AuthLocalizations.localizationsDelegates,
-          supportedLocales: AuthLocalizations.supportedLocales,
+          localizationsDelegates: appLocalizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
         ),
       ),
     );
@@ -85,7 +84,11 @@ void main() {
     return (container: container, repo: repo);
   }
 
-  Future<void> fill(WidgetTester tester, String phone, String credential) async {
+  Future<void> fill(
+    WidgetTester tester,
+    String phone,
+    String credential,
+  ) async {
     final List<TextField> fields = tester
         .widgetList<TextField>(find.byType(TextField))
         .toList();
@@ -105,7 +108,9 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('验证码模式：手机号 + 验证码 + 获取验证码 + 协议行 + 微信入口', (WidgetTester tester) async {
+  testWidgets('验证码模式：手机号 + 验证码 + 获取验证码 + 协议行 + 微信入口', (
+    WidgetTester tester,
+  ) async {
     await pumpLogin(tester);
 
     expect(find.text('登录 / 注册'), findsOneWidget);
@@ -159,8 +164,9 @@ void main() {
 
   testWidgets('发码成功 → 按钮进入倒计时并禁用', (WidgetTester tester) async {
     final env = await pumpLogin(tester);
-    env.repo.sendCodeResult =
-        const Success<SendCodeOutcome>(SendCodeOutcome(cooldownSeconds: 60));
+    env.repo.sendCodeResult = const Success<SendCodeOutcome>(
+      SendCodeOutcome(cooldownSeconds: 60),
+    );
 
     await tester.enterText(find.byType(TextField).first, '13800138000');
     await tester.pumpAndSettle();
@@ -189,7 +195,14 @@ void main() {
       ),
     );
     env.repo.captchaResult = Success<List<int>>(<int>[
-      0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
+      0x89,
+      0x50,
+      0x4E,
+      0x47,
+      0x0D,
+      0x0A,
+      0x1A,
+      0x0A,
     ]);
 
     await tester.enterText(find.byType(TextField).first, '13800138000');
@@ -330,7 +343,9 @@ void main() {
     expect(env.container.read(authControllerProvider).isLoggedIn, isFalse);
   });
 
-  testWidgets('密码模式走 loginWithPassword（不是 code 分支）', (WidgetTester tester) async {
+  testWidgets('密码模式走 loginWithPassword（不是 code 分支）', (
+    WidgetTester tester,
+  ) async {
     final env = await pumpLogin(tester);
     env.repo.loginResult = const Fail<AuthSession>(
       Failure(
@@ -350,10 +365,7 @@ void main() {
     expect(env.repo.lastPassword, 'a1234567');
     expect(env.repo.lastCode, isNull);
     // 服务端已关闭密码登录，原文如实展示，不自造"密码错误"。
-    expect(
-      find.text('请使用手机号验证码登录，若手机号登录异常，请联系客服'),
-      findsOneWidget,
-    );
+    expect(find.text('请使用手机号验证码登录，若手机号登录异常，请联系客服'), findsOneWidget);
   });
 }
 
@@ -381,8 +393,7 @@ final class _FakeAuthRepository implements AuthRepository {
     sendCodeCalls++;
     lastPhone = phone;
     lastCaptcha = captcha;
-    return sendCodeResult ??
-        const Success<SendCodeOutcome>(SendCodeOutcome());
+    return sendCodeResult ?? const Success<SendCodeOutcome>(SendCodeOutcome());
   }
 
   @override
@@ -426,10 +437,10 @@ final class _FakeAuthRepository implements AuthRepository {
   }
 
   static Fail<AuthSession> _unconfigured() => Fail<AuthSession>(
-        const Failure(
-          code: 'TEST_UNCONFIGURED',
-          message: '测试没给 loginResult',
-          type: FailureType.server,
-        ),
-      );
+    const Failure(
+      code: 'TEST_UNCONFIGURED',
+      message: '测试没给 loginResult',
+      type: FailureType.server,
+    ),
+  );
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
-import '../../../l10n/home_localizations.dart';
+import '../../../l10n/l10n.dart';
 
 /// 首页运营 banner（`view_home_banner.xml`）。
 ///
@@ -45,28 +45,28 @@ class BannerSlide {
 class _HomeBannerFloorState extends State<HomeBannerFloor> {
   List<BannerSlide> get _slides => <BannerSlide>[
     BannerSlide(
-      title: HomeLocalizations.of(context).homeBannerFloor_47,
-      subtitle: HomeLocalizations.of(context).homeBannerFloor_48,
-      badge: HomeLocalizations.of(context).homeBannerFloor_49,
+      title: context.l10n.homeBannerFloor_47,
+      subtitle: context.l10n.homeBannerFloor_48,
+      badge: context.l10n.homeBannerFloor_49,
       colors: (Color(0xFFFF6AB9), Color(0xFFFE3870)),
     ),
     BannerSlide(
-      title: HomeLocalizations.of(context).homeBannerFloor_53,
-      subtitle: HomeLocalizations.of(context).homeBannerFloor_54,
-      badge: HomeLocalizations.of(context).homeBannerFloor_55,
+      title: context.l10n.homeBannerFloor_53,
+      subtitle: context.l10n.homeBannerFloor_54,
+      badge: context.l10n.homeBannerFloor_55,
       colors: (Color(0xFFFFB36B), Color(0xFFE8873A)),
     ),
     BannerSlide(
-      title: HomeLocalizations.of(context).homeBannerFloor_59,
-      subtitle: HomeLocalizations.of(context).homeBannerFloor_60,
-      badge: HomeLocalizations.of(context).homeBannerFloor_61,
+      title: context.l10n.homeBannerFloor_59,
+      subtitle: context.l10n.homeBannerFloor_60,
+      badge: context.l10n.homeBannerFloor_61,
       colors: (Color(0xFF9B7BFF), Color(0xFF6C4BE0)),
       showId: '2001',
     ),
     BannerSlide(
-      title: HomeLocalizations.of(context).homeBannerFloor_66,
-      subtitle: HomeLocalizations.of(context).homeBannerFloor_67,
-      badge: HomeLocalizations.of(context).homeBannerFloor_68,
+      title: context.l10n.homeBannerFloor_66,
+      subtitle: context.l10n.homeBannerFloor_67,
+      badge: context.l10n.homeBannerFloor_68,
       colors: (Color(0xFF6FD6C4), Color(0xFF2AA08C)),
     ),
   ];
@@ -159,7 +159,10 @@ class _HomeBannerFloorState extends State<HomeBannerFloor> {
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.24),
                                 borderRadius: BorderRadius.circular(10),

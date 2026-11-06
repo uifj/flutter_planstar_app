@@ -13,7 +13,7 @@ import 'application/feed_providers.dart';
 import 'domain/feed_post.dart';
 import 'widgets/feed_card.dart';
 import 'widgets/publish_sheet.dart';
-import '../../l10n/discover_localizations.dart';
+import '../../l10n/l10n.dart';
 
 /// 发现 Tab（`fragment_discovery.xml`）。
 ///
@@ -37,7 +37,10 @@ class DiscoverPage extends ConsumerStatefulWidget {
 }
 
 class _DiscoverPageState extends ConsumerState<DiscoverPage> {
-  List<String> get _tabs => <String>[DiscoverLocalizations.of(context).discoverPage_39, DiscoverLocalizations.of(context).discoverPage_39_2];
+  List<String> get _tabs => <String>[
+    context.l10n.discoverPage_39,
+    context.l10n.discoverPage_39_2,
+  ];
   int _tab = 0;
 
   @override
@@ -70,10 +73,10 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
               Expanded(
                 child: posts.isEmpty
                     ? PsEmptyState(
-                        title: DiscoverLocalizations.of(context).discoverPage_72,
-                        description: DiscoverLocalizations.of(context).discoverPage_73,
+                        title: context.l10n.discoverPage_72,
+                        description: context.l10n.discoverPage_73,
                         icon: LucideIcons.users,
-                        actionLabel: DiscoverLocalizations.of(context).discoverPage_75,
+                        actionLabel: context.l10n.discoverPage_75,
                         onAction: () => setState(() => _tab = 0),
                       )
                     : _MasonryFeed(posts: posts, onTapPost: openPost),
@@ -87,7 +90,13 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
               onTap: () => PublishSheet.show(
                 context,
                 onPublish: (title) {
-                  ref.read(feedControllerProvider.notifier).publish(title);
+                  ref
+                      .read(feedControllerProvider.notifier)
+                      .publish(
+                        title,
+                        author: context.l10n.feedProviders_18,
+                        tag: context.l10n.feedProviders_25,
+                      );
                   setState(() => _tab = 0);
                 },
               ),

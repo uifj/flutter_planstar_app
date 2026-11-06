@@ -123,9 +123,7 @@ final class ApiConfig {
     final base = baseOverride.isNotEmpty
         ? baseOverride
         : (assetBase ??
-            (environment == ApiEnvironment.beta
-                ? betaBaseUrl
-                : prodBaseUrl));
+              (environment == ApiEnvironment.beta ? betaBaseUrl : prodBaseUrl));
 
     return ApiConfig(
       baseUrl: base.endsWith('/') ? base : '$base/',
@@ -144,8 +142,9 @@ final class ApiConfig {
       sendTimeout: Duration(
         milliseconds: http.getInt('sendTimeoutMs') ?? 20000,
       ),
-      enableLogging:
-          logOverride.isNotEmpty ? logOverride == 'true' : (http.getBool('enableLogging') ?? false),
+      enableLogging: logOverride.isNotEmpty
+          ? logOverride == 'true'
+          : (http.getBool('enableLogging') ?? false),
     );
   }
 

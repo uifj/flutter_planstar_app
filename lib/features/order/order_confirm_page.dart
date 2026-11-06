@@ -8,7 +8,8 @@ import 'package:go_router/go_router.dart';
 import 'application/order_confirm_controller.dart';
 import 'application/order_draft_seed.dart';
 import 'domain/domain.dart';
-import '../../l10n/order_localizations.dart';
+import '../../l10n/l10n.dart';
+import 'order_l10n.dart';
 
 /// 确认订单页。
 ///
@@ -25,173 +26,202 @@ class OrderConfirmPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(orderConfirmControllerProvider(showId));
     final seed = ref.watch(orderDraftSeedProvider(showId));
-    final controller = ref.read(orderConfirmControllerProvider(showId).notifier);
+    final controller = ref.read(
+      orderConfirmControllerProvider(showId).notifier,
+    );
     final theme = Theme.of(context);
 
     // 提交成功后跳转到支付页。
     // 用 ref.listen 而不是在 build 里直接 go：直接 go 会在 build 期间触发路由。
-    ref.listen<OrderConfirmState>(
-      orderConfirmControllerProvider(showId),
-      (previous, next) {
-        if (previous != null && !previous.submitted && next.submitted) {
-          final order = next.order;
-          context.go(
-            '/order/pay'
-            '?number=${Uri.encodeComponent(order.number.value)}'
-            '&amount=${next.quote.paymentAmount.minorUnits}'
-            '&title=${Uri.encodeComponent(seed.showTitle)}',
-          );
-        }
-      },
-    );
+    ref.listen<OrderConfirmState>(orderConfirmControllerProvider(showId), (
+      previous,
+      next,
+    ) {
+      if (previous != null && !previous.submitted && next.submitted) {
+        final order = next.order;
+        context.go(
+          '/order/pay'
+          '?number=${Uri.encodeComponent(order.number.value)}'
+          '&amount=${next.quote.paymentAmount.minorUnits}'
+          '&title=${Uri.encodeComponent(seed.showTitle)}',
+        );
+      }
+    });
 
     return AdaptiveScaffold(
-      appBar: AdaptiveAppBar(title: OrderLocalizations.of(context).orderConfirmPage_48),
+      appBar: AdaptiveAppBar(title: context.l10n.orderConfirmPage_48),
       body: Column(
         children: <Widget>[
           Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
               children: <Widget>[
-          _ShowHeader(seed: seed),
-          if (state.notice != null)
-            _NoticeBar(message: state.notice!, onDismiss: controller.dismissNotice),
-          _Section(
-            title: OrderLocalizations.of(context).orderConfirmPage_59,
-            child: Column(
-              children: <Widget>[
-                for (final offer in seed.tiers)
-                  _TierRow(
-                    offer: offer,
-                    quantity: _quantityOf(state.order, offer.id),
-                    onIncrease: () => controller.increase(offer.id),
-                    onDecrease: () => controller.decrease(offer.id),
+                _ShowHeader(seed: seed),
+                if (state.notice != null)
+                  _NoticeBar(
+                    message: state.notice!.messageOf(context),
+                    onDismiss: controller.dismissNotice,
                   ),
-              ],
-            ),
-          ),
-          _Section(
-            title: OrderLocalizations.of(context).orderConfirmPage_73,
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: <Widget>[
-                _ChoiceChip(
-                  label: OrderLocalizations.of(context).orderConfirmPage_79,
-                  selected: state.order.discount is NoDiscount,
-                  onSelected: controller.clearDiscount,
-                ),
-                if (seed.availableCampaign != null)
-                  _ChoiceChip(
-                    label: seed.availableCampaign!.describe(),
-                    selected: state.order.discount is CampaignSelection,
-                    onSelected: controller.selectCampaign,
-                  ),
-                if (seed.availableCoupon != null)
-                  _ChoiceChip(
-                    label: seed.availableCoupon!.describe(),
-                    selected: state.order.discount is CouponSelection,
-                    onSelected: controller.selectCoupon,
-                  ),
-              ],
-            ),
-          ),
-          _Section(
-            title: OrderLocalizations.of(context).orderConfirmPage_99,
-            child: Column(
-              children: <Widget>[
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    seed.giftCard == null
-                        ? OrderLocalizations.of(context).orderConfirmPage_107
-                        : OrderLocalizations.of(context).orderConfirmPage_109(seed.giftCard!.balance.format()),
-                  ),
-                  value: state.order.giftCard != null,
-                  onChanged: seed.giftCard == null
-                      ? null
-                      : (enabled) => enabled
-                          ? controller.useGiftCard()
-                          : controller.clearGiftCard(),
-                ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    seed.speedPackUnitPrice == null
-                        ? OrderLocalizations.of(context).orderConfirmPage_123
-                        : '加速包（${seed.speedPackUnitPrice!.format()}/张）',
-                  ),
-                  value: state.order.speedPack != null,
-                  onChanged: seed.speedPackUnitPrice == null
-                      ? null
-                      : (enabled) => enabled
-                          ? controller.buySpeedPack()
-                          : controller.clearSpeedPack(),
-                ),
-              ],
-            ),
-          ),
-          _Section(
-            title: OrderLocalizations.of(context).orderConfirmPage_138,
-            trailing: TextButton(
-              onPressed: controller.assignDemoVisitor,
-              child: Text(
-                state.order.visitors.isEmpty
-                    ? '选择观演人（需 ${state.order.requiredVisitorCount} 位）'
-                    : '已选 ${state.order.visitors.length} 位',
-              ),
-            ),
-            child: state.order.visitors.isEmpty
-                ? Text(
-                    OrderLocalizations.of(context).orderConfirmPage_150,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.error,
-                    ),
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                _Section(
+                  title: context.l10n.orderConfirmPage_59,
+                  child: Column(
                     children: <Widget>[
-                      for (final visitor in state.order.visitors)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 2),
-                          child: Text('${visitor.name} · ${visitor.idCard}'),
+                      for (final offer in seed.tiers)
+                        _TierRow(
+                          offer: offer,
+                          quantity: _quantityOf(state.order, offer.id),
+                          onIncrease: () => controller.increase(offer.id),
+                          onDecrease: () => controller.decrease(offer.id),
                         ),
                     ],
                   ),
-          ),
-          _Section(
-            title: OrderLocalizations.of(context).orderConfirmPage_167,
-            child: Column(
-              children: <Widget>[
-                for (final line in state.quote.breakdown)
-                  _AmountRow(label: line.label, value: line.amount.format()),
-                const Divider(height: 20),
-                _AmountRow(label: OrderLocalizations.of(context).orderConfirmPage_173, value: state.quote.totalAmount.format()),
-                _AmountRow(
-                  label: OrderLocalizations.of(context).orderConfirmPage_175,
-                  value: state.quote.paymentAmount.format(),
-                  emphasized: true,
                 ),
-              ],
-            ),
-          ),
-          CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            controlAffinity: ListTileControlAffinity.leading,
-            // ⚠ 默认不勾：企划星默认勾选是合规问题（M5-01）。
-            value: state.order.agreementAccepted,
-            onChanged: state.order.isEditable
-                ? (_) => controller.toggleAgreement()
-                : null,
-            title: Text('我已阅读并同意${state.order.buyType.agreementTitle}'),
-          ),
+                _Section(
+                  title: context.l10n.orderConfirmPage_73,
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: <Widget>[
+                      _ChoiceChip(
+                        label: context.l10n.orderConfirmPage_79,
+                        selected: state.order.discount is NoDiscount,
+                        onSelected: controller.clearDiscount,
+                      ),
+                      if (seed.availableCampaign != null)
+                        _ChoiceChip(
+                          label: seed.availableCampaign!.describeOf(context),
+                          selected: state.order.discount is CampaignSelection,
+                          onSelected: controller.selectCampaign,
+                        ),
+                      if (seed.availableCoupon != null)
+                        _ChoiceChip(
+                          label: seed.availableCoupon!.describeOf(context),
+                          selected: state.order.discount is CouponSelection,
+                          onSelected: controller.selectCoupon,
+                        ),
+                    ],
+                  ),
+                ),
+                _Section(
+                  title: context.l10n.orderConfirmPage_99,
+                  child: Column(
+                    children: <Widget>[
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        title: Text(
+                          seed.giftCard == null
+                              ? context.l10n.orderConfirmPage_107
+                              : context.l10n.orderConfirmPage_109(
+                                  seed.giftCard!.balance.format(),
+                                ),
+                        ),
+                        value: state.order.giftCard != null,
+                        onChanged: seed.giftCard == null
+                            ? null
+                            : (enabled) => enabled
+                                  ? controller.useGiftCard()
+                                  : controller.clearGiftCard(),
+                      ),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        title: Text(
+                          seed.speedPackUnitPrice == null
+                              ? context.l10n.orderConfirmPage_123
+                              : context.l10n.orderConfirmPage_125(
+                                  seed.speedPackUnitPrice!.format(),
+                                ),
+                        ),
+                        value: state.order.speedPack != null,
+                        onChanged: seed.speedPackUnitPrice == null
+                            ? null
+                            : (enabled) => enabled
+                                  ? controller.buySpeedPack()
+                                  : controller.clearSpeedPack(),
+                      ),
+                    ],
+                  ),
+                ),
+                _Section(
+                  title: context.l10n.orderConfirmPage_138,
+                  trailing: TextButton(
+                    onPressed: controller.assignDemoVisitor,
+                    child: Text(
+                      state.order.visitors.isEmpty
+                          ? context.l10n.orderConfirmPage_143(
+                              state.order.requiredVisitorCount,
+                            )
+                          : context.l10n.orderConfirmPage_145(
+                              state.order.visitors.length,
+                            ),
+                    ),
+                  ),
+                  child: state.order.visitors.isEmpty
+                      ? Text(
+                          context.l10n.orderConfirmPage_150,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.error,
+                          ),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            for (final visitor in state.order.visitors)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 2,
+                                ),
+                                child: Text(
+                                  '${visitor.name} · ${visitor.idCard}',
+                                ),
+                              ),
+                          ],
+                        ),
+                ),
+                _Section(
+                  title: context.l10n.orderConfirmPage_167,
+                  child: Column(
+                    children: <Widget>[
+                      for (final line in state.quote.breakdown)
+                        _AmountRow(
+                          label: line.labelOf(context),
+                          value: line.amount.format(),
+                        ),
+                      const Divider(height: 20),
+                      _AmountRow(
+                        label: context.l10n.orderConfirmPage_173,
+                        value: state.quote.totalAmount.format(),
+                      ),
+                      _AmountRow(
+                        label: context.l10n.orderConfirmPage_175,
+                        value: state.quote.paymentAmount.format(),
+                        emphasized: true,
+                      ),
+                    ],
+                  ),
+                ),
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  // ⚠ 默认不勾：企划星默认勾选是合规问题（M5-01）。
+                  value: state.order.agreementAccepted,
+                  onChanged: state.order.isEditable
+                      ? (_) => controller.toggleAgreement()
+                      : null,
+                  title: Text(
+                    context.l10n.orderConfirmPage_190(
+                      state.order.buyType.agreementTitleOf(context),
+                    ),
+                  ),
+                ),
                 if (state.recentEvents.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      '领域事件：${state.recentEvents.join(' → ')}',
+                      context.l10n.orderConfirmPage_196(
+                        state.recentEvents.join(' → '),
+                      ),
                       style: theme.textTheme.bodySmall,
                     ),
                   ),
@@ -360,7 +390,9 @@ class _AmountRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final style = emphasized
-        ? theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.primary)
+        ? theme.textTheme.titleMedium?.copyWith(
+            color: theme.colorScheme.primary,
+          )
         : theme.textTheme.bodyMedium;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
@@ -439,7 +471,10 @@ class _SubmitBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(OrderLocalizations.of(context).orderConfirmPage_175, style: theme.textTheme.bodySmall),
+                  Text(
+                    context.l10n.orderConfirmPage_175,
+                    style: theme.textTheme.bodySmall,
+                  ),
                   Text(
                     payable.format(),
                     style: theme.textTheme.headlineSmall?.copyWith(
@@ -452,10 +487,10 @@ class _SubmitBar extends StatelessWidget {
             ),
             AdaptiveButton(
               label: submitted
-                  ? OrderLocalizations.of(context).orderConfirmPage_457
+                  ? context.l10n.orderConfirmPage_457
                   : submitting
-                      ? OrderLocalizations.of(context).orderConfirmPage_460
-                      : OrderLocalizations.of(context).orderConfirmPage_462,
+                  ? context.l10n.orderConfirmPage_460
+                  : context.l10n.orderConfirmPage_462,
               onPressed: enabled ? () => onSubmit() : null,
             ),
           ],

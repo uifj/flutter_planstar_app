@@ -15,9 +15,6 @@ sealed class Discount extends ValueObject {
   /// 与企划星的差别：企划星允许抵扣额超过总额，靠事后 `if (paymentAmount < 0) = 0` 兜底。
   /// 这里在源头钳住，`paymentAmount` 就不会出现负数中间态。
   Money discountOn(Money base);
-
-  /// 展示用文案。
-  String describe();
 }
 
 /// 减固定金额。
@@ -35,9 +32,6 @@ final class AmountDiscount extends Discount {
   Money discountOn(Money base) => amount.min(base);
 
   @override
-  String describe() => '-${amount.format()}';
-
-  @override
   List<Object?> get props => <Object?>[amount];
 }
 
@@ -47,7 +41,11 @@ final class AmountDiscount extends Discount {
 final class RateDiscount extends Discount {
   RateDiscount(this.basisPoints, {this.cap}) {
     if (basisPoints < 0 || basisPoints > 10000) {
-      throw ArgumentError.value(basisPoints, 'basisPoints', '比例必须在 0..10000 之间');
+      throw ArgumentError.value(
+        basisPoints,
+        'basisPoints',
+        '比例必须在 0..10000 之间',
+      );
     }
   }
 
@@ -62,13 +60,6 @@ final class RateDiscount extends Discount {
     final raw = base.percentage(basisPoints);
     final ceiling = cap;
     return ceiling == null ? raw : raw.min(ceiling);
-  }
-
-  @override
-  String describe() {
-    final percent = (basisPoints / 100).toStringAsFixed(basisPoints % 100 == 0 ? 0 : 2);
-    final ceiling = cap;
-    return ceiling == null ? '-$percent%' : '-$percent%（封顶 ${ceiling.format()}）';
   }
 
   @override
@@ -93,19 +84,18 @@ sealed class DiscountSelection {
   static const DiscountSelection none = NoDiscount();
 
   /// 选营销活动。
-  factory DiscountSelection.campaign(CampaignId id, Discount discount) = CampaignSelection;
+  factory DiscountSelection.campaign(CampaignId id, Discount discount) =
+      CampaignSelection;
 
   /// 选优惠券。
-  factory DiscountSelection.coupon(CouponId id, Discount discount) = CouponSelection;
+  factory DiscountSelection.coupon(CouponId id, Discount discount) =
+      CouponSelection;
 
   /// 在 [base] 上算抵扣额。
   Money discountOn(Money base);
 
   /// 参与下单的促销 id（`campaignIds` 或 `couponIds`，**不会同时有值**）。
   String? get promotionId;
-
-  /// 展示文案。
-  String describe();
 }
 
 /// 不用任何优惠。
@@ -117,9 +107,6 @@ final class NoDiscount extends DiscountSelection {
 
   @override
   String? get promotionId => null;
-
-  @override
-  String describe() => '不使用优惠';
 }
 
 /// 营销活动。
@@ -134,9 +121,6 @@ final class CampaignSelection extends DiscountSelection {
 
   @override
   String? get promotionId => campaignId.value;
-
-  @override
-  String describe() => '营销活动 ${discount.describe()}';
 }
 
 /// 优惠券。
@@ -151,7 +135,4 @@ final class CouponSelection extends DiscountSelection {
 
   @override
   String? get promotionId => couponId.value;
-
-  @override
-  String describe() => '优惠券 ${discount.describe()}';
 }
