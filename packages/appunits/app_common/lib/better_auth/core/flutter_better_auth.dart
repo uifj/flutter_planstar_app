@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:app_common/better_auth/core/storage/custom_persist_cookie_jar.dart';
 import 'package:app_common/better_auth/flutter_better_auth.dart';
-import 'package:stone_core/storage_core.dart';
+import 'package:core/storage.dart';
 
 import 'api/bearer_interceptor.dart';
 import 'api/interceptor.dart';
@@ -29,9 +29,10 @@ class FlutterBetterAuth {
 
   // Better Auth `bearer` plugin: the session token captured from the
   // `set-auth-token` response header, sent as `Authorization: Bearer`.
-  // Persisted through stone_core [Config] secure KV (no direct
-  // flutter_secure_storage dependency).
+  // Persisted through core's [SecureStore] port; the host injects the
+  // platform keychain/keystore implementation at initialization.
   static const String _bearerKey = 'better_auth_bearer_token';
+  static SecureStore? _secureStore;
   static String? _bearerToken;
 
   /// Current bearer token, if the server's `bearer` plugin issued one.
@@ -40,11 +41,12 @@ class FlutterBetterAuth {
   /// Persists a new bearer token (called by the interceptor).
   static void setBearerToken(String? token) {
     _bearerToken = token;
-    final config = Config.getInstance();
+    final store = _secureStore;
+    if (store == null) return;
     if (token == null || token.isEmpty) {
-      unawaited(config.deleteSecure(_bearerKey).catchError((_) => false));
+      unawaited(store.delete(_bearerKey).catchError((_) {}));
     } else {
-      unawaited(config.setSecure(_bearerKey, token).catchError((_) => false));
+      unawaited(store.write(_bearerKey, token).catchError((_) {}));
     }
   }
 
@@ -52,6 +54,11 @@ class FlutterBetterAuth {
     required String url,
     Dio? dio,
     StorageInterface? store,
+
+    /// Host-provided secure KV (keychain/keystore). When omitted, an
+    /// in-memory store is used so the client still works in tests and previews;
+    /// tokens then do not survive a restart.
+    SecureStore? secureStore,
 
     /// Native deep-link scheme, for example `myapp`.
     ///
@@ -68,14 +75,12 @@ class FlutterBetterAuth {
     bool refreshSessionOnReconnect = true,
   }) async {
     if (_initialized) return;
-    // stone_core Config 是本客户端 secure KV 底座（bearer token / cookie）；
-    // 幂等初始化，避免宿主未先 Config.initialize() 时 getInstance 抛错。
-    await Config.initialize();
+    _secureStore = secureStore ?? MemorySecureStore();
     baseUrl = url;
     appScheme = scheme;
     if (store == null && !kIsWeb) {
       // Encrypted, chunked cookie persistence by default on native platforms.
-      storage = SecureStorage();
+      storage = SecureStorage(store: _secureStore!);
     } else {
       storage = store;
     }
@@ -126,7 +131,7 @@ class FlutterBetterAuth {
     }
     // Bearer-token fallback (works cross-origin where cookies are blocked).
     try {
-      _bearerToken = await Config.getInstance().getSecure(_bearerKey);
+      _bearerToken = await _secureStore?.read(_bearerKey);
     } catch (_) {
       _bearerToken = null;
     }

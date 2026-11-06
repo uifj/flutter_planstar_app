@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:planstar/app/app.dart';
-import 'package:planstar/features/auth/l10n/auth_localizations.dart';
-import 'package:planstar/features/discover/l10n/discover_localizations.dart';
-import 'package:planstar/features/goods/l10n/goods_localizations.dart';
-import 'package:planstar/features/home/l10n/home_localizations.dart';
-import 'package:planstar/features/message/l10n/message_localizations.dart';
-import 'package:planstar/features/order/l10n/order_localizations.dart';
-import 'package:planstar/features/user/l10n/user_localizations.dart';
+import 'package:planstar/l10n/auth_localizations.dart';
+import 'package:planstar/l10n/catalog_localizations.dart';
+import 'package:planstar/l10n/discover_localizations.dart';
+import 'package:planstar/l10n/goods_localizations.dart';
+import 'package:planstar/l10n/group_buy_localizations.dart';
+import 'package:planstar/l10n/home_localizations.dart';
+import 'package:planstar/l10n/marketing_localizations.dart';
+import 'package:planstar/l10n/message_localizations.dart';
+import 'package:planstar/l10n/order_localizations.dart';
+import 'package:planstar/l10n/proxy_buy_localizations.dart';
+import 'package:planstar/l10n/search_localizations.dart';
+import 'package:planstar/l10n/user_localizations.dart';
 import 'package:planstar/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,11 +20,16 @@ final Map<String, LocalizationsDelegate<Object>> _delegates =
     <String, LocalizationsDelegate<Object>>{
   'app': AppLocalizations.delegate,
   'auth': AuthLocalizations.delegate,
+  'catalog': CatalogLocalizations.delegate,
   'discover': DiscoverLocalizations.delegate,
   'goods': GoodsLocalizations.delegate,
+  'group_buy': GroupBuyLocalizations.delegate,
   'home': HomeLocalizations.delegate,
+  'marketing': MarketingLocalizations.delegate,
   'message': MessageLocalizations.delegate,
   'order': OrderLocalizations.delegate,
+  'proxy_buy': ProxyBuyLocalizations.delegate,
+  'search': SearchLocalizations.delegate,
   'user': UserLocalizations.delegate,
 };
 
@@ -27,11 +37,16 @@ final Map<String, List<Locale>> _supportedLocales =
     <String, List<Locale>>{
   'app': AppLocalizations.supportedLocales,
   'auth': AuthLocalizations.supportedLocales,
+  'catalog': CatalogLocalizations.supportedLocales,
   'discover': DiscoverLocalizations.supportedLocales,
   'goods': GoodsLocalizations.supportedLocales,
+  'group_buy': GroupBuyLocalizations.supportedLocales,
   'home': HomeLocalizations.supportedLocales,
+  'marketing': MarketingLocalizations.supportedLocales,
   'message': MessageLocalizations.supportedLocales,
   'order': OrderLocalizations.supportedLocales,
+  'proxy_buy': ProxyBuyLocalizations.supportedLocales,
+  'search': SearchLocalizations.supportedLocales,
   'user': UserLocalizations.supportedLocales,
 };
 
@@ -40,11 +55,16 @@ final Map<String, String Function(Object)> _probes =
     <String, String Function(Object)>{
   'app': (Object o) => (o as AppLocalizations).appTitle,
   'auth': (Object o) => (o as AuthLocalizations).authTitle,
+  'catalog': (Object o) => (o as CatalogLocalizations).catalogProviders_74,
   'discover': (Object o) => (o as DiscoverLocalizations).discoverTitle,
   'goods': (Object o) => (o as GoodsLocalizations).goodsGoToOrder,
+  'group_buy': (Object o) => (o as GroupBuyLocalizations).groupBuy_72,
   'home': (Object o) => (o as HomeLocalizations).homeTitle,
+  'marketing': (Object o) => (o as MarketingLocalizations).couponPage_30,
   'message': (Object o) => (o as MessageLocalizations).messageTitle,
   'order': (Object o) => (o as OrderLocalizations).orderListTitle,
+  'proxy_buy': (Object o) => (o as ProxyBuyLocalizations).proxyBuy_142,
+  'search': (Object o) => (o as SearchLocalizations).searchProviders_22,
   'user': (Object o) => (o as UserLocalizations).userTitle,
 };
 
@@ -86,7 +106,7 @@ void main() {
   });
 
   group('应用壳把全部 delegate 挂上了', () {
-    test('appLocalizationsDelegates 含全部 8 套（按 identity 比，不靠字符串）', () {
+    test('appLocalizationsDelegates 含全部 13 套（按 identity 比，不靠字符串）', () {
       for (final entry in _delegates.entries) {
         expect(
           appLocalizationsDelegates.any(
@@ -125,18 +145,36 @@ void main() {
       expect(Localizations.of<AuthLocalizations>(context, AuthLocalizations),
           isNotNull);
       expect(
+          Localizations.of<CatalogLocalizations>(
+              context, CatalogLocalizations),
+          isNotNull);
+      expect(
           Localizations.of<DiscoverLocalizations>(
               context, DiscoverLocalizations),
           isNotNull);
       expect(Localizations.of<GoodsLocalizations>(context, GoodsLocalizations),
           isNotNull);
+      expect(
+          Localizations.of<GroupBuyLocalizations>(
+              context, GroupBuyLocalizations),
+          isNotNull);
       expect(Localizations.of<HomeLocalizations>(context, HomeLocalizations),
+          isNotNull);
+      expect(
+          Localizations.of<MarketingLocalizations>(
+              context, MarketingLocalizations),
           isNotNull);
       expect(
           Localizations.of<MessageLocalizations>(
               context, MessageLocalizations),
           isNotNull);
       expect(Localizations.of<OrderLocalizations>(context, OrderLocalizations),
+          isNotNull);
+      expect(
+          Localizations.of<ProxyBuyLocalizations>(
+              context, ProxyBuyLocalizations),
+          isNotNull);
+      expect(Localizations.of<SearchLocalizations>(context, SearchLocalizations),
           isNotNull);
       expect(Localizations.of<UserLocalizations>(context, UserLocalizations),
           isNotNull);

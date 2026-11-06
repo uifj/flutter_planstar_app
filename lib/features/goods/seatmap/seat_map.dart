@@ -1,4 +1,4 @@
-import 'package:core_domain/core_domain.dart';
+import 'package:core/domain.dart';
 
 /// 座位状态（对齐企划星 `TicketSeatBean.status`）。
 enum SeatStatus {

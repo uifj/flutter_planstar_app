@@ -5,8 +5,8 @@
 /// "永不自建 OkHttpClient"（05 页 §8 第 1 条）是同一件事。
 library;
 
-import 'package:core_network/core_network.dart';
-import 'package:core_storage/core_storage.dart';
+import 'package:core/network.dart';
+import 'package:core/storage.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

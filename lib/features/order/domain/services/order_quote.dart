@@ -1,4 +1,4 @@
-import 'package:core_domain/core_domain.dart';
+import 'package:core/domain.dart';
 
 /// 费用明细的一行（对应企划星 `ExpenseDetailsView` 的弹窗）。
 final class QuoteLine extends ValueObject {

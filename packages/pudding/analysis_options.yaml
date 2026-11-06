@@ -16,7 +16,7 @@ analyzer:
     - example/**
     # Vendored verbatim copies of upstream sentry-dart 9.30.1 integrations
     # (ADR-0083): third-party code, so our first-party member-doc / unawaited
-    # lints don't apply — same treatment as stone_core/logger (a sentry_logging
+    # lints don't apply — same treatment as infras/core/logger (a sentry_logging
     # copy) and the root analysis_options' packages/** exclusion.
     - lib/grpc/src/**
     - lib/link/src/**

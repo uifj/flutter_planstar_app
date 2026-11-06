@@ -1,5 +1,5 @@
 import 'package:core_design_system/core_design_system.dart';
-import 'package:core_domain/core_domain.dart';
+import 'package:core/domain.dart';
 import 'package:flutter/material.dart';
 
 /// 价格排版。

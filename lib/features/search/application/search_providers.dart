@@ -11,7 +11,7 @@ import '../domain/search_models.dart';
 /// ## 为什么是内存态
 ///
 /// 企划星把历史存在 `SharedPreferences` 里。这里没有落盘，原因和 `themeMode`
-/// 一样：`core_storage` 的 `AppStore` 是异步初始化的，而 `Notifier.build()`
+/// 一样：`package:core/storage.dart` 的 `AppStore` 是异步初始化的，而 `Notifier.build()`
 /// 是同步的。接真实持久化时把 [build] 换成读 `appStore.preferences`，
 /// 并在 [add] / [remove] / [clear] 里写回即可——**页面读的接口不变**。
 class SearchHistoryController extends Notifier<List<String>> {

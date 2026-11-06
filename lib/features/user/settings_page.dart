@@ -23,7 +23,7 @@ import 'application/profile_providers.dart';
 /// - 原页有 12 个入口（含"清除缓存""检查更新""关于""账号安全"等），
 ///   这里只保留**当前有真实行为**的几项：深色模式（真的切换）、退出登录
 ///   （真的清会话）、其余用 toast 说明"待接入"而不是做成点不动的死链。
-/// - **不做"清除缓存"的实际清理**：`core_cache` 的 `HttpCacheStore` 有
+/// - **不做"清除缓存"的实际清理**：`package:core/cache.dart` 的 `HttpCacheStore` 有
 ///   `clear()`，但这里没有注入实例，写一个假成功提示会误导。
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -107,7 +107,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 label: '清除缓存',
                 value: '图片与接口缓存',
                 showDivider: false,
-                onTap: () => _toast('缓存清理待接入 core_cache 的 HttpCacheStore'),
+                onTap: () => _toast('缓存清理待接入 package:core/cache.dart 的 HttpCacheStore'),
               ),
             ],
           ),

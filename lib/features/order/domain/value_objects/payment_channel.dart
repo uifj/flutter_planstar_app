@@ -1,4 +1,4 @@
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 
 /// 支付渠道（对齐企划星 `PayInfo.channels[].type` 与 `subjectType` 的用法）。
 ///

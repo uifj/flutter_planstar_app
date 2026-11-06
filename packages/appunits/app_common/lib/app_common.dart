@@ -13,13 +13,13 @@
 ///   （比照 feedback，含 `{version}`/`{progress}` 占位符），宿主已注册同一 delegate。
 /// - `better_auth/` —— BetterAuth REST 客户端（原独立包 `flutter_better_auth` 并入，
 ///   内部 import 已改指 `package:app_common/better_auth/`）。与前两块不同，这一棵**自带
-///   设备/后端能力**（dio+retrofit、flutter_secure_storage、hive_ce、cookie_jar、
-///   flutter_web_auth_2、connectivity、io/web 条件导入），经 stone_core 复用网络与存储底座
-///   （ADR-0083：本包在 appunits 层消费 stone_core）。它**不进本根 barrel**——其领域类型
+///   设备/后端能力**（dio+retrofit、cookie_jar、flutter_web_auth_2、connectivity、
+///   io/web 条件导入），经 `core` 复用网络与存储端口（ADR-0083：本包在 appunits
+///   层消费 `core`；安全存储实现由宿主组合根注入）。它**不进本根 barrel**——其领域类型
 ///   （Session/User/Organization 等）名太通用，直接 re-export 会与其余面撞名；消费者按需
 ///   `import 'package:app_common/better_auth/flutter_better_auth.dart';` 取用。
 ///
-/// 依赖路线（ADR-0083）：`sentry → stone_core → pudding → appunits → lib`；
+/// 依赖路线（ADR-0083）：`sentry → infras/core → pudding → appunits → lib`；
 /// 本包在 appunits 层，只被 lib 消费、不消费 lib。
 library;
 

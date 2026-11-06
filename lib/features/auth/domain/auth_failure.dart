@@ -7,14 +7,14 @@
 /// （`BaseLoginActivity` 第 537 行附近）。这里把那些 `contains` 提成枚举，
 /// UI 只 switch 一次。
 ///
-/// 与 `core_result` 的关系：传输层与仓库层仍然统一返回 `Result`/`Failure`
+/// 与 `package:core/result.dart` 的关系：传输层与仓库层仍然统一返回 `Result`/`Failure`
 /// （全项目只有一套失败契约，30-02）。[AuthFailure] 是**面向 UI 的视图**，
 /// 由 [AuthFailure.fromFailure] 从 `Failure` 派生——分类信息装在
 /// `Failure.code` 里（见 [AuthFailureCodes]），因为 `Failure` 的 `code`
 /// 本来就是"机器可读的失败码"。
 library;
 
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 
 /// 失败类别。
 enum AuthFailureKind {

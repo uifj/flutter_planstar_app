@@ -19,7 +19,7 @@ library;
 
 import 'dart:convert';
 
-import 'package:core_storage/core_storage.dart';
+import 'package:core/storage.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../app/network/app_bootstrap.dart';

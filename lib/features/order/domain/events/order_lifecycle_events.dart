@@ -1,4 +1,4 @@
-import 'package:core_domain/core_domain.dart';
+import 'package:core/domain.dart';
 
 import '../value_objects/ids.dart';
 import '../value_objects/order_number.dart';

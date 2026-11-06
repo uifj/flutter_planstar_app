@@ -1,4 +1,4 @@
-import 'package:core_domain/core_domain.dart';
+import 'package:core/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/domain.dart';

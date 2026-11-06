@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:core_network/core_network.dart';
-import 'package:core_result/core_result.dart';
-import 'package:core_storage/core_storage.dart';
+import 'package:core/network.dart';
+import 'package:core/result.dart';
+import 'package:core/storage.dart';
 import 'package:dio/dio.dart';
 import 'package:planstar/app/network/device_identity.dart';
 import 'package:planstar/app/network/ps_network_interceptor.dart';

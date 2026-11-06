@@ -1,4 +1,4 @@
-import 'package:core_domain/core_domain.dart';
+import 'package:core/domain.dart';
 
 import '../value_objects/discount.dart';
 import '../value_objects/speed_pack.dart';

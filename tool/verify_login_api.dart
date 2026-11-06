@@ -39,8 +39,8 @@ library;
 
 import 'dart:io';
 
-import 'package:core_network/core_network.dart';
-import 'package:core_result/core_result.dart';
+import 'package:core/network.dart';
+import 'package:core/result.dart';
 import 'package:dio/dio.dart';
 import 'package:planstar/app/network/api_config.dart';
 import 'package:planstar/app/network/device_identity.dart';

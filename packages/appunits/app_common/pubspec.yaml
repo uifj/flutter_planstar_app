@@ -24,12 +24,11 @@ dependencies:
   open_file: ^3.5.10
 
   # ── BetterAuth 客户端（lib/better_auth/，原独立包 flutter_better_auth 并入）──
-  # 依赖路线 ADR-0083：sentry → stone_core → pudding → appunits → lib，本包在
-  # appunits 层消费 stone_core。secure KV（flutter_secure_storage）、Hive（hive_ce +
-  # path_provider）、日志（logging）均改经 stone_core 封装提供，本包不再直接依赖它们，
-  # 只保留 better_auth 自身的网络/认证依赖。
-  stone_core:
-    path: ../../infras/stone_core
+  # 依赖路线：sentry → infras/core → pudding → appunits → lib，本包在 appunits
+  # 层消费平台无关内核 `core`。secure KV 走 core 的 SecureStore 端口，具体实现
+  # （flutter_secure_storage 等）由宿主组合根注入；本包不再直接依赖存储插件。
+  core:
+    path: ../../infras/core
   dio: ^5.9.2
   retrofit: ^4.9.2
   cookie_jar: ^4.0.9

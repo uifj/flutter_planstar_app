@@ -3,14 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../features/auth/l10n/auth_localizations.dart';
-import '../features/discover/l10n/discover_localizations.dart';
-import '../features/goods/l10n/goods_localizations.dart';
-import '../features/home/l10n/home_localizations.dart';
-import '../features/message/l10n/message_localizations.dart';
-import '../features/order/l10n/order_localizations.dart';
-import '../features/user/l10n/user_localizations.dart';
 import '../l10n/app_localizations.dart';
+import '../l10n/auth_localizations.dart';
+import '../l10n/catalog_localizations.dart';
+import '../l10n/discover_localizations.dart';
+import '../l10n/goods_localizations.dart';
+import '../l10n/group_buy_localizations.dart';
+import '../l10n/home_localizations.dart';
+import '../l10n/marketing_localizations.dart';
+import '../l10n/message_localizations.dart';
+import '../l10n/order_localizations.dart';
+import '../l10n/proxy_buy_localizations.dart';
+import '../l10n/search_localizations.dart';
+import '../l10n/user_localizations.dart';
 import 'router.dart';
 import 'sdk/sdk_bootstrap.dart';
 import 'theme.dart';
@@ -28,11 +33,16 @@ const List<LocalizationsDelegate<Object>> appLocalizationsDelegates =
       AppLocalizations.delegate,
       // 各 feature 自带
       AuthLocalizations.delegate,
+      CatalogLocalizations.delegate,
       DiscoverLocalizations.delegate,
       GoodsLocalizations.delegate,
+      GroupBuyLocalizations.delegate,
       HomeLocalizations.delegate,
+      MarketingLocalizations.delegate,
       MessageLocalizations.delegate,
       OrderLocalizations.delegate,
+      ProxyBuyLocalizations.delegate,
+      SearchLocalizations.delegate,
       UserLocalizations.delegate,
       // Material / Cupertino 内置组件文案
       GlobalMaterialLocalizations.delegate,
@@ -50,7 +60,8 @@ const List<LocalizationsDelegate<Object>> appLocalizationsDelegates =
 ///
 /// ## l10n 是「一 feature 一套 ARB」
 ///
-/// 每个 feature 有自己的 `l10n/*.arb` 与生成类，这里只是把它们的 delegate
+/// 每个 feature 有自己的 ARB 与生成类，**源文件统一放在 `lib/l10n`**
+/// （`lib/l10n/features/<name>/<name>_zh.arb`），这里只是把它们的 delegate
 /// 汇总挂上（见 [appLocalizationsDelegates]）。**不要把 feature 文案搬进
 /// 应用级 ARB**——那正是 §3.4 要治的病（一个几千行的巨型 ARB，
 /// 谁都不敢删任何一个 key）。

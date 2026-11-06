@@ -1,4 +1,4 @@
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 
 /// 订单状态机。
 ///

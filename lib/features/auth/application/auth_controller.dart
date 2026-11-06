@@ -12,7 +12,7 @@ library;
 
 import 'dart:async';
 
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/network/network_providers.dart';

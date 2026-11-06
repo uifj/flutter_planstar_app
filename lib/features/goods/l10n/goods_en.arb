@@ -1,6 +1,0 @@
-{
-  "@@locale": "en",
-  "goodsShowTitle": "Show {showId}",
-  "goodsGoToOrder": "Buy tickets",
-  "goodsSeatMapRefreshHint": "Seat availability changes in real time; the price at checkout prevails"
-}

@@ -15,10 +15,12 @@ library;
 
 import 'dart:async';
 
-import 'package:core_config/core_config.dart';
-import 'package:core_storage/core_storage.dart';
+import 'package:core/config.dart';
+import 'package:core/storage.dart';
 import 'package:flutter/foundation.dart';
 
+import '../platform/prefs_key_value_store.dart';
+import '../platform/secure_storage_store.dart';
 import 'api_config.dart';
 import 'device_identity.dart';
 import 'ps_request_context.dart';

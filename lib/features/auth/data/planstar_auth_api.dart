@@ -20,8 +20,8 @@
 /// "发码 v3、提交 v1 的版本错配"）。这里照抄，不"顺手统一"——服务端就是这么挂的。
 library;
 
-import 'package:core_network/core_network.dart';
-import 'package:core_result/core_result.dart';
+import 'package:core/network.dart';
+import 'package:core/result.dart';
 import 'package:dio/dio.dart' show Options, ResponseType;
 
 import 'dto/json_shape.dart';

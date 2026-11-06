@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:stone_core/logger/logger_core.dart';
 
+import '../better_auth_logger.dart';
 import 'models/result/better_error.dart';
 import 'models/result/result.dart';
 
@@ -17,9 +17,13 @@ class BetterAuthCallAdapter<T>
       final res = e.response;
       final status = res?.statusCode;
       final body = res?.data;
-      StoneLogger.info('Dio response headers: ${res?.headers}', 'better_auth');
-      StoneLogger.error('DioException: $e\nStack: $s', 'better_auth');
-      StoneLogger.error('Status: $status, Body: $body', 'better_auth');
+      betterAuthLogger.info('Dio response headers: ${res?.headers}');
+      betterAuthLogger.error(
+        'DioException: $e',
+        error: e,
+        stackTrace: s,
+      );
+      betterAuthLogger.error('Status: $status, Body: $body');
       return Result.err(
         BetterError(
           code: res?.data?['code'] ?? "ERROR",
@@ -28,7 +32,7 @@ class BetterAuthCallAdapter<T>
         ),
       );
     } catch (e, s) {
-      StoneLogger.error('Unknown Error: $e\nStack: $s', 'better_auth');
+      betterAuthLogger.error('Unknown Error: $e', error: e, stackTrace: s);
       return Result.err(
         BetterError(message: e.toString(), stack: s.toString()),
       );

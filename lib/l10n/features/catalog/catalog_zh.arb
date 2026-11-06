@@ -1,0 +1,226 @@
+{
+  "@@locale": "zh",
+  "catalogProviders_74": "上海",
+  "@catalogProviders_74": {
+    "description": "来源：lib/features/catalog/application/catalog_providers.dart:74；原文：'上海'"
+  },
+  "showCategory_95": "{address} · {showCount} 场演出",
+  "@showCategory_95": {
+    "description": "来源：lib/features/catalog/domain/show_category.dart:95；原文：'$address · $showCount 场演出'",
+    "placeholders": {
+      "address": {
+        "type": "Object"
+      },
+      "showCount": {
+        "type": "Object"
+      }
+    }
+  },
+  "showSummary_165": "{text}折",
+  "@showSummary_165": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:165；原文：'$text折'",
+    "placeholders": {
+      "text": {
+        "type": "Object"
+      }
+    }
+  },
+  "showSummary_178": "暂时售罄",
+  "@showSummary_178": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:178；原文：'暂时售罄'"
+  },
+  "showSummary_178_2": "售票中",
+  "@showSummary_178_2": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:178；原文：'售票中'"
+  },
+  "showSummary_263": "周一",
+  "@showSummary_263": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:263；原文：'周一'"
+  },
+  "showSummary_263_2": "周二",
+  "@showSummary_263_2": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:263；原文：'周二'"
+  },
+  "showSummary_263_3": "周三",
+  "@showSummary_263_3": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:263；原文：'周三'"
+  },
+  "showSummary_263_4": "周四",
+  "@showSummary_263_4": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:263；原文：'周四'"
+  },
+  "showSummary_263_5": "周五",
+  "@showSummary_263_5": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:263；原文：'周五'"
+  },
+  "showSummary_263_6": "周六",
+  "@showSummary_263_6": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:263；原文：'周六'"
+  },
+  "showSummary_263_7": "周日",
+  "@showSummary_263_7": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:263；原文：'周日'"
+  },
+  "showSummary_266": "{month}月{day}日 {weekday} {hour}:{minute}",
+  "@showSummary_266": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:266；原文：'${time.month}月${time.day}日 ${weekdays[time.weekday - 1]} $hour:$minute'",
+    "placeholders": {
+      "month": {
+        "type": "Object"
+      },
+      "day": {
+        "type": "Object"
+      },
+      "weekday": {
+        "type": "Object"
+      },
+      "hour": {
+        "type": "Object"
+      },
+      "minute": {
+        "type": "Object"
+      }
+    }
+  },
+  "showSummary_280": "刚刚",
+  "@showSummary_280": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:280；原文：'刚刚'"
+  },
+  "showSummary_281": "{inMinutes}分钟前",
+  "@showSummary_281": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:281；原文：'${delta.inMinutes}分钟前'",
+    "placeholders": {
+      "inMinutes": {
+        "type": "Object"
+      }
+    }
+  },
+  "showSummary_285": "昨天",
+  "@showSummary_285": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:285；原文：'昨天'"
+  },
+  "showSummary_286": "{inDays}天前",
+  "@showSummary_286": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:286；原文：'${delta.inDays}天前'",
+    "placeholders": {
+      "inDays": {
+        "type": "Object"
+      }
+    }
+  },
+  "showSummary_287": "{month}月{day}日",
+  "@showSummary_287": {
+    "description": "来源：lib/features/catalog/domain/show_summary.dart:287；原文：'${time.month}月${time.day}日'",
+    "placeholders": {
+      "month": {
+        "type": "Object"
+      },
+      "day": {
+        "type": "Object"
+      }
+    }
+  },
+  "categoryHomePage_116": "{city} 暂无{name}演出",
+  "@categoryHomePage_116": {
+    "description": "来源：lib/features/catalog/ui/category_home_page.dart:116；原文：'$city 暂无${selectedCategory?.name ?? '该分类'}演出'",
+    "placeholders": {
+      "city": {
+        "type": "Object"
+      },
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "categoryHomePage_117": "试试切换城市或查看其他分类",
+  "@categoryHomePage_117": {
+    "description": "来源：lib/features/catalog/ui/category_home_page.dart:117；原文：'试试切换城市或查看其他分类'"
+  },
+  "categoryHomePage_119": "去首页",
+  "@categoryHomePage_119": {
+    "description": "来源：lib/features/catalog/ui/category_home_page.dart:119；原文：'去首页'"
+  },
+  "categoryHomePage_403": "起",
+  "@categoryHomePage_403": {
+    "description": "来源：lib/features/catalog/ui/category_home_page.dart:403；原文：'起'"
+  },
+  "categoryHomePage_406": "{wishCount} 人想看",
+  "@categoryHomePage_406": {
+    "description": "来源：lib/features/catalog/ui/category_home_page.dart:406；原文：'${show.wishCount} 人想看'",
+    "placeholders": {
+      "wishCount": {
+        "type": "Object"
+      }
+    }
+  },
+  "showCards_72": "暂时售罄",
+  "@showCards_72": {
+    "description": "来源：lib/features/catalog/ui/show_cards.dart:72；原文：'暂时售罄'"
+  },
+  "showCards_75": "起",
+  "@showCards_75": {
+    "description": "来源：lib/features/catalog/ui/show_cards.dart:75；原文：'起'"
+  },
+  "showCards_156": "暂时售罄",
+  "@showCards_156": {
+    "description": "来源：lib/features/catalog/ui/show_cards.dart:156；原文：'暂时售罄'"
+  },
+  "showCards_175": "{discountLabel}起",
+  "@showCards_175": {
+    "description": "来源：lib/features/catalog/ui/show_cards.dart:175；原文：'${show.discountLabel!}起'",
+    "placeholders": {
+      "discountLabel": {
+        "type": "Object"
+      }
+    }
+  },
+  "showCards_270": "暂时售罄",
+  "@showCards_270": {
+    "description": "来源：lib/features/catalog/ui/show_cards.dart:270；原文：'暂时售罄'"
+  },
+  "showCards_277": "起",
+  "@showCards_277": {
+    "description": "来源：lib/features/catalog/ui/show_cards.dart:277；原文：'起'"
+  },
+  "showListPage_78": "该分类暂无演出",
+  "@showListPage_78": {
+    "description": "来源：lib/features/catalog/ui/show_list_page.dart:78；原文：'该分类暂无演出'"
+  },
+  "showListPage_79": "换个分类或城市看看",
+  "@showListPage_79": {
+    "description": "来源：lib/features/catalog/ui/show_list_page.dart:79；原文：'换个分类或城市看看'"
+  },
+  "showListPage_81": "看全部演出",
+  "@showListPage_81": {
+    "description": "来源：lib/features/catalog/ui/show_list_page.dart:81；原文：'看全部演出'"
+  },
+  "showListPage_112": "全部演出",
+  "@showListPage_112": {
+    "description": "来源：lib/features/catalog/ui/show_list_page.dart:112；原文：'全部演出'"
+  },
+  "showListPage_140": "推荐",
+  "@showListPage_140": {
+    "description": "来源：lib/features/catalog/ui/show_list_page.dart:140；原文：'推荐'"
+  },
+  "showListPage_141": "最近开演",
+  "@showListPage_141": {
+    "description": "来源：lib/features/catalog/ui/show_list_page.dart:141；原文：'最近开演'"
+  },
+  "showListPage_142": "价格最低",
+  "@showListPage_142": {
+    "description": "来源：lib/features/catalog/ui/show_list_page.dart:142；原文：'价格最低'"
+  },
+  "showListPage_172": "全部",
+  "@showListPage_172": {
+    "description": "来源：lib/features/catalog/ui/show_list_page.dart:172；原文：'全部'"
+  },
+  "showListPage_249": "共 {total} 场",
+  "@showListPage_249": {
+    "description": "来源：lib/features/catalog/ui/show_list_page.dart:249；原文：'共 $total 场'",
+    "placeholders": {
+      "total": {
+        "type": "Object"
+      }
+    }
+  }
+}

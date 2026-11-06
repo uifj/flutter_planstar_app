@@ -25,7 +25,7 @@ export 'package:core_design_system/core_design_system.dart'
 
 /// 主题模式控制器。`system` / `light` / `dark` 三态，默认跟随系统。
 ///
-/// 持久化留给后续接入 `core_storage`：把 [set] 里的赋值改成
+/// 持久化留给后续接入 `package:core/storage.dart`：把 [set] 里的赋值改成
 /// `appStore.preferences.writeInt('themeMode', mode.index)`，
 /// [build] 里读回来即可，**不要**在 Notifier 里直接调单例。
 final class ThemeModeController extends Notifier<ThemeMode> {

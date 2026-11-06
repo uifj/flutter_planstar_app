@@ -1,0 +1,402 @@
+{
+  "@@locale": "zh",
+  "goodsShowTitle": "演出 {showId}",
+  "@goodsShowTitle": {
+    "placeholders": {
+      "showId": {
+        "type": "String"
+      }
+    }
+  },
+  "goodsGoToOrder": "去下单",
+  "goodsSeatMapRefreshHint": "座位图实时变化，请以提交订单时的价格为准",
+  "chooseTicketPage_71": "选票",
+  "@chooseTicketPage_71": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:71；原文：'选票'"
+  },
+  "chooseTicketPage_73": "演出不存在或已下架",
+  "@chooseTicketPage_73": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:73；原文：'演出不存在或已下架'"
+  },
+  "chooseTicketPage_74": "演出编号：{showId}",
+  "@chooseTicketPage_74": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:74；原文：'演出编号：${widget.showId}'",
+    "placeholders": {
+      "showId": {
+        "type": "Object"
+      }
+    }
+  },
+  "chooseTicketPage_76": "返回",
+  "@chooseTicketPage_76": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:76；原文：'返回'"
+  },
+  "chooseTicketPage_100": "选择场次",
+  "@chooseTicketPage_100": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:100；原文：'选择场次'"
+  },
+  "chooseTicketPage_109": "选择场次",
+  "@chooseTicketPage_109": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:109；原文：'选择场次'"
+  },
+  "chooseTicketPage_122": "选择票档",
+  "@chooseTicketPage_122": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:122；原文：'选择票档'"
+  },
+  "chooseTicketPage_127": "暂无票档信息",
+  "@chooseTicketPage_127": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:127；原文：'暂无票档信息'"
+  },
+  "chooseTicketPage_142": "购买数量",
+  "@chooseTicketPage_142": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:142；原文：'购买数量'"
+  },
+  "chooseTicketPage_171": "请先选择票档",
+  "@chooseTicketPage_171": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:171；原文：'请先选择票档'"
+  },
+  "chooseTicketPage_175": "本场暂时售罄",
+  "@chooseTicketPage_175": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:175；原文：'本场暂时售罄'"
+  },
+  "chooseTicketPage_355": "售罄",
+  "@chooseTicketPage_355": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:355；原文：'售罄'"
+  },
+  "chooseTicketPage_439": "仅剩 {remaining} 张",
+  "@chooseTicketPage_439": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:439；原文：'仅剩 ${tiers[i].remaining} 张'",
+    "placeholders": {
+      "remaining": {
+        "type": "Object"
+      }
+    }
+  },
+  "chooseTicketPage_451": "售罄",
+  "@chooseTicketPage_451": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:451；原文：'售罄'"
+  },
+  "chooseTicketPage_458": " · 已选",
+  "@chooseTicketPage_458": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:458；原文：' · 已选'"
+  },
+  "chooseTicketPage_520": "最多购买 {max} 张",
+  "@chooseTicketPage_520": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:520；原文：'最多购买 $max 张'",
+    "placeholders": {
+      "max": {
+        "type": "Object"
+      }
+    }
+  },
+  "chooseTicketPage_569": "演出票一经售出，除演出取消外不支持退换。",
+  "@chooseTicketPage_569": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:569；原文：'演出票一经售出，除演出取消外不支持退换。'"
+  },
+  "chooseTicketPage_570": "入场需配合场馆安检，请提前 30 分钟到场。",
+  "@chooseTicketPage_570": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:570；原文：'入场需配合场馆安检，请提前 30 分钟到场。'"
+  },
+  "chooseTicketPage_571": "同一订单最多购买 6 张票（部分票档可能更少）。",
+  "@chooseTicketPage_571": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:571；原文：'同一订单最多购买 6 张票（部分票档可能更少）。'"
+  },
+  "chooseTicketPage_588": "购票须知",
+  "@chooseTicketPage_588": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:588；原文：'购票须知'"
+  },
+  "chooseTicketPage_669": "选座购票",
+  "@chooseTicketPage_669": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:669；原文：'选座购票'"
+  },
+  "chooseTicketPage_697": "请选择票档",
+  "@chooseTicketPage_697": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:697；原文：'请选择票档'"
+  },
+  "chooseTicketPage_707": "合计：",
+  "@chooseTicketPage_707": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:707；原文：'合计：'"
+  },
+  "chooseTicketPage_731": "确认选票",
+  "@chooseTicketPage_731": {
+    "description": "来源：lib/features/goods/choose_ticket_page.dart:731；原文：'确认选票'"
+  },
+  "seatMapView_212": "{name} ({availableCount}席可选)",
+  "@seatMapView_212": {
+    "description": "来源：lib/features/goods/seatmap/seat_map_view.dart:212；原文：'${area.name} (${area.availableCount}席可选)'",
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      },
+      "availableCount": {
+        "type": "Object"
+      }
+    }
+  },
+  "seatSelectionPage_45": "选座",
+  "@seatSelectionPage_45": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:45；原文：'选座'"
+  },
+  "seatSelectionPage_91": "已选 {count} 个座位，总价 {format}",
+  "@seatSelectionPage_91": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:91；原文：'已选 ${state.count} 个座位，总价 ${state.totalPrice.format()}'",
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      },
+      "format": {
+        "type": "Object"
+      }
+    }
+  },
+  "seatSelectionPage_116": "可选",
+  "@seatSelectionPage_116": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:116；原文：'可选'"
+  },
+  "seatSelectionPage_118": "已选",
+  "@seatSelectionPage_118": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:118；原文：'已选'"
+  },
+  "seatSelectionPage_120": "已售",
+  "@seatSelectionPage_120": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:120；原文：'已售'"
+  },
+  "seatSelectionPage_122": "锁定",
+  "@seatSelectionPage_122": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:122；原文：'锁定'"
+  },
+  "seatSelectionPage_191": "已选 {length}/{maxSeats} 座",
+  "@seatSelectionPage_191": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:191；原文：'已选 ${seats.length}/${SeatSelectionState.maxSeats} 座'",
+    "placeholders": {
+      "length": {
+        "type": "Object"
+      },
+      "maxSeats": {
+        "type": "Object"
+      }
+    }
+  },
+  "seatSelectionPage_202": "清空",
+  "@seatSelectionPage_202": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:202；原文：'清空'"
+  },
+  "seatSelectionPage_226": "{areaName} {row}排{col}座",
+  "@seatSelectionPage_226": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:226；原文：'${seat.areaName ?? ''} ${seat.row}排${seat.col}座'",
+    "placeholders": {
+      "areaName": {
+        "type": "Object"
+      },
+      "row": {
+        "type": "Object"
+      },
+      "col": {
+        "type": "Object"
+      }
+    }
+  },
+  "seatSelectionPage_273": "已选 {count} 座",
+  "@seatSelectionPage_273": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:273；原文：'已选 ${state.count} 座'",
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "seatSelectionPage_280": "合计 ",
+  "@seatSelectionPage_280": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:280；原文：'合计 '"
+  },
+  "seatSelectionPage_288": "请选择座位",
+  "@seatSelectionPage_288": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:288；原文：'请选择座位'"
+  },
+  "seatSelectionPage_306": "确认选座",
+  "@seatSelectionPage_306": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:306；原文：'确认选座'"
+  },
+  "seatSelectionPage_306_2": "请先选座",
+  "@seatSelectionPage_306_2": {
+    "description": "来源：lib/features/goods/seatmap/seat_selection_page.dart:306；原文：'请先选座'"
+  },
+  "showDetailPage_44": "简介",
+  "@showDetailPage_44": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:44；原文：'简介'"
+  },
+  "showDetailPage_44_2": "票档",
+  "@showDetailPage_44_2": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:44；原文：'票档'"
+  },
+  "showDetailPage_44_3": "须知",
+  "@showDetailPage_44_3": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:44；原文：'须知'"
+  },
+  "showDetailPage_84": "演出不存在或已下架",
+  "@showDetailPage_84": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:84；原文：'演出不存在或已下架'"
+  },
+  "showDetailPage_85": "演出编号：{showId}",
+  "@showDetailPage_85": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:85；原文：'演出编号：${widget.showId}'",
+    "placeholders": {
+      "showId": {
+        "type": "Object"
+      }
+    }
+  },
+  "showDetailPage_87": "返回首页",
+  "@showDetailPage_87": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:87；原文：'返回首页'"
+  },
+  "showDetailPage_110": "分享面板（演示）",
+  "@showDetailPage_110": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:110；原文：'分享面板（演示）'"
+  },
+  "showDetailPage_125": "企划星安心入场保障（演示）",
+  "@showDetailPage_125": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:125；原文：'企划星安心入场保障（演示）'"
+  },
+  "showDetailPage_143": "客服会话（演示）",
+  "@showDetailPage_143": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:143；原文：'客服会话（演示）'"
+  },
+  "showDetailPage_144": "已加入想看",
+  "@showDetailPage_144": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:144；原文：'已加入想看'"
+  },
+  "showDetailPage_154": "本场暂时售罄",
+  "@showDetailPage_154": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:154；原文：'本场暂时售罄'"
+  },
+  "showDetailPage_228": "暂无评分",
+  "@showDetailPage_228": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:228；原文：'暂无评分'"
+  },
+  "showDetailPage_238": "{ratingCount} 条评价",
+  "@showDetailPage_238": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:238；原文：'${show.ratingCount} 条评价'",
+    "placeholders": {
+      "ratingCount": {
+        "type": "Object"
+      }
+    }
+  },
+  "showDetailPage_264": "起",
+  "@showDetailPage_264": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:264；原文：'起'"
+  },
+  "showDetailPage_473": "企划星安心入场保障",
+  "@showDetailPage_473": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:473；原文：'企划星安心入场保障'"
+  },
+  "showDetailPage_488": "无票必赔 最高退一赔一",
+  "@showDetailPage_488": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:488；原文：'无票必赔 最高退一赔一'"
+  },
+  "showDetailPage_519": "选择票档",
+  "@showDetailPage_519": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:519；原文：'选择票档'"
+  },
+  "showDetailPage_560": "售罄",
+  "@showDetailPage_560": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:560；原文：'售罄'"
+  },
+  "showDetailPage_590": "艺人阵容",
+  "@showDetailPage_590": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:590；原文：'艺人阵容'"
+  },
+  "showDetailPage_685": "演出票一经售出，除演出取消外不支持退换。",
+  "@showDetailPage_685": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:685；原文：'演出票一经售出，除演出取消外不支持退换。'"
+  },
+  "showDetailPage_685_2": "入场需配合场馆安检，请提前 30 分钟到场。",
+  "@showDetailPage_685_2": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:685；原文：'入场需配合场馆安检，请提前 30 分钟到场。'"
+  },
+  "showDetailPage_693": "购买须知",
+  "@showDetailPage_693": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:693；原文：'购买须知'"
+  },
+  "showDetailPage_726": "先看后付",
+  "@showDetailPage_726": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:726；原文：'先看后付'"
+  },
+  "showDetailPage_727": "无票赔付",
+  "@showDetailPage_727": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:727；原文：'无票赔付'"
+  },
+  "showDetailPage_728": "出票保真",
+  "@showDetailPage_728": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:728；原文：'出票保真'"
+  },
+  "showDetailPage_729": "配送保障",
+  "@showDetailPage_729": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:729；原文：'配送保障'"
+  },
+  "showDetailPage_748": "企划星服务保障",
+  "@showDetailPage_748": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:748；原文：'企划星服务保障'"
+  },
+  "showDetailPage_820": "客服",
+  "@showDetailPage_820": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:820；原文：'客服'"
+  },
+  "showDetailPage_823": "想看",
+  "@showDetailPage_823": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:823；原文：'想看'"
+  },
+  "showDetailPage_840": "暂时售罄",
+  "@showDetailPage_840": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:840；原文：'暂时售罄'"
+  },
+  "showDetailPage_840_2": "立即购买",
+  "@showDetailPage_840_2": {
+    "description": "来源：lib/features/goods/show_detail_page.dart:840；原文：'立即购买'"
+  },
+  "venuePage_45": "场馆详情",
+  "@venuePage_45": {
+    "description": "来源：lib/features/goods/venue_page.dart:45；原文：'场馆详情'"
+  },
+  "venuePage_48": "没有找到这个场馆",
+  "@venuePage_48": {
+    "description": "来源：lib/features/goods/venue_page.dart:48；原文：'没有找到这个场馆'"
+  },
+  "venuePage_49": "场馆可能已更名，或当前城市没有它的演出",
+  "@venuePage_49": {
+    "description": "来源：lib/features/goods/venue_page.dart:49；原文：'场馆可能已更名，或当前城市没有它的演出'"
+  },
+  "venuePage_51": "返回",
+  "@venuePage_51": {
+    "description": "来源：lib/features/goods/venue_page.dart:51；原文：'返回'"
+  },
+  "venuePage_58": "近期演出",
+  "@venuePage_58": {
+    "description": "来源：lib/features/goods/venue_page.dart:58；原文：'近期演出'"
+  },
+  "venuePage_61": "暂无近期演出",
+  "@venuePage_61": {
+    "description": "来源：lib/features/goods/venue_page.dart:61；原文：'暂无近期演出'"
+  },
+  "venuePage_62": "换个城市或过几天再来看看",
+  "@venuePage_62": {
+    "description": "来源：lib/features/goods/venue_page.dart:62；原文：'换个城市或过几天再来看看'"
+  },
+  "venuePage_124": "地址已复制",
+  "@venuePage_124": {
+    "description": "来源：lib/features/goods/venue_page.dart:124；原文：'地址已复制'"
+  },
+  "venuePage_134": "复制",
+  "@venuePage_134": {
+    "description": "来源：lib/features/goods/venue_page.dart:134；原文：'复制'"
+  },
+  "venuePage_146": "场演出",
+  "@venuePage_146": {
+    "description": "来源：lib/features/goods/venue_page.dart:146；原文：'场演出'"
+  },
+  "venuePage_148": "近期可购",
+  "@venuePage_148": {
+    "description": "来源：lib/features/goods/venue_page.dart:148；原文：'近期可购'"
+  }
+}

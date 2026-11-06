@@ -10,7 +10,7 @@
 /// `⚠` beta 是**明文 HTTP**，只在调试环境用。
 library;
 
-import 'package:core_config/core_config.dart';
+import 'package:core/config.dart';
 
 /// API 环境。
 enum ApiEnvironment {

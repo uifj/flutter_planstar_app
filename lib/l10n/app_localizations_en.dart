@@ -55,4 +55,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stateOfflineCache => 'Showing cached content while offline';
+
+  @override
+  String get splashPage_129 => '让看演出更简单';
+
+  @override
+  String get splashPage_146 => '企划星科技 © 2015–2026';
+
+  @override
+  String get splashPage_180 => '隐私政策与用户协议';
+
+  @override
+  String get splashPage_187 => '欢迎使用企划星。为了保障您的合法权益，请在使用前阅读并同意以下协议：';
+
+  @override
+  String get splashPage_192 => '《用户协议》：规定了您与企划星之间的权利义务关系。';
+
+  @override
+  String get splashPage_195 => '《隐私政策》：说明了企划星如何收集、使用和保护您的个人信息。';
+
+  @override
+  String get splashPage_199 => '点击「同意并继续」表示您已阅读并同意以上协议。';
+
+  @override
+  String get splashPage_208 => '不同意';
+
+  @override
+  String get splashPage_212 => '同意并继续';
+
+  @override
+  String get psEmptyState_32 => '没有找到相关演出';
+
+  @override
+  String get psEmptyState_33 => '换个关键词或城市试试';
+
+  @override
+  String get psEmptyState_35 => '重新搜索';
+
+  @override
+  String get psPoster_136 => '企';
+
+  @override
+  String get psSearchBar_25 => '搜索明星、演出、场馆';
+
+  @override
+  String get psSearchBar_104 => '搜索';
+
+  @override
+  String get psSectionHeader_16 => '全部';
 }

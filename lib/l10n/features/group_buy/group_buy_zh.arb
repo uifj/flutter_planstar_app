@@ -1,0 +1,165 @@
+{
+  "@@locale": "zh",
+  "groupBuy_72": "超低价拼团",
+  "@groupBuy_72": {
+    "description": "来源：lib/features/group_buy/group_buy.dart:72；原文：'超低价拼团'"
+  },
+  "groupBuy_144": "{rate}折",
+  "@groupBuy_144": {
+    "description": "来源：lib/features/group_buy/group_buy.dart:144；原文：'${rate ~/ 10}折'",
+    "placeholders": {
+      "rate": {
+        "type": "Object"
+      }
+    }
+  },
+  "groupBuy_145": "{rate}折",
+  "@groupBuy_145": {
+    "description": "来源：lib/features/group_buy/group_buy.dart:145；原文：'${rate / 10}折'",
+    "placeholders": {
+      "rate": {
+        "type": "Object"
+      }
+    }
+  },
+  "groupBuy_155": "拼团中",
+  "@groupBuy_155": {
+    "description": "来源：lib/features/group_buy/group_buy.dart:155；原文：'拼团中'"
+  },
+  "groupBuy_157": "拼团成功",
+  "@groupBuy_157": {
+    "description": "来源：lib/features/group_buy/group_buy.dart:157；原文：'拼团成功'"
+  },
+  "groupBuy_159": "拼团失败",
+  "@groupBuy_159": {
+    "description": "来源：lib/features/group_buy/group_buy.dart:159；原文：'拼团失败'"
+  },
+  "groupBuy_161": "已取消",
+  "@groupBuy_161": {
+    "description": "来源：lib/features/group_buy/group_buy.dart:161；原文：'已取消'"
+  },
+  "groupBuyDetailPage_46": "拼团详情",
+  "@groupBuyDetailPage_46": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:46；原文：'拼团详情'"
+  },
+  "groupBuyDetailPage_49": "拼团活动不存在",
+  "@groupBuyDetailPage_49": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:49；原文：'拼团活动不存在'"
+  },
+  "groupBuyDetailPage_60": "拼团详情",
+  "@groupBuyDetailPage_60": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:60；原文：'拼团详情'"
+  },
+  "groupBuyDetailPage_172": "拼团价 ",
+  "@groupBuyDetailPage_172": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:172；原文：'拼团价 '"
+  },
+  "groupBuyDetailPage_208": "省{savedAmount}",
+  "@groupBuyDetailPage_208": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:208；原文：'省${group.savedAmount.format(withSymbol: false)}'",
+    "placeholders": {
+      "savedAmount": {
+        "type": "Object"
+      }
+    }
+  },
+  "groupBuyDetailPage_249": "{succeedNum}人成团",
+  "@groupBuyDetailPage_249": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:249；原文：'${group.succeedNum}人成团'",
+    "placeholders": {
+      "succeedNum": {
+        "type": "Object"
+      }
+    }
+  },
+  "groupBuyDetailPage_259": "已满团",
+  "@groupBuyDetailPage_259": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:259；原文：'已满团'"
+  },
+  "groupBuyDetailPage_259_2": "还差{remaining}人",
+  "@groupBuyDetailPage_259_2": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:259；原文：'还差${group.remaining}人'",
+    "placeholders": {
+      "remaining": {
+        "type": "Object"
+      }
+    }
+  },
+  "groupBuyDetailPage_283": "剩余 {remainingHours} 小时",
+  "@groupBuyDetailPage_283": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:283；原文：'剩余 ${group.remainingHours} 小时'",
+    "placeholders": {
+      "remainingHours": {
+        "type": "Object"
+      }
+    }
+  },
+  "groupBuyDetailPage_316": "参团成员 ({currentMembers}/{succeedNum})",
+  "@groupBuyDetailPage_316": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:316；原文：'参团成员 (${group.currentMembers}/${group.succeedNum})'",
+    "placeholders": {
+      "currentMembers": {
+        "type": "Object"
+      },
+      "succeedNum": {
+        "type": "Object"
+      }
+    }
+  },
+  "groupBuyDetailPage_394": "团长",
+  "@groupBuyDetailPage_394": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:394；原文：'团长'"
+  },
+  "groupBuyDetailPage_444": "待邀请",
+  "@groupBuyDetailPage_444": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:444；原文：'待邀请'"
+  },
+  "groupBuyDetailPage_472": "拼团规则",
+  "@groupBuyDetailPage_472": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:472；原文：'拼团规则'"
+  },
+  "groupBuyDetailPage_481": "1. 在有效期内邀请好友参团，满人数即成团\n2. 拼团成功后系统自动出票\n3. 未在有效期内满团则自动退款\n4. 每人限参 1 个拼团\n5. 拼团价不与其他优惠叠加",
+  "@groupBuyDetailPage_481": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:481；原文：'1. 在有效期内邀请好友参团，满人数即成团\\n'\n            '2. 拼团成功后系统自动出票\\n'\n            '3. 未在有效期内满团则自动退款\\n'\n            '4. 每人限参 1 个拼团\\n'\n            '5. 拼团价不与其他优惠叠加'"
+  },
+  "groupBuyDetailPage_533": "拼团价",
+  "@groupBuyDetailPage_533": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:533；原文：'拼团价'"
+  },
+  "groupBuyDetailPage_573": "立即参团",
+  "@groupBuyDetailPage_573": {
+    "description": "来源：lib/features/group_buy/group_buy_detail_page.dart:573；原文：'立即参团'"
+  },
+  "groupBuyPage_28": "超低价拼团",
+  "@groupBuyPage_28": {
+    "description": "来源：lib/features/group_buy/group_buy_page.dart:28；原文：'超低价拼团'"
+  },
+  "groupBuyPage_31": "暂无拼团活动",
+  "@groupBuyPage_31": {
+    "description": "来源：lib/features/group_buy/group_buy_page.dart:31；原文：'暂无拼团活动'"
+  },
+  "groupBuyPage_32": "拼团活动上线后会显示在这里",
+  "@groupBuyPage_32": {
+    "description": "来源：lib/features/group_buy/group_buy_page.dart:32；原文：'拼团活动上线后会显示在这里'"
+  },
+  "groupBuyPage_150": "拼团价 ",
+  "@groupBuyPage_150": {
+    "description": "来源：lib/features/group_buy/group_buy_page.dart:150；原文：'拼团价 '"
+  },
+  "groupBuyPage_210": "{currentMembers}/{succeedNum}人",
+  "@groupBuyPage_210": {
+    "description": "来源：lib/features/group_buy/group_buy_page.dart:210；原文：'${group.currentMembers}/${group.succeedNum}人'",
+    "placeholders": {
+      "currentMembers": {
+        "type": "Object"
+      },
+      "succeedNum": {
+        "type": "Object"
+      }
+    }
+  },
+  "groupBuyProviders_59": "参团成功！等待拼团完成",
+  "@groupBuyProviders_59": {
+    "description": "来源：lib/features/group_buy/group_buy_providers.dart:59；原文：'参团成功！等待拼团完成'"
+  }
+}

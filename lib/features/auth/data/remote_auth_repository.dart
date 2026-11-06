@@ -5,7 +5,7 @@
 /// UI 侧再经 `AuthFailure.fromFailure` 换成枚举（见 domain/auth_failure.dart）。
 library;
 
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 
 import '../../../app/network/ps_request_context.dart';
 import '../domain/auth_failure.dart';

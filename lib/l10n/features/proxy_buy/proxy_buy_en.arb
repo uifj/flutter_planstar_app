@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "proxyBuy_142": "待抢票",
+  "proxyBuy_144": "抢票中",
+  "proxyBuy_146": "抢票成功",
+  "proxyBuy_148": "抢票失败",
+  "proxyBuy_150": "已取消",
+  "proxyBuyPage_30": "代抢服务",
+  "proxyBuyPage_36": "我的代抢订单",
+  "proxyBuyPage_39": "暂无代抢订单",
+  "proxyBuyPage_40": "参与代抢后订单会显示在这里",
+  "proxyBuyPage_81": "代抢规则",
+  "proxyBuyPage_98": "含赔付",
+  "proxyBuyPage_118": "代抢服务费：",
+  "proxyBuyPage_122": "{format}/张",
+  "proxyBuyPage_165": "选择截止时间",
+  "proxyBuyPage_303": "场馆",
+  "proxyBuyPage_305": "场次",
+  "proxyBuyPage_307": "截止",
+  "proxyBuyPage_314": "{quantity}张 × {format}",
+  "proxyBuyPage_322": "代抢费 {format}/张",
+  "proxyBuyPage_334": "合计 "
+}

@@ -2,11 +2,11 @@
 ///
 /// 只有这一个抽象：UI/应用层依赖它，真实实现（[RemoteAuthRepository]）在
 /// `data/`，测试用假实现。端口方法全部返回 `Result`，**不抛异常**——
-/// 与 `core_network` 的契约一致（来源同时存在"抛异常"和"返码"两条路径，
+/// 与 `package:core/network.dart` 的契约一致（来源同时存在"抛异常"和"返码"两条路径，
 /// 30-02）。
 library;
 
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 
 import 'auth_failure.dart';
 import 'auth_session.dart';

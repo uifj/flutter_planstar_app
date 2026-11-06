@@ -38,6 +38,7 @@ final class L10nTarget {
     required this.template,
     required this.outputFile,
     required this.className,
+    this.outputDir = 'lib/l10n',
   });
 
   /// 人类可读名称（日志用）。
@@ -54,6 +55,9 @@ final class L10nTarget {
 
   /// 生成的类名。
   final String className;
+
+  /// 生成 Dart 文件的目录（默认 lib/l10n，保持所有 l10n 产物集中）。
+  final String outputDir;
 }
 
 /// 全部目标。新增 feature 时在这里加一行即可。
@@ -67,49 +71,84 @@ const List<L10nTarget> targets = <L10nTarget>[
   ),
   L10nTarget(
     label: 'features/auth',
-    arbDir: 'lib/features/auth/l10n',
+    arbDir: 'lib/l10n/features/auth',
     template: 'auth_zh.arb',
     outputFile: 'auth_localizations.dart',
     className: 'AuthLocalizations',
   ),
   L10nTarget(
+    label: 'features/catalog',
+    arbDir: 'lib/l10n/features/catalog',
+    template: 'catalog_zh.arb',
+    outputFile: 'catalog_localizations.dart',
+    className: 'CatalogLocalizations',
+  ),
+  L10nTarget(
     label: 'features/discover',
-    arbDir: 'lib/features/discover/l10n',
+    arbDir: 'lib/l10n/features/discover',
     template: 'discover_zh.arb',
     outputFile: 'discover_localizations.dart',
     className: 'DiscoverLocalizations',
   ),
   L10nTarget(
     label: 'features/goods',
-    arbDir: 'lib/features/goods/l10n',
+    arbDir: 'lib/l10n/features/goods',
     template: 'goods_zh.arb',
     outputFile: 'goods_localizations.dart',
     className: 'GoodsLocalizations',
   ),
   L10nTarget(
+    label: 'features/group_buy',
+    arbDir: 'lib/l10n/features/group_buy',
+    template: 'group_buy_zh.arb',
+    outputFile: 'group_buy_localizations.dart',
+    className: 'GroupBuyLocalizations',
+  ),
+  L10nTarget(
     label: 'features/home',
-    arbDir: 'lib/features/home/l10n',
+    arbDir: 'lib/l10n/features/home',
     template: 'home_zh.arb',
     outputFile: 'home_localizations.dart',
     className: 'HomeLocalizations',
   ),
   L10nTarget(
+    label: 'features/marketing',
+    arbDir: 'lib/l10n/features/marketing',
+    template: 'marketing_zh.arb',
+    outputFile: 'marketing_localizations.dart',
+    className: 'MarketingLocalizations',
+  ),
+  L10nTarget(
     label: 'features/message',
-    arbDir: 'lib/features/message/l10n',
+    arbDir: 'lib/l10n/features/message',
     template: 'message_zh.arb',
     outputFile: 'message_localizations.dart',
     className: 'MessageLocalizations',
   ),
   L10nTarget(
     label: 'features/order',
-    arbDir: 'lib/features/order/l10n',
+    arbDir: 'lib/l10n/features/order',
     template: 'order_zh.arb',
     outputFile: 'order_localizations.dart',
     className: 'OrderLocalizations',
   ),
   L10nTarget(
+    label: 'features/proxy_buy',
+    arbDir: 'lib/l10n/features/proxy_buy',
+    template: 'proxy_buy_zh.arb',
+    outputFile: 'proxy_buy_localizations.dart',
+    className: 'ProxyBuyLocalizations',
+  ),
+  L10nTarget(
+    label: 'features/search',
+    arbDir: 'lib/l10n/features/search',
+    template: 'search_zh.arb',
+    outputFile: 'search_localizations.dart',
+    className: 'SearchLocalizations',
+  ),
+  L10nTarget(
     label: 'features/user',
-    arbDir: 'lib/features/user/l10n',
+    arbDir: 'lib/l10n/features/user',
     template: 'user_zh.arb',
     outputFile: 'user_localizations.dart',
     className: 'UserLocalizations',
@@ -145,6 +184,7 @@ Future<void> main(List<String> args) async {
         <String>[
           'gen-l10n',
           '--arb-dir=${target.arbDir}',
+          '--output-dir=${target.outputDir}',
           '--template-arb-file=${target.template}',
           '--output-localization-file=${target.outputFile}',
           '--output-class=${target.className}',

@@ -1,5 +1,5 @@
-import 'package:core_domain/core_domain.dart';
-import 'package:core_result/core_result.dart';
+import 'package:core/domain.dart';
+import 'package:core/result.dart';
 
 import '../events/order_lifecycle_events.dart';
 import '../events/order_paid.dart';

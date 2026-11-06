@@ -1,5 +1,5 @@
-import 'package:core_network/core_network.dart';
-import 'package:core_result/core_result.dart';
+import 'package:core/network.dart';
+import 'package:core/result.dart';
 
 import '../domain/aggregates/ticket_order.dart';
 import '../domain/policies/purchase_limit_policy.dart';

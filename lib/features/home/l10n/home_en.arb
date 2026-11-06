@@ -1,8 +1,0 @@
-{
-  "@@locale": "en",
-  "homeTitle": "Planstar · Home",
-  "homeEntryShowDetail": "Show detail",
-  "homeEntryShowDetailSubtitle": "Deep link planstar://activity_detail?showId=888 → /show/888",
-  "homeEntryOrderConfirm": "Confirm order (sign-in required)",
-  "homeEntryOrderConfirmSubtitle": "planstar://order_confirm → /order/confirm, triggers the sign-in gate"
-}

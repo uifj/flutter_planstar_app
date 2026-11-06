@@ -1,10 +1,10 @@
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 
 import '../domain/domain.dart';
 
 /// 内存仓储 —— **适配器**，实现领域层的 [TicketOrderRepository] 端口。
 ///
-/// 真实实现会走 `core_network` 的 `ApiClient`（`GET v1/unifiedOrder/confirm`、
+/// 真实实现会走 `package:core/network.dart` 的 `ApiClient`（`GET v1/unifiedOrder/confirm`、
 /// `POST v3/unifiedOrder/makeOrder`、`GET v1/unifiedPay/payDetail`），
 /// 并在其中做 DTO ↔ 领域对象的转换（防腐层）。这里先用内存实现，
 /// 让整条链路（聚合 → 报价 → 事件）能跑通、能测。

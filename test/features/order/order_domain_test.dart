@@ -1,5 +1,5 @@
-import 'package:core_domain/core_domain.dart';
-import 'package:core_result/core_result.dart';
+import 'package:core/domain.dart';
+import 'package:core/result.dart';
 import 'package:planstar/features/order/domain/domain.dart';
 import 'package:flutter_test/flutter_test.dart';
 

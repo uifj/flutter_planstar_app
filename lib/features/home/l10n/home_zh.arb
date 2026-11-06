@@ -1,8 +1,0 @@
-{
-  "@@locale": "zh",
-  "homeTitle": "企划星 · 首页",
-  "homeEntryShowDetail": "演出详情",
-  "homeEntryShowDetailSubtitle": "深链 planstar://activity_detail?showId=888 → /show/888",
-  "homeEntryOrderConfirm": "确认订单（需登录）",
-  "homeEntryOrderConfirmSubtitle": "planstar://order_confirm → /order/confirm，触发登录门禁"
-}

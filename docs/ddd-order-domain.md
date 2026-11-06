@@ -1,7 +1,7 @@
 # 订单领域层：DDD 战术模式落地
 
 > 本文记录 `fp_order` 竖切里领域层的**为什么这么写**。代码在
-> `lib/features/order/domain/` 与 `packages/core/domain/`，
+> `lib/features/order/domain/` 与 `packages/infras/core/lib/src/domain/`，
 > 业务依据来自 Android 原项目反编译 wiki（第 12 / 27 页与 `modules/order-and-payment.md`）。
 
 ## 0. 这次做了什么
@@ -17,15 +17,15 @@
 ## 1. 目录
 
 ```
-packages/core/domain/            # core_domain：零 Flutter 依赖的领域原语
-  lib/src/entity.dart            #   Entity<TId>（身份相等）
-  lib/src/aggregate_root.dart    #   AggregateRoot<TId>（事件收集）
-  lib/src/value_object.dart      #   ValueObject（属性相等 + 深比较）
-  lib/src/domain_event.dart      #   DomainEvent
-  lib/src/domain_event_bus.dart  #   进程内分发（按运行时类型精确匹配）
-  lib/src/money.dart             #   Money（整数分）
-  lib/src/quantity.dart          #   Quantity
-  lib/src/id_generator.dart      #   IdGenerator 端口 + UUIDv7 形态实现
+packages/infras/core/lib/src/domain/   # core 的 domain 子库：零 Flutter 依赖的领域原语
+  entity.dart                    #   Entity<TId>（身份相等）
+  aggregate_root.dart            #   AggregateRoot<TId>（事件收集）
+  value_object.dart              #   ValueObject（属性相等 + 深比较）
+  domain_event.dart              #   DomainEvent
+  domain_event_bus.dart          #   进程内分发（按运行时类型精确匹配）
+  money.dart                     #   Money（整数分）
+  quantity.dart                  #   Quantity
+  id_generator.dart              #   IdGenerator 端口 + UUIDv7 形态实现
 
 lib/features/order/
   domain/                        # 领域层：不 import Flutter，不 import Dio
@@ -44,7 +44,7 @@ lib/features/order/
 ```
 
 依赖方向：`presentation → application → domain ← data`。
-`domain` 只依赖 `core_domain` + `core_result`，**不认识 Flutter**。
+`domain` 只依赖 `package:core/domain.dart` + `package:core/result.dart`，**不认识 Flutter**。
 
 ## 2. 模式 → 代码
 
@@ -120,7 +120,7 @@ submit() → order.submit(now)        // 校验协议/观演人/报价 → 迁�
 
 | Provider | 现在 | 换成 |
 |---|---|---|
-| `ticketOrderRepositoryProvider` | `InMemoryTicketOrderRepository` | 走 `core_network` 的 `ApiClient`，做 DTO ↔ 领域对象映射（`GET v1/unifiedOrder/confirm`、`POST v3/unifiedOrder/makeOrder`） |
+| `ticketOrderRepositoryProvider` | `InMemoryTicketOrderRepository` | 走 `package:core/network.dart` 的 `ApiClient`，做 DTO ↔ 领域对象映射（`GET v1/unifiedOrder/confirm`、`POST v3/unifiedOrder/makeOrder`） |
 | `orderNumberSequenceProvider` | 内存自增 | 服务端下发 / Redis `INCR` |
 | `orderDraftSeedProvider` | 写死的演示数据 | `OrderConfirmInfo` 的防腐层转换结果 |
 
@@ -134,8 +134,8 @@ submit() → order.submit(now)        // 校验协议/观演人/报价 → 迁�
 
 ```bash
 flutter test test/features/order          # 48 个用例：领域 34 + 控制器 11 + 页面 3
-flutter test packages/core/domain         # 22 个原语用例（Money / 事件 / 实体）
-flutter analyze lib test packages/core/domain
+dart test packages/infras/core              # 22 个原语用例（Money / 事件 / 实体）
+flutter analyze lib test packages/infras/core
 ```
 
 金额公式的每条分支（券 / 活动封顶 / 活动不封顶 / 优惠超总额 / 礼品卡取小 /

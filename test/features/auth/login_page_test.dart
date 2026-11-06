@@ -1,5 +1,5 @@
 import 'package:core_design_system/core_design_system.dart';
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 import 'package:flutter/material.dart';
 import 'package:planstar/app/theme.dart';
 import 'package:planstar/features/auth/application/auth_providers.dart';
@@ -8,7 +8,7 @@ import 'package:planstar/features/auth/domain/auth_failure.dart';
 import 'package:planstar/features/auth/domain/auth_repository.dart';
 import 'package:planstar/features/auth/domain/auth_session.dart';
 import 'package:planstar/features/auth/domain/auth_user.dart';
-import 'package:planstar/features/auth/l10n/auth_localizations.dart';
+import 'package:planstar/l10n/auth_localizations.dart';
 import 'package:planstar/features/auth/login_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

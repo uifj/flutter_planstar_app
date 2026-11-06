@@ -13,7 +13,7 @@ import 'application/auth_controller.dart';
 import 'application/auth_providers.dart';
 import 'application/auth_state.dart';
 import 'domain/auth_failure.dart';
-import 'l10n/auth_localizations.dart';
+import '../../l10n/auth_localizations.dart';
 
 /// 登录 / 注册页（`layout_login_register.xml`）。
 ///

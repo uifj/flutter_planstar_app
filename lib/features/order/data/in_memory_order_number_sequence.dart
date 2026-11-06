@@ -1,4 +1,4 @@
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 
 import '../domain/domain.dart';
 

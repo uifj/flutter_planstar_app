@@ -200,7 +200,7 @@
 
 **Android 对应**：`ProxyBuyChooseTicketActivity` / `ProxyBuyConfirmActivity` / `PinTuanChooseTicketPurchaseFragment` / `PinTuanOrderListActivity`
 
-**现状**：`core_domain` 的 `OrderType` 枚举已包含 `proxyBuy` / `groupBuy`，但没有对应的链路页面。`ShowDetailPage` 的注释明确写了"只做了普通购票"。
+**现状**：`package:core/domain.dart` 的 `OrderType` 枚举已包含 `proxyBuy` / `groupBuy`，但没有对应的链路页面。`ShowDetailPage` 的注释明确写了"只做了普通购票"。
 
 **缺失内容**：
 - 代抢购票：选票档 → 填代抢信息 → 确认 → 支付（与普通购票流程类似但有代抢标记）
@@ -230,7 +230,7 @@
 **实现建议**：
 - 新建 `lib/features/review/` 模块
 - 评分用 5 星组件（自绘）
-- 图片上传走 `core_upload`（已有 `ImageUploader` 端口）
+- 图片上传走 `package:core/upload.dart`（已有 `ImageUploader` 端口）
 - DTO 对齐 `v1/review/create` + `v1/review/list`
 
 ---
@@ -291,7 +291,7 @@
 **实现建议**：
 - 相机层用 `camera` 包
 - 裁剪 / 编辑需要专门的 SDK（参考 Android 的 `VideoRecorderCropActivity`）
-- 上传走 `core_upload`
+- 上传走 `package:core/upload.dart`
 
 ---
 

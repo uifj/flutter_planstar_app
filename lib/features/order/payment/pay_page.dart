@@ -1,7 +1,7 @@
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:core_design_system/core_design_system.dart';
-import 'package:core_domain/core_domain.dart';
+import 'package:core/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

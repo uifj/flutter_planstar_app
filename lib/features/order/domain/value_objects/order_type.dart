@@ -1,4 +1,4 @@
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 
 /// 下单类型（对应企划星的 `OrderType` 编译期常量）。
 ///

@@ -1,4 +1,4 @@
-import 'package:core_domain/core_domain.dart';
+import 'package:core/domain.dart';
 
 /// 订单号：`PN` + `yyyyMMdd` + 6 位序号，例 `PN20261101000123`。
 ///

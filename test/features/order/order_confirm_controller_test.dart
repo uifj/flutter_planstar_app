@@ -1,4 +1,4 @@
-import 'package:core_domain/core_domain.dart';
+import 'package:core/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:planstar/features/order/application/order_confirm_controller.dart';
 import 'package:planstar/features/order/application/order_providers.dart';

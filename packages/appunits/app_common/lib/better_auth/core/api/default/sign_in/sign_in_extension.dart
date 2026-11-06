@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:app_common/better_auth/core/api/models/result/result_extension.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
-import 'package:stone_core/logger/logger_core.dart';
+
+import '../../../better_auth_logger.dart';
 
 import '../../../flutter_better_auth.dart';
 import '../../better_auth_client.dart';
@@ -101,11 +102,10 @@ extension SignInSocialExtension on SignInBetterAuth {
           url: proxyUrl.toString(),
           callbackUrlScheme: effectiveCallbackScheme,
         );
-        StoneLogger.debug('web-auth callback url: $result', 'better_auth');
+        betterAuthLogger.debug('web-auth callback url: $result');
         final callback = parseOAuthCallback(result);
-        StoneLogger.debug(
+        betterAuthLogger.debug(
           'callback params: ${callback.allParams.keys.toList()}',
-          'better_auth',
         );
         final cookie = callback.cookie;
         if (cookie != null && cookie.isNotEmpty) {
@@ -120,11 +120,10 @@ extension SignInSocialExtension on SignInBetterAuth {
           );
           await FlutterBetterAuth.refreshSession();
         } else {
-          StoneLogger.warning(
+          betterAuthLogger.warn(
             'callback carried no session cookie or code. '
                 'params=${callback.allParams.keys.toList()} '
                 'error=${callback.error}',
-            'better_auth',
           );
         }
       } on PlatformException catch (e) {

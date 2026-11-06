@@ -1,4 +1,4 @@
-import 'package:core_result/core_result.dart';
+import 'package:core/result.dart';
 import 'package:flutter/material.dart';
 import 'package:planstar/app/theme.dart';
 import 'package:planstar/features/auth/application/auth_providers.dart';

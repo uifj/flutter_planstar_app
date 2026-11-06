@@ -9,7 +9,7 @@
 ///   (`GetMqttTicket`) connect flow, with `SentryMqttIntegration` observability.
 ///
 /// Dependency route (ADR-0083):
-/// `sentry → stone_core → pudding → appunits → lib` (never reversed).
+/// `sentry → infras/core → pudding → appunits → lib` (never reversed).
 library;
 
 export 'grpc/grpc.dart';
