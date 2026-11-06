@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'application/order_confirm_controller.dart';
 import 'application/order_draft_seed.dart';
 import 'domain/domain.dart';
+import '../../l10n/order_localizations.dart';
 
 /// 确认订单页。
 ///
@@ -45,7 +46,7 @@ class OrderConfirmPage extends ConsumerWidget {
     );
 
     return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: '确认订单'),
+      appBar: AdaptiveAppBar(title: OrderLocalizations.of(context).orderConfirmPage_48),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -56,7 +57,7 @@ class OrderConfirmPage extends ConsumerWidget {
           if (state.notice != null)
             _NoticeBar(message: state.notice!, onDismiss: controller.dismissNotice),
           _Section(
-            title: '选择票档',
+            title: OrderLocalizations.of(context).orderConfirmPage_59,
             child: Column(
               children: <Widget>[
                 for (final offer in seed.tiers)
@@ -70,13 +71,13 @@ class OrderConfirmPage extends ConsumerWidget {
             ),
           ),
           _Section(
-            title: '优惠',
+            title: OrderLocalizations.of(context).orderConfirmPage_73,
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
               children: <Widget>[
                 _ChoiceChip(
-                  label: '不使用优惠',
+                  label: OrderLocalizations.of(context).orderConfirmPage_79,
                   selected: state.order.discount is NoDiscount,
                   onSelected: controller.clearDiscount,
                 ),
@@ -96,7 +97,7 @@ class OrderConfirmPage extends ConsumerWidget {
             ),
           ),
           _Section(
-            title: '其他抵扣',
+            title: OrderLocalizations.of(context).orderConfirmPage_99,
             child: Column(
               children: <Widget>[
                 SwitchListTile(
@@ -104,8 +105,8 @@ class OrderConfirmPage extends ConsumerWidget {
                   dense: true,
                   title: Text(
                     seed.giftCard == null
-                        ? '礼品卡（本单不可用）'
-                        : '礼品卡（余额 ${seed.giftCard!.balance.format()}）',
+                        ? OrderLocalizations.of(context).orderConfirmPage_107
+                        : OrderLocalizations.of(context).orderConfirmPage_109(seed.giftCard!.balance.format()),
                   ),
                   value: state.order.giftCard != null,
                   onChanged: seed.giftCard == null
@@ -119,7 +120,7 @@ class OrderConfirmPage extends ConsumerWidget {
                   dense: true,
                   title: Text(
                     seed.speedPackUnitPrice == null
-                        ? '加速包（本场不提供）'
+                        ? OrderLocalizations.of(context).orderConfirmPage_123
                         : '加速包（${seed.speedPackUnitPrice!.format()}/张）',
                   ),
                   value: state.order.speedPack != null,
@@ -133,7 +134,7 @@ class OrderConfirmPage extends ConsumerWidget {
             ),
           ),
           _Section(
-            title: '实名观演人',
+            title: OrderLocalizations.of(context).orderConfirmPage_138,
             trailing: TextButton(
               onPressed: controller.assignDemoVisitor,
               child: Text(
@@ -144,7 +145,7 @@ class OrderConfirmPage extends ConsumerWidget {
             ),
             child: state.order.visitors.isEmpty
                 ? Text(
-                    '本场次需实名观演人，未选择将无法提交',
+                    OrderLocalizations.of(context).orderConfirmPage_150,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.error,
                     ),
@@ -161,15 +162,15 @@ class OrderConfirmPage extends ConsumerWidget {
                   ),
           ),
           _Section(
-            title: '费用明细',
+            title: OrderLocalizations.of(context).orderConfirmPage_167,
             child: Column(
               children: <Widget>[
                 for (final line in state.quote.breakdown)
                   _AmountRow(label: line.label, value: line.amount.format()),
                 const Divider(height: 20),
-                _AmountRow(label: '订单原价', value: state.quote.totalAmount.format()),
+                _AmountRow(label: OrderLocalizations.of(context).orderConfirmPage_173, value: state.quote.totalAmount.format()),
                 _AmountRow(
-                  label: '应付',
+                  label: OrderLocalizations.of(context).orderConfirmPage_175,
                   value: state.quote.paymentAmount.format(),
                   emphasized: true,
                 ),
@@ -438,7 +439,7 @@ class _SubmitBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text('应付', style: theme.textTheme.bodySmall),
+                  Text(OrderLocalizations.of(context).orderConfirmPage_175, style: theme.textTheme.bodySmall),
                   Text(
                     payable.format(),
                     style: theme.textTheme.headlineSmall?.copyWith(
@@ -451,10 +452,10 @@ class _SubmitBar extends StatelessWidget {
             ),
             AdaptiveButton(
               label: submitted
-                  ? '已提交'
+                  ? OrderLocalizations.of(context).orderConfirmPage_457
                   : submitting
-                      ? '提交中…'
-                      : '提交订单',
+                      ? OrderLocalizations.of(context).orderConfirmPage_460
+                      : OrderLocalizations.of(context).orderConfirmPage_462,
               onPressed: enabled ? () => onSubmit() : null,
             ),
           ],

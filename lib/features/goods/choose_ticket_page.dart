@@ -11,6 +11,7 @@ import '../../shared/ui/ps_price.dart';
 import '../../shared/ui/ps_tag.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_summary.dart';
+import '../../l10n/goods_localizations.dart';
 
 /// 选票页（企划星 `ChooseTicketB2CActivity` + 3 个 Fragment）。
 ///
@@ -68,12 +69,12 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
 
     if (show == null) {
       return AdaptiveScaffold(
-        appBar: const AdaptiveAppBar(title: '选票'),
+        appBar: AdaptiveAppBar(title: GoodsLocalizations.of(context).chooseTicketPage_71),
         body: PsEmptyState(
-          title: '演出不存在或已下架',
-          description: '演出编号：${widget.showId}',
+          title: GoodsLocalizations.of(context).chooseTicketPage_73,
+          description: GoodsLocalizations.of(context).chooseTicketPage_74(widget.showId),
           icon: LucideIcons.calendarX,
-          actionLabel: '返回',
+          actionLabel: GoodsLocalizations.of(context).chooseTicketPage_76,
           onAction: () => context.pop(),
         ),
       );
@@ -97,7 +98,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
                 children: <Widget>[
                   _ShowInfoCard(show: show),
                   if (sessions.isNotEmpty) ...<Widget>[
-                    _SectionTitle(title: '选择场次'),
+                    _SectionTitle(title: GoodsLocalizations.of(context).chooseTicketPage_100),
                     _SessionList(
                       sessions: sessions,
                       selectedIndex: _selectedSession,
@@ -106,7 +107,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
                       }),
                     ),
                   ] else ...<Widget>[
-                    _SectionTitle(title: '选择场次'),
+                    _SectionTitle(title: GoodsLocalizations.of(context).chooseTicketPage_109),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(15, 8, 15, 0),
                       child: Text(
@@ -119,12 +120,12 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
                     ),
                     const SizedBox(height: 8),
                   ],
-                  _SectionTitle(title: '选择票档'),
+                  _SectionTitle(title: GoodsLocalizations.of(context).chooseTicketPage_122),
                   if (tiers.isEmpty)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(15, 8, 15, 0),
                       child: Text(
-                        '暂无票档信息',
+                        GoodsLocalizations.of(context).chooseTicketPage_127,
                         style: TextStyle(fontSize: 14, color: colors.textTertiary),
                       ),
                     )
@@ -139,7 +140,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
                       }),
                     ),
                   if (_selectedTier >= 0) ...<Widget>[
-                    _SectionTitle(title: '购买数量'),
+                    _SectionTitle(title: GoodsLocalizations.of(context).chooseTicketPage_142),
                     _QuantitySelector(
                       quantity: _quantity,
                       min: 1,
@@ -168,11 +169,11 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
 
   void _proceed(BuildContext context, ShowSummary show) {
     if (_selectedTier < 0) {
-      _toast(context, '请先选择票档');
+      _toast(context, GoodsLocalizations.of(context).chooseTicketPage_171);
       return;
     }
     if (show.soldOut) {
-      _toast(context, '本场暂时售罄');
+      _toast(context, GoodsLocalizations.of(context).chooseTicketPage_175);
       return;
     }
     // 把选好的参数带到确认订单页。企划星走 scheme 参数，这里用 query。
@@ -352,7 +353,7 @@ class _SessionList extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    session.soldOut ? '售罄' : session.tierSummary,
+                    session.soldOut ? GoodsLocalizations.of(context).chooseTicketPage_355 : session.tierSummary,
                     style: TextStyle(
                       fontSize: 11,
                       color: session.soldOut
@@ -436,7 +437,7 @@ class _TierList extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 4),
                               child: Text(
-                                '仅剩 ${tiers[i].remaining} 张',
+                                GoodsLocalizations.of(context).chooseTicketPage_439(tiers[i].remaining!),
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: colors.price,
@@ -448,14 +449,14 @@ class _TierList extends StatelessWidget {
                     ),
                     if (tiers[i].soldOut)
                       Text(
-                        '售罄',
+                        GoodsLocalizations.of(context).chooseTicketPage_451,
                         style: TextStyle(fontSize: 14, color: colors.textDisabled),
                       )
                     else
                       PsPrice(
                         amount: tiers[i].price,
                         size: 18,
-                        suffix: i == selectedIndex ? ' · 已选' : null,
+                        suffix: i == selectedIndex ? GoodsLocalizations.of(context).chooseTicketPage_458 : null,
                       ),
                   ],
                 ),
@@ -517,7 +518,7 @@ class _QuantitySelector extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            '最多购买 $max 张',
+            GoodsLocalizations.of(context).chooseTicketPage_520(max),
             style: TextStyle(fontSize: 12, color: colors.textTertiary),
           ),
         ],
@@ -566,9 +567,9 @@ class _PurchaseNoticeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final notices = <String>[
-      '演出票一经售出，除演出取消外不支持退换。',
-      '入场需配合场馆安检，请提前 30 分钟到场。',
-      '同一订单最多购买 6 张票（部分票档可能更少）。',
+      GoodsLocalizations.of(context).chooseTicketPage_569,
+      GoodsLocalizations.of(context).chooseTicketPage_570,
+      GoodsLocalizations.of(context).chooseTicketPage_571,
     ];
     return Container(
       margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -585,7 +586,7 @@ class _PurchaseNoticeCard extends StatelessWidget {
               Icon(LucideIcons.info, size: 14, color: colors.textTertiary),
               const SizedBox(width: 4),
               Text(
-                '购票须知',
+                GoodsLocalizations.of(context).chooseTicketPage_588,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -666,7 +667,7 @@ class _BottomBar extends StatelessWidget {
                     Icon(LucideIcons.armchair, size: 14, color: colors.brand),
                     const SizedBox(width: 4),
                     Text(
-                      '选座购票',
+                      GoodsLocalizations.of(context).chooseTicketPage_669,
                       style: TextStyle(fontSize: 13, color: colors.brand),
                     ),
                   ],
@@ -694,7 +695,7 @@ class _BottomBar extends StatelessWidget {
                         )
                       else
                         Text(
-                          '请选择票档',
+                          GoodsLocalizations.of(context).chooseTicketPage_697,
                           style: TextStyle(
                             fontSize: 12,
                             color: colors.textTertiary,
@@ -704,7 +705,7 @@ class _BottomBar extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(
-                            '合计：',
+                            GoodsLocalizations.of(context).chooseTicketPage_707,
                             style: TextStyle(
                               fontSize: 13,
                               color: colors.textSecondary,
@@ -728,7 +729,7 @@ class _BottomBar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: Text(
-                      '确认选票',
+                      GoodsLocalizations.of(context).chooseTicketPage_731,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,

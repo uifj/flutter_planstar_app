@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'gift_card_providers.dart';
+import '../../../l10n/marketing_localizations.dart';
 
 /// 绑定礼品卡页。
 ///
@@ -64,14 +65,14 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
     final isSubmitting = state is AddGiftCardSubmitting;
 
     return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: '绑定礼品卡'),
+      appBar: AdaptiveAppBar(title: MarketingLocalizations.of(context).addGiftCardPage_67),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              '请输入礼品卡卡号',
+              MarketingLocalizations.of(context).addGiftCardPage_74,
               style: TextStyle(
                 fontSize: 14,
                 color: colors.textSecondary,
@@ -88,7 +89,7 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
                 controller: _controller,
                 enabled: !isSubmitting,
                 decoration: InputDecoration(
-                  hintText: '输入礼品卡卡号 / 密码',
+                  hintText: MarketingLocalizations.of(context).addGiftCardPage_91,
                   hintStyle: TextStyle(
                     fontSize: 14,
                     color: colors.textDisabled,
@@ -131,8 +132,8 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
                           color: colors.onBrand,
                         ),
                       )
-                    : const Text(
-                        '绑定',
+                    : Text(
+                        MarketingLocalizations.of(context).addGiftCardPage_135,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -152,7 +153,7 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    '使用说明',
+                    MarketingLocalizations.of(context).addGiftCardPage_155,
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
@@ -161,10 +162,7 @@ class _AddGiftCardPageState extends ConsumerState<AddGiftCardPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '1. 礼品卡卡号在实体卡背面刮开涂层后获取\n'
-                    '2. 绑定成功后余额可在下单时抵扣\n'
-                    '3. 礼品卡不可叠加使用，不记名不挂失\n'
-                    '4. 有效期以礼品卡标注为准',
+                    MarketingLocalizations.of(context).addGiftCardPage_164,
                     style: TextStyle(
                       fontSize: 12,
                       height: 1.8,

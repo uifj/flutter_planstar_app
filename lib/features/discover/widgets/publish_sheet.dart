@@ -1,5 +1,7 @@
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
+import '../../../l10n/discover_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// 发布动态面板（对应企划星发现页右下角的 `btnNewPost`）。
 ///
@@ -66,7 +68,7 @@ class _PublishSheetState extends State<PublishSheet> {
               Row(
                 children: <Widget>[
                   Text(
-                    '发布动态',
+                    DiscoverLocalizations.of(context).publishSheet_69,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
@@ -76,7 +78,7 @@ class _PublishSheetState extends State<PublishSheet> {
                   const Spacer(),
                   TextButton(
                     onPressed: () => Navigator.of(context).maybePop(),
-                    child: Text('取消', style: TextStyle(color: colors.textTertiary)),
+                    child: Text(AppLocalizations.of(context).actionCancel, style: TextStyle(color: colors.textTertiary)),
                   ),
                 ],
               ),
@@ -93,9 +95,9 @@ class _PublishSheetState extends State<PublishSheet> {
                   maxLines: 5,
                   maxLength: 120,
                   style: TextStyle(fontSize: 14, color: colors.textPrimary),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: '聊聊你看过的演出…',
+                    hintText: DiscoverLocalizations.of(context).publishSheet_98,
                     counterStyle: TextStyle(fontSize: 11),
                   ),
                 ),
@@ -118,8 +120,8 @@ class _PublishSheetState extends State<PublishSheet> {
                       borderRadius: BorderRadius.circular(22),
                     ),
                   ),
-                  child: const Text(
-                    '发布',
+                  child: Text(
+                    DiscoverLocalizations.of(context).publishSheet_122,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                 ),

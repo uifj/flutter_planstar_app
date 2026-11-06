@@ -13,6 +13,7 @@ import '../catalog/ui/show_cards.dart';
 import 'application/feed_providers.dart';
 import 'domain/feed_post.dart';
 import '../../shared/ui/ps_network_images.dart';
+import '../../l10n/discover_localizations.dart';
 
 /// 动态详情页（企划星 `FeedDetailActivity` + `FeedDetailTweetFragment`）。
 ///
@@ -42,13 +43,13 @@ class FeedDetailPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: const AdaptiveAppBar(title: '动态详情'),
+      appBar: AdaptiveAppBar(title: DiscoverLocalizations.of(context).feedDetailPage_45),
       body: post == null
           ? PsEmptyState(
-              title: '动态不存在',
-              description: '它可能已被作者删除',
+              title: DiscoverLocalizations.of(context).feedDetailPage_48,
+              description: DiscoverLocalizations.of(context).feedDetailPage_49,
               icon: LucideIcons.fileText,
-              actionLabel: '返回发现',
+              actionLabel: DiscoverLocalizations.of(context).feedDetailPage_51,
               onAction: () => context.go('/discover'),
             )
           : _FeedDetailBody(post: post),
@@ -122,7 +123,7 @@ class _FeedDetailBody extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
                   child: Text(
-                    '相关演出',
+                    DiscoverLocalizations.of(context).feedDetailPage_125,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -148,7 +149,7 @@ class _FeedDetailBody extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
                 child: Text(
-                  '评论 ${comments.length}',
+                  DiscoverLocalizations.of(context).feedDetailPage_151(comments.length),
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -157,9 +158,9 @@ class _FeedDetailBody extends ConsumerWidget {
                 ),
               ),
               if (comments.isEmpty)
-                const PsEmptyState(
-                  title: '还没有评论',
-                  description: '来说两句吧',
+                PsEmptyState(
+                  title: DiscoverLocalizations.of(context).feedDetailPage_161,
+                  description: DiscoverLocalizations.of(context).feedDetailPage_162,
                   icon: LucideIcons.messageSquare,
                   compact: true,
                 )
@@ -213,7 +214,7 @@ class _AuthorRow extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                '${formatRelativeTime(post.publishedAt)} · ${post.viewCountLabel} 阅读',
+                DiscoverLocalizations.of(context).feedDetailPage_216(formatRelativeTime(post.publishedAt), post.viewCountLabel),
                 style: TextStyle(fontSize: 11, color: colors.textTertiary),
               ),
             ],
@@ -249,7 +250,7 @@ class _VideoNotice extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '这条动态带视频，播放器尚未接入（需要 CDN 与 videoplayer 等价实现）',
+              DiscoverLocalizations.of(context).feedDetailPage_252,
               style: TextStyle(fontSize: 12, height: 1.4, color: colors.textTertiary),
             ),
           ),
@@ -273,19 +274,19 @@ class _InteractionBar extends StatelessWidget {
         _Action(
           icon: LucideIcons.heart,
           label: post.likeCountLabel,
-          onTap: () => _toast(context, '点赞接口待接入'),
+          onTap: () => _toast(context, DiscoverLocalizations.of(context).feedDetailPage_276),
         ),
         const SizedBox(width: 24),
         _Action(
           icon: LucideIcons.messageSquare,
-          label: '评论',
-          onTap: () => _toast(context, '评论发布待接入'),
+          label: DiscoverLocalizations.of(context).feedDetailPage_281,
+          onTap: () => _toast(context, DiscoverLocalizations.of(context).feedDetailPage_282),
         ),
         const SizedBox(width: 24),
         _Action(
           icon: LucideIcons.share,
-          label: '分享',
-          onTap: () => _toast(context, '分享面板待接入 fluwx'),
+          label: DiscoverLocalizations.of(context).feedDetailPage_287,
+          onTap: () => _toast(context, DiscoverLocalizations.of(context).feedDetailPage_288),
         ),
         const Spacer(),
         Text(

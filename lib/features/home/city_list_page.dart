@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/data/demo_catalog.dart';
 import 'widgets/city_tile.dart';
+import '../../l10n/home_localizations.dart';
 
 /// 城市列表页（企划星 `CityListActivity`）。
 ///
@@ -43,26 +44,26 @@ class CityListPage extends ConsumerWidget {
       if (!citiesWithData.contains(city)) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('$city 暂无演出数据（演示数据仅覆盖部分城市）')));
+        ).showSnackBar(SnackBar(content: Text(HomeLocalizations.of(context).cityListPage_46(city))));
       }
       context.pop();
     }
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: const AdaptiveAppBar(title: '选择城市'),
+      appBar: AdaptiveAppBar(title: HomeLocalizations.of(context).cityListPage_53),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: <Widget>[
-          _LocatedCard(current: current, onUse: () => select('上海')),
+          _LocatedCard(current: current, onUse: () => select(HomeLocalizations.of(context).cityListPage_57)),
           _Section(
-            title: '热门城市',
+            title: HomeLocalizations.of(context).cityListPage_59,
             cities: demoCities.take(8).toList(growable: false),
             current: current,
             onSelect: select,
           ),
           _Section(
-            title: '全部城市',
+            title: HomeLocalizations.of(context).cityListPage_65,
             cities: demoCities,
             current: current,
             onSelect: select,
@@ -70,7 +71,7 @@ class CityListPage extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 16, 15, 0),
             child: Text(
-              '演示数据只覆盖上海、北京、杭州、广州、深圳；其余城市会显示空态。',
+              HomeLocalizations.of(context).cityListPage_73,
               style: TextStyle(
                 fontSize: 12,
                 height: 1.5,
@@ -112,18 +113,18 @@ class _LocatedCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  '当前定位：上海',
+                  HomeLocalizations.of(context).cityListPage_115,
                   style: TextStyle(fontSize: 15, color: colors.textPrimary),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '演示环境没有接入定位，这里固定为上海',
+                  HomeLocalizations.of(context).cityListPage_120,
                   style: TextStyle(fontSize: 11, color: colors.textDisabled),
                 ),
               ],
             ),
           ),
-          if (current != '上海')
+          if (current != HomeLocalizations.of(context).cityListPage_126)
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: onUse,
@@ -137,7 +138,7 @@ class _LocatedCard extends StatelessWidget {
                   border: Border.all(color: colors.brand, width: 0.5),
                 ),
                 child: Text(
-                  '使用',
+                  HomeLocalizations.of(context).cityListPage_140,
                   style: TextStyle(fontSize: 12, color: colors.brand),
                 ),
               ),

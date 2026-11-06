@@ -12,6 +12,7 @@ import '../../shared/ui/ps_tag.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_summary.dart';
 import '../../shared/ui/ps_network_images.dart';
+import '../../l10n/goods_localizations.dart';
 
 /// 演出详情（`layout_show_detail.xml`）。
 ///
@@ -41,7 +42,7 @@ class ShowDetailPage extends ConsumerStatefulWidget {
 }
 
 class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
-  static const List<String> _tabs = <String>['简介', '票档', '须知'];
+  List<String> get _tabs => <String>[GoodsLocalizations.of(context).showDetailPage_44, GoodsLocalizations.of(context).showDetailPage_44_2, GoodsLocalizations.of(context).showDetailPage_44_3];
 
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _introKey = GlobalKey();
@@ -81,10 +82,10 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
       return AdaptiveScaffold(
         appBar: const AdaptiveAppBar(title: '演出详情'),
         body: PsEmptyState(
-          title: '演出不存在或已下架',
-          description: '演出编号：${widget.showId}',
+          title: GoodsLocalizations.of(context).showDetailPage_84,
+          description: GoodsLocalizations.of(context).showDetailPage_85(widget.showId),
           icon: LucideIcons.calendarX,
-          actionLabel: '返回首页',
+          actionLabel: GoodsLocalizations.of(context).showDetailPage_87,
           onAction: () => context.go('/'),
         ),
       );
@@ -107,7 +108,7 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
                     topPadding: topPadding,
                     onBack: () => context.pop(),
                     onShare: () => ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('分享面板（演示）')),
+                      SnackBar(content: Text(GoodsLocalizations.of(context).showDetailPage_110)),
                     ),
                   ),
                 ),
@@ -122,7 +123,7 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
                 SliverList(
                   delegate: SliverChildListDelegate(<Widget>[
                     _InfoSection(key: _introKey, show: show),
-                    _GuaranteeBanner(onTap: () => _toast(context, '企划星安心入场保障（演示）')),
+                    _GuaranteeBanner(onTap: () => _toast(context, GoodsLocalizations.of(context).showDetailPage_125)),
                     _TierSection(
                       key: _tiersKey,
                       show: show,
@@ -140,8 +141,8 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
           ),
           _PurchaseBar(
             show: show,
-            onService: () => _toast(context, '客服会话（演示）'),
-            onWish: () => _toast(context, '已加入想看'),
+            onService: () => _toast(context, GoodsLocalizations.of(context).showDetailPage_143),
+            onWish: () => _toast(context, GoodsLocalizations.of(context).showDetailPage_144),
             onBuy: () => _buy(context),
           ),
         ],
@@ -151,7 +152,7 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
 
   void _buy(BuildContext context) {
     if (ref.watch(showByIdProvider(widget.showId))?.soldOut ?? false) {
-      _toast(context, '本场暂时售罄');
+      _toast(context, GoodsLocalizations.of(context).showDetailPage_154);
       return;
     }
     // 详情页 → 选票页 → 确认订单。
@@ -225,7 +226,7 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
                       Row(
                         children: <Widget>[
                           Text(
-                            show.rating > 0 ? show.rating.toStringAsFixed(1) : '暂无评分',
+                            show.rating > 0 ? show.rating.toStringAsFixed(1) : GoodsLocalizations.of(context).showDetailPage_228,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
@@ -235,7 +236,7 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
                           const SizedBox(width: 6),
                           if (show.ratingCount > 0)
                             Text(
-                              '${show.ratingCount} 条评价',
+                              GoodsLocalizations.of(context).showDetailPage_238(show.ratingCount),
                               style: const TextStyle(fontSize: 11, color: Color(0xCCFFFFFF)),
                             ),
                         ],
@@ -261,7 +262,7 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: PsPrice(amount: show.priceFrom, size: 18, suffix: '起'),
+                        child: PsPrice(amount: show.priceFrom, size: 18, suffix: GoodsLocalizations.of(context).showDetailPage_264),
                       ),
                     ],
                   ),
@@ -470,7 +471,7 @@ class _GuaranteeBanner extends StatelessWidget {
               Icon(LucideIcons.badgeCheck, size: 20, color: colors.price),
               const SizedBox(width: 4),
               Text(
-                '企划星安心入场保障',
+                GoodsLocalizations.of(context).showDetailPage_473,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -485,7 +486,7 @@ class _GuaranteeBanner extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  '无票必赔 最高退一赔一',
+                  GoodsLocalizations.of(context).showDetailPage_488,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 12, color: colors.textSecondary),
@@ -516,7 +517,7 @@ class _TierSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '选择票档',
+            GoodsLocalizations.of(context).showDetailPage_519,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -557,7 +558,7 @@ class _TierSection extends StatelessWidget {
                     ),
                     if (tier.soldOut)
                       Text(
-                        '售罄',
+                        GoodsLocalizations.of(context).showDetailPage_560,
                         style: TextStyle(fontSize: 13, color: colors.textDisabled),
                       )
                     else
@@ -587,7 +588,7 @@ class _LineupSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '艺人阵容',
+            GoodsLocalizations.of(context).showDetailPage_590,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -682,7 +683,7 @@ class _NoticeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final notices = show.purchaseNotice.isEmpty
-        ? const <String>['演出票一经售出，除演出取消外不支持退换。', '入场需配合场馆安检，请提前 30 分钟到场。']
+        ? <String>[GoodsLocalizations.of(context).showDetailPage_685, GoodsLocalizations.of(context).showDetailPage_685_2]
         : show.purchaseNotice;
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 24, 15, 0),
@@ -690,7 +691,7 @@ class _NoticeSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '购买须知',
+            GoodsLocalizations.of(context).showDetailPage_693,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -745,7 +746,7 @@ class _ServiceGuaranteeSection extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
-                  '企划星服务保障',
+                  GoodsLocalizations.of(context).showDetailPage_748,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -817,10 +818,10 @@ class _PurchaseBar extends StatelessWidget {
             height: 66,
             child: Row(
               children: <Widget>[
-                _BarAction(icon: LucideIcons.headset, label: '客服', onTap: onService),
+                _BarAction(icon: LucideIcons.headset, label: GoodsLocalizations.of(context).showDetailPage_820, onTap: onService),
                 _BarAction(
                   icon: LucideIcons.heart,
-                  label: '想看',
+                  label: GoodsLocalizations.of(context).showDetailPage_823,
                   color: colors.price,
                   onTap: onWish,
                 ),
@@ -837,7 +838,7 @@ class _PurchaseBar extends StatelessWidget {
                           borderRadius: BorderRadius.circular(25),
                         ),
                         child: Text(
-                          show.soldOut ? '暂时售罄' : '立即购买',
+                          show.soldOut ? GoodsLocalizations.of(context).showDetailPage_840 : GoodsLocalizations.of(context).showDetailPage_840_2,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,

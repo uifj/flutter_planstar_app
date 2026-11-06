@@ -10,6 +10,8 @@ import '../../shared/ui/ps_empty_state.dart';
 import '../../shared/ui/ps_floating_tab_bar.dart';
 import 'application/message_providers.dart';
 import 'domain/message_thread.dart';
+import '../../l10n/message_localizations.dart';
+import '../../l10n/app_localizations.dart';
 
 /// 消息 Tab（`layout_user_message.xml`）。
 ///
@@ -59,18 +61,18 @@ class MessagePage extends ConsumerWidget {
                     onTap: (entry) {
                       controller.markEntryRead(entry.id);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${entry.title}列表（演示）')),
+                        SnackBar(content: Text(MessageLocalizations.of(context).messagePage_62(entry.title))),
                       );
                     },
                   ),
                 ),
                 const SizedBox(height: 15),
                 if (state.isEmpty)
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(top: 24),
                     child: PsEmptyState(
-                      title: '暂无消息',
-                      description: '订单进度、开票提醒都会出现在这里',
+                      title: MessageLocalizations.of(context).messagePage_72,
+                      description: MessageLocalizations.of(context).messagePage_73,
                       icon: LucideIcons.messagesSquare,
                     ),
                   )
@@ -119,16 +121,16 @@ class MessagePage extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('清空消息'),
-        content: const Text('清空后会话记录将不再显示，确定继续吗？'),
+        title: Text(MessageLocalizations.of(context).messagePage_122),
+        content: Text(MessageLocalizations.of(context).messagePage_123),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('取消'),
+            child: Text(AppLocalizations.of(context).actionCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('清空'),
+            child: Text(MessageLocalizations.of(context).messagePage_131),
           ),
         ],
       ),
@@ -157,7 +159,7 @@ class _MessageTopBar extends StatelessWidget {
               children: <Widget>[
                 Center(
                   child: Text(
-                    '消息中心',
+                    MessageLocalizations.of(context).messagePage_160,
                     style: TextStyle(fontSize: 16, color: colors.textPrimary),
                   ),
                 ),
@@ -355,7 +357,7 @@ class _ThreadRow extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                                 child: Text(
-                                  '官方',
+                                  MessageLocalizations.of(context).messagePage_358,
                                   style: TextStyle(
                                     fontSize: 9,
                                     height: 1.1,

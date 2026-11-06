@@ -7,6 +7,8 @@ import '../../app/theme.dart';
 import '../../shared/ui/ps_cell.dart';
 import '../auth/application/auth_providers.dart';
 import 'application/profile_providers.dart';
+import '../../l10n/user_localizations.dart';
+import '../../l10n/app_localizations.dart';
 
 /// 设置页（企划星 `MoreSettingActivity` + `MoreSettingFragment`）。
 ///
@@ -50,40 +52,40 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: const AdaptiveAppBar(title: '设置'),
+      appBar: AdaptiveAppBar(title: UserLocalizations.of(context).settingsPage_53),
       body: ListView(
         padding: const EdgeInsets.only(top: 8, bottom: 32),
         children: <Widget>[
           _Group(
             children: <Widget>[
               PsCell(
-                label: '昵称',
+                label: UserLocalizations.of(context).settingsPage_60,
                 value: profile.nickname,
                 onTap: loggedIn
                     ? () => context.push('/me/edit-profile')
-                    : () => _toast('请先登录'),
+                    : () => _toast(UserLocalizations.of(context).settingsPage_64),
               ),
               PsCell(
-                label: '手机号',
-                value: profile.mobileLabel ?? '未绑定',
-                onTap: () => _toast('换绑手机号需要先验证原手机号'),
+                label: UserLocalizations.of(context).settingsPage_67,
+                value: profile.mobileLabel ?? UserLocalizations.of(context).settingsPage_68,
+                onTap: () => _toast(UserLocalizations.of(context).settingsPage_69),
               ),
               PsCell(
-                label: '意见反馈',
+                label: UserLocalizations.of(context).settingsPage_72,
                 onTap: () => context.push('/feedback'),
               ),
               PsCell(
-                label: '实名认证',
-                value: '未认证',
+                label: UserLocalizations.of(context).settingsPage_76,
+                value: UserLocalizations.of(context).settingsPage_77,
                 showDivider: false,
-                onTap: () => _toast('实名认证属于独立的 id 聚合，本示例未实现'),
+                onTap: () => _toast(UserLocalizations.of(context).settingsPage_79),
               ),
             ],
           ),
           _Group(
             children: <Widget>[
               PsCell(
-                label: '消息通知',
+                label: UserLocalizations.of(context).settingsPage_86,
                 trailing: Switch.adaptive(
                   value: _pushEnabled,
                   activeTrackColor: colors.brand,
@@ -92,7 +94,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 ),
               ),
               PsCell(
-                label: '深色模式',
+                label: UserLocalizations.of(context).settingsPage_95,
                 value: _themeModeLabel(themeMode),
                 // 三态循环：跟随系统 → 亮 → 暗 → 跟随系统。
                 onTap: () => ref.read(themeModeProvider.notifier).set(
@@ -104,28 +106,28 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 ),
               ),
               PsCell(
-                label: '清除缓存',
-                value: '图片与接口缓存',
+                label: UserLocalizations.of(context).settingsPage_107,
+                value: UserLocalizations.of(context).settingsPage_108,
                 showDivider: false,
-                onTap: () => _toast('缓存清理待接入 package:core/cache.dart 的 HttpCacheStore'),
+                onTap: () => _toast(UserLocalizations.of(context).settingsPage_110),
               ),
             ],
           ),
           _Group(
             children: <Widget>[
               PsCell(
-                label: '版本号',
+                label: UserLocalizations.of(context).settingsPage_117,
                 value: _appVersion,
-                onTap: () => _toast('已是最新版本'),
+                onTap: () => _toast(UserLocalizations.of(context).settingsPage_119),
               ),
               PsCell(
-                label: '用户协议',
-                onTap: () => _toast('协议页待接入 WebView（`web` 包 64 个类的等价物）'),
+                label: UserLocalizations.of(context).settingsPage_122,
+                onTap: () => _toast(UserLocalizations.of(context).settingsPage_123),
               ),
               PsCell(
-                label: '隐私政策',
+                label: UserLocalizations.of(context).settingsPage_126,
                 showDivider: false,
-                onTap: () => _toast('隐私政策页待接入 WebView'),
+                onTap: () => _toast(UserLocalizations.of(context).settingsPage_128),
               ),
             ],
           ),
@@ -143,7 +145,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     borderRadius: BorderRadius.circular(AppRadius.lg),
                   ),
                   child: Text(
-                    '退出登录',
+                    UserLocalizations.of(context).userLogout,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -159,25 +161,25 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   }
 
   String _themeModeLabel(ThemeMode mode) => switch (mode) {
-    ThemeMode.system => '跟随系统',
+    ThemeMode.system => UserLocalizations.of(context).settingsPage_162,
     ThemeMode.light => '关闭',
-    ThemeMode.dark => '开启',
+    ThemeMode.dark => UserLocalizations.of(context).settingsPage_164,
   };
 
   Future<void> _confirmLogout() async {
     final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
-        title: const Text('退出登录'),
-        content: const Text('退出后需要重新登录才能查看订单，确定继续吗？'),
+        title: Text(UserLocalizations.of(context).userLogout),
+        content: Text(UserLocalizations.of(context).settingsPage_172),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('取消'),
+            child: Text(AppLocalizations.of(context).actionCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('退出'),
+            child: Text(UserLocalizations.of(context).settingsPage_180),
           ),
         ],
       ),
@@ -185,7 +187,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     if (!(confirmed ?? false)) return;
     await ref.read(authControllerProvider.notifier).logout();
     if (!mounted) return;
-    _toast('已退出登录');
+    _toast(UserLocalizations.of(context).settingsPage_188);
     context.go('/me');
   }
 

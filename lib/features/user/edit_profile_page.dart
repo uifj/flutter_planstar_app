@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 
 import '../auth/application/auth_providers.dart';
 import 'application/profile_providers.dart';
+import '../../l10n/user_localizations.dart';
+import '../../l10n/app_localizations.dart';
 
 /// 编辑资料页（企划星 `EditProfileActivity` + `fragment_edit_profile.xml`）。
 ///
@@ -62,7 +64,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: '编辑资料'),
+      appBar: AdaptiveAppBar(title: UserLocalizations.of(context).editProfilePage_65),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(15, 16, 15, 24),
         child: Column(
@@ -72,7 +74,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             Center(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => _toast(context, '头像上传待接入'),
+                onTap: () => _toast(context, UserLocalizations.of(context).editProfilePage_75),
                 child: Column(
                   children: <Widget>[
                     ClipOval(
@@ -104,7 +106,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '点击更换头像',
+                      UserLocalizations.of(context).editProfilePage_107,
                       style: TextStyle(fontSize: 12, color: colors.textTertiary),
                     ),
                   ],
@@ -113,7 +115,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             ),
             const SizedBox(height: 24),
             // 昵称
-            _Label(text: '昵称'),
+            _Label(text: UserLocalizations.of(context).editProfilePage_116),
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
@@ -137,24 +139,24 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             ),
             const SizedBox(height: 20),
             // 性别
-            _Label(text: '性别'),
+            _Label(text: UserLocalizations.of(context).editProfilePage_140),
             const SizedBox(height: 8),
             Row(
               children: <Widget>[
                 _GenderChip(
-                  label: '保密',
+                  label: UserLocalizations.of(context).editProfilePage_145,
                   selected: _gender == 0,
                   onTap: () => setState(() => _gender = 0),
                 ),
                 const SizedBox(width: 10),
                 _GenderChip(
-                  label: '男',
+                  label: UserLocalizations.of(context).editProfilePage_151,
                   selected: _gender == 1,
                   onTap: () => setState(() => _gender = 1),
                 ),
                 const SizedBox(width: 10),
                 _GenderChip(
-                  label: '女',
+                  label: UserLocalizations.of(context).editProfilePage_157,
                   selected: _gender == 2,
                   onTap: () => setState(() => _gender = 2),
                 ),
@@ -162,7 +164,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             ),
             const SizedBox(height: 20),
             // 个性签名
-            _Label(text: '个性签名'),
+            _Label(text: UserLocalizations.of(context).editProfilePage_165),
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
@@ -177,7 +179,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                 onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: '写点什么介绍自己吧…',
+                  hintText: UserLocalizations.of(context).editProfilePage_180,
                   hintStyle: TextStyle(fontSize: 14, color: colors.textTertiary),
                   counterStyle: TextStyle(
                     fontSize: 11,
@@ -207,8 +209,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     borderRadius: BorderRadius.circular(23),
                   ),
                 ),
-                child: const Text(
-                  '保存',
+                child: Text(
+                  AppLocalizations.of(context).actionSave,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -226,7 +228,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   void _save() {
     // 不实际提交：企划星走 POST v1/user/baseInfo，这里没有真实接口实现。
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('资料已记录（演示模式，未实际提交到服务器）')),
+      SnackBar(content: Text(UserLocalizations.of(context).editProfilePage_229)),
     );
     context.pop();
   }

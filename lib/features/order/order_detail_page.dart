@@ -14,6 +14,8 @@ import '../catalog/domain/show_summary.dart';
 import 'application/order_list_controller.dart';
 import 'domain/domain.dart';
 import 'widgets/payment_channel_sheet.dart';
+import '../../l10n/order_localizations.dart';
+import '../../l10n/app_localizations.dart';
 
 /// 订单详情页（企划星 `MyOrderActivity` 的详情 + `OrderDetailWebFragment` 的原生化）。
 ///
@@ -49,23 +51,23 @@ class OrderDetailPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: const AdaptiveAppBar(title: '订单详情'),
+      appBar: AdaptiveAppBar(title: OrderLocalizations.of(context).orderDetailPage_52),
       body: orderAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (Object error, StackTrace _) => PsEmptyState(
-          title: '订单加载失败',
+          title: OrderLocalizations.of(context).orderDetailPage_56,
           description: '$error',
           icon: LucideIcons.circleAlert,
-          actionLabel: '重试',
+          actionLabel: AppLocalizations.of(context).actionRetry,
           onAction: () => ref.invalidate(orderListProvider),
         ),
         data: (TicketOrder? order) {
           if (order == null) {
             return PsEmptyState(
-              title: '订单不存在',
-              description: '订单可能已被删除，或链接已过期',
+              title: OrderLocalizations.of(context).orderDetailPage_65,
+              description: OrderLocalizations.of(context).orderDetailPage_66,
               icon: LucideIcons.receiptText,
-              actionLabel: '返回订单列表',
+              actionLabel: OrderLocalizations.of(context).orderDetailPage_68,
               onAction: () => context.go('/order'),
             );
           }
@@ -98,19 +100,19 @@ class _OrderDetailBody extends ConsumerWidget {
               if (show != null) _ShowSection(show: show),
               _Card(
                 children: <Widget>[
-                  _SectionTitle(title: '票档'),
+                  _SectionTitle(title: OrderLocalizations.of(context).orderDetailPage_101),
                   for (final OrderLine line in order.lines)
                     _InfoRow(
                       label: line.tierName,
-                      value: '${line.quantity.value} 张 · ${line.subtotal.format()}',
+                      value: OrderLocalizations.of(context).orderDetailPage_105(line.quantity.value, line.subtotal.format()),
                     ),
                   _InfoRow(
-                    label: '取票方式',
+                    label: OrderLocalizations.of(context).orderDetailPage_108,
                     value: order.delivery.describe(),
                   ),
                   if (order.visitors.isNotEmpty) ...<Widget>[
                     const Divider(height: 20),
-                    _SectionTitle(title: '观演人'),
+                    _SectionTitle(title: OrderLocalizations.of(context).orderDetailPage_113),
                     for (final Visitor visitor in order.visitors)
                       _InfoRow(
                         label: visitor.name,
@@ -122,22 +124,22 @@ class _OrderDetailBody extends ConsumerWidget {
               if (order.quote != null)
                 _Card(
                   children: <Widget>[
-                    _SectionTitle(title: '金额明细'),
+                    _SectionTitle(title: OrderLocalizations.of(context).orderDetailPage_125),
                     for (final QuoteLine line in order.quote!.breakdown)
                       _InfoRow(
                         label: line.label,
                         value: line.isDeduction
                             ? '-${line.amount.format()}'
                             : line.amount.format(),
-                        emphasize: line.label == '实付',
+                        emphasize: line.label == OrderLocalizations.of(context).orderDetailPage_133,
                       ),
                   ],
                 ),
               _Card(
                 children: <Widget>[
-                  _SectionTitle(title: '订单信息'),
+                  _SectionTitle(title: OrderLocalizations.of(context).orderDetailPage_139),
                   _InfoRow(
-                    label: '订单号',
+                    label: OrderLocalizations.of(context).orderDetailPage_141,
                     value: order.number.value,
                     trailing: GestureDetector(
                       behavior: HitTestBehavior.opaque,
@@ -146,7 +148,7 @@ class _OrderDetailBody extends ConsumerWidget {
                           ClipboardData(text: order.number.value),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('订单号已复制')),
+                          SnackBar(content: Text(OrderLocalizations.of(context).orderDetailPage_150)),
                         );
                       },
                       child: Padding(
@@ -159,11 +161,11 @@ class _OrderDetailBody extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  _InfoRow(label: '下单时间', value: _formatTime(order.placedAt)),
+                  _InfoRow(label: OrderLocalizations.of(context).orderDetailPage_163, value: _formatTime(order.placedAt)),
                   if (order.paidAt != null)
-                    _InfoRow(label: '支付时间', value: _formatTime(order.paidAt!)),
+                    _InfoRow(label: OrderLocalizations.of(context).orderDetailPage_165, value: _formatTime(order.paidAt!)),
                   if (order.cancelReason != null)
-                    _InfoRow(label: '关闭原因', value: order.cancelReason!),
+                    _InfoRow(label: OrderLocalizations.of(context).orderDetailPage_167, value: order.cancelReason!),
                 ],
               ),
             ],
@@ -195,16 +197,16 @@ class _StatusHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final (String hint, Color tint) = switch (order.status) {
-      OrderStatus.draft => ('订单尚未提交', colors.warning),
+      OrderStatus.draft => (OrderLocalizations.of(context).orderDetailPage_199, colors.warning),
       OrderStatus.awaitingPayment => (
-          '请在 $_deadline 前完成支付，超时订单将自动关闭',
+          OrderLocalizations.of(context).orderDetailPage_201(_deadline),
           colors.warning,
         ),
-      OrderStatus.awaitingTickets => ('已支付，正在为你出票', colors.brand),
-      OrderStatus.ticketsInTransit => ('门票已寄出，请注意查收', colors.brand),
-      OrderStatus.completed => ('订单已完成，欢迎发表观演评价', colors.success),
-      OrderStatus.cancelled => ('订单已关闭，可重新选购', colors.textTertiary),
-      OrderStatus.refunded => ('退款已原路退回', colors.textTertiary),
+      OrderStatus.awaitingTickets => (OrderLocalizations.of(context).orderDetailPage_204, colors.brand),
+      OrderStatus.ticketsInTransit => (OrderLocalizations.of(context).orderDetailPage_205, colors.brand),
+      OrderStatus.completed => (OrderLocalizations.of(context).orderDetailPage_206, colors.success),
+      OrderStatus.cancelled => (OrderLocalizations.of(context).orderDetailPage_207, colors.textTertiary),
+      OrderStatus.refunded => (OrderLocalizations.of(context).orderDetailPage_208, colors.textTertiary),
     };
 
     return Container(
@@ -321,24 +323,24 @@ class _ActionBar extends ConsumerWidget {
     final List<_Action> buttons = switch (order.status) {
       OrderStatus.awaitingPayment => <_Action>[
           _Action(
-            label: '取消订单',
+            label: OrderLocalizations.of(context).orderDetailPage_325,
             onTap: () => _cancel(context, actions),
           ),
           _Action(
-            label: '立即支付',
+            label: OrderLocalizations.of(context).orderDetailPage_329,
             primary: true,
             onTap: () => _pay(context, actions),
           ),
         ],
       OrderStatus.ticketsInTransit => <_Action>[
-          _Action(label: '查看物流', onTap: () => _toast(context, '物流详情待接入快递查询接口')),
+          _Action(label: OrderLocalizations.of(context).orderDetailPage_335, onTap: () => _toast(context, OrderLocalizations.of(context).orderDetailPage_335_2)),
           _Action(
-            label: '确认收货',
+            label: OrderLocalizations.of(context).orderDetailPage_337,
             primary: true,
             onTap: () => _confirmReceipt(context, actions),
           ),
           _Action(
-            label: '申请退款',
+            label: OrderLocalizations.of(context).orderDetailPage_342,
             onTap: () => context.push(
               '/order/refund'
               '?number=${Uri.encodeComponent(order.number.value)}'
@@ -347,25 +349,25 @@ class _ActionBar extends ConsumerWidget {
           ),
         ],
       OrderStatus.completed => <_Action>[
-          _Action(label: '去评价', onTap: () => _toast(context, '评价属于独立的评价聚合，本示例未实现')),
+          _Action(label: OrderLocalizations.of(context).orderDetailPage_351, onTap: () => _toast(context, OrderLocalizations.of(context).orderDetailPage_351_2)),
           _Action(
-            label: '再次购买',
+            label: OrderLocalizations.of(context).orderDetailPage_353,
             primary: true,
             onTap: () => context.push('/order/confirm?showId=${order.showId.value}'),
           ),
         ],
       OrderStatus.draft => <_Action>[
           _Action(
-            label: '继续填写',
+            label: OrderLocalizations.of(context).orderDetailPage_360,
             primary: true,
             onTap: () => context.push('/order/confirm?showId=${order.showId.value}'),
           ),
         ],
       OrderStatus.awaitingTickets => <_Action>[
-          _Action(label: '联系客服', onTap: () => _toast(context, '客服会话（演示）')),
-          _Action(label: '查看票夹', onTap: () => _toast(context, '电子票面待接入出票接口')),
+          _Action(label: OrderLocalizations.of(context).orderDetailPage_366, onTap: () => _toast(context, OrderLocalizations.of(context).orderDetailPage_366_2)),
+          _Action(label: OrderLocalizations.of(context).orderDetailPage_367, onTap: () => _toast(context, OrderLocalizations.of(context).orderDetailPage_367_2)),
           _Action(
-            label: '申请退款',
+            label: OrderLocalizations.of(context).orderDetailPage_369,
             onTap: () => context.push(
               '/order/refund'
               '?number=${Uri.encodeComponent(order.number.value)}'
@@ -375,7 +377,7 @@ class _ActionBar extends ConsumerWidget {
         ],
       OrderStatus.cancelled || OrderStatus.refunded => <_Action>[
           _Action(
-            label: '重新选购',
+            label: OrderLocalizations.of(context).orderDetailPage_379,
             primary: true,
             onTap: () => context.push('/order/confirm?showId=${order.showId.value}'),
           ),
@@ -433,31 +435,34 @@ class _ActionBar extends ConsumerWidget {
     if (channel == null) return;
     final String? error = await actions.pay(order, channel);
     if (!context.mounted) return;
-    _toast(context, error ?? '支付成功，等待出票');
+    _toast(context, error ?? OrderLocalizations.of(context).orderDetailPage_437);
   }
 
   Future<void> _cancel(BuildContext context, OrderActions actions) async {
     final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
-        title: const Text('取消订单'),
-        content: const Text('取消后需要重新下单，确定继续吗？'),
+        title: Text(OrderLocalizations.of(context).orderDetailPage_444),
+        content: Text(OrderLocalizations.of(context).orderDetailPage_445),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('再想想'),
+            child: Text(OrderLocalizations.of(context).orderDetailPage_449),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('取消订单'),
+            child: Text(OrderLocalizations.of(context).orderDetailPage_453),
           ),
         ],
       ),
     );
-    if (!(confirmed ?? false)) return;
-    final String? error = await actions.cancel(order, '用户主动取消');
     if (!context.mounted) return;
-    _toast(context, error ?? '订单已取消');
+    if (!(confirmed ?? false)) return;
+    final String reason =
+        OrderLocalizations.of(context).orderDetailPage_459;
+    final String? error = await actions.cancel(order, reason);
+    if (!context.mounted) return;
+    _toast(context, error ?? OrderLocalizations.of(context).orderDetailPage_461);
   }
 
   Future<void> _confirmReceipt(
@@ -466,7 +471,7 @@ class _ActionBar extends ConsumerWidget {
   ) async {
     final String? error = await actions.confirmReceipt(order);
     if (!context.mounted) return;
-    _toast(context, error ?? '已确认收货');
+    _toast(context, error ?? OrderLocalizations.of(context).orderDetailPage_470);
   }
 
   static void _toast(BuildContext context, String message) {

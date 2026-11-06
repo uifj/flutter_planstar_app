@@ -8,6 +8,7 @@ import '../../../shared/ui/ps_price.dart';
 import '../../../shared/ui/ps_tag.dart';
 import '../../catalog/domain/show_summary.dart';
 import '../domain/domain.dart';
+import '../../../l10n/order_localizations.dart';
 
 /// 订单卡片（`item_order_ticket.xml`）。
 ///
@@ -49,8 +50,8 @@ class OrderListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final title = show?.title ?? '演出 ${order.showId.value}';
-    final sessionLabel = show?.firstSessionLabel ?? '场次待确认';
+    final title = show?.title ?? OrderLocalizations.of(context).orderListCard_52(order.showId.value);
+    final sessionLabel = show?.firstSessionLabel ?? OrderLocalizations.of(context).orderListCard_53;
     final payable = order.quote?.paymentAmount;
 
     return GestureDetector(
@@ -75,7 +76,7 @@ class OrderListCard extends StatelessWidget {
                 ),
                 if (order.buyType == BuyType.proxy) ...<Widget>[
                   const SizedBox(width: 8),
-                  const PsTag(label: '代购', tone: PsTagTone.outline, fontSize: 10),
+                  PsTag(label: OrderLocalizations.of(context).orderListCard_78, tone: PsTagTone.outline, fontSize: 10),
                 ],
                 const Spacer(),
                 Text(
@@ -127,7 +128,7 @@ class OrderListCard extends StatelessWidget {
                         ),
                       if (order.visitors.isNotEmpty)
                         Text(
-                          '观演人 ${order.visitors.map((v) => v.name).join('、')}',
+                          OrderLocalizations.of(context).orderListCard_130(order.visitors.map((v) => v.name).join('、')),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -138,7 +139,7 @@ class OrderListCard extends StatelessWidget {
                         ),
                       const SizedBox(height: 2),
                       Text(
-                        '订单号 ${order.number.value}',
+                        OrderLocalizations.of(context).orderListCard_141(order.number.value),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 11, color: colors.textDisabled),
@@ -181,7 +182,7 @@ class OrderListCard extends StatelessWidget {
                       children: <Widget>[
                         Flexible(
                           child: Text(
-                            '共 ${order.totalTickets.value} 张  实付',
+                            OrderLocalizations.of(context).orderListCard_184(order.totalTickets.value),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 12, color: colors.textTertiary),
@@ -214,40 +215,40 @@ class OrderListCard extends StatelessWidget {
       case OrderStatus.draft:
       case OrderStatus.awaitingPayment:
         return <Widget>[
-          if (onCancel != null) _OrderButton(label: '取消订单', onTap: onCancel),
+          if (onCancel != null) _OrderButton(label: OrderLocalizations.of(context).orderListCard_217, onTap: onCancel),
           if (onPay != null) ...<Widget>[
             const SizedBox(width: 8),
-            _OrderButton(label: '去支付', primary: true, onTap: onPay),
+            _OrderButton(label: OrderLocalizations.of(context).orderListCard_220, primary: true, onTap: onPay),
           ],
         ];
       case OrderStatus.awaitingTickets:
         return <Widget>[
-          if (onContactService != null) _OrderButton(label: '联系客服', onTap: onContactService),
+          if (onContactService != null) _OrderButton(label: OrderLocalizations.of(context).orderListCard_225, onTap: onContactService),
           if (onCancel != null) ...<Widget>[
             const SizedBox(width: 8),
-            _OrderButton(label: '申请退款', onTap: onCancel),
+            _OrderButton(label: OrderLocalizations.of(context).orderListCard_228, onTap: onCancel),
           ],
         ];
       case OrderStatus.ticketsInTransit:
         return <Widget>[
-          if (onContactService != null) _OrderButton(label: '查看物流', onTap: onContactService),
+          if (onContactService != null) _OrderButton(label: OrderLocalizations.of(context).orderListCard_233, onTap: onContactService),
           if (onConfirmReceipt != null) ...<Widget>[
             const SizedBox(width: 8),
-            _OrderButton(label: '确认收货', primary: true, onTap: onConfirmReceipt),
+            _OrderButton(label: OrderLocalizations.of(context).orderListCard_236, primary: true, onTap: onConfirmReceipt),
           ],
         ];
       case OrderStatus.completed:
         return <Widget>[
-          if (onBuyAgain != null) _OrderButton(label: '再次购买', onTap: onBuyAgain),
+          if (onBuyAgain != null) _OrderButton(label: OrderLocalizations.of(context).orderListCard_241, onTap: onBuyAgain),
           if (onReview != null) ...<Widget>[
             const SizedBox(width: 8),
-            _OrderButton(label: '去评价', primary: true, onTap: onReview),
+            _OrderButton(label: OrderLocalizations.of(context).orderListCard_244, primary: true, onTap: onReview),
           ],
         ];
       case OrderStatus.cancelled:
       case OrderStatus.refunded:
         return <Widget>[
-          if (onBuyAgain != null) _OrderButton(label: '再次购买', onTap: onBuyAgain),
+          if (onBuyAgain != null) _OrderButton(label: OrderLocalizations.of(context).orderListCard_250, onTap: onBuyAgain),
         ];
     }
   }
@@ -295,14 +296,14 @@ class _PaymentCountdownState extends State<_PaymentCountdown> {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     if (_left == Duration.zero) {
       return Text(
-        '支付已超时，请重新下单',
+        OrderLocalizations.of(context).orderListCard_298,
         style: TextStyle(fontSize: 11, color: colors.textDisabled),
       );
     }
     final minutes = _left.inMinutes.toString().padLeft(2, '0');
     final seconds = (_left.inSeconds % 60).toString().padLeft(2, '0');
     return Text(
-      '剩余支付时间 $minutes:$seconds',
+      OrderLocalizations.of(context).orderListCard_305(minutes, seconds),
       style: TextStyle(fontSize: 11, color: colors.price),
     );
   }

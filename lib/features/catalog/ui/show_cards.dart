@@ -5,6 +5,7 @@ import '../../../shared/ui/ps_poster.dart';
 import '../../../shared/ui/ps_price.dart';
 import '../../../shared/ui/ps_tag.dart';
 import '../domain/show_summary.dart';
+import '../../../l10n/catalog_localizations.dart';
 
 /// 精选卡片（`item_home_choiceness.xml`）。
 ///
@@ -69,10 +70,10 @@ class ShowCardChoiceness extends StatelessWidget {
                 Expanded(
                   child: show.soldOut
                       ? Text(
-                          '暂时售罄',
+                          CatalogLocalizations.of(context).showCards_72,
                           style: TextStyle(fontSize: 11, color: colors.textTertiary),
                         )
-                      : PsPrice(amount: show.priceFrom, size: 16, suffix: '起'),
+                      : PsPrice(amount: show.priceFrom, size: 16, suffix: CatalogLocalizations.of(context).showCards_75),
                 ),
                 if (show.tags.isNotEmpty)
                   Flexible(
@@ -153,7 +154,7 @@ class ShowCardFloor extends StatelessWidget {
             const SizedBox(height: 4),
             if (show.soldOut)
               Text(
-                '暂时售罄',
+                CatalogLocalizations.of(context).showCards_156,
                 style: TextStyle(fontSize: 11, color: colors.textTertiary),
               )
             else
@@ -172,7 +173,7 @@ class ShowCardFloor extends StatelessWidget {
                     PsPrice(amount: show.priceFrom, size: 12),
                     if (show.discountLabel != null) ...<Widget>[
                       const SizedBox(width: 2),
-                      PsDiscountTag(label: '${show.discountLabel!}起'),
+                      PsDiscountTag(label: CatalogLocalizations.of(context).showCards_175(show.discountLabel!)),
                     ],
                   ],
                 ),
@@ -267,14 +268,14 @@ class ShowCardRow extends StatelessWidget {
                       children: <Widget>[
                         if (show.soldOut)
                           Text(
-                            '暂时售罄',
+                            CatalogLocalizations.of(context).showCards_270,
                             style: TextStyle(fontSize: 13, color: colors.textTertiary),
                           )
                         else
                           PsPrice(
                             amount: show.priceFrom,
                             size: 17,
-                            suffix: '起',
+                            suffix: CatalogLocalizations.of(context).showCards_277,
                             strikeThroughAmount: show.listPriceFrom,
                           ),
                         const Spacer(),

@@ -10,6 +10,7 @@ import '../../../shared/ui/ps_price.dart';
 import '../domain/domain.dart';
 import 'pay_info.dart';
 import 'pay_providers.dart';
+import '../../../l10n/order_localizations.dart';
 
 /// 支付页（企划星 `PayActivity`）。
 ///
@@ -74,7 +75,7 @@ class PayPage extends ConsumerWidget {
       canPop: state.status != PayStatus.requesting && state.status != PayStatus.paying,
       child: AdaptiveScaffold(
         backgroundColor: colors.bgPage,
-        appBar: AdaptiveAppBar(title: '收银台'),
+        appBar: AdaptiveAppBar(title: OrderLocalizations.of(context).payPage_77),
         body: _PayBody(
           state: state,
           arg: arg,
@@ -130,7 +131,7 @@ class _PayBody extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  '演示环境：支付不会真实扣款，点击确认后模拟支付流程',
+                  OrderLocalizations.of(context).payPage_133,
                   style: TextStyle(fontSize: 12, height: 1.5, color: colors.textDisabled),
                 ),
               ),
@@ -163,7 +164,7 @@ class _PayBody extends ConsumerWidget {
         );
       case PayCancelled():
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('支付已取消')),
+          SnackBar(content: Text(OrderLocalizations.of(context).payPage_166)),
         );
     }
   }
@@ -192,7 +193,7 @@ class _CountdownBar extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            '请在 ${PayController.formatCountdown(seconds)} 内完成支付',
+            OrderLocalizations.of(context).payPage_195(PayController.formatCountdown(seconds)),
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
@@ -256,7 +257,7 @@ class _OrderCard extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                '应付金额',
+                OrderLocalizations.of(context).payPage_259,
                 style: TextStyle(fontSize: 14, color: colors.textSecondary),
               ),
               const Spacer(),
@@ -298,7 +299,7 @@ class _ChannelSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
             child: Text(
-              '选择支付方式',
+              OrderLocalizations.of(context).payPage_301,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
@@ -433,11 +434,11 @@ class _PayButton extends StatelessWidget {
 
     String label;
     if (state.status == PayStatus.requesting) {
-      label = '请求中…';
+      label = OrderLocalizations.of(context).payPage_436;
     } else if (state.status == PayStatus.paying) {
-      label = '支付中…';
+      label = OrderLocalizations.of(context).payPage_438;
     } else {
-      label = '确认支付 ${state.info.payAmount.format()}';
+      label = OrderLocalizations.of(context).payPage_440(state.info.payAmount.format());
     }
 
     return Container(

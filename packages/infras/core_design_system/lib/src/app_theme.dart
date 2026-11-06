@@ -1,4 +1,7 @@
 /// L2 装配：把 L0 色板与 L1 语义槽组装成 `ThemeData`。
+///
+/// 组件样式向 TUIKit（`atomic-x`）靠拢：直角卡片、8/20 圆角按钮、
+/// 无阴影、灰底输入框、细描边。
 library;
 
 import 'package:flutter/material.dart';
@@ -24,19 +27,21 @@ abstract final class AppTheme {
   static ThemeData dark() => _build(AppColors.dark, Brightness.dark);
 
   static ThemeData _build(AppColors colors, Brightness brightness) {
-    // 刻意**不用** `ColorScheme.fromSeed`：它会把品牌色变成一整套 Material
-    // 派生的色调（primary 会被调成更"协调"的值），企划星的品牌红就会失真。
-    // 这里显式给出 ColorScheme，只让 Material 组件拿到必要的槽位。
+    // 刻意**不用** `ColorScheme.fromSeed`：它会把品牌色派生成一套
+    // "更协调"的色调，TUIKit 的蓝会失真。这里显式给出 ColorScheme。
     final scheme = ColorScheme(
       brightness: brightness,
       primary: colors.brand,
       onPrimary: colors.onBrand,
-      secondary: colors.brandPressed,
+      secondary: colors.info,
       onSecondary: colors.onBrand,
       error: colors.error,
-      onError: const Color(0xFFFFFFFF),
+      onError: colors.onBrand,
       surface: colors.bgCard,
       onSurface: colors.textPrimary,
+      surfaceContainerHighest: colors.bgSubtle,
+      outline: colors.border,
+      outlineVariant: colors.divider,
     );
 
     final textTheme = _textTheme(colors);
@@ -48,13 +53,19 @@ abstract final class AppTheme {
       scaffoldBackgroundColor: colors.bgPage,
       canvasColor: colors.bgCard,
       dividerColor: colors.divider,
-      fontFamily: null, // 全量使用系统字体（品牌字体 DIN 已移除）
+      fontFamily: null, // 系统字体
       textTheme: textTheme,
+      iconTheme: IconThemeData(color: colors.textPrimary),
+      primaryIconTheme: IconThemeData(color: colors.onBrand),
+      disabledColor: colors.textDisabled,
+      hintColor: colors.textTertiary,
+      splashFactory: InkSparkle.splashFactory,
       appBarTheme: AppBarTheme(
-        backgroundColor: colors.bgCard,
+        // TUIKit 顶栏与页面同底，靠分隔线分层。
+        backgroundColor: colors.bgPage,
         foregroundColor: colors.textPrimary,
         elevation: 0,
-        scrolledUnderElevation: 0.5,
+        scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
           fontSize: AppTypography.subtitle,
@@ -74,7 +85,7 @@ abstract final class AppTheme {
         elevation: 0,
         labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
           (Set<WidgetState> states) => TextStyle(
-            fontSize: AppTypography.micro,
+            fontSize: AppTypography.label,
             fontWeight: states.contains(WidgetState.selected)
                 ? AppTypography.medium
                 : AppTypography.regular,
@@ -97,13 +108,102 @@ abstract final class AppTheme {
           backgroundColor: colors.brand,
           foregroundColor: colors.onBrand,
           disabledBackgroundColor: colors.brandDisabled,
+          disabledForegroundColor: colors.textDisabled,
           minimumSize: const Size.fromHeight(44),
+          // TUIKit 主按钮是药丸（superLargeRadius = 20）。
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.xl),
+          ),
+          textStyle: TextStyle(
+            fontSize: AppTypography.body,
+            fontWeight: AppTypography.medium,
+          ),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: colors.brand,
+          disabledForegroundColor: colors.textDisabled,
+          minimumSize: const Size.fromHeight(44),
+          side: BorderSide(color: colors.border),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
           textStyle: TextStyle(
             fontSize: AppTypography.body,
             fontWeight: AppTypography.medium,
+          ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: colors.brand,
+          disabledForegroundColor: colors.textDisabled,
+          textStyle: TextStyle(
+            fontSize: AppTypography.body,
+            fontWeight: AppTypography.medium,
+          ),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: colors.bgSubtle,
+        hintStyle: TextStyle(
+          fontSize: AppTypography.body,
+          color: colors.textTertiary,
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          borderSide: BorderSide(color: colors.brand),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          borderSide: BorderSide(color: colors.error),
+        ),
+      ),
+      cardTheme: CardThemeData(
+        color: colors.bgCard,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+        ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: colors.bgCard,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+        ),
+        titleTextStyle: TextStyle(
+          fontSize: AppTypography.subtitle,
+          fontWeight: AppTypography.medium,
+          color: colors.textPrimary,
+        ),
+        contentTextStyle: TextStyle(
+          fontSize: AppTypography.body,
+          color: colors.textSecondary,
+        ),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: colors.bgCard,
+        surfaceTintColor: Colors.transparent,
+        modalBackgroundColor: colors.bgCard,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.xl),
           ),
         ),
       ),
@@ -114,8 +214,69 @@ abstract final class AppTheme {
           color: colors.onBrand,
         ),
         behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+        ),
       ),
-      splashFactory: InkSparkle.splashFactory,
+      popupMenuTheme: PopupMenuThemeData(
+        color: colors.bgCard,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+        ),
+        textStyle: TextStyle(
+          fontSize: AppTypography.body,
+          color: colors.textPrimary,
+        ),
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.resolveWith<Color>(
+          (Set<WidgetState> states) => states.contains(WidgetState.selected)
+              ? colors.brand
+              : colors.bgSubtle,
+        ),
+        checkColor: WidgetStatePropertyAll<Color>(colors.onBrand),
+        side: BorderSide(color: colors.border),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.xs),
+        ),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith<Color>(
+          (Set<WidgetState> states) => states.contains(WidgetState.selected)
+              ? colors.onBrand
+              : colors.bgCard,
+        ),
+        trackColor: WidgetStateProperty.resolveWith<Color>(
+          (Set<WidgetState> states) => states.contains(WidgetState.selected)
+              ? colors.brand
+              : colors.border,
+        ),
+      ),
+      sliderTheme: SliderThemeData(
+        activeTrackColor: colors.brand,
+        inactiveTrackColor: colors.border,
+        thumbColor: colors.onBrand,
+      ),
+      tabBarTheme: TabBarThemeData(
+        labelColor: colors.tabActive,
+        unselectedLabelColor: colors.tabInactive,
+        indicatorColor: colors.brand,
+        dividerColor: colors.divider,
+        labelStyle: TextStyle(
+          fontSize: AppTypography.body,
+          fontWeight: AppTypography.medium,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: AppTypography.body,
+          fontWeight: AppTypography.regular,
+        ),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: colors.brand,
+        linearTrackColor: colors.border,
+        circularTrackColor: colors.border,
+      ),
     );
   }
 

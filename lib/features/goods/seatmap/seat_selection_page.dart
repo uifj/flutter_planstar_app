@@ -9,6 +9,7 @@ import '../../../shared/ui/ps_price.dart';
 import 'seat_map.dart';
 import 'seat_map_view.dart';
 import 'seat_selection_providers.dart';
+import '../../../l10n/goods_localizations.dart';
 
 /// 选座页（企划星 `SelectTicketSeatMapActivity` / `ChooseTicketSeatTableFragment`）。
 ///
@@ -42,7 +43,7 @@ class SeatSelectionPage extends ConsumerWidget {
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
       appBar: AdaptiveAppBar(
-        title: '选座',
+        title: GoodsLocalizations.of(context).seatSelectionPage_45,
         subtitle: state.mapData.venueName,
       ),
       body: Column(
@@ -88,7 +89,7 @@ class SeatSelectionPage extends ConsumerWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    '已选 ${state.count} 个座位，总价 ${state.totalPrice.format()}',
+                    GoodsLocalizations.of(context).seatSelectionPage_91(state.count, state.totalPrice.format()),
                   ),
                 ),
               );
@@ -113,13 +114,13 @@ class _LegendBar extends StatelessWidget {
       color: colors.bgCard,
       child: Row(
         children: <Widget>[
-          _LegendDot(color: colors.bgSubtle, label: '可选'),
+          _LegendDot(color: colors.bgSubtle, label: GoodsLocalizations.of(context).seatSelectionPage_116),
           const SizedBox(width: 12),
-          _LegendDot(color: colors.brand, label: '已选'),
+          _LegendDot(color: colors.brand, label: GoodsLocalizations.of(context).seatSelectionPage_118),
           const SizedBox(width: 12),
-          _LegendDot(color: colors.textDisabled.withValues(alpha: 0.3), label: '已售'),
+          _LegendDot(color: colors.textDisabled.withValues(alpha: 0.3), label: GoodsLocalizations.of(context).seatSelectionPage_120),
           const SizedBox(width: 12),
-          _LegendDot(color: const Color(0xFFFFB238), label: '锁定'),
+          _LegendDot(color: const Color(0xFFFFB238), label: GoodsLocalizations.of(context).seatSelectionPage_122),
         ],
       ),
     );
@@ -188,7 +189,7 @@ class _SelectedSeatsBar extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                '已选 ${seats.length}/${SeatSelectionState.maxSeats} 座',
+                GoodsLocalizations.of(context).seatSelectionPage_191(seats.length, SeatSelectionState.maxSeats),
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -199,7 +200,7 @@ class _SelectedSeatsBar extends StatelessWidget {
               GestureDetector(
                 onTap: onClear,
                 child: Text(
-                  '清空',
+                  GoodsLocalizations.of(context).seatSelectionPage_202,
                   style: TextStyle(fontSize: 12, color: colors.textTertiary),
                 ),
               ),
@@ -223,7 +224,7 @@ class _SelectedSeatsBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          '${seat.areaName ?? ''} ${seat.row}排${seat.col}座',
+                          GoodsLocalizations.of(context).seatSelectionPage_226(seat.areaName ?? '', seat.row, seat.col),
                           style: TextStyle(fontSize: 11, color: colors.brand),
                         ),
                         const SizedBox(width: 4),
@@ -270,14 +271,14 @@ class _ConfirmBar extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
-                  '已选 ${state.count} 座',
+                  GoodsLocalizations.of(context).seatSelectionPage_273(state.count),
                   style: TextStyle(fontSize: 12, color: colors.textTertiary),
                 ),
                 if (state.count > 0)
                   Row(
                     children: <Widget>[
                       Text(
-                        '合计 ',
+                        GoodsLocalizations.of(context).seatSelectionPage_280,
                         style: TextStyle(fontSize: 13, color: colors.textSecondary),
                       ),
                       PsPrice(amount: state.totalPrice, size: 18),
@@ -285,7 +286,7 @@ class _ConfirmBar extends StatelessWidget {
                   )
                 else
                   Text(
-                    '请选择座位',
+                    GoodsLocalizations.of(context).seatSelectionPage_288,
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: colors.textPrimary),
                   ),
               ],
@@ -303,7 +304,7 @@ class _ConfirmBar extends StatelessWidget {
                 ),
               ),
               child: Text(
-                canConfirm ? '确认选座' : '请先选座',
+                canConfirm ? GoodsLocalizations.of(context).seatSelectionPage_306 : GoodsLocalizations.of(context).seatSelectionPage_306_2,
                 style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               ),
             ),

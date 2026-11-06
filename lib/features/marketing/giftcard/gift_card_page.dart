@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../shared/ui/ps_empty_state.dart';
 import 'gift_card.dart';
 import 'gift_card_providers.dart';
+import '../../../l10n/marketing_localizations.dart';
 
 /// 礼品卡列表页。
 ///
@@ -27,26 +28,26 @@ class GiftCardPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
-        title: '礼品卡',
+        title: MarketingLocalizations.of(context).giftCardPage_30,
         actions: <AdaptiveAppBarAction>[
           AdaptiveAppBarAction(
             icon: LucideIcons.plus,
-            label: '绑定',
+            label: MarketingLocalizations.of(context).giftCardPage_34,
             onPressed: () => context.push('/giftcards/add'),
           ),
         ],
       ),
       body: activeCards.isEmpty && inactiveCards.isEmpty
-          ? const PsEmptyState(
-              title: '暂无礼品卡',
-              description: '绑定礼品卡后可在此查看和使用',
+          ? PsEmptyState(
+              title: MarketingLocalizations.of(context).giftCardPage_41,
+              description: MarketingLocalizations.of(context).giftCardPage_42,
               icon: LucideIcons.gift,
             )
           : ListView(
               children: <Widget>[
                 if (activeCards.isNotEmpty) ...<Widget>[
                   _SectionHeader(
-                    title: '可用礼品卡',
+                    title: MarketingLocalizations.of(context).giftCardPage_49,
                     count: activeCards.length,
                   ),
                   for (final card in activeCards) _GiftCardItem(card: card),
@@ -54,7 +55,7 @@ class GiftCardPage extends ConsumerWidget {
                 ],
                 if (inactiveCards.isNotEmpty) ...<Widget>[
                   _SectionHeader(
-                    title: '不可用礼品卡',
+                    title: MarketingLocalizations.of(context).giftCardPage_57,
                     count: inactiveCards.length,
                   ),
                   for (final card in inactiveCards) _GiftCardItem(card: card),
@@ -155,7 +156,7 @@ class _GiftCardItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '面值',
+                  MarketingLocalizations.of(context).giftCardPage_158,
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.white.withValues(alpha: 0.8),
@@ -193,7 +194,7 @@ class _GiftCardItem extends StatelessWidget {
                   Row(
                     children: <Widget>[
                       Text(
-                        '余额 ',
+                        MarketingLocalizations.of(context).giftCardPage_196,
                         style: TextStyle(
                           fontSize: 12,
                           color: colors.textTertiary,
@@ -221,7 +222,7 @@ class _GiftCardItem extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            '即将过期',
+                            MarketingLocalizations.of(context).giftCardPage_224,
                             style: TextStyle(
                               fontSize: 10,
                               color: colors.warning,

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../shared/ui/ps_empty_state.dart';
 import 'group_buy.dart';
 import 'group_buy_providers.dart';
+import '../../l10n/group_buy_localizations.dart';
 
 /// 拼团列表页。
 ///
@@ -25,11 +26,11 @@ class GroupBuyPage extends ConsumerWidget {
     final list = ref.watch(groupBuyListProvider);
 
     return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: '超低价拼团'),
+      appBar: AdaptiveAppBar(title: GroupBuyLocalizations.of(context).groupBuyPage_28),
       body: list.isEmpty
-          ? const PsEmptyState(
-              title: '暂无拼团活动',
-              description: '拼团活动上线后会显示在这里',
+          ? PsEmptyState(
+              title: GroupBuyLocalizations.of(context).groupBuyPage_31,
+              description: GroupBuyLocalizations.of(context).groupBuyPage_32,
               icon: LucideIcons.users,
             )
           : ListView(
@@ -147,7 +148,7 @@ class _GroupBuyCard extends StatelessWidget {
                     textBaseline: TextBaseline.alphabetic,
                     children: <Widget>[
                       Text(
-                        '拼团价 ',
+                        GroupBuyLocalizations.of(context).groupBuyPage_150,
                         style: TextStyle(
                           fontSize: 11,
                           color: colors.textTertiary,
@@ -207,7 +208,7 @@ class _GroupBuyCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '${group.currentMembers}/${group.succeedNum}人',
+                          GroupBuyLocalizations.of(context).groupBuyPage_210(group.currentMembers, group.succeedNum),
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,

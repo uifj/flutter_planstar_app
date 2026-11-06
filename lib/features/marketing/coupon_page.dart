@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../shared/ui/ps_empty_state.dart';
 import 'coupon.dart';
 import 'coupon_providers.dart';
+import '../../l10n/marketing_localizations.dart';
 
 /// 我的优惠券页面。
 ///
@@ -27,11 +28,11 @@ class CouponPage extends ConsumerWidget {
       length: 3,
       child: AdaptiveScaffold(
         appBar: AdaptiveAppBar(
-          title: '我的优惠券',
+          title: MarketingLocalizations.of(context).couponPage_30,
           actions: <AdaptiveAppBarAction>[
             AdaptiveAppBarAction(
               icon: LucideIcons.circlePlus,
-              label: '兑换',
+              label: MarketingLocalizations.of(context).couponPage_34,
               onPressed: () => context.push('/coupons/exchange'),
             ),
           ],
@@ -94,17 +95,17 @@ class _CouponList extends ConsumerWidget {
     if (coupons.isEmpty) {
       return PsEmptyState(
         title: switch (tab) {
-          CouponTab.usable => '暂无可用优惠券',
-          CouponTab.used => '暂无已使用记录',
-          CouponTab.expired => '暂无过期优惠券',
+          CouponTab.usable => MarketingLocalizations.of(context).couponPage_97,
+          CouponTab.used => MarketingLocalizations.of(context).couponPage_98,
+          CouponTab.expired => MarketingLocalizations.of(context).couponPage_99,
         },
         description: switch (tab) {
-          CouponTab.usable => '去首页领取更多优惠',
-          CouponTab.used => '已使用的券会显示在这里',
-          CouponTab.expired => '过期的券会显示在这里',
+          CouponTab.usable => MarketingLocalizations.of(context).couponPage_102,
+          CouponTab.used => MarketingLocalizations.of(context).couponPage_103,
+          CouponTab.expired => MarketingLocalizations.of(context).couponPage_104,
         },
         icon: LucideIcons.ticket,
-        actionLabel: tab == CouponTab.usable ? '去逛逛' : null,
+        actionLabel: tab == CouponTab.usable ? MarketingLocalizations.of(context).couponPage_107 : null,
         onAction: tab == CouponTab.usable ? () => context.go('/') : null,
       );
     }
@@ -205,7 +206,7 @@ class _CouponCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(2),
                           ),
                           child: Text(
-                            '仅剩${coupon.daysUntilExpiry}天',
+                            MarketingLocalizations.of(context).couponPage_208(coupon.daysUntilExpiry),
                             style: TextStyle(
                               fontSize: 10,
                               color: colors.warning,
@@ -287,7 +288,7 @@ class _AmountSection extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '折',
+                  MarketingLocalizations.of(context).couponPage_290,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -299,7 +300,7 @@ class _AmountSection extends StatelessWidget {
           ],
           const SizedBox(height: 4),
           Text(
-            '抵扣',
+            MarketingLocalizations.of(context).couponPage_302,
             style: TextStyle(
               fontSize: 10,
               color: accentColor.withValues(alpha: 0.7),

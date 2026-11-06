@@ -3,6 +3,7 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../l10n/user_localizations.dart';
 
 /// 意见反馈页（企划星 `FeedbackActivity` + `fragment_feedback.xml`）。
 ///
@@ -28,12 +29,12 @@ class FeedbackPage extends ConsumerStatefulWidget {
 }
 
 class _FeedbackPageState extends ConsumerState<FeedbackPage> {
-  static const List<String> _categories = <String>[
-    '功能建议',
-    '演出问题',
-    '支付问题',
-    '购票体验',
-    '其他',
+  List<String> get _categories => <String>[
+    UserLocalizations.of(context).feedbackPage_32,
+    UserLocalizations.of(context).feedbackPage_33,
+    UserLocalizations.of(context).feedbackPage_34,
+    UserLocalizations.of(context).feedbackPage_35,
+    UserLocalizations.of(context).feedbackPage_36,
   ];
 
   int _selectedCategory = 0;
@@ -55,7 +56,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: '意见反馈'),
+      appBar: AdaptiveAppBar(title: UserLocalizations.of(context).feedbackPage_58),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(15, 16, 15, 24),
         child: Column(
@@ -63,7 +64,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
           children: <Widget>[
             // 反馈类型
             Text(
-              '反馈类型',
+              UserLocalizations.of(context).feedbackPage_66,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -111,7 +112,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             const SizedBox(height: 24),
             // 反馈内容
             Text(
-              '反馈内容',
+              UserLocalizations.of(context).feedbackPage_114,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -120,7 +121,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             ),
             const SizedBox(height: 6),
             Text(
-              '请至少填写 10 个字，以便我们更好地理解您的问题',
+              UserLocalizations.of(context).feedbackPage_123,
               style: TextStyle(fontSize: 12, color: colors.textTertiary),
             ),
             const SizedBox(height: 8),
@@ -137,7 +138,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
                 onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: '请描述您遇到的问题或建议…',
+                  hintText: UserLocalizations.of(context).feedbackPage_140,
                   hintStyle: TextStyle(
                     fontSize: 14,
                     color: colors.textTertiary,
@@ -157,7 +158,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             const SizedBox(height: 24),
             // 联系方式
             Text(
-              '联系方式（选填）',
+              UserLocalizations.of(context).feedbackPage_160,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -166,7 +167,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
             ),
             const SizedBox(height: 6),
             Text(
-              '留下手机号或邮箱，方便我们与您联系',
+              UserLocalizations.of(context).feedbackPage_169,
               style: TextStyle(fontSize: 12, color: colors.textTertiary),
             ),
             const SizedBox(height: 8),
@@ -181,7 +182,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: '手机号 / 邮箱',
+                  hintText: UserLocalizations.of(context).feedbackPage_184,
                   hintStyle: TextStyle(
                     fontSize: 14,
                     color: colors.textTertiary,
@@ -208,7 +209,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
                   ),
                 ),
                 child: Text(
-                  '提交反馈',
+                  UserLocalizations.of(context).feedbackPage_211,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -226,8 +227,8 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
   void _submit() {
     // 不实际提交：企划星走 POST v1/feedback，这里没有真实接口实现。
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('反馈已记录（演示模式，未实际提交到服务器）'),
+      SnackBar(
+        content: Text(UserLocalizations.of(context).feedbackPage_230),
       ),
     );
     context.pop();

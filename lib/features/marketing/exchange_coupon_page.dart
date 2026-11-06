@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'coupon_providers.dart';
+import '../../l10n/marketing_localizations.dart';
 
 /// 兑换码输入页。
 ///
@@ -29,7 +30,7 @@ class ExchangeCouponPage extends ConsumerWidget {
       if (next.result != null && (previous?.result == null)) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('兑换成功：${next.result!.title}'),
+            content: Text(MarketingLocalizations.of(context).exchangeCouponPage_32(next.result!.title)),
             duration: const Duration(seconds: 2),
           ),
         );
@@ -44,7 +45,7 @@ class ExchangeCouponPage extends ConsumerWidget {
     });
 
     return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: '兑换优惠券'),
+      appBar: AdaptiveAppBar(title: MarketingLocalizations.of(context).exchangeCouponPage_47),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -68,7 +69,7 @@ class ExchangeCouponPage extends ConsumerWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      '输入兑换码领取优惠券，兑换码由活动方发放',
+                      MarketingLocalizations.of(context).exchangeCouponPage_71,
                       style: TextStyle(
                         fontSize: 12,
                         color: colors.textSecondary,
@@ -81,7 +82,7 @@ class ExchangeCouponPage extends ConsumerWidget {
             const SizedBox(height: 28),
             // 输入框
             Text(
-              '兑换码',
+              MarketingLocalizations.of(context).exchangeCouponPage_84,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
@@ -92,7 +93,7 @@ class ExchangeCouponPage extends ConsumerWidget {
             TextField(
               onChanged: ref.read(exchangeControllerProvider.notifier).updateCode,
               decoration: InputDecoration(
-                hintText: '请输入兑换码',
+                hintText: MarketingLocalizations.of(context).exchangeCouponPage_95,
                 hintStyle: TextStyle(color: colors.textDisabled),
                 filled: true,
                 fillColor: colors.bgCard,
@@ -151,8 +152,8 @@ class ExchangeCouponPage extends ConsumerWidget {
                           color: Colors.white,
                         ),
                       )
-                    : const Text(
-                        '立即兑换',
+                    : Text(
+                        MarketingLocalizations.of(context).exchangeCouponPage_155,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,

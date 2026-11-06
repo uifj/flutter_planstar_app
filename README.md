@@ -15,7 +15,7 @@ packages/infras/core/               平台无关内核（纯 Dart，零 Flutter�
   lib/storage.dart           存储端口 + 无单例 AppStore（适配器在 app 组合根）
   lib/config.dart            配置（幂等异步加载）
   lib/logger.dart            日志（级别由装配方注入）
-packages/infras/core_design_system/ 三层设计令牌（L0 色板 → L1 语义槽 → L2 ThemeData，Flutter）
+packages/infras/core_design_system/ 三层设计令牌（TUIKit 风格：L0 色板 → L1 语义槽 → L2 ThemeData，Flutter）
 lib/
   app/                  main / app / router / theme / session / 深链表
   shell/                StatefulShellRoute 外壳（底栏）

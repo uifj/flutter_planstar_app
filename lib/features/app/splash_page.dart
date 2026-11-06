@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../l10n/app_localizations.dart';
 
 /// 隐私协议同意状态。
 ///
@@ -113,20 +114,20 @@ class _SplashPageState extends ConsumerState<SplashPage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        '企划星',
+                        AppLocalizations.of(context).appTitle,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w900,
-                          color: Color(0xFFFF317B),
+                          color: context.appColors.brand,
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    '让看演出更简单',
+                  Text(
+                    AppLocalizations.of(context).splashPage_129,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
@@ -143,7 +144,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    '企划星科技 © 2015–2026',
+                    AppLocalizations.of(context).splashPage_146,
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.white.withValues(alpha: 0.6),
@@ -177,26 +178,26 @@ class _PrivacyDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('隐私政策与用户协议'),
+      title: Text(AppLocalizations.of(context).splashPage_180),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const Text(
-              '欢迎使用企划星。为了保障您的合法权益，请在使用前阅读并同意以下协议：',
+            Text(
+              AppLocalizations.of(context).splashPage_187,
               style: TextStyle(fontSize: 14, height: 1.5),
             ),
             const SizedBox(height: 12),
-            const _Bullet(
-              text: '《用户协议》：规定了您与企划星之间的权利义务关系。',
+            _Bullet(
+              text: AppLocalizations.of(context).splashPage_192,
             ),
-            const _Bullet(
-              text: '《隐私政策》：说明了企划星如何收集、使用和保护您的个人信息。',
+            _Bullet(
+              text: AppLocalizations.of(context).splashPage_195,
             ),
             const SizedBox(height: 12),
-            const Text(
-              '点击「同意并继续」表示您已阅读并同意以上协议。',
+            Text(
+              AppLocalizations.of(context).splashPage_199,
               style: TextStyle(fontSize: 13, color: Colors.grey),
             ),
           ],
@@ -205,11 +206,11 @@ class _PrivacyDialog extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           onPressed: onDisagree,
-          child: const Text('不同意'),
+          child: Text(AppLocalizations.of(context).splashPage_208),
         ),
         FilledButton(
           onPressed: onAgree,
-          child: const Text('同意并继续'),
+          child: Text(AppLocalizations.of(context).splashPage_212),
         ),
       ],
     );

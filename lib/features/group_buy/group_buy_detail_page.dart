@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'group_buy.dart';
 import 'group_buy_providers.dart';
+import '../../l10n/group_buy_localizations.dart';
 
 /// 拼团详情页。
 ///
@@ -43,10 +44,10 @@ class GroupBuyDetailPage extends ConsumerWidget {
 
     if (group == null) {
       return AdaptiveScaffold(
-        appBar: const AdaptiveAppBar(title: '拼团详情'),
+        appBar: AdaptiveAppBar(title: GroupBuyLocalizations.of(context).groupBuyDetailPage_46),
         body: Center(
           child: Text(
-            '拼团活动不存在',
+            GroupBuyLocalizations.of(context).groupBuyDetailPage_49,
             style: TextStyle(fontSize: 14, color: colors.textTertiary),
           ),
         ),
@@ -57,7 +58,7 @@ class GroupBuyDetailPage extends ConsumerWidget {
     final canJoin = group.status == GroupBuyStatus.grouping && !group.isFull;
 
     return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: '拼团详情'),
+      appBar: AdaptiveAppBar(title: GroupBuyLocalizations.of(context).groupBuyDetailPage_60),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -169,7 +170,7 @@ class _ShowInfoCard extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Text(
-                  '拼团价 ',
+                  GroupBuyLocalizations.of(context).groupBuyDetailPage_172,
                   style: TextStyle(
                     fontSize: 12,
                     color: colors.textSecondary,
@@ -205,7 +206,7 @@ class _ShowInfoCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: Text(
-                      '省${group.savedAmount.format(withSymbol: false)}',
+                      GroupBuyLocalizations.of(context).groupBuyDetailPage_208(group.savedAmount.format(withSymbol: false)),
                       style: const TextStyle(
                         fontSize: 10,
                         color: Colors.white,
@@ -246,7 +247,7 @@ class _ProgressCard extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                '${group.succeedNum}人成团',
+                GroupBuyLocalizations.of(context).groupBuyDetailPage_249(group.succeedNum),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -256,7 +257,7 @@ class _ProgressCard extends StatelessWidget {
               const Spacer(),
               if (group.status == GroupBuyStatus.grouping)
                 Text(
-                  group.isFull ? '已满团' : '还差${group.remaining}人',
+                  group.isFull ? GroupBuyLocalizations.of(context).groupBuyDetailPage_259 : GroupBuyLocalizations.of(context).groupBuyDetailPage_259_2(group.remaining),
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -280,7 +281,7 @@ class _ProgressCard extends StatelessWidget {
           const SizedBox(height: 8),
           if (group.status == GroupBuyStatus.grouping && !group.isExpired)
             Text(
-              '剩余 ${group.remainingHours} 小时',
+              GroupBuyLocalizations.of(context).groupBuyDetailPage_283(group.remainingHours),
               style: TextStyle(
                 fontSize: 12,
                 color: colors.textTertiary,
@@ -313,7 +314,7 @@ class _MembersCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '参团成员 (${group.currentMembers}/${group.succeedNum})',
+            GroupBuyLocalizations.of(context).groupBuyDetailPage_316(group.currentMembers, group.succeedNum),
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -390,8 +391,8 @@ class _MemberAvatar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(color: Colors.white, width: 1),
                   ),
-                  child: const Text(
-                    '团长',
+                  child: Text(
+                    GroupBuyLocalizations.of(context).groupBuyDetailPage_394,
                     style: TextStyle(
                       fontSize: 8,
                       color: Colors.white,
@@ -441,7 +442,7 @@ class _EmptySlot extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '待邀请',
+          GroupBuyLocalizations.of(context).groupBuyDetailPage_444,
           style: TextStyle(
             fontSize: 11,
             color: colors.textDisabled,
@@ -469,7 +470,7 @@ class _RuleCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '拼团规则',
+            GroupBuyLocalizations.of(context).groupBuyDetailPage_472,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -478,11 +479,7 @@ class _RuleCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '1. 在有效期内邀请好友参团，满人数即成团\n'
-            '2. 拼团成功后系统自动出票\n'
-            '3. 未在有效期内满团则自动退款\n'
-            '4. 每人限参 1 个拼团\n'
-            '5. 拼团价不与其他优惠叠加',
+            GroupBuyLocalizations.of(context).groupBuyDetailPage_481,
             style: TextStyle(
               fontSize: 12,
               height: 1.7,
@@ -530,7 +527,7 @@ class _BottomBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  '拼团价',
+                  GroupBuyLocalizations.of(context).groupBuyDetailPage_533,
                   style: TextStyle(
                     fontSize: 11,
                     color: colors.textTertiary,
@@ -569,8 +566,8 @@ class _BottomBar extends StatelessWidget {
                         color: Colors.white,
                       ),
                     )
-                  : const Text(
-                      '立即参团',
+                  : Text(
+                      GroupBuyLocalizations.of(context).groupBuyDetailPage_573,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,

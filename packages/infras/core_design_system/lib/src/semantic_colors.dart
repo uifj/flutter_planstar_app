@@ -1,4 +1,8 @@
 /// L1 语义槽：组件**只准引用这一层**。
+///
+/// 语义槽映射自 TUIKit（`base_component/theme/color_scheme.dart`）的
+/// `SemanticColorScheme`，按本应用实际用到的 24 个槽收敛。多出来的
+/// TRTC 专属槽（气泡、通话按钮、标签色阶等）不搬。
 library;
 
 import 'package:flutter/material.dart';
@@ -9,13 +13,12 @@ import 'palette.dart';
 ///
 /// 为什么是 `ThemeExtension` 而不是来源的 `InheritedNotifier<ThemeState>`：
 ///
-/// 1. 来源的 `ComponentTheme`（`theme_state.dart:699`）在构造函数初始化列表里
-///    写 `themeState = themeState ?? ThemeState()`，而它是 `StatelessWidget`，
-///    **父级每次 rebuild 都会 new 一个 `ThemeState`**，主题被重置为默认（30-09）。
-///    `ThemeExtension` 由 `ThemeData` 持有，不存在这个问题。
-/// 2. 来源的 `ThemeConfig.operator==` 只比 `primaryColor`、忽略 `type`（30-10）。
-///    [AppColors] 是 `@immutable` 值对象，由 Flutter 框架用 `==` 比较，
-///    字段全参与比较，不会有"缓存命中判断失效"。
+/// 1. 来源的 `ComponentTheme` 在构造函数里 `themeState = themeState ?? ThemeState()`，
+///    而它是 `StatelessWidget`，父级每次 rebuild 都会 new 一个 `ThemeState`，
+///    主题会被重置为默认。
+/// 2. 来源的 `ThemeConfig.operator==` 只比 `primaryColor`、忽略 `type`，
+///    切换亮/暗时缓存判断会失效。[AppColors] 是 `@immutable` 值对象，
+///    全部字段参与比较，不会出现这个问题。
 /// 3. 与 Riverpod 天然配合：主题由 `Notifier<ThemeMode>` 决定，
 ///    `MaterialApp.theme` 消费它，`AppColors` 通过 `Theme.of(context)` 下发。
 ///
@@ -72,7 +75,7 @@ final class AppColors extends ThemeExtension<AppColors> {
   /// 卡片/容器背景。
   final Color bgCard;
 
-  /// 次级背景。
+  /// 次级背景（输入框、分组底）。
   final Color bgSubtle;
 
   /// 遮罩。
@@ -105,7 +108,7 @@ final class AppColors extends ThemeExtension<AppColors> {
   /// 成功。
   final Color success;
 
-  /// 警告。
+  /// 警告（文字/图标）。
   final Color warning;
 
   /// 警告背景。
@@ -126,65 +129,60 @@ final class AppColors extends ThemeExtension<AppColors> {
   /// 未选中 Tab。
   final Color tabInactive;
 
-  /// 亮色方案。数值全部来自企划星 Android 资源。
+  /// 亮色方案（TUIKit `LightSemanticScheme` 的子集）。
   static const AppColors light = AppColors(
-    textPrimary: NeutralPalette.text0,
-    textSecondary: NeutralPalette.text1,
-    textTertiary: NeutralPalette.text2,
-    textDisabled: NeutralPalette.text3,
-    bgPage: NeutralPalette.bgPage,
-    bgCard: NeutralPalette.surface,
-    bgSubtle: NeutralPalette.bgSubtle,
-    bgOverlay: NeutralPalette.overlay,
-    divider: NeutralPalette.divider,
-    border: NeutralPalette.dividerList,
-    brand: BrandPalette.primary,
-    brandPressed: BrandPalette.primaryPressed,
-    brandDisabled: BrandPalette.primaryDisabled,
-    brandSubtle: BrandPalette.primaryAlpha20,
-    onBrand: NeutralPalette.surface,
-    price: FunctionalPalette.price,
-    success: FunctionalPalette.success,
-    warning: FunctionalPalette.warningBg,
-    warningBg: FunctionalPalette.warningBg,
-    error: FunctionalPalette.error,
-    info: FunctionalPalette.info,
-    skeleton: FunctionalPalette.skeleton,
-    tabActive: BrandPalette.primary,
-    tabInactive: NeutralPalette.text2,
+    textPrimary: BasePalette.black2,
+    textSecondary: BasePalette.black4,
+    textTertiary: BasePalette.black5,
+    textDisabled: BasePalette.black6,
+    bgPage: BasePalette.grayLight1,
+    bgCard: BasePalette.white1,
+    bgSubtle: BasePalette.grayLight2,
+    bgOverlay: BasePalette.black4,
+    divider: BasePalette.grayLight2,
+    border: BasePalette.grayLight3,
+    brand: BasePalette.themeLight6,
+    brandPressed: BasePalette.themeLight7,
+    brandDisabled: BasePalette.themeLight2,
+    brandSubtle: BasePalette.themeLight1,
+    onBrand: BasePalette.white1,
+    price: BasePalette.redLight6,
+    success: BasePalette.greenLight6,
+    warning: BasePalette.orangeLight6,
+    warningBg: BasePalette.orangeLight1,
+    error: BasePalette.redLight6,
+    info: BasePalette.themeLight5,
+    skeleton: BasePalette.grayLight2,
+    tabActive: BasePalette.themeLight6,
+    tabInactive: BasePalette.black4,
   );
 
-  /// 暗色方案。
-  ///
-  /// `⚠` **这是自建的，不是从企划星 Android 抄的。** 企划星 `values-night/colors.xml`
-  /// 里并没有覆盖 `ps_theme_color` / `text_0..4` / `divider` 这些槽位，
-  /// 也就是说 Android 侧根本没有暗色语义体系。这里的取值按同一套槽位推导，
-  /// **上线前需要设计确认**，不要当成既有设计。
+  /// 暗色方案（TUIKit `DarkSemanticScheme` 的子集）。
   static const AppColors dark = AppColors(
-    textPrimary: Color(0xFFE6E6E6),
-    textSecondary: Color(0xFFCCCCCC),
-    textTertiary: Color(0xFF999999),
-    textDisabled: Color(0xFF666666),
-    bgPage: Color(0xFF121212),
-    bgCard: Color(0xFF1E1E1E),
-    bgSubtle: Color(0xFF181818),
-    bgOverlay: Color(0x99000000),
-    divider: Color(0xFF232323),
-    border: Color(0xFF2E2E2E),
-    brand: BrandPalette.primary,
-    brandPressed: BrandPalette.primaryDark,
-    brandDisabled: BrandPalette.primaryDisabled,
-    brandSubtle: BrandPalette.primaryAlpha20,
-    onBrand: Color(0xFFFFFFFF),
-    price: Color(0xFFFF4E7E),
-    success: Color(0xFF7BD383),
-    warning: Color(0xFF4A3A12),
-    warningBg: Color(0xFF4A3A12),
-    error: Color(0xFFE96A6A),
-    info: Color(0xFF7BA9FF),
-    skeleton: Color(0xFF2A2A2A),
-    tabActive: BrandPalette.primary,
-    tabInactive: Color(0xFF999999),
+    textPrimary: BasePalette.white2,
+    textSecondary: BasePalette.white4,
+    textTertiary: BasePalette.white6,
+    textDisabled: BasePalette.white7,
+    bgPage: BasePalette.grayDark1,
+    bgCard: BasePalette.grayDark2,
+    bgSubtle: BasePalette.grayDark3,
+    bgOverlay: BasePalette.black4,
+    divider: BasePalette.grayDark3,
+    border: BasePalette.grayDark4,
+    brand: BasePalette.themeDark6,
+    brandPressed: BasePalette.themeDark7,
+    brandDisabled: BasePalette.themeDark2,
+    brandSubtle: BasePalette.themeDark2,
+    onBrand: BasePalette.white1,
+    price: BasePalette.redDark6,
+    success: BasePalette.greenDark6,
+    warning: BasePalette.orangeDark6,
+    warningBg: BasePalette.orangeDark2,
+    error: BasePalette.redDark6,
+    info: BasePalette.themeDark6,
+    skeleton: BasePalette.grayDark3,
+    tabActive: BasePalette.themeDark6,
+    tabInactive: BasePalette.white4,
   );
 
   @override
@@ -278,10 +276,7 @@ final class AppColors extends ThemeExtension<AppColors> {
 
   /// **全部 24 个字段**参与比较。
   ///
-  /// 这一条直接对应 30-10：来源的 `ThemeConfig.operator==` 只比较
-  /// `primaryColor`、忽略 `type`，于是"亮色/暗色切换"时缓存命中判断失效。
-  /// 这里用全字段比较，且新增字段时**编译器不会提醒你补**——所以字段与
-  /// [hashCode] 必须成对维护，任何新增槽位都要同时加进这两处。
+  /// 新增字段时编译器不会提醒你补这里——字段与 [hashCode] 必须成对维护。
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {

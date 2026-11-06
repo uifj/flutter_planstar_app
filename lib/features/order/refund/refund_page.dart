@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import 'refund_providers.dart';
 import 'refund_state.dart';
+import '../../../l10n/order_localizations.dart';
 
 /// 退款申请页。
 ///
@@ -39,8 +40,8 @@ class RefundPage extends ConsumerWidget {
       if (next.status == RefundStatus.submitted &&
           previous?.status != RefundStatus.submitted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('退款申请已提交，请等待审核'),
+          SnackBar(
+            content: Text(OrderLocalizations.of(context).refundPage_43),
             duration: Duration(seconds: 2),
           ),
         );
@@ -59,7 +60,7 @@ class RefundPage extends ConsumerWidget {
       canPop: state.status != RefundStatus.submitting,
       child: AdaptiveScaffold(
         backgroundColor: colors.bgPage,
-        appBar: const AdaptiveAppBar(title: '申请退款'),
+        appBar: AdaptiveAppBar(title: OrderLocalizations.of(context).refundPage_62),
         body: state.status == RefundStatus.submitted
             ? _SuccessView(amount: refundAmount)
             : ListView(
@@ -94,9 +95,9 @@ class RefundPage extends ConsumerWidget {
                   const SizedBox(height: 24),
                   _SubmitButton(
                     label: switch (state.status) {
-                      RefundStatus.submitting => '提交中…',
-                      RefundStatus.submitted => '已提交',
-                      _ => '提交退款申请',
+                      RefundStatus.submitting => OrderLocalizations.of(context).refundPage_97,
+                      RefundStatus.submitted => OrderLocalizations.of(context).refundPage_98,
+                      _ => OrderLocalizations.of(context).refundPage_99,
                     },
                     enabled: state.canSubmit,
                     onTap: () =>
@@ -135,7 +136,7 @@ class _RefundAmountCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '退款金额',
+            OrderLocalizations.of(context).refundPage_138,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -147,7 +148,7 @@ class _RefundAmountCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                '订单金额',
+                OrderLocalizations.of(context).refundPage_150,
                 style: TextStyle(fontSize: 13, color: colors.textTertiary),
               ),
               Text(
@@ -161,7 +162,7 @@ class _RefundAmountCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                '预计退款',
+                OrderLocalizations.of(context).refundPage_164,
                 style: TextStyle(fontSize: 13, color: colors.textTertiary),
               ),
               Text(
@@ -204,7 +205,7 @@ class _ReasonSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '退款原因',
+            OrderLocalizations.of(context).refundPage_207,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -241,7 +242,7 @@ class _CustomReasonInput extends StatelessWidget {
         onChanged: onChanged,
         maxLines: 3,
         decoration: InputDecoration(
-          hintText: '请输入退款原因（选填）',
+          hintText: OrderLocalizations.of(context).refundPage_244,
           hintStyle: TextStyle(color: colors.textDisabled),
           filled: true,
           fillColor: colors.bgCard,
@@ -328,7 +329,7 @@ class _RefundPolicy extends StatelessWidget {
               Icon(LucideIcons.info, size: 14, color: colors.warning),
               const SizedBox(width: 4),
               Text(
-                '退款说明',
+                OrderLocalizations.of(context).refundPage_331,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -339,11 +340,7 @@ class _RefundPolicy extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '• 待发货状态下可全额退款\n'
-            '• 待收货状态下退票款金额的 80%\n'
-            '• 已完成订单不支持退款\n'
-            '• 退款将原路退回至支付账户\n'
-            '• 退款审核一般需要 1-3 个工作日',
+            OrderLocalizations.of(context).refundPage_342,
             style: TextStyle(
               fontSize: 12,
               height: 1.6,
@@ -379,7 +376,7 @@ class _SuccessView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '退款申请已提交',
+              OrderLocalizations.of(context).refundPage_382,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -388,7 +385,7 @@ class _SuccessView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '退款金额 ${amount.format()} 将在审核通过后原路退回',
+              OrderLocalizations.of(context).refundPage_391(amount.format()),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
@@ -401,7 +398,7 @@ class _SuccessView extends StatelessWidget {
               style: FilledButton.styleFrom(
                 backgroundColor: colors.brand,
               ),
-              child: const Text('返回订单列表'),
+              child: Text(OrderLocalizations.of(context).refundPage_404),
             ),
           ],
         ),

@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../shared/ui/ps_empty_state.dart';
 import 'wallet.dart';
 import 'wallet_providers.dart';
+import '../../l10n/marketing_localizations.dart';
 
 /// 钱包页面。
 ///
@@ -28,16 +29,16 @@ class WalletPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: const AdaptiveAppBar(title: '我的钱包'),
+      appBar: AdaptiveAppBar(title: MarketingLocalizations.of(context).walletPage_31),
       body: Column(
         children: <Widget>[
           _BalanceHeader(balance: account.balance),
-          _ActionBar(onTapDeposit: () => _toast(context, '充值流程待接入支付 SDK'), onTapWithdraw: () => _toast(context, '提现需要先绑定银行卡')),
+          _ActionBar(onTapDeposit: () => _toast(context, MarketingLocalizations.of(context).walletPage_35), onTapWithdraw: () => _toast(context, MarketingLocalizations.of(context).walletPage_35_2)),
           Expanded(
             child: account.transactions.isEmpty
-                ? const PsEmptyState(
-                    title: '暂无交易记录',
-                    description: '充值或消费后会有记录显示在这里',
+                ? PsEmptyState(
+                    title: MarketingLocalizations.of(context).walletPage_39,
+                    description: MarketingLocalizations.of(context).walletPage_40,
                     icon: LucideIcons.receiptText,
                   )
                 : ListView.separated(
@@ -91,7 +92,7 @@ class _BalanceHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '当前余额（元）',
+            MarketingLocalizations.of(context).walletPage_94,
             style: TextStyle(
               fontSize: 13,
               color: colors.onBrand.withValues(alpha: 0.8),
@@ -140,7 +141,7 @@ class _ActionBar extends StatelessWidget {
           Expanded(
             child: _ActionButton(
               icon: LucideIcons.circlePlus,
-              label: '充值',
+              label: MarketingLocalizations.of(context).walletPage_143,
               onTap: onTapDeposit,
               primary: true,
             ),
@@ -149,7 +150,7 @@ class _ActionBar extends StatelessWidget {
           Expanded(
             child: _ActionButton(
               icon: LucideIcons.landmark,
-              label: '提现',
+              label: MarketingLocalizations.of(context).walletPage_152,
               onTap: onTapWithdraw,
               primary: false,
             ),

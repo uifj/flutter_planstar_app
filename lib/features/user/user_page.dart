@@ -12,6 +12,7 @@ import '../auth/application/auth_providers.dart';
 import '../message/application/message_providers.dart';
 import '../order/application/order_list_controller.dart';
 import 'application/profile_providers.dart';
+import '../../l10n/user_localizations.dart';
 
 /// 我的 Tab（`layout_user.xml`）。
 ///
@@ -64,7 +65,7 @@ class UserPage extends ConsumerWidget {
             },
             onTapMessage: () => context.go('/message'),
             onTapSetting: () => context.push('/settings'),
-            onTapHome: () => _toast(context, '个人主页不在本次范围内'),
+            onTapHome: () => _toast(context, UserLocalizations.of(context).userPage_67),
           ),
           _OrderCard(
             badges: badges,
@@ -78,9 +79,9 @@ class UserPage extends ConsumerWidget {
           ),
           _MenuCard(
             onTapAddress: () => context.push('/address'),
-            onTapVisitors: () => _toast(context, '观演人管理不在本次范围内'),
-            onTapService: () => _toast(context, '客服会话（演示）'),
-            onTapBusiness: () => _toast(context, '卖家招募不在本次范围内'),
+            onTapVisitors: () => _toast(context, UserLocalizations.of(context).userPage_81),
+            onTapService: () => _toast(context, UserLocalizations.of(context).userPage_82),
+            onTapBusiness: () => _toast(context, UserLocalizations.of(context).userPage_83),
             onTapGiftCard: () => context.push('/giftcards'),
             onTapProxyBuy: () => context.push('/proxy-buy'),
             onTapGroupBuy: () => context.push('/group-buy'),
@@ -95,7 +96,7 @@ class UserPage extends ConsumerWidget {
                     // 真实登出：清掉 psSession 令牌 + 本地资料，并让路由门禁
                     // 立刻把受保护页弹回登录页。
                     ref.read(authControllerProvider.notifier).logout();
-                    _toast(context, '已退出登录');
+                    _toast(context, UserLocalizations.of(context).userPage_98);
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: colors.bgCard,
@@ -104,7 +105,7 @@ class UserPage extends ConsumerWidget {
                     ),
                   ),
                   child: Text(
-                    '退出登录',
+                    UserLocalizations.of(context).userLogout,
                     style: TextStyle(fontSize: 16, color: colors.error),
                   ),
                 ),
@@ -251,7 +252,7 @@ class _ProfileHeader extends StatelessWidget {
                           const SizedBox(height: 7),
                           if (!profile.isLoggedIn)
                             Text(
-                              '点击登录，查看订单与优惠券',
+                              UserLocalizations.of(context).userPage_254,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: colors.textTertiary,
@@ -305,7 +306,7 @@ class _ProfileHeader extends StatelessWidget {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          '个人主页',
+                          UserLocalizations.of(context).userPage_308,
                           style: TextStyle(
                             fontSize: 12,
                             color: colors.textPrimary,
@@ -330,14 +331,14 @@ class _ProfileHeader extends StatelessWidget {
                       Expanded(
                         child: _StatColumn(
                           value: profile.wannaSeeCount,
-                          label: '想看',
+                          label: UserLocalizations.of(context).userPage_333,
                         ),
                       ),
                       Container(width: 1, height: 18, color: colors.border),
                       Expanded(
                         child: _StatColumn(
                           value: profile.followCount,
-                          label: '关注',
+                          label: UserLocalizations.of(context).userPage_340,
                         ),
                       ),
                     ],
@@ -480,7 +481,7 @@ class _OrderCard extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      '全部订单',
+                      UserLocalizations.of(context).userPage_483,
                       style: TextStyle(fontSize: 14, color: colors.textPrimary),
                     ),
                     Icon(
@@ -566,7 +567,7 @@ class _AssetsCard extends StatelessWidget {
               onTap: onTapCoupon,
               child: _AssetColumn(
                 value: '${profile.couponCount}',
-                label: '优惠券',
+                label: UserLocalizations.of(context).userPage_569,
               ),
             ),
           ),
@@ -577,7 +578,7 @@ class _AssetsCard extends StatelessWidget {
               onTap: onTapWallet,
               child: _AssetColumn(
                 value: profile.walletBalance.format(withSymbol: false),
-                label: '我的钱包',
+                label: UserLocalizations.of(context).userPage_580,
               ),
             ),
           ),
@@ -647,13 +648,13 @@ class _MenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final entries = <(String, VoidCallback)>[
-      ('礼品卡', onTapGiftCard),
-      ('代抢服务', onTapProxyBuy),
-      ('超低价拼团', onTapGroupBuy),
-      ('地址管理', onTapAddress),
-      ('观演人', onTapVisitors),
-      ('联系客服', onTapService),
-      ('卖家招募', onTapBusiness),
+      (UserLocalizations.of(context).userPage_650, onTapGiftCard),
+      (UserLocalizations.of(context).userPage_651, onTapProxyBuy),
+      (UserLocalizations.of(context).userPage_652, onTapGroupBuy),
+      (UserLocalizations.of(context).userPage_653, onTapAddress),
+      (UserLocalizations.of(context).userPage_654, onTapVisitors),
+      (UserLocalizations.of(context).userPage_655, onTapService),
+      (UserLocalizations.of(context).userPage_656, onTapBusiness),
     ];
 
     return Container(

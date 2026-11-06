@@ -1,19 +1,20 @@
 /// 字号与字重令牌 + 数字字体。
+///
+/// 阶梯对齐 TUIKit（`base_component/theme/font.dart`）：
+/// 标题 32/20、小标题 16、正文 14、说明 12、角标 10；字重只保留
+/// bold / medium / regular 三档。
 library;
 
 import 'package:flutter/material.dart';
 
 /// 字号与字重。
-///
-/// 企划星 Android 侧字号散落在各 layout 的 `sp` 值里，没有集中定义；这里是
-/// 按现有页面的实际使用归纳出的七级阶梯，**不是**从资源文件抄来的。
 abstract final class AppTypography {
-  /// 数字/价格字体族。本地品牌字体 DIN 已随 `assets/` 一并移除，
-  /// 改为 `null`（系统字体），等宽效果由 `FontFeature.tabularFigures` 保证。
+  /// 数字/价格字体族。使用系统字体，等宽效果由
+  /// [FontFeature.tabularFigures] 保证。
   static const String? numericFontFamily = null;
 
-  /// 超大号：详情页主价格、倒计时。
-  static const double display = 28;
+  /// 超大号：详情页主价格、大数字。
+  static const double display = 32;
 
   /// 标题：页面标题。
   static const double title = 20;
@@ -28,19 +29,19 @@ abstract final class AppTypography {
   static const double caption = 12;
 
   /// 标签：角标、徽标。
-  static const double label = 11;
+  static const double label = 10;
 
   /// 最小：极小角标。
   static const double micro = 10;
 
   /// 常规字重。
-  static const FontWeight regular = FontWeight.w400;
+  static const FontWeight regular = FontWeight.normal;
 
   /// 中等字重（强调）。
   static const FontWeight medium = FontWeight.w500;
 
   /// 粗体（价格、标题）。
-  static const FontWeight bold = FontWeight.w700;
+  static const FontWeight bold = FontWeight.bold;
 
   /// 数字展示样式（系统字体 + 粗体 + 紧行高）。
   ///
@@ -63,58 +64,63 @@ abstract final class AppTypography {
 }
 
 /// 圆角令牌。
+///
+/// 对齐 TUIKit（`radius.dart`）：4 / 8 / 12 / 16 / 20 / 999。
 abstract final class AppRadius {
-  /// 2：极小元素（标签内边距）。
-  static const double xs = 2;
+  /// 4：提示条、小标签（TUIKit `tipsRadius`）。
+  static const double xs = 4;
 
-  /// 4：输入框、按钮。
-  static const double sm = 4;
+  /// 8：输入框、小按钮（TUIKit `smallRadius`）。
+  static const double sm = 8;
 
-  /// 6：卡片内的图片。
-  static const double md = 6;
+  /// 12：弹窗、卡片（TUIKit `alertRadius`）。
+  static const double md = 12;
 
-  /// 8：卡片。
-  static const double lg = 8;
+  /// 16：大卡片、面板（TUIKit `largeRadius`）。
+  static const double lg = 16;
 
-  /// 12：弹窗、底部面板。
-  static const double xl = 12;
+  /// 20：底部面板、药丸按钮（TUIKit `superLargeRadius`）。
+  static const double xl = 20;
 
-  /// 16：大面板。
-  static const double xxl = 16;
+  /// 20：与 [xl] 同值，保留旧名以兼容既有调用。
+  static const double xxl = 20;
 
-  /// 全圆（药丸按钮、头像）。
+  /// 全圆（头像、药丸）。
   static const double full = 999;
 }
 
-/// 间距令牌。以 4 为基准的八级阶梯。
+/// 间距令牌。
+///
+/// 对齐 TUIKit（`spacing.dart`）的 4 基准阶梯：
+/// 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 56 / 72。
 abstract final class AppSpacing {
-  /// 2。
-  static const double xxs = 2;
+  /// 4：图标与文字。
+  static const double xxs = 4;
 
-  /// 4。
-  static const double xs = 4;
+  /// 8：小间距。
+  static const double xs = 8;
 
-  /// 6。
-  static const double sm = 6;
+  /// 12：图标之间。
+  static const double sm = 12;
 
-  /// 8。
-  static const double md = 8;
+  /// 16：模块内部。
+  static const double md = 16;
 
-  /// 12。
-  static const double lg = 12;
+  /// 20：内容区。
+  static const double lg = 20;
 
-  /// 16：页面左右边距。
-  static const double xl = 16;
+  /// 24：常规布局。
+  static const double xl = 24;
 
-  /// 20。
-  static const double xxl = 20;
+  /// 32：标题区。
+  static const double xxl = 32;
 
-  /// 24：区块间距。
-  static const double section = 24;
+  /// 40：卡片区。
+  static const double section = 40;
 
-  /// 32：大区块间距。
-  static const double huge = 32;
+  /// 56：大区块。
+  static const double huge = 56;
 
-  /// 页面水平内边距（列表页统一 12）。
-  static const double pageHorizontal = 12;
+  /// 页面水平内边距。
+  static const double pageHorizontal = 16;
 }

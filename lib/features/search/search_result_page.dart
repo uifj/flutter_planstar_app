@@ -13,6 +13,7 @@ import '../discover/domain/feed_post.dart';
 import '../discover/widgets/feed_card.dart';
 import 'application/search_providers.dart';
 import 'domain/search_models.dart';
+import '../../l10n/search_localizations.dart';
 
 /// 搜索结果页（企划星 `SearchResultActivity` + 5 个 `SearchResult*Fragment`）。
 ///
@@ -122,11 +123,11 @@ class _SearchResultPageState extends ConsumerState<SearchResultPage> {
     return <Widget>[
       if (shows.isNotEmpty) ...<Widget>[
         _SectionHeader(
-          title: '演出',
+          title: SearchLocalizations.of(context).searchResultPage_125,
           count: results.shows.length,
           moreLabel: _scope == SearchScope.all &&
                   results.shows.length > _previewCount
-              ? '查看全部'
+              ? SearchLocalizations.of(context).searchResultPage_129
               : null,
           onMore: () => setState(() => _scope = SearchScope.shows),
         ),
@@ -138,11 +139,11 @@ class _SearchResultPageState extends ConsumerState<SearchResultPage> {
       ],
       if (feeds.isNotEmpty) ...<Widget>[
         _SectionHeader(
-          title: '动态',
+          title: SearchLocalizations.of(context).searchResultPage_142,
           count: results.feeds.length,
           moreLabel: _scope == SearchScope.all &&
                   results.feeds.length > _previewCount
-              ? '查看全部'
+              ? SearchLocalizations.of(context).searchResultPage_146
               : null,
           onMore: () => setState(() => _scope = SearchScope.feeds),
         ),

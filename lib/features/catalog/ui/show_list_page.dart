@@ -10,6 +10,7 @@ import '../application/catalog_providers.dart';
 import '../domain/show_category.dart';
 import '../domain/show_summary.dart';
 import 'show_cards.dart';
+import '../../../l10n/catalog_localizations.dart';
 
 /// 演出列表页（企划星 `CategoryHomeActivity` / `HotListActivity` 的合并版）。
 ///
@@ -75,10 +76,10 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
           Expanded(
             child: shows.isEmpty
                 ? PsEmptyState(
-                    title: '该分类暂无演出',
-                    description: '换个分类或城市看看',
+                    title: CatalogLocalizations.of(context).showListPage_78,
+                    description: CatalogLocalizations.of(context).showListPage_79,
                     icon: LucideIcons.drama,
-                    actionLabel: '看全部演出',
+                    actionLabel: CatalogLocalizations.of(context).showListPage_81,
                     onAction: () => setState(() => _categoryId = null),
                   )
                 : ListView.separated(
@@ -109,7 +110,7 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
         if (category.id == id) return category.name;
       }
     }
-    return '全部演出';
+    return CatalogLocalizations.of(context).showListPage_112;
   }
 
   /// 先按分类过滤，再按当前排序规则排。
@@ -169,7 +170,7 @@ class _CategoryBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         children: <Widget>[
           _CategoryChip(
-            label: '全部',
+            label: CatalogLocalizations.of(context).showListPage_172,
             selected: selected == null,
             onTap: () => onSelect(null),
           ),
@@ -246,7 +247,7 @@ class _SortBar extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Text(
-            '共 $total 场',
+            CatalogLocalizations.of(context).showListPage_249(total),
             style: TextStyle(fontSize: 12, color: colors.textTertiary),
           ),
           const Spacer(),

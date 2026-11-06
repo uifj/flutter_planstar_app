@@ -5,6 +5,7 @@ import '../../../shared/ui/ps_section_header.dart';
 import '../../catalog/application/catalog_providers.dart';
 import '../../catalog/domain/show_summary.dart';
 import '../../catalog/ui/show_cards.dart';
+import '../../../l10n/home_localizations.dart';
 
 /// 首页「精选推荐」楼层（`view_home_choiceness.xml`）。
 ///
@@ -80,7 +81,7 @@ class _HomeChoicenessFloorState extends State<HomeChoicenessFloor> {
         children: <Widget>[
           const SizedBox(height: 16),
           // 企划星的精选楼层只有标题，**没有**「全部」——不要凭印象加。
-          const PsSectionHeader(title: '精选推荐', titleSize: 20),
+          PsSectionHeader(title: HomeLocalizations.of(context).homeChoicenessFloor_83, titleSize: 20),
           const SizedBox(height: 6),
           SizedBox(
             height: 42,

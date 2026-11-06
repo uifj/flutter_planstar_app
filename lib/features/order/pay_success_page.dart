@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../shared/ui/ps_price.dart';
+import '../../l10n/order_localizations.dart';
 
 /// 支付成功页（企划星 `PaySuccessActivity` + `PaySuccessFragment`）。
 ///
@@ -72,7 +73,7 @@ class PaySuccessPage extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '支付成功',
+              OrderLocalizations.of(context).paySuccessPage_75,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
@@ -81,7 +82,7 @@ class PaySuccessPage extends ConsumerWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              '企划星正在为您出票，请耐心等待',
+              OrderLocalizations.of(context).paySuccessPage_84,
               style: TextStyle(fontSize: 14, color: colors.textTertiary),
             ),
             const SizedBox(height: 32),
@@ -111,8 +112,8 @@ class PaySuccessPage extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(23),
                         ),
                       ),
-                      child: const Text(
-                        '查看订单',
+                      child: Text(
+                        OrderLocalizations.of(context).paySuccessPage_115,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -135,7 +136,7 @@ class PaySuccessPage extends ConsumerWidget {
                         ),
                       ),
                       child: Text(
-                        '继续逛逛',
+                        OrderLocalizations.of(context).paySuccessPage_138,
                         style: TextStyle(
                           fontSize: 16,
                           color: colors.textSecondary,
@@ -179,14 +180,14 @@ class _OrderSummaryCard extends StatelessWidget {
         children: <Widget>[
           if (showTitle != null) ...<Widget>[
             _SummaryRow(
-              label: '演出',
+              label: OrderLocalizations.of(context).paySuccessPage_182,
               value: showTitle!,
               valueMaxLines: 2,
             ),
             const SizedBox(height: 12),
           ],
           _SummaryRow(
-            label: '订单号',
+            label: OrderLocalizations.of(context).paySuccessPage_189,
             value: orderNumber,
           ),
           const SizedBox(height: 12),
@@ -195,7 +196,7 @@ class _OrderSummaryCard extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                '支付金额',
+                OrderLocalizations.of(context).paySuccessPage_198,
                 style: TextStyle(fontSize: 14, color: colors.textSecondary),
               ),
               const Spacer(),

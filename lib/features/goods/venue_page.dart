@@ -11,6 +11,7 @@ import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_category.dart';
 import '../catalog/domain/show_summary.dart';
 import '../catalog/ui/show_cards.dart';
+import '../../l10n/goods_localizations.dart';
 
 /// 场馆详情页（企划星 `VenueDetailActivity` + `VenueDetailFragment`）。
 ///
@@ -42,24 +43,24 @@ class VenuePage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: AdaptiveAppBar(title: '场馆详情'),
+      appBar: AdaptiveAppBar(title: GoodsLocalizations.of(context).venuePage_45),
       body: venue == null
           ? PsEmptyState(
-              title: '没有找到这个场馆',
-              description: '场馆可能已更名，或当前城市没有它的演出',
+              title: GoodsLocalizations.of(context).venuePage_48,
+              description: GoodsLocalizations.of(context).venuePage_49,
               icon: LucideIcons.mapPinOff,
-              actionLabel: '返回',
+              actionLabel: GoodsLocalizations.of(context).venuePage_51,
               onAction: () => context.pop(),
             )
           : ListView(
               padding: const EdgeInsets.only(bottom: 24),
               children: <Widget>[
                 _VenueHeader(venue: venue, city: city),
-                _SectionBar(title: '近期演出', count: shows.length),
+                _SectionBar(title: GoodsLocalizations.of(context).venuePage_58, count: shows.length),
                 if (shows.isEmpty)
-                  const PsEmptyState(
-                    title: '暂无近期演出',
-                    description: '换个城市或过几天再来看看',
+                  PsEmptyState(
+                    title: GoodsLocalizations.of(context).venuePage_61,
+                    description: GoodsLocalizations.of(context).venuePage_62,
                     icon: LucideIcons.calendarX,
                     compact: true,
                   )
@@ -121,7 +122,7 @@ class _VenueHeader extends StatelessWidget {
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: '$city ${venue.address}'));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('地址已复制')),
+                    SnackBar(content: Text(GoodsLocalizations.of(context).venuePage_124)),
                   );
                 },
                 child: Padding(
@@ -131,7 +132,7 @@ class _VenueHeader extends StatelessWidget {
                       Icon(LucideIcons.copy, size: 13, color: colors.brand),
                       const SizedBox(width: 2),
                       Text(
-                        '复制',
+                        GoodsLocalizations.of(context).venuePage_134,
                         style: TextStyle(fontSize: 12, color: colors.brand),
                       ),
                     ],
@@ -143,9 +144,9 @@ class _VenueHeader extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: <Widget>[
-              _Metric(value: '${venue.showCount}', label: '场演出'),
+              _Metric(value: '${venue.showCount}', label: GoodsLocalizations.of(context).venuePage_146),
               const SizedBox(width: 24),
-              _Metric(value: '${venue.showIds.length}', label: '近期可购'),
+              _Metric(value: '${venue.showIds.length}', label: GoodsLocalizations.of(context).venuePage_148),
             ],
           ),
         ],

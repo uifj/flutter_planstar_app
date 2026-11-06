@@ -3,6 +3,8 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/ui/ps_search_bar.dart';
+import '../../../l10n/home_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// 首页顶部（`view_home_header.xml` + `view_home_toolbar.xml`）。
 ///
@@ -69,7 +71,7 @@ class HomeHeader extends SliverPersistentHeaderDelegate {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: <Color>[
-                    Color.lerp(const Color(0xFFFFE9EF), colors.bgCard, t)!,
+                    Color.lerp(colors.brandSubtle, colors.bgCard, t)!,
                     colors.bgCard,
                   ],
                 ),
@@ -92,7 +94,7 @@ class HomeHeader extends SliverPersistentHeaderDelegate {
                       Icon(LucideIcons.sparkles, size: 18, color: colors.brand),
                       const SizedBox(width: 4),
                       Text(
-                        '企划星',
+                        AppLocalizations.of(context).appTitle,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -104,9 +106,14 @@ class HomeHeader extends SliverPersistentHeaderDelegate {
                   const Spacer(),
                   Icon(LucideIcons.shieldCheck, size: 14, color: colors.textTertiary),
                   const SizedBox(width: 2),
-                  Text(
-                    '100%真票 · 无票赔付',
-                    style: TextStyle(fontSize: 11, color: colors.textTertiary),
+                  Flexible(
+                    child: Text(
+                      HomeLocalizations.of(context).homeHeader_108,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(fontSize: 11, color: colors.textTertiary),
+                    ),
                   ),
                 ],
               ),

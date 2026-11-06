@@ -49,8 +49,7 @@ class PsPoster extends StatelessWidget {
   /// 售罄/下架时压暗。
   final bool dimmed;
 
-  /// 六组派生渐变。取品牌色系（洋红/紫/蓝/琥珀/青/朱），与 `BrandPalette` 同族，
-  /// 统一取品牌色系。
+  /// 六组派生渐变（洋红/紫/蓝/琥珀/青/朱），与 `BasePalette` 的强调色同族。
   static const List<List<Color>> _gradients = <List<Color>>[
     <Color>[Color(0xFFFF8FC0), Color(0xFFFF317B)],
     <Color>[Color(0xFFB08BFF), Color(0xFF6C4BE0)],

@@ -9,6 +9,7 @@ import '../../shared/ui/ps_tag.dart';
 import '../catalog/domain/show_summary.dart';
 import 'application/search_providers.dart';
 import 'domain/search_models.dart';
+import '../../l10n/search_localizations.dart';
 
 /// 搜索页（企划星 `SearchActivity` + `SearchHintFragment` / `SearchSuggestFrgment`）。
 ///
@@ -95,7 +96,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               decoration: InputDecoration(
                 isDense: true,
                 border: InputBorder.none,
-                hintText: '搜索明星、演出、场馆',
+                hintText: SearchLocalizations.of(context).searchPage_98,
                 hintStyle: TextStyle(fontSize: 13, color: colors.textTertiary),
               ),
               onChanged: (String value) => setState(() => _input = value),
@@ -129,8 +130,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _SectionBar(
-          title: '搜索历史',
-          action: '清空',
+          title: SearchLocalizations.of(context).searchPage_132,
+          action: SearchLocalizations.of(context).searchPage_133,
           onAction: () => ref.read(searchHistoryProvider.notifier).clear(),
         ),
         Padding(
@@ -147,7 +148,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   onLongPress: () {
                     ref.read(searchHistoryProvider.notifier).remove(word);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('已删除「$word」')),
+                      SnackBar(content: Text(SearchLocalizations.of(context).searchPage_150(word))),
                     );
                   },
                   child: PsTag(
@@ -168,7 +169,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
           child: Text(
-            '长按可删除',
+            SearchLocalizations.of(context).searchPage_171,
             style: TextStyle(fontSize: 11, color: colors.textDisabled),
           ),
         ),
@@ -184,7 +185,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const _SectionBar(title: '热搜榜'),
+        _SectionBar(title: SearchLocalizations.of(context).searchPage_187),
         for (final (int index, HotKeyword keyword) in keywords.indexed)
           GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -216,7 +217,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   ),
                   if (keyword.hot) ...<Widget>[
                     PsTag(
-                      label: '热',
+                      label: SearchLocalizations.of(context).searchPage_219,
                       tone: PsTagTone.solid,
                       color: colors.price,
                       fontSize: 9,
@@ -259,7 +260,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   child: Text.rich(
                     TextSpan(
                       children: <InlineSpan>[
-                        const TextSpan(text: '搜索 '),
+                        TextSpan(text: SearchLocalizations.of(context).searchPage_262),
                         TextSpan(
                           text: '「${_input.trim()}」',
                           style: TextStyle(
@@ -322,7 +323,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 24),
             child: Text(
-              '没有匹配的演出，点上面「搜索」看全部结果',
+              SearchLocalizations.of(context).searchPage_325,
               style: TextStyle(fontSize: 12, color: colors.textTertiary),
             ),
           ),

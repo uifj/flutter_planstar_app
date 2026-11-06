@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/ui/ps_empty_state.dart';
 import 'proxy_buy.dart';
 import 'proxy_buy_providers.dart';
+import '../../l10n/proxy_buy_localizations.dart';
 
 /// 代抢页面。
 ///
@@ -27,17 +28,17 @@ class ProxyBuyPage extends ConsumerWidget {
     final orders = ref.watch(proxyBuyOrdersProvider);
 
     return AdaptiveScaffold(
-      appBar: const AdaptiveAppBar(title: '代抢服务'),
+      appBar: AdaptiveAppBar(title: ProxyBuyLocalizations.of(context).proxyBuyPage_30),
       body: ListView(
         children: <Widget>[
           _RuleBanner(info: info),
           _DeadlineSelector(deadlines: info.deadlines),
           const SizedBox(height: 12),
-          _SectionTitle(title: '我的代抢订单'),
+          _SectionTitle(title: ProxyBuyLocalizations.of(context).proxyBuyPage_36),
           if (orders.isEmpty)
-            const PsEmptyState(
-              title: '暂无代抢订单',
-              description: '参与代抢后订单会显示在这里',
+            PsEmptyState(
+              title: ProxyBuyLocalizations.of(context).proxyBuyPage_39,
+              description: ProxyBuyLocalizations.of(context).proxyBuyPage_40,
               icon: LucideIcons.clipboardList,
             )
           else
@@ -78,7 +79,7 @@ class _RuleBanner extends StatelessWidget {
               Icon(LucideIcons.info, size: 16, color: colors.warning),
               const SizedBox(width: 6),
               Text(
-                '代抢规则',
+                ProxyBuyLocalizations.of(context).proxyBuyPage_81,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -95,7 +96,7 @@ class _RuleBanner extends StatelessWidget {
                     borderRadius: BorderRadius.circular(3),
                   ),
                   child: Text(
-                    '含赔付',
+                    ProxyBuyLocalizations.of(context).proxyBuyPage_98,
                     style: TextStyle(fontSize: 10, color: colors.warning),
                   ),
                 ),
@@ -115,11 +116,11 @@ class _RuleBanner extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                '代抢服务费：',
+                ProxyBuyLocalizations.of(context).proxyBuyPage_118,
                 style: TextStyle(fontSize: 12, color: colors.textTertiary),
               ),
               Text(
-                '${info.proxyBuyFee.format()}/张',
+                ProxyBuyLocalizations.of(context).proxyBuyPage_122(info.proxyBuyFee.format()),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -162,7 +163,7 @@ class _DeadlineSelectorState extends State<_DeadlineSelector> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '选择截止时间',
+            ProxyBuyLocalizations.of(context).proxyBuyPage_165,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -300,18 +301,18 @@ class _OrderItem extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          _InfoRow(label: '场馆', value: order.venue),
+          _InfoRow(label: ProxyBuyLocalizations.of(context).proxyBuyPage_303, value: order.venue),
           const SizedBox(height: 4),
-          _InfoRow(label: '场次', value: order.eventTime),
+          _InfoRow(label: ProxyBuyLocalizations.of(context).proxyBuyPage_305, value: order.eventTime),
           const SizedBox(height: 4),
-          _InfoRow(label: '截止', value: order.deadline.desc),
+          _InfoRow(label: ProxyBuyLocalizations.of(context).proxyBuyPage_307, value: order.deadline.desc),
           const SizedBox(height: 8),
           Divider(height: 1, color: colors.divider),
           const SizedBox(height: 8),
           Row(
             children: <Widget>[
               Text(
-                '${order.quantity}张 × ${order.ticketPrice.format()}',
+                ProxyBuyLocalizations.of(context).proxyBuyPage_314(order.quantity, order.ticketPrice.format()),
                 style: TextStyle(
                   fontSize: 12,
                   color: colors.textTertiary,
@@ -319,7 +320,7 @@ class _OrderItem extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                '代抢费 ${order.proxyBuyFee.format()}/张',
+                ProxyBuyLocalizations.of(context).proxyBuyPage_322(order.proxyBuyFee.format()),
                 style: TextStyle(
                   fontSize: 12,
                   color: colors.textTertiary,
@@ -331,7 +332,7 @@ class _OrderItem extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                '合计 ',
+                ProxyBuyLocalizations.of(context).proxyBuyPage_334,
                 style: TextStyle(fontSize: 13, color: colors.textSecondary),
               ),
               Text(

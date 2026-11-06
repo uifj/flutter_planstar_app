@@ -1,11 +1,13 @@
 import 'package:core/result.dart';
 import 'package:flutter/material.dart';
+import 'package:planstar/app/app.dart' show appLocalizationsDelegates;
 import 'package:planstar/app/theme.dart';
 import 'package:planstar/features/auth/application/auth_providers.dart';
 import 'package:planstar/features/auth/domain/auth_repository.dart';
 import 'package:planstar/features/auth/domain/auth_session.dart';
 import 'package:planstar/features/auth/domain/auth_user.dart';
 import 'package:planstar/features/user/user_page.dart';
+import 'package:planstar/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -58,7 +60,13 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(routerConfig: router, theme: AppTheme.light()),
+        child: MaterialApp.router(
+          routerConfig: router,
+          theme: AppTheme.light(),
+          locale: const Locale('zh'),
+          localizationsDelegates: appLocalizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
       ),
     );
     await tester.pumpAndSettle();

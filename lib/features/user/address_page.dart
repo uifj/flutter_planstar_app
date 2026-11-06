@@ -9,6 +9,8 @@ import '../../shared/ui/ps_empty_state.dart';
 import '../../shared/ui/ps_tag.dart';
 import 'application/address_providers.dart';
 import 'domain/shipping_address.dart';
+import '../../l10n/user_localizations.dart';
+import '../../l10n/app_localizations.dart';
 
 /// 收货地址管理（企划星 `AddressListActivity` + `item_address.xml`）。
 ///
@@ -46,16 +48,16 @@ class AddressPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
-      appBar: const AdaptiveAppBar(title: '收货地址'),
+      appBar: AdaptiveAppBar(title: UserLocalizations.of(context).addressPage_49),
       body: Column(
         children: <Widget>[
           Expanded(
             child: addresses.isEmpty
                 ? PsEmptyState(
-                    title: '还没有收货地址',
-                    description: '寄纸质票时需要地址，先添加一个吧',
+                    title: UserLocalizations.of(context).addressPage_55,
+                    description: UserLocalizations.of(context).addressPage_56,
                     icon: LucideIcons.mapPinOff,
-                    actionLabel: '新增地址',
+                    actionLabel: UserLocalizations.of(context).addressPage_58,
                     onAction: () => _openForm(context, ref),
                   )
                 : ListView.builder(
@@ -128,16 +130,16 @@ class AddressPage extends ConsumerWidget {
     final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) => AlertDialog(
-        title: const Text('删除地址'),
-        content: Text('确定删除「${address.name} ${address.maskedMobile}」这个地址吗？'),
+        title: Text(UserLocalizations.of(context).addressPage_131),
+        content: Text(UserLocalizations.of(context).addressPage_132(address.name, address.maskedMobile)),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('取消'),
+            child: Text(AppLocalizations.of(context).actionCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('删除'),
+            child: Text(UserLocalizations.of(context).addressPage_140),
           ),
         ],
       ),
@@ -147,7 +149,7 @@ class AddressPage extends ConsumerWidget {
     if (!context.mounted) return;
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('已删除')));
+    ).showSnackBar(SnackBar(content: Text(UserLocalizations.of(context).addressPage_150)));
   }
 }
 
@@ -208,7 +210,7 @@ class _AddressCard extends StatelessWidget {
                     if (address.isDefault) ...<Widget>[
                       const SizedBox(width: 6),
                       PsTag(
-                        label: '默认',
+                        label: UserLocalizations.of(context).addressPage_211,
                         tone: PsTagTone.soft,
                         fontSize: 10,
                         radius: 3,
@@ -260,7 +262,7 @@ class _AddressCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            address.isDefault ? '默认地址' : '设为默认',
+                            address.isDefault ? UserLocalizations.of(context).addressPage_263 : UserLocalizations.of(context).addressPage_263_2,
                             style: TextStyle(
                               fontSize: 13,
                               color: address.isDefault
@@ -273,9 +275,9 @@ class _AddressCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                _ActionButton(label: '编辑', onTap: onEdit),
+                _ActionButton(label: UserLocalizations.of(context).addressPage_276, onTap: onEdit),
                 _ActionButton(
-                  label: '删除',
+                  label: UserLocalizations.of(context).addressPage_278,
                   onTap: onDelete,
                   isDestructive: true,
                 ),
@@ -345,8 +347,8 @@ class _BottomBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
           ),
-          child: const Text(
-            '新增地址',
+          child: Text(
+            UserLocalizations.of(context).addressPage_349,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
           ),
         ),
@@ -469,7 +471,7 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
               Row(
                 children: <Widget>[
                   Text(
-                    isEditing ? '编辑地址' : '新增地址',
+                    isEditing ? UserLocalizations.of(context).addressPage_472 : UserLocalizations.of(context).addressPage_472_2,
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w700,
@@ -490,15 +492,15 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
               const SizedBox(height: 4),
               _Field(
                 controller: _name,
-                label: '收件人',
-                hint: '真实姓名',
+                label: UserLocalizations.of(context).addressPage_493,
+                hint: UserLocalizations.of(context).addressPage_494,
                 maxLength: 20,
                 onChanged: _refresh,
               ),
               _Field(
                 controller: _mobile,
-                label: '手机号',
-                hint: '11 位手机号',
+                label: UserLocalizations.of(context).addressPage_500,
+                hint: UserLocalizations.of(context).addressPage_501,
                 keyboardType: TextInputType.phone,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly,
@@ -508,14 +510,14 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
               ),
               _Field(
                 controller: _region,
-                label: '所在地区',
-                hint: '省 市 区（如：上海市 浦东新区）',
+                label: UserLocalizations.of(context).addressPage_511,
+                hint: UserLocalizations.of(context).addressPage_512,
                 onChanged: _refresh,
               ),
               _Field(
                 controller: _detail,
-                label: '详细地址',
-                hint: '街道、门牌号、场馆取票口',
+                label: UserLocalizations.of(context).addressPage_517,
+                hint: UserLocalizations.of(context).addressPage_518,
                 maxLines: 2,
                 maxLength: 60,
                 onChanged: _refresh,
@@ -535,8 +537,8 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
                       borderRadius: BorderRadius.circular(AppRadius.lg),
                     ),
                   ),
-                  child: const Text(
-                    '保存',
+                  child: Text(
+                    AppLocalizations.of(context).actionSave,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                 ),

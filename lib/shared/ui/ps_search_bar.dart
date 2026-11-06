@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 /// 首页搜索栏（`home_search_bar.xml`）。
 ///
@@ -100,8 +101,8 @@ class PsSearchBar extends StatelessWidget {
                 color: colors.brand,
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Text(
-                '搜索',
+              child: Text(
+                AppLocalizations.of(context).psSearchBar_104,
                 style: TextStyle(
                   fontSize: 13,
                   height: 1.1,

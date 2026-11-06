@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../catalog/data/demo_catalog.dart';
 import 'city_tile.dart';
+import '../../../l10n/home_localizations.dart';
 
 /// 城市选择面板。
 ///
@@ -67,7 +68,7 @@ class CityPickerSheet extends StatelessWidget {
             Row(
               children: <Widget>[
                 Text(
-                  '选择城市',
+                  HomeLocalizations.of(context).cityPickerSheet_70,
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
@@ -87,14 +88,14 @@ class CityPickerSheet extends StatelessWidget {
                 Icon(LucideIcons.mapPin, size: 14, color: colors.brand),
                 const SizedBox(width: 4),
                 Text(
-                  '当前定位：上海',
+                  HomeLocalizations.of(context).cityPickerSheet_90,
                   style: TextStyle(fontSize: 12, color: colors.textTertiary),
                 ),
               ],
             ),
             const SizedBox(height: 16),
             Text(
-              '热门城市',
+              HomeLocalizations.of(context).cityPickerSheet_97,
               style: TextStyle(fontSize: 13, color: colors.textSecondary),
             ),
             const SizedBox(height: 10),
@@ -124,7 +125,7 @@ class CityPickerSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        '查看全部城市',
+                        HomeLocalizations.of(context).cityPickerSheet_127,
                         style: TextStyle(
                           fontSize: 13,
                           color: colors.textSecondary,

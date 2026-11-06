@@ -3,6 +3,7 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 
 import '../domain/domain.dart';
+import '../../../l10n/order_localizations.dart';
 
 /// 支付渠道选择面板（`dialog_pay_channel.xml`）。
 ///
@@ -49,7 +50,7 @@ class PaymentChannelSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              '选择支付方式',
+              OrderLocalizations.of(context).paymentChannelSheet_52,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,

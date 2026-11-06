@@ -10,6 +10,7 @@ import 'application/message_providers.dart';
 import 'domain/chat_message.dart';
 import 'domain/message_thread.dart';
 import '../../shared/ui/ps_network_images.dart';
+import '../../l10n/message_localizations.dart';
 
 /// 会话详情页（企划星 `UserMsgDetailActivity` + `ChatListFragment` 的会话内页）。
 ///
@@ -72,24 +73,24 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
       appBar: AdaptiveAppBar(
-        title: thread?.title ?? '会话',
-        subtitle: thread?.isOfficial ?? false ? '官方账号' : null,
+        title: thread?.title ?? MessageLocalizations.of(context).chatPage_75,
+        subtitle: thread?.isOfficial ?? false ? MessageLocalizations.of(context).chatPage_76 : null,
       ),
       body: thread == null
           ? PsEmptyState(
-              title: '会话不存在',
-              description: '它可能已被清空',
+              title: MessageLocalizations.of(context).chatPage_80,
+              description: MessageLocalizations.of(context).chatPage_81,
               icon: LucideIcons.messagesSquare,
-              actionLabel: '返回消息',
+              actionLabel: MessageLocalizations.of(context).chatPage_83,
               onAction: () => context.go('/message'),
             )
           : Column(
               children: <Widget>[
                 Expanded(
                   child: messages.isEmpty
-                      ? const PsEmptyState(
-                          title: '还没有消息',
-                          description: '打个招呼吧',
+                      ? PsEmptyState(
+                          title: MessageLocalizations.of(context).chatPage_91,
+                          description: MessageLocalizations.of(context).chatPage_92,
                           icon: LucideIcons.messageCircle,
                           compact: true,
                         )
@@ -285,7 +286,7 @@ class _Composer extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 6),
               child: Text(
-                '演示环境：消息只保存在本地，不会真的发送',
+                MessageLocalizations.of(context).chatPage_288,
                 style: TextStyle(fontSize: 10, color: colors.textDisabled),
               ),
             ),
@@ -307,7 +308,7 @@ class _Composer extends StatelessWidget {
                         decoration: InputDecoration(
                           isDense: true,
                           border: InputBorder.none,
-                          hintText: '输入消息…',
+                          hintText: MessageLocalizations.of(context).chatPage_310,
                           hintStyle: TextStyle(
                             fontSize: 14,
                             color: colors.textTertiary,
@@ -331,7 +332,7 @@ class _Composer extends StatelessWidget {
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: Text(
-                      '发送',
+                      MessageLocalizations.of(context).chatPage_334,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,

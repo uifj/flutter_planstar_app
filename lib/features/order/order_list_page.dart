@@ -12,6 +12,8 @@ import '../catalog/domain/show_summary.dart';
 import 'application/order_list_controller.dart';
 import 'domain/domain.dart';
 import 'widgets/order_list_card.dart';
+import '../../l10n/order_localizations.dart';
+import '../../l10n/app_localizations.dart';
 
 /// 我的订单（`activity_my_order.xml` + `fragment_my_activity_order.xml`）。
 ///
@@ -68,10 +70,10 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
                   error: (error, _) => PsEmptyState(
-                    title: '订单加载失败',
+                    title: OrderLocalizations.of(context).orderListPage_71,
                     description: '$error',
                     icon: LucideIcons.circleAlert,
-                    actionLabel: '重试',
+                    actionLabel: AppLocalizations.of(context).actionRetry,
                     onAction: () => ref.invalidate(orderListProvider),
                   ),
                   data: (orders) {
@@ -82,11 +84,11 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
                           const SizedBox(height: 80),
                           PsEmptyState(
                             title: filter == OrderListFilter.all
-                                ? '还没有订单'
-                                : '没有${filter.label}的订单',
-                            description: '去首页挑一场演出吧',
+                                ? OrderLocalizations.of(context).orderListPage_85
+                                : OrderLocalizations.of(context).orderListPage_87(filter.label),
+                            description: OrderLocalizations.of(context).orderListPage_88,
                             icon: LucideIcons.receiptText,
-                            actionLabel: '去逛逛',
+                            actionLabel: OrderLocalizations.of(context).orderListPage_90,
                             onAction: () => context.go('/'),
                           ),
                         ],
@@ -111,11 +113,11 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
                           onCancel: () => _cancel(context, order, actions),
                           onConfirmReceipt: () =>
                               _confirmReceipt(context, order, actions),
-                          onReview: () => _toast(context, '评价属于独立的评价聚合，本示例未实现'),
+                          onReview: () => _toast(context, OrderLocalizations.of(context).orderListPage_115),
                           onBuyAgain: () => context.push(
                             '/order/confirm?showId=${order.showId.value}',
                           ),
-                          onContactService: () => _toast(context, '客服会话（演示）'),
+                          onContactService: () => _toast(context, OrderLocalizations.of(context).orderListPage_119),
                         );
                       },
                     );
@@ -124,10 +126,10 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
               ),
             ),
           ] else
-            const Expanded(
+            Expanded(
               child: PsEmptyState(
-                title: '暂无商品订单',
-                description: '本项目只迁移了演出票链路，周边商品未包含',
+                title: OrderLocalizations.of(context).orderListPage_130,
+                description: OrderLocalizations.of(context).orderListPage_131,
                 icon: LucideIcons.shoppingBag,
               ),
             ),
@@ -177,24 +179,27 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('取消订单'),
-        content: const Text('取消后需要重新下单，确定继续吗？'),
+        title: Text(OrderLocalizations.of(context).orderListPage_181),
+        content: Text(OrderLocalizations.of(context).orderListPage_182),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('再想想'),
+            child: Text(OrderLocalizations.of(context).orderListPage_186),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('取消订单'),
+            child: Text(OrderLocalizations.of(context).orderListPage_190),
           ),
         ],
       ),
     );
-    if (!(confirmed ?? false)) return;
-    final error = await actions.cancel(order, '用户主动取消');
     if (!context.mounted) return;
-    _toast(context, error ?? '订单已取消');
+    if (!(confirmed ?? false)) return;
+    final String reason =
+        OrderLocalizations.of(context).orderListPage_196;
+    final error = await actions.cancel(order, reason);
+    if (!context.mounted) return;
+    _toast(context, error ?? OrderLocalizations.of(context).orderListPage_198);
   }
 
   Future<void> _confirmReceipt(
@@ -204,7 +209,7 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
   ) async {
     final error = await actions.confirmReceipt(order);
     if (!context.mounted) return;
-    _toast(context, error ?? '已确认收货');
+    _toast(context, error ?? OrderLocalizations.of(context).orderListPage_208);
   }
 }
 
@@ -225,7 +230,7 @@ class _PrimaryTabs extends StatelessWidget {
         height: 40,
         child: Row(
           children: <Widget>[
-            for (final (index, label) in <String>['演出', '商品'].indexed)
+            for (final (index, label) in <String>[OrderLocalizations.of(context).orderListPage_229, OrderLocalizations.of(context).orderListPage_229_2].indexed)
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () => onSelect(index),

@@ -13,6 +13,7 @@ import 'application/feed_providers.dart';
 import 'domain/feed_post.dart';
 import 'widgets/feed_card.dart';
 import 'widgets/publish_sheet.dart';
+import '../../l10n/discover_localizations.dart';
 
 /// 发现 Tab（`fragment_discovery.xml`）。
 ///
@@ -36,7 +37,7 @@ class DiscoverPage extends ConsumerStatefulWidget {
 }
 
 class _DiscoverPageState extends ConsumerState<DiscoverPage> {
-  static const List<String> _tabs = <String>['热门', '关注'];
+  List<String> get _tabs => <String>[DiscoverLocalizations.of(context).discoverPage_39, DiscoverLocalizations.of(context).discoverPage_39_2];
   int _tab = 0;
 
   @override
@@ -69,10 +70,10 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
               Expanded(
                 child: posts.isEmpty
                     ? PsEmptyState(
-                        title: '关注的人还没有新动态',
-                        description: '去热门看看大家在聊什么',
+                        title: DiscoverLocalizations.of(context).discoverPage_72,
+                        description: DiscoverLocalizations.of(context).discoverPage_73,
                         icon: LucideIcons.users,
-                        actionLabel: '查看热门',
+                        actionLabel: DiscoverLocalizations.of(context).discoverPage_75,
                         onAction: () => setState(() => _tab = 0),
                       )
                     : _MasonryFeed(posts: posts, onTapPost: openPost),

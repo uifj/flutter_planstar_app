@@ -6,6 +6,7 @@ import '../../../shared/ui/ps_poster.dart';
 import '../../../shared/ui/ps_price.dart';
 import '../../catalog/domain/show_category.dart';
 import '../../catalog/domain/show_summary.dart';
+import '../../../l10n/home_localizations.dart';
 
 /// 首页「热门场馆」楼层（`view_home_popular_venues.xml` + `item_home_venues.xml`）。
 ///
@@ -42,10 +43,10 @@ class HomeVenuesFloor extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 16),
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 14),
             child: Text(
-              '热门场馆',
+              HomeLocalizations.of(context).homeVenuesFloor_48,
               style: TextStyle(
                 fontSize: 20,
                 height: 1.2,

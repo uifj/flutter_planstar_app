@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:planstar/app/app.dart' show appLocalizationsDelegates;
 import 'package:planstar/app/theme.dart';
+import 'package:planstar/l10n/app_localizations.dart';
 import 'package:planstar/features/catalog/ui/show_list_page.dart';
 import 'package:planstar/features/discover/discover_page.dart';
 import 'package:planstar/features/discover/feed_detail_page.dart';
@@ -100,6 +102,10 @@ void main() {
         child: MaterialApp.router(
           routerConfig: router,
           theme: AppTheme.light(),
+          // 页面文案走各 feature 的 l10n；测试壳必须挂同一份 delegate，
+          // 否则 `XxxLocalizations.of(context)!` 会在首帧抛 Null check。
+          localizationsDelegates: appLocalizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
         ),
       ),
     );

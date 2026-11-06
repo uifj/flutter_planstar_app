@@ -70,12 +70,12 @@ Future<void> _pumpShell(WidgetTester tester, Locale locale) async {
 
 void main() {
   group('主题令牌', () {
-    test('品牌色是企划星的真实洋红，且不是 fromSeed 派生出来的', () {
+    test('品牌色是 TUIKit 蓝色，且不是 fromSeed 派生出来的', () {
       final ThemeData light = AppTheme.light();
 
       // 品牌色必须**等于**色板里的常量。`ColorScheme.fromSeed` 会把种子色
-      // 派生成一套"更协调"的色调，品牌红就失真了——这条断言就是防它回潮。
-      expect(light.colorScheme.primary, BrandPalette.primary);
+      // 派生成一套"更协调"的色调，品牌蓝就失真了——这条断言就是防它回潮。
+      expect(light.colorScheme.primary, BasePalette.primary);
       expect(light.brightness, Brightness.light);
 
       // 语义槽必须挂得上，否则所有 Pn* 组件都会回落到硬编码色。
@@ -109,10 +109,10 @@ void main() {
       );
 
       final ThemeData theme = Theme.of(captured);
-      expect(theme.colorScheme.primary, BrandPalette.primary);
+      expect(theme.colorScheme.primary, BasePalette.primary);
       expect(theme.extension<AppColors>(), isNotNull);
       // 走扩展方法取语义槽，证明 `context.appColors` 这条读取路径可用。
-      expect(captured.appColors.price, FunctionalPalette.price);
+      expect(captured.appColors.price, AppColors.light.price);
     });
   });
 

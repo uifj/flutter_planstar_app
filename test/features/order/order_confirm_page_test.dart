@@ -1,14 +1,21 @@
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:planstar/app/app.dart' show appLocalizationsDelegates;
 import 'package:planstar/features/order/order_confirm_page.dart';
+import 'package:planstar/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   Future<void> pumpPage(WidgetTester tester) async {
     await tester.pumpWidget(
       const ProviderScope(
-        child: MaterialApp(home: OrderConfirmPage(showId: '10086')),
+        child: MaterialApp(
+          locale: Locale('zh'),
+          localizationsDelegates: appLocalizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: OrderConfirmPage(showId: '10086'),
+        ),
       ),
     );
     await tester.pumpAndSettle();

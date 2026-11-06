@@ -46,29 +46,29 @@ void main() {
 
     test('品牌色直接进 ColorScheme，不被 fromSeed 派生掉', () {
       final theme = AppTheme.light();
-      expect(theme.colorScheme.primary, BrandPalette.primary);
-      expect(theme.colorScheme.primary, const Color(0xFFFF317B));
+      expect(theme.colorScheme.primary, BasePalette.primary);
+      expect(theme.colorScheme.primary, const Color(0xFF1C66E5));
     });
 
-    test('分隔线是 0.5 逻辑像素（企划星的细线风格）', () {
+    test('分隔线是 0.5 逻辑像素（TUIKit 细线风格）', () {
       expect(AppTheme.light().dividerTheme.thickness, 0.5);
     });
   });
 
-  group('令牌取值', () {
-    test('品牌色与企划星 Android 资源一致', () {
-      // ps_theme_color = #ffff317b
-      expect(BrandPalette.primary, const Color(0xFFFF317B));
-      // text_0 = #ff262626
-      expect(NeutralPalette.text0, const Color(0xFF262626));
-      // divider = #fff2f2f2
-      expect(NeutralPalette.divider, const Color(0xFFF2F2F2));
+  group('令牌取值（TUIKit 色阶）', () {
+    test('品牌色与中性色取自 TUIKit BaseColors', () {
+      // buttonColorPrimaryDefault = themeLight6
+      expect(BasePalette.primary, const Color(0xFF1C66E5));
+      // textColorPrimary = black2
+      expect(AppColors.light.textPrimary, const Color(0xE6000000));
+      // strokeColorSecondary = grayLight2
+      expect(AppColors.light.divider, const Color(0xFFF0F2F7));
     });
 
     test('数字样式带 tabularFigures（避免价格左右跳动）', () {
       final style = AppTypography.numeric(
         size: AppTypography.display,
-        color: BrandPalette.primary,
+        color: BasePalette.primary,
       );
       expect(style.fontFamily, AppTypography.numericFontFamily);
       expect(style.fontFeatures, contains(const FontFeature.tabularFigures()));
@@ -88,6 +88,6 @@ void main() {
         ),
       ),
     );
-    expect(resolved.price, FunctionalPalette.price);
+    expect(resolved.price, AppColors.light.price);
   });
 }

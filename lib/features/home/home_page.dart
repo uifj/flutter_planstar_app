@@ -20,6 +20,8 @@ import 'widgets/home_guarantee_floor.dart';
 import 'widgets/home_header.dart';
 import 'widgets/home_show_floor.dart';
 import 'widgets/home_venues_floor.dart';
+import '../../l10n/app_localizations.dart';
+import '../../l10n/home_localizations.dart';
 
 /// 首页（`layout_home.xml` + `HomeFragment`）。
 ///
@@ -172,11 +174,11 @@ class HomePage extends ConsumerWidget {
                     padding: const EdgeInsets.only(top: 40),
                     child: PsEmptyState(
                       title: '$city 暂无演出',
-                      description: '演示数据只覆盖上海、北京、杭州、广州、深圳',
+                      description: HomeLocalizations.of(context).homePage_176,
                       icon: LucideIcons.building2,
-                      actionLabel: '切换到上海',
+                      actionLabel: HomeLocalizations.of(context).homePage_178,
                       onAction: () =>
-                          ref.read(selectedCityProvider.notifier).select('上海'),
+                          ref.read(selectedCityProvider.notifier).select(HomeLocalizations.of(context).cityListPage_57),
                     ),
                   ),
                 )
@@ -189,8 +191,8 @@ class HomePage extends ConsumerWidget {
                 ),
                 SliverToBoxAdapter(
                   child: HomeShowFloor(
-                    title: '热门演出',
-                    description: '本周想看人数最多',
+                    title: HomeLocalizations.of(context).homePage_193,
+                    description: HomeLocalizations.of(context).homePage_194,
                     shows: hotShows.take(8).toList(growable: false),
                     onTapShow: openShow,
                     onTapMore: () => openShows(),
@@ -237,7 +239,7 @@ class HomePage extends ConsumerWidget {
                               size: 14, color: colors.textDisabled),
                           const SizedBox(width: 4),
                           Text(
-                            '企划星 · 让看演出更简单',
+                            HomeLocalizations.of(context).homePage_241,
                             style: TextStyle(
                               fontSize: 11,
                               color: colors.textDisabled,
@@ -247,7 +249,7 @@ class HomePage extends ConsumerWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        '让每一场演出都值得期待',
+                        HomeLocalizations.of(context).homePage_251,
                         style: TextStyle(
                           fontSize: 11,
                           color: colors.textDisabled,
@@ -358,10 +360,10 @@ class _ErrorScaffold extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(top: topPadding + 60),
               child: PsEmptyState(
-                title: '加载失败',
+                title: HomeLocalizations.of(context).homePage_363,
                 description: '无法获取 $city 的演出数据\n${error.toString()}',
                 icon: LucideIcons.wifiOff,
-                actionLabel: '重试',
+                actionLabel: AppLocalizations.of(context).actionRetry,
                 onAction: onRetry,
               ),
             ),

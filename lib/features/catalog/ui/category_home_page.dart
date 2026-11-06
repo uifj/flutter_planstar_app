@@ -13,6 +13,7 @@ import '../../../shared/ui/ps_tag.dart';
 import '../application/catalog_providers.dart';
 import '../domain/show_category.dart';
 import '../domain/show_summary.dart';
+import '../../../l10n/catalog_localizations.dart';
 
 /// 分类首页（企划星 `CategoryHomeActivity` + `CategoryHomeFragment`）。
 ///
@@ -113,10 +114,10 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
           Expanded(
             child: filteredShows.isEmpty
                 ? PsEmptyState(
-                    title: '$city 暂无${selectedCategory?.name ?? '该分类'}演出',
-                    description: '试试切换城市或查看其他分类',
+                    title: CatalogLocalizations.of(context).categoryHomePage_116(city, selectedCategory?.name ?? '该分类'),
+                    description: CatalogLocalizations.of(context).categoryHomePage_117,
                     icon: LucideIcons.calendarCheck,
-                    actionLabel: '去首页',
+                    actionLabel: CatalogLocalizations.of(context).categoryHomePage_119,
                     onAction: () => context.go('/'),
                   )
                 : ListView.builder(
@@ -400,10 +401,10 @@ class _CategoryShowCard extends StatelessWidget {
                             fontSize: 9,
                           ),
                         ),
-                      PsPrice(amount: show.priceFrom, size: 16, suffix: '起'),
+                      PsPrice(amount: show.priceFrom, size: 16, suffix: CatalogLocalizations.of(context).categoryHomePage_403),
                       const Spacer(),
                       Text(
-                        '${show.wishCount} 人想看',
+                        CatalogLocalizations.of(context).categoryHomePage_406(show.wishCount),
                         style: TextStyle(fontSize: 11, color: colors.textTertiary),
                       ),
                     ],

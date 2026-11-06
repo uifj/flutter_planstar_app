@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
+import '../../../l10n/home_localizations.dart';
 
 /// 首页运营 banner（`view_home_banner.xml`）。
 ///
@@ -42,30 +43,30 @@ class BannerSlide {
 }
 
 class _HomeBannerFloorState extends State<HomeBannerFloor> {
-  static const List<BannerSlide> _slides = <BannerSlide>[
+  List<BannerSlide> get _slides => <BannerSlide>[
     BannerSlide(
-      title: '双 11 演出狂欢',
-      subtitle: '满 500 减 100 · 全场通用',
-      badge: '限时',
+      title: HomeLocalizations.of(context).homeBannerFloor_47,
+      subtitle: HomeLocalizations.of(context).homeBannerFloor_48,
+      badge: HomeLocalizations.of(context).homeBannerFloor_49,
       colors: (Color(0xFFFF6AB9), Color(0xFFFE3870)),
     ),
     BannerSlide(
-      title: '新人首单立减 50',
-      subtitle: '注册即领 · 无门槛使用',
-      badge: '新人',
+      title: HomeLocalizations.of(context).homeBannerFloor_53,
+      subtitle: HomeLocalizations.of(context).homeBannerFloor_54,
+      badge: HomeLocalizations.of(context).homeBannerFloor_55,
       colors: (Color(0xFFFFB36B), Color(0xFFE8873A)),
     ),
     BannerSlide(
-      title: '《剧院魅影》中文版',
-      subtitle: '限时 9 折 · 上海文化广场',
-      badge: '热卖',
+      title: HomeLocalizations.of(context).homeBannerFloor_59,
+      subtitle: HomeLocalizations.of(context).homeBannerFloor_60,
+      badge: HomeLocalizations.of(context).homeBannerFloor_61,
       colors: (Color(0xFF9B7BFF), Color(0xFF6C4BE0)),
       showId: '2001',
     ),
     BannerSlide(
-      title: '企划星安心入场保障',
-      subtitle: '无票必赔 · 最高退一赔一',
-      badge: '保障',
+      title: HomeLocalizations.of(context).homeBannerFloor_66,
+      subtitle: HomeLocalizations.of(context).homeBannerFloor_67,
+      badge: HomeLocalizations.of(context).homeBannerFloor_68,
       colors: (Color(0xFF6FD6C4), Color(0xFF2AA08C)),
     ),
   ];

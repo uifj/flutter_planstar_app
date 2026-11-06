@@ -680,12 +680,12 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppColors colors = context.appColors;
     return Container(
-      decoration: const BoxDecoration(
-        // `gradient_ffe9ef_to_ffffff`（angle 270 = 上→下）。
+      decoration: BoxDecoration(
+        // 品牌淡色 → 卡片底，替代原 `gradient_ffe9ef_to_ffffff` 洋红渐层。
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: <Color>[Color(0xFFFFE9EF), Color(0xFFFFFFFF)],
+          colors: <Color>[colors.brandSubtle, colors.bgCard],
         ),
       ),
       // 来源：btn_close marginTop 45dp、marginStart 20dp。45dp 是距屏幕顶的
@@ -886,11 +886,8 @@ class _LoginButton extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            gradient: const LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: <Color>[Color(0xFFFF2661), Color(0xFFFF5180)],
-            ),
+            // TUIKit 主按钮是纯品牌蓝实底，不用渐变。
+            color: context.appColors.brand,
           ),
           child: Text(
             label,
