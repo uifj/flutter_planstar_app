@@ -13,99 +13,61 @@
 ///    [isComplete] 一处，并写清口径。
 library;
 
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'auth_user.freezed.dart';
+part 'auth_user.g.dart';
+
 /// 用户资料。
-final class AuthUser {
+@freezed
+abstract class AuthUser with _$AuthUser {
+  const AuthUser._();
+
   /// 创建资料。
-  const AuthUser({
-    required this.userId,
-    this.userName,
-    this.avatar = '',
-    this.bio,
-    this.gender = 0,
-    this.birthday = 0,
-    this.mobileNo,
-    this.level = 0,
-    this.followerNum = 0,
-    this.followingNum = 0,
-    this.wantWatchNum = 0,
-    this.isDouliUser = false,
-    this.badgeIcon,
-  });
+  const factory AuthUser({
+    /// 用户 id。未登录时来源用 `-1` 表示（`AccountService.userId()`）。
+    @JsonKey(readValue: _readUserId) required int userId,
 
-  /// 用户 id。未登录时来源用 `-1` 表示（`AccountService.userId()`）。
-  final int userId;
+    /// 昵称。
+    @JsonKey(readValue: _readUserName) String? userName,
 
-  /// 昵称。
-  final String? userName;
+    /// 头像 URL。空串表示没设置（来源 `UserBean.avatar` 默认 `""`）。
+    @JsonKey(readValue: _readAvatar) @Default('') String avatar,
 
-  /// 头像 URL。空串表示没设置（来源 `UserBean.avatar` 默认 `""`）。
-  final String avatar;
+    /// 个性签名。
+    @JsonKey(readValue: _readBio) String? bio,
 
-  /// 个性签名。
-  final String? bio;
+    /// 性别：0 未设置 / 1 男 / 2 女（来源 `UserBean.gender`）。
+    @JsonKey(readValue: _readGender) @Default(0) int gender,
 
-  /// 性别：0 未设置 / 1 男 / 2 女（来源 `UserBean.gender`）。
-  final int gender;
+    /// 生日（毫秒时间戳）。0 表示未设置。
+    @JsonKey(readValue: _readBirthday) @Default(0) int birthday,
 
-  /// 生日（毫秒时间戳）。0 表示未设置。
-  final int birthday;
+    /// 手机号（服务端返回的可能是脱敏后的）。
+    @JsonKey(readValue: _readMobileNo) String? mobileNo,
 
-  /// 手机号（服务端返回的可能是脱敏后的）。
-  final String? mobileNo;
+    /// 等级（"我的"页的等级胶囊）。
+    @JsonKey(readValue: _readLevel) @Default(0) int level,
 
-  /// 等级（"我的"页的等级胶囊）。
-  final int level;
+    /// 粉丝数。
+    @JsonKey(readValue: _readFollowerNum) @Default(0) int followerNum,
 
-  /// 粉丝数。
-  final int followerNum;
+    /// 关注数。
+    @JsonKey(readValue: _readFollowingNum) @Default(0) int followingNum,
 
-  /// 关注数。
-  final int followingNum;
+    /// 想看数。
+    @JsonKey(readValue: _readWantWatchNum) @Default(0) int wantWatchNum,
 
-  /// 想看数。
-  final int wantWatchNum;
+    /// 是否兜礼用户（"兜礼"角标）。
+    @JsonKey(readValue: _readIsDouliUser) @Default(false) bool isDouliUser,
 
-  /// 是否兜礼用户（"兜礼"角标）。
-  final bool isDouliUser;
-
-  /// 等级图标 URL。
-  final String? badgeIcon;
+    /// 等级图标 URL。
+    @JsonKey(readValue: _readBadgeIcon) String? badgeIcon,
+  }) = _AuthUser;
 
   /// 从 JSON 解析（字段名对齐 `UserBean`）。
-  factory AuthUser.fromJson(Map<String, Object?> json) {
-    return AuthUser(
-      userId: _asInt(json['userId']) ?? -1,
-      userName: _asString(json['userName']),
-      avatar: _asString(json['avatar']) ?? '',
-      bio: _asString(json['bio']),
-      gender: _asInt(json['gender']) ?? 0,
-      birthday: _asInt(json['birthday']) ?? 0,
-      mobileNo: _asString(json['mobileNo']),
-      level: _asInt(json['level']) ?? 0,
-      followerNum: _asInt(json['followerNum']) ?? 0,
-      followingNum: _asInt(json['followingNum']) ?? 0,
-      wantWatchNum: _asInt(json['wantWatchNum']) ?? 0,
-      isDouliUser: _asBool(json['isDouliUser']) ?? false,
-      badgeIcon: _asString(json['badgeIcon']),
-    );
-  }
-
-  /// 序列化（用于本地缓存，字段名与 [AuthUser.fromJson] 对称）。
-  Map<String, Object?> toJson() => <String, Object?>{
-    'userId': userId,
-    'userName': userName,
-    'avatar': avatar,
-    'bio': bio,
-    'gender': gender,
-    'birthday': birthday,
-    'mobileNo': mobileNo,
-    'level': level,
-    'followerNum': followerNum,
-    'followingNum': followingNum,
-    'wantWatchNum': wantWatchNum,
-    'isDouliUser': isDouliUser,
-    'badgeIcon': badgeIcon,
-  };
+  factory AuthUser.fromJson(Map<String, dynamic> json) =>
+      _$AuthUserFromJson(json);
 
   /// 是否是一个"真实存在"的用户。
   ///
@@ -147,6 +109,47 @@ final class AuthUser {
   @override
   String toString() => 'AuthUser($userId, $displayName)';
 }
+
+// ── JSON 兼容读取（服务端字段可能是字符串 / 数字 / 布尔混用）──────────────
+
+Object? _readUserId(Map<dynamic, dynamic> json, String key) =>
+    _asInt(json['userId']) ?? -1;
+
+Object? _readUserName(Map<dynamic, dynamic> json, String key) =>
+    _asString(json['userName']);
+
+Object? _readAvatar(Map<dynamic, dynamic> json, String key) =>
+    _asString(json['avatar']) ?? '';
+
+Object? _readBio(Map<dynamic, dynamic> json, String key) =>
+    _asString(json['bio']);
+
+Object? _readGender(Map<dynamic, dynamic> json, String key) =>
+    _asInt(json['gender']) ?? 0;
+
+Object? _readBirthday(Map<dynamic, dynamic> json, String key) =>
+    _asInt(json['birthday']) ?? 0;
+
+Object? _readMobileNo(Map<dynamic, dynamic> json, String key) =>
+    _asString(json['mobileNo']);
+
+Object? _readLevel(Map<dynamic, dynamic> json, String key) =>
+    _asInt(json['level']) ?? 0;
+
+Object? _readFollowerNum(Map<dynamic, dynamic> json, String key) =>
+    _asInt(json['followerNum']) ?? 0;
+
+Object? _readFollowingNum(Map<dynamic, dynamic> json, String key) =>
+    _asInt(json['followingNum']) ?? 0;
+
+Object? _readWantWatchNum(Map<dynamic, dynamic> json, String key) =>
+    _asInt(json['wantWatchNum']) ?? 0;
+
+Object? _readIsDouliUser(Map<dynamic, dynamic> json, String key) =>
+    _asBool(json['isDouliUser']) ?? false;
+
+Object? _readBadgeIcon(Map<dynamic, dynamic> json, String key) =>
+    _asString(json['badgeIcon']);
 
 int? _asInt(Object? value) {
   if (value is int) {

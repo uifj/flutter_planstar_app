@@ -12,38 +12,28 @@
 /// 同一个后端里两种错误风格并存，所以两个接口要分开建模。
 library;
 
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'send_code_response_dto.freezed.dart';
+part 'send_code_response_dto.g.dart';
+
 /// 发验证码响应。
-final class SendCodeResponseDto {
+@freezed
+abstract class SendCodeResponseDto with _$SendCodeResponseDto {
   /// 创建响应。
-  const SendCodeResponseDto({
-    required this.success,
-    this.needCaptcha = false,
-    this.errorMsg,
-  });
+  const factory SendCodeResponseDto({
+    /// 是否已下发。
+    @JsonKey(fromJson: _asBool) required bool success,
 
-  /// 是否已下发。
-  final bool success;
+    /// 是否需要先过图形验证码。
+    @JsonKey(fromJson: _asBool) @Default(false) bool needCaptcha,
 
-  /// 是否需要先过图形验证码。
-  final bool needCaptcha;
+    /// 失败原因（服务端原文，例如"发送失败"）。
+    @JsonKey(fromJson: _nonEmptyStringOrNull) String? errorMsg,
+  }) = _SendCodeResponseDto;
 
-  /// 失败原因（服务端原文，例如"发送失败"）。
-  final String? errorMsg;
-
-  /// 从 JSON 解析。
-  factory SendCodeResponseDto.fromJson(Map<String, Object?> json) {
-    final Object? msg = json['errorMsg'];
-    return SendCodeResponseDto(
-      success: _asBool(json['success']),
-      needCaptcha: _asBool(json['needCaptcha']),
-      errorMsg: msg is String && msg.isNotEmpty ? msg : null,
-    );
-  }
-
-  @override
-  String toString() =>
-      'SendCodeResponseDto(success: $success, needCaptcha: $needCaptcha, '
-      'errorMsg: $errorMsg)';
+  factory SendCodeResponseDto.fromJson(Map<String, dynamic> json) =>
+      _$SendCodeResponseDtoFromJson(json);
 }
 
 bool _asBool(Object? value) {
@@ -58,3 +48,6 @@ bool _asBool(Object? value) {
   }
   return false;
 }
+
+String? _nonEmptyStringOrNull(Object? value) =>
+    value is String && value.isNotEmpty ? value : null;

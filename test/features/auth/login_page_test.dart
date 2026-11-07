@@ -9,7 +9,7 @@ import 'package:planstar/features/auth/domain/auth_failure.dart';
 import 'package:planstar/features/auth/domain/auth_repository.dart';
 import 'package:planstar/features/auth/domain/auth_session.dart';
 import 'package:planstar/features/auth/domain/auth_user.dart';
-import 'package:planstar/l10n/app_localizations.dart';
+import 'package:planstar/l10n/generated/app_localizations.dart';
 import 'package:planstar/features/auth/login_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
