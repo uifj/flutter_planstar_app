@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/network/network_providers.dart';
 import '../../shared/ui/ps_empty_state.dart';
 import 'application/message_providers.dart';
 import 'domain/chat_message.dart';
@@ -22,10 +23,9 @@ import '../../l10n/l10n.dart';
 ///
 /// ## 与 Android 的差异
 ///
-/// - **没有真实通道**：发送只是把消息追加到本地状态（`chatMessagesProvider`），
-///   退出再进会回到演示数据。企划星走 mqtt，这里没有等价物。
-///   所以输入栏上方有一行明确的说明——**假装能发消息而不告诉用户是假的，
-///   比不给输入栏更糟**。
+/// - 真实模式走 `GET/POST /v1/chat/threads/{id}/messages` 与 `.../read`；
+///   发送采用乐观上屏，失败回滚并提示。
+/// - 演示模式（`PS_USE_DEMO=true`）保留本地演示数据，并在输入栏上方明确标注。
 /// - 不做图片/语音/表情/撤回：这些都需要通道协议支持。
 class ChatPage extends ConsumerStatefulWidget {
   const ChatPage({super.key, required this.threadId});
@@ -68,9 +68,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     final MessageThread? thread = ref.watch(
       messageThreadByIdProvider(widget.threadId),
     );
-    final List<ChatMessage> messages = ref.watch(
+    final AsyncValue<List<ChatMessage>> messagesAsync = ref.watch(
       chatMessagesProvider(widget.threadId),
     );
+    final bool isDemo = ref.watch(dataSourcePolicyProvider).isDemo;
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
@@ -89,61 +90,77 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           : Column(
               children: <Widget>[
                 Expanded(
-                  child: messages.isEmpty
-                      ? PsEmptyState(
+                  child: messagesAsync.when(
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (Object error, _) => PsEmptyState(
+                      title: context.l10n.chatPage_91,
+                      description: psErrorMessage(error),
+                      icon: LucideIcons.circleAlert,
+                      actionLabel: context.l10n.actionRetry,
+                      onAction: () =>
+                          ref.invalidate(chatMessagesProvider(widget.threadId)),
+                    ),
+                    data: (List<ChatMessage> messages) {
+                      if (messages.isEmpty) {
+                        return PsEmptyState(
                           title: context.l10n.chatPage_91,
                           description: context.l10n.chatPage_92,
                           icon: LucideIcons.messageCircle,
                           compact: true,
-                        )
-                      : ListView.builder(
-                          controller: _scrollController,
-                          padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-                          itemCount: messages.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final ChatMessage message = messages[index];
-                            final bool showTime =
-                                index == 0 ||
-                                message.sentAt
-                                        .difference(messages[index - 1].sentAt)
-                                        .abs() >
-                                    _timeGap;
-                            return Column(
-                              children: <Widget>[
-                                if (showTime)
-                                  _TimeDivider(label: message.timeLabel),
-                                _Bubble(message: message),
-                              ],
-                            );
-                          },
-                        ),
+                        );
+                      }
+                      return ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+                        itemCount: messages.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final ChatMessage message = messages[index];
+                          final bool showTime =
+                              index == 0 ||
+                              message.sentAt
+                                      .difference(messages[index - 1].sentAt)
+                                      .abs() >
+                                  _timeGap;
+                          return Column(
+                            children: <Widget>[
+                              if (showTime)
+                                _TimeDivider(label: message.timeLabel),
+                              _Bubble(message: message),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
-                _Composer(controller: _controller, onSend: _send),
+                _Composer(
+                  controller: _controller,
+                  onSend: _send,
+                  showDemoNotice: isDemo,
+                ),
               ],
             ),
     );
   }
 
-  void _send() {
+  Future<void> _send() async {
     final String text = _controller.text.trim();
     if (text.isEmpty) return;
 
-    final List<ChatMessage> current = ref.read(
-      chatMessagesProvider(widget.threadId),
-    );
-    ref
-        .read(chatMessagesProvider(widget.threadId).notifier)
-        .state = <ChatMessage>[
-      ...current,
-      ChatMessage(
-        id: 'm-${DateTime.now().microsecondsSinceEpoch}',
-        text: text,
-        sentAt: DateTime.now(),
-        fromMe: true,
-      ),
-    ];
-
     _controller.clear();
+    final String? error = await ref
+        .read(chatMessagesProvider(widget.threadId).notifier)
+        .send(text);
+    if (!mounted) return;
+
+    if (error != null) {
+      // 失败回滚后把输入内容还给用户，并提示原因。
+      if (_controller.text.isEmpty) _controller.text = text;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error)));
+    }
     setState(() {});
     _scrollToBottom(animated: true);
   }
@@ -270,10 +287,15 @@ class _Bubble extends StatelessWidget {
 
 /// 输入栏。
 class _Composer extends StatelessWidget {
-  const _Composer({required this.controller, required this.onSend});
+  const _Composer({
+    required this.controller,
+    required this.onSend,
+    required this.showDemoNotice,
+  });
 
   final TextEditingController controller;
   final VoidCallback onSend;
+  final bool showDemoNotice;
 
   @override
   Widget build(BuildContext context) {
@@ -289,14 +311,15 @@ class _Composer extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // 明确告知这是本地演示，避免用户以为消息真的发出去了。
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Text(
-                context.l10n.chatPage_288,
-                style: TextStyle(fontSize: 10, color: colors.textDisabled),
+            // 演示模式明确告知消息只存在本地。
+            if (showDemoNotice)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Text(
+                  context.l10n.chatPage_288,
+                  style: TextStyle(fontSize: 10, color: colors.textDisabled),
+                ),
               ),
-            ),
             Row(
               children: <Widget>[
                 Expanded(

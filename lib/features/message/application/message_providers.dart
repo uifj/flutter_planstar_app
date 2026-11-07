@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:core/result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/network/network_providers.dart';
 import '../../../shared/ui/ps_network_images.dart';
 import '../../auth/application/auth_providers.dart';
 import '../data/demo_chat.dart';
+import '../data/planstar_chat_api.dart';
 import '../data/planstar_message_api.dart';
 import '../domain/chat_message.dart';
 import '../domain/message_thread.dart';
@@ -13,8 +15,8 @@ import 'message_api_providers.dart';
 
 /// 消息中心状态。
 ///
-/// 真实模式下 `v1/messages` 返回的是**通知行**（`user_message`），没有会话表，
-/// 所以：`entries` 按 `msg_type` 聚合出三个系统入口的未读，`threads` 为空。
+/// 真实模式下：`entries` 按 `v1/messages` 的 `msg_type` 聚合出三个系统入口的未读，
+/// `threads` 来自 `GET /v1/chat/threads`。
 /// `PS_USE_DEMO=true` 时仍是内存演示数据（会话 + 入口）。
 final class MessageCenterState {
   const MessageCenterState({required this.entries, required this.threads});
@@ -52,14 +54,19 @@ const List<({String id, String title, String icon, String type})> _entrySpecs =
 class MessageCenterController extends AsyncNotifier<MessageCenterState> {
   @override
   Future<MessageCenterState> build() async {
-    if (ref.watch(useDemoProvider)) return _demoState();
+    if (ref.watch(dataSourcePolicyProvider).isDemo) return _demoState();
     final PlanstarMessageApi api = ref.read(planstarMessageApiProvider);
+    final ChatApi chatApi = ref.read(planstarChatApiProvider);
 
-    // 后端没有"按类型聚合"的接口，三个入口的未读只能分别取一次；
-    // 每次 pageSize=100 足够覆盖当前量级，且三请求并发，延迟等价于一次。
-    final List<int> counts = await Future.wait(<Future<int>>[
+    // 三个系统入口的未读与客服会话并发加载。
+    final List<Object?> loaded = await Future.wait<Object?>(<Future<Object?>>[
+      _loadThreads(chatApi),
       for (final spec in _entrySpecs) _unreadOfType(api, spec.type),
     ]);
+    final List<MessageThread> threads = loaded.first! as List<MessageThread>;
+    final List<int> counts = <int>[
+      for (final Object? value in loaded.skip(1)) value! as int,
+    ];
 
     return MessageCenterState(
       entries: <SystemMessageEntry>[
@@ -71,9 +78,13 @@ class MessageCenterController extends AsyncNotifier<MessageCenterState> {
             unreadCount: counts[i],
           ),
       ],
-      // 后端没有会话/聊天表，会话列表在真实模式下是空态。
-      threads: const <MessageThread>[],
+      threads: threads,
     );
+  }
+
+  Future<List<MessageThread>> _loadThreads(ChatApi api) async {
+    final result = await api.fetchThreads();
+    return result.getOrElse((_) => const <MessageThread>[]);
   }
 
   /// 清空全部消息（企划星 `ib_message_clear`）。
@@ -84,7 +95,7 @@ class MessageCenterController extends AsyncNotifier<MessageCenterState> {
   void clearThreads() {
     final MessageCenterState? current = state.valueOrNull;
     if (current == null) return;
-    if (!ref.read(useDemoProvider)) return;
+    if (ref.read(dataSourcePolicyProvider).isRemote) return;
     state = AsyncData(
       current.copyWith(
         threads: const <MessageThread>[],
@@ -124,7 +135,7 @@ class MessageCenterController extends AsyncNotifier<MessageCenterState> {
         ],
       ),
     );
-    if (ref.read(useDemoProvider)) return;
+    if (ref.read(dataSourcePolicyProvider).isDemo) return;
     final spec = _entrySpecs.where((s) => s.id == id).firstOrNull;
     if (spec == null) return;
     unawaited(
@@ -134,7 +145,7 @@ class MessageCenterController extends AsyncNotifier<MessageCenterState> {
     );
   }
 
-  /// 读掉某个会话的未读（真实模式没有会话，等同空操作）。
+  /// 读掉某个会话的未读：本地先清零，真实模式再调 `POST .../read`。
   void markThreadRead(String id) {
     final MessageCenterState? current = state.valueOrNull;
     if (current == null) return;
@@ -142,19 +153,16 @@ class MessageCenterController extends AsyncNotifier<MessageCenterState> {
       current.copyWith(
         threads: <MessageThread>[
           for (final thread in current.threads)
-            if (thread.id == id)
-              MessageThread(
-                id: thread.id,
-                title: thread.title,
-                preview: thread.preview,
-                updatedAt: thread.updatedAt,
-                avatarFallbackUrl: thread.avatarFallbackUrl,
-                isOfficial: thread.isOfficial,
-              )
-            else
-              thread,
+            if (thread.id == id) thread.copyWith(unreadCount: 0) else thread,
         ],
       ),
+    );
+    if (ref.read(dataSourcePolicyProvider).isDemo) return;
+    unawaited(
+      ref
+          .read(planstarChatApiProvider)
+          .markRead(id)
+          .whenComplete(() => ref.invalidate(messageUnreadProvider)),
     );
   }
 
@@ -207,7 +215,7 @@ class MessageCenterController extends AsyncNotifier<MessageCenterState> {
         MessageThread(
           id: 't1',
           title: '企划星官方客服',
-          preview: '您好，关于《剧院魅影》的退改签问题，我们已为您登记…',
+          preview: '您好，关于《星海回声》企划的支持退款问题，我们已为您登记…',
           updatedAt: now.subtract(const Duration(minutes: 12)),
           unreadCount: 2,
           avatarFallbackUrl: PsImages.avatar('planstar-official'),
@@ -215,30 +223,30 @@ class MessageCenterController extends AsyncNotifier<MessageCenterState> {
         ),
         MessageThread(
           id: 't2',
-          title: '演出提醒',
-          preview: '您关注的「周杰伦上海站」即将开票，别忘了设置提醒',
+          title: '企划提醒',
+          preview: '您关注的「夏日回声企划」即将开放支持，别忘了设置提醒',
           updatedAt: now.subtract(const Duration(hours: 2)),
           unreadCount: 1,
         ),
         MessageThread(
           id: 't3',
           title: '订单助手',
-          preview: '订单 PN20261108000001 已出票，可在「我的订单」查看电子票',
+          preview: '订单 PN20261108000001 已生成支持凭证，可在「我的订单」查看',
           updatedAt: now.subtract(const Duration(hours: 26)),
           unreadCount: 0,
           isOfficial: true,
         ),
         MessageThread(
           id: 't4',
-          title: '剧院常驻民',
+          title: '企划常驻民',
           preview: '你发的动态收到了 12 个赞',
           updatedAt: now.subtract(const Duration(days: 2)),
           unreadCount: 0,
         ),
         MessageThread(
           id: 't5',
-          title: '抢票小分队',
-          preview: '上海站加场了，明天十点开抢',
+          title: '支持小分队',
+          preview: '新档位追加了，明天十点开放支持',
           updatedAt: now.subtract(const Duration(days: 4)),
           unreadCount: 0,
         ),
@@ -266,7 +274,7 @@ final messageCenterProvider =
 /// 三页消息列表便宜，且角标与服务端未读总数严格一致。demo 模式沿用
 /// [messageCenterProvider] 里演示会话的未读合计。
 final messageUnreadProvider = FutureProvider<int>((ref) async {
-  if (ref.watch(useDemoProvider)) {
+  if (ref.watch(dataSourcePolicyProvider).isDemo) {
     return ref.watch(messageCenterProvider).valueOrNull?.totalUnread ?? 0;
   }
   // 未登录时该端点必返 401，游客页不必发这次请求。
@@ -292,18 +300,73 @@ final messageThreadByIdProvider = Provider.family<MessageThread?, String>((
   return null;
 });
 
+/// 某个会话的消息列表控制器。
+///
+/// 真实模式从 `GET /v1/chat/threads/{id}/messages` 加载；发送走
+/// `POST .../messages`，采用乐观上屏 + 失败回滚。
+/// 演示模式保留 [buildDemoChat] 的本地数据。
+class ChatMessagesController
+    extends FamilyAsyncNotifier<List<ChatMessage>, String> {
+  @override
+  Future<List<ChatMessage>> build(String threadId) async {
+    if (ref.watch(dataSourcePolicyProvider).isDemo) {
+      return buildDemoChat(threadId);
+    }
+    final Result<List<ChatMessage>> result = await ref
+        .read(planstarChatApiProvider)
+        .fetchMessages(threadId);
+    return result.fold(
+      onSuccess: (messages) => messages,
+      onFailure: (failure) => throw failure,
+    );
+  }
+
+  /// 发送消息。返回 `null` 表示成功，否则为错误文案（页面弹提示）。
+  Future<String?> send(String text) async {
+    final String trimmed = text.trim();
+    if (trimmed.isEmpty) return null;
+
+    final List<ChatMessage> snapshot =
+        state.valueOrNull ?? const <ChatMessage>[];
+    final ChatMessage optimistic = ChatMessage(
+      id: 'local-${DateTime.now().microsecondsSinceEpoch}',
+      text: trimmed,
+      sentAt: DateTime.now(),
+      fromMe: true,
+    );
+    state = AsyncData(<ChatMessage>[...snapshot, optimistic]);
+
+    if (ref.read(dataSourcePolicyProvider).isDemo) {
+      // 演示分支：只做本地追加，不请求接口。
+      return null;
+    }
+
+    final Result<ChatMessage> result = await ref
+        .read(planstarChatApiProvider)
+        .sendMessage(arg, trimmed);
+    return result.fold(
+      onSuccess: (ChatMessage saved) {
+        final List<ChatMessage> current =
+            state.valueOrNull ?? const <ChatMessage>[];
+        state = AsyncData(<ChatMessage>[
+          ...current.where((message) => message.id != optimistic.id),
+          saved,
+        ]);
+        return null;
+      },
+      onFailure: (failure) {
+        // 失败回滚到发送前的快照。
+        state = AsyncData(snapshot);
+        return failure.message.isEmpty ? '发送失败，请重试' : failure.message;
+      },
+    );
+  }
+}
+
 /// 某个会话的消息列表。
-///
-/// ## 为什么是 `StateProvider.family`
-///
-/// 发消息只是"往列表尾部追加"，没有别的状态要维护，不值得为它建一个
-/// `Notifier` 子类。接真实通道时换成 `StreamProvider.family` 订阅 mqtt
-/// 推送即可——页面读的仍然是 `List<ChatMessage>`，结构不变。
-///
-/// `family` 的键是会话 id：每个会话一份独立状态，切走再回来消息还在。
-final chatMessagesProvider = StateProvider.family<List<ChatMessage>, String>((
-  ref,
-  String threadId,
-) {
-  return buildDemoChat(threadId);
-});
+final chatMessagesProvider =
+    AsyncNotifierProvider.family<
+      ChatMessagesController,
+      List<ChatMessage>,
+      String
+    >(ChatMessagesController.new);

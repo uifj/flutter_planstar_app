@@ -5,25 +5,22 @@
 /// ——这些没有真实通道时全是死字段。
 library;
 
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'chat_message.freezed.dart';
+
 /// 会话消息。
-final class ChatMessage {
-  const ChatMessage({
-    required this.id,
-    required this.text,
-    required this.sentAt,
-    required this.fromMe,
-    this.senderName,
-  });
+@freezed
+abstract class ChatMessage with _$ChatMessage {
+  const ChatMessage._();
 
-  final String id;
-  final String text;
-  final DateTime sentAt;
-
-  /// 是否自己发的（决定气泡左右与配色）。
-  final bool fromMe;
-
-  /// 对方昵称（群聊用；一对一为 `null`）。
-  final String? senderName;
+  const factory ChatMessage({
+    required String id,
+    required String text,
+    required DateTime sentAt,
+    required bool fromMe,
+    String? senderName,
+  }) = _ChatMessage;
 
   /// 时间文案：`HH:mm`。
   String get timeLabel {

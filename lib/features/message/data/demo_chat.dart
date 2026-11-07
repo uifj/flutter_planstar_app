@@ -37,7 +37,7 @@ List<ChatMessage> buildDemoChat(String threadId, {DateTime? now}) {
       ),
       msg(
         id: 't1-2',
-        text: '我买的《剧院魅影》11 月 8 日那场，临时有事去不了，能退吗？',
+        text: '我买的《星海回声》11 月 8 日那场，临时有事去不了，能退吗？',
         ago: const Duration(minutes: 38),
         fromMe: true,
       ),
@@ -56,8 +56,8 @@ List<ChatMessage> buildDemoChat(String threadId, {DateTime? now}) {
       msg(
         id: 't1-5',
         text:
-            '您好，关于《剧院魅影》的退改签问题，我们已为您登记，'
-            '演出前 7 天可申请退票，扣除 10% 手续费，3 个工作日内原路退回。',
+            '您好，关于《星海回声》企划的支持退款问题，我们已为您登记，'
+            '支持截止前 7 天可申请退款，扣除 10% 手续费，3 个工作日内原路退回。',
         ago: const Duration(minutes: 12),
         senderName: '企划星官方客服',
       ),
@@ -65,9 +65,9 @@ List<ChatMessage> buildDemoChat(String threadId, {DateTime? now}) {
     't2' => <ChatMessage>[
       msg(
         id: 't2-1',
-        text: '您关注的「周杰伦上海站」即将开票，别忘了设置提醒。',
+        text: '您关注的「夏日回声企划」即将开放支持，别忘了设置提醒。',
         ago: const Duration(hours: 2),
-        senderName: '演出提醒',
+        senderName: '企划提醒',
       ),
       msg(
         id: 't2-2',
@@ -79,7 +79,7 @@ List<ChatMessage> buildDemoChat(String threadId, {DateTime? now}) {
     't3' => <ChatMessage>[
       msg(
         id: 't3-1',
-        text: '订单 PN20261108000001 已出票，可在「我的订单」查看电子票。',
+        text: '订单 PN20261108000001 已生成支持凭证，可在「我的订单」查看。',
         ago: const Duration(hours: 26),
         senderName: '订单助手',
       ),
@@ -87,9 +87,9 @@ List<ChatMessage> buildDemoChat(String threadId, {DateTime? now}) {
     't5' => <ChatMessage>[
       msg(
         id: 't5-1',
-        text: '上海站加场了，明天十点开抢。',
+        text: '新档位追加了，明天十点开放支持。',
         ago: const Duration(days: 4, minutes: 30),
-        senderName: '抢票小分队',
+        senderName: '支持小分队',
       ),
       msg(
         id: 't5-2',
@@ -99,9 +99,9 @@ List<ChatMessage> buildDemoChat(String threadId, {DateTime? now}) {
       ),
       msg(
         id: 't5-3',
-        text: '加场是周五场，票档和原来一样。',
+        text: '追加的是周五档，回报档位和原来一样。',
         ago: const Duration(days: 4, minutes: 5),
-        senderName: '抢票小分队',
+        senderName: '支持小分队',
       ),
     ],
     _ => const <ChatMessage>[],
