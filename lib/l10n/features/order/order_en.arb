@@ -246,5 +246,7 @@
   "orderListCard_250": "再次购买",
   "orderListCard_298": "支付已超时，请重新下单",
   "orderListCard_305": "剩余支付时间 {minutes}:{seconds}",
-  "paymentChannelSheet_52": "选择支付方式"
+  "paymentChannelSheet_52": "选择支付方式",
+  "orderConfirmPage_seatsTitle": "已选座位",
+  "orderConfirmPage_seatsSubtotal": "座位小计"
 }

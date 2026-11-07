@@ -8,6 +8,8 @@ import 'package:go_router/go_router.dart';
 import 'application/order_confirm_controller.dart';
 import 'application/order_draft_seed.dart';
 import 'domain/domain.dart';
+import '../goods/seatmap/seat_selection_providers.dart';
+import 'widgets/selected_seats_section.dart';
 import '../../l10n/l10n.dart';
 import 'order_l10n.dart';
 
@@ -27,6 +29,16 @@ class OrderConfirmPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(orderConfirmControllerProvider(showId));
     final seed = ref.watch(orderDraftSeedProvider(showId));
+    // 选座结果：与选座页共享同一个 provider family，座位对象完整传递。
+    final selectedSeats = ref
+        .watch(seatSelectionProvider(showId))
+        .selectedSeats;
+    // 选座走本地 mock 定价（后端暂无座位 SKU），应付金额以座位小计为准，
+    // 避免出现"座位小计 ¥6,880 / 应付 ¥680"的割裂展示。
+    var seatTotalMinor = 0;
+    for (final seat in selectedSeats) {
+      seatTotalMinor += seat.price?.minorUnits ?? 0;
+    }
     final controller = ref.read(
       orderConfirmControllerProvider(showId).notifier,
     );
@@ -58,6 +70,7 @@ class OrderConfirmPage extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
               children: <Widget>[
                 _ShowHeader(seed: seed),
+                SelectedSeatsSection(seats: selectedSeats),
                 if (state.notice != null)
                   _NoticeBar(
                     message: state.notice!.messageOf(context),
@@ -230,7 +243,9 @@ class OrderConfirmPage extends ConsumerWidget {
             ),
           ),
           _SubmitBar(
-            payable: state.displayQuote.paymentAmount,
+            payable: selectedSeats.isEmpty || seatTotalMinor == 0
+                ? state.displayQuote.paymentAmount
+                : Money.fromMinorUnits(seatTotalMinor),
             enabled: state.canSubmit,
             submitting: state.submitting,
             submitted: state.submitted,

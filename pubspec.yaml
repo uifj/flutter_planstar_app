@@ -57,6 +57,7 @@ dependencies:
   flutter_baidu_mapapi_utils: ^4.0.2
   flutter_baidu_mapapi_search: ^4.0.2
   flutter_baidu_mapapi_base: 4.0.2
+  webview_flutter: ^4.14.1
 
   # 已移除 lottie：本地动画资源随 assets/ 一并删除，加载态改为代码绘制。
 
@@ -77,3 +78,7 @@ flutter:
   #   - 图片统一走开源免费图床（见 lib/shared/ui/ps_network_images.dart）
   #   - categories / api_config 等配置改为 Dart 编译期常量
   #   - 字体使用系统默认字体
+  #
+  # 例外：选座 WebView 的离线页面（HTML/CSS/JS 一体，无外网请求）。
+  assets:
+    - assets/seatmap/seat_map.html

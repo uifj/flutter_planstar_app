@@ -1580,6 +1580,18 @@ abstract class OrderLocalizations {
   /// In zh, this message translates to:
   /// **'选择支付方式'**
   String get paymentChannelSheet_52;
+
+  /// 确认订单页：已选座位分组标题
+  ///
+  /// In zh, this message translates to:
+  /// **'已选座位'**
+  String get orderConfirmPage_seatsTitle;
+
+  /// 确认订单页：所选座位票价合计
+  ///
+  /// In zh, this message translates to:
+  /// **'座位小计'**
+  String get orderConfirmPage_seatsSubtotal;
 }
 
 class _OrderLocalizationsDelegate extends LocalizationsDelegate<OrderLocalizations> {

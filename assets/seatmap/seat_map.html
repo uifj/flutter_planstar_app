@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>选座</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #EDF1F7;
+      font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Helvetica Neue", sans-serif;
+      color: #1A1A1A;
+      touch-action: none;
+      overscroll-behavior: none;
+    }
+
+    #canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding: 10px 10px 18px;
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+
+    #stage {
+      width: max-content;
+      min-width: 220px;
+      margin: 0 auto 12px;
+      padding: 7px 46px;
+      border-radius: 24px 24px 6px 6px;
+      background: linear-gradient(180deg, #DCE6FA 0%, #EAF0FB 100%);
+      color: #5C6B85;
+      font-size: 11px;
+      letter-spacing: 6px;
+      text-align: center;
+      box-shadow: inset 0 1px 0 #FFFFFF;
+    }
+
+    .area {
+      width: max-content;
+      margin: 0 auto 12px;
+      padding: 10px 12px 12px;
+      border-radius: 14px;
+      background: #FFFFFF;
+      box-shadow: 0 2px 10px rgba(24, 39, 75, 0.06);
+    }
+
+    .area-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 2px 10px;
+      font-size: 12px;
+    }
+
+    .area-head .dot {
+      width: 5px;
+      height: 14px;
+      border-radius: 3px;
+      background: #1C66E5;
+      flex: none;
+    }
+
+    .area-head .name {
+      font-weight: 700;
+      color: #1A1A1A;
+    }
+
+    .area-head .price {
+      color: #E54545;
+      font-weight: 700;
+    }
+
+    .area-head .avail {
+      margin-left: auto;
+      color: #9AA3B2;
+      font-size: 11px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .row:last-child {
+      margin-bottom: 0;
+    }
+
+    .row-label {
+      width: 18px;
+      flex: none;
+      text-align: center;
+      font-size: 10px;
+      color: #9AA3B2;
+    }
+
+    .seats {
+      display: flex;
+      gap: 5px;
+    }
+
+    .seat {
+      width: 22px;
+      height: 22px;
+      flex: none;
+      border-radius: 5px 5px 4px 4px;
+      border: 1.5px solid #C3CCDC;
+      background: #FFFFFF;
+      box-shadow: 0 1px 2px rgba(24, 39, 75, .06);
+      transition: transform .12s ease, background-color .12s ease,
+                  border-color .12s ease, box-shadow .12s ease;
+    }
+
+    .seat.available {
+      cursor: pointer;
+    }
+
+    .seat.available:active {
+      transform: scale(.88);
+    }
+
+    .seat.sold {
+      background: #DCE1EA;
+      border-color: #DCE1EA;
+      box-shadow: none;
+    }
+
+    .seat.locked {
+      background: #FFE3B8;
+      border-color: #FFCE86;
+      box-shadow: none;
+    }
+
+    .seat.aisle {
+      background: transparent;
+      border: none;
+      pointer-events: none;
+    }
+
+    .seat.blocked {
+      background: transparent;
+      border: 1px dashed #E8EBF2;
+      pointer-events: none;
+    }
+
+    .seat.selected {
+      background: #1C66E5;
+      border-color: #1C66E5;
+      box-shadow: 0 3px 8px rgba(28, 102, 229, .38);
+      animation: seat-pop .18s ease-out;
+    }
+
+    @keyframes seat-pop {
+      0% { transform: scale(.72); }
+      60% { transform: scale(1.14); }
+      100% { transform: scale(1); }
+    }
+
+    .seat.shake {
+      animation: seat-shake .32s ease;
+    }
+
+    @keyframes seat-shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      75% { transform: translateX(3px); }
+    }
+
+    #zoom {
+      position: fixed;
+      right: 12px;
+      bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    #zoom button {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .95);
+      color: #4A5568;
+      font-size: 17px;
+      line-height: 1;
+      box-shadow: 0 2px 8px rgba(24, 39, 75, .16);
+    }
+
+    #zoom button:active {
+      background: #EEF2F9;
+      transform: scale(.94);
+    }
+
+    #tip {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      padding: 5px 12px;
+      border-radius: 12px;
+      background: rgba(26, 32, 44, .55);
+      color: #FFFFFF;
+      font-size: 11px;
+      letter-spacing: .5px;
+      opacity: 0;
+      transition: opacity .25s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #tip.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas">
+    <div id="stage" hidden>舞台</div>
+    <div id="areas"></div>
+  </div>
+  <div id="zoom">
+    <button type="button" data-zoom="in" aria-label="放大">＋</button>
+    <button type="button" data-zoom="out" aria-label="缩小">－</button>
+    <button type="button" data-zoom="reset" aria-label="复位">⤾</button>
+  </div>
+  <div id="tip">双指缩放 · 拖动查看</div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    var canvas = document.getElementById('canvas');
+    var areasEl = document.getElementById('areas');
+    var stageEl = document.getElementById('stage');
+    var tipEl = document.getElementById('tip');
+
+    var state = { maxSeats: 6, areas: [], stageLabel: '舞台' };
+    var selected = new Set();
+    var view = { x: 0, y: 0, s: 1 };
+    var MIN_SCALE = 0.5;
+    var MAX_SCALE = 2.6;
+    var pointers = new Map();
+    var drag = null;
+    var moved = false;
+    var lastTapAt = 0;
+    var tipTimer = null;
+
+    // ── 与 Flutter 的通信 ────────────────────────────────────────────────
+    function post(message) {
+      try {
+        if (window.PsSeatBridge) {
+          window.PsSeatBridge.postMessage(JSON.stringify(message));
+        }
+      } catch (e) { /* 通道未就绪时忽略 */ }
+    }
+
+    function notifySelection() {
+      post({ type: 'selection', ids: Array.from(selected) });
+    }
+
+    // ── 渲染 ────────────────────────────────────────────────────────────
+    function money(minor) {
+      if (!minor) return '';
+      return '¥' + Math.round(minor / 100).toLocaleString('zh-CN');
+    }
+
+    function buildSeat(seat) {
+      var el = document.createElement('div');
+      el.className = 'seat ' + seat.status;
+      el.dataset.id = String(seat.id);
+      el.dataset.status = seat.status;
+      if (seat.status === 'available') el.dataset.price = String(seat.price || 0);
+      if (selected.has(seat.id)) el.classList.add('selected');
+      return el;
+    }
+
+    function buildArea(area) {
+      var card = document.createElement('div');
+      card.className = 'area';
+
+      var head = document.createElement('div');
+      head.className = 'area-head';
+
+      var dot = document.createElement('span');
+      dot.className = 'dot';
+      if (area.color) dot.style.background = area.color;
+
+      var name = document.createElement('span');
+      name.className = 'name';
+      name.textContent = area.name;
+
+      var price = document.createElement('span');
+      price.className = 'price';
+      price.textContent = money(area.price);
+
+      var avail = document.createElement('span');
+      avail.className = 'avail';
+      avail.textContent = (area.available || 0) + ' 席可选';
+
+      head.appendChild(dot);
+      head.appendChild(name);
+      if (area.price) head.appendChild(price);
+      head.appendChild(avail);
+      card.appendChild(head);
+
+      area.rows.forEach(function (row) {
+        var rowEl = document.createElement('div');
+        rowEl.className = 'row';
+
+        var label = document.createElement('div');
+        label.className = 'row-label';
+        label.textContent = row.label;
+
+        var seatsEl = document.createElement('div');
+        seatsEl.className = 'seats';
+        row.seats.forEach(function (seat) {
+          seatsEl.appendChild(buildSeat(seat));
+        });
+
+        rowEl.appendChild(label);
+        rowEl.appendChild(seatsEl);
+        card.appendChild(rowEl);
+      });
+
+      return card;
+    }
+
+    function render() {
+      areasEl.innerHTML = '';
+      state.areas.forEach(function (area) {
+        areasEl.appendChild(buildArea(area));
+      });
+      stageEl.hidden = false;
+      stageEl.textContent = state.stageLabel || '舞台';
+      applyTransform();
+      requestAnimationFrame(function () {
+        fit();
+        showTip('双指缩放 · 拖动查看');
+      });
+    }
+
+    // ── 缩放 / 平移 ─────────────────────────────────────────────────────
+    function applyTransform() {
+      canvas.style.transform =
+        'translate3d(' + view.x + 'px,' + view.y + 'px,0) scale(' + view.s + ')';
+    }
+
+    function clampValue(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function clampView() {
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      var cw = canvas.offsetWidth * view.s;
+      var ch = canvas.offsetHeight * view.s;
+
+      if (cw <= w) {
+        view.x = (w - cw) / 2;
+      } else {
+        view.x = clampValue(view.x, w - cw - 40, 40);
+      }
+      if (ch <= h) {
+        view.y = (h - ch) / 2;
+      } else {
+        view.y = clampValue(view.y, h - ch - 40, 40);
+      }
+    }
+
+    function setView(x, y, scale) {
+      view.s = clampValue(scale, MIN_SCALE, MAX_SCALE);
+      view.x = x;
+      view.y = y;
+      clampView();
+      applyTransform();
+    }
+
+    function fit() {
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      var cw = canvas.offsetWidth;
+      var ch = canvas.offsetHeight;
+      if (!cw || !ch) return;
+
+      var scale = clampValue((w - 12) / cw, MIN_SCALE, 1.08);
+      var x = (w - cw * scale) / 2;
+      var y = ch * scale <= h ? (h - ch * scale) / 2 : 0;
+      setView(x, y, scale);
+    }
+
+    function zoomAt(nextScale, px, py) {
+      var s = clampValue(nextScale, MIN_SCALE, MAX_SCALE);
+      var ratio = s / view.s;
+      view.x = px - (px - view.x) * ratio;
+      view.y = py - (py - view.y) * ratio;
+      view.s = s;
+      clampView();
+      applyTransform();
+    }
+
+    document.getElementById('zoom').addEventListener('click', function (e) {
+      var button = e.target.closest('button');
+      if (!button) return;
+      var action = button.dataset.zoom;
+      var cx = window.innerWidth / 2;
+      var cy = window.innerHeight / 2;
+      if (action === 'in') zoomAt(view.s * 1.25, cx, cy);
+      if (action === 'out') zoomAt(view.s / 1.25, cx, cy);
+      if (action === 'reset') fit();
+    });
+
+    function distance(a, b) {
+      var dx = a.x - b.x;
+      var dy = a.y - b.y;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    document.addEventListener('pointerdown', function (e) {
+      // 缩放按钮是普通控件，不参与画布手势，避免 preventDefault 吞掉 click。
+      if (e.target && e.target.closest && e.target.closest('#zoom')) return;
+      e.preventDefault();
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      moved = false;
+      if (pointers.size === 1) {
+        drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
+      } else if (pointers.size === 2) {
+        var pair = Array.from(pointers.values());
+        drag = {
+          dist: distance(pair[0], pair[1]),
+          scale: view.s,
+          cx: (pair[0].x + pair[1].x) / 2,
+          cy: (pair[0].y + pair[1].y) / 2
+        };
+        moved = true;
+      }
+    }, { passive: false });
+
+    document.addEventListener('pointermove', function (e) {
+      if (!pointers.has(e.pointerId)) return;
+      e.preventDefault();
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      if (pointers.size === 1 && drag && drag.dist === undefined) {
+        var dx = e.clientX - drag.x;
+        var dy = e.clientY - drag.y;
+        if (Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
+        setView(drag.vx + dx, drag.vy + dy, view.s);
+      } else if (pointers.size === 2 && drag && drag.dist !== undefined) {
+        var pair = Array.from(pointers.values());
+        var next = drag.scale * (distance(pair[0], pair[1]) / drag.dist);
+        var cx = (pair[0].x + pair[1].x) / 2;
+        var cy = (pair[0].y + pair[1].y) / 2;
+        zoomAt(next, cx, cy);
+      }
+    }, { passive: false });
+
+    function endPointer(e) {
+      pointers.delete(e.pointerId);
+
+      if (pointers.size === 0) {
+        var wasDrag = moved;
+        drag = null;
+        moved = false;
+        if (!wasDrag) handleTap(e);
+      } else if (pointers.size === 1) {
+        var left = Array.from(pointers.values())[0];
+        drag = { x: left.x, y: left.y, vx: view.x, vy: view.y };
+      }
+    }
+
+    document.addEventListener('pointerup', endPointer);
+    document.addEventListener('pointercancel', function (e) {
+      pointers.delete(e.pointerId);
+      if (pointers.size === 0) {
+        drag = null;
+        moved = false;
+      }
+    });
+
+    function handleTap(e) {
+      if (e.target && e.target.closest && e.target.closest('#zoom')) return;
+
+      var now = Date.now();
+      var isDoubleTap = now - lastTapAt < 300;
+      lastTapAt = now;
+
+      var seatEl = e.target && e.target.closest ? e.target.closest('.seat') : null;
+      if (isDoubleTap) {
+        if (!seatEl) {
+          var target = view.s > 1.2 ? 1 : 1.8;
+          zoomAt(target, e.clientX, e.clientY);
+        }
+        return;
+      }
+      if (!seatEl) return;
+      if (seatEl.dataset.status !== 'available') return;
+      toggleSeat(seatEl);
+    }
+
+    function toggleSeat(seatEl) {
+      var id = Number(seatEl.dataset.id);
+      if (selected.has(id)) {
+        selected.delete(id);
+        seatEl.classList.remove('selected');
+      } else {
+        if (selected.size >= state.maxSeats) {
+          seatEl.classList.add('shake');
+          setTimeout(function () { seatEl.classList.remove('shake'); }, 340);
+          post({ type: 'limit', max: state.maxSeats });
+          return;
+        }
+        selected.add(id);
+        seatEl.classList.add('selected');
+      }
+      notifySelection();
+    }
+
+    function showTip(text) {
+      tipEl.textContent = text;
+      tipEl.classList.add('show');
+      clearTimeout(tipTimer);
+      tipTimer = setTimeout(function () {
+        tipEl.classList.remove('show');
+      }, 2200);
+    }
+
+    // ── Flutter → WebView 的入口 ────────────────────────────────────────
+    window.PsSeat = {
+      init: function (payload) {
+        state.maxSeats = payload.maxSeats || 6;
+        state.areas = payload.areas || [];
+        state.stageLabel = payload.stageLabel || '舞台';
+        selected = new Set(payload.selection || []);
+        render();
+      },
+      applySelection: function (ids) {
+        selected = new Set(ids || []);
+        var nodes = areasEl.querySelectorAll('.seat');
+        for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          var id = Number(node.dataset.id);
+          node.classList.toggle('selected', selected.has(id));
+        }
+      },
+      setMax: function (max) {
+        state.maxSeats = max || state.maxSeats;
+      }
+    };
+
+    // 通知 Flutter：页面与通道已就绪，可以下发座位图数据。
+    // 通道对象由 WebView 注入，个别机型注入略晚，这里做有限次重试。
+    (function announceReady(attempt) {
+      if (window.PsSeatBridge) {
+        post({ type: 'ready' });
+        return;
+      }
+      if (attempt > 40) return;
+      setTimeout(function () { announceReady(attempt + 1); }, 50);
+    })(0);
+  })();
+  </script>
+</body>
+</html>

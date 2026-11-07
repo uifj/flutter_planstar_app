@@ -838,4 +838,10 @@ class OrderLocalizationsZh extends OrderLocalizations {
 
   @override
   String get paymentChannelSheet_52 => '选择支付方式';
+
+  @override
+  String get orderConfirmPage_seatsTitle => '已选座位';
+
+  @override
+  String get orderConfirmPage_seatsSubtotal => '座位小计';
 }

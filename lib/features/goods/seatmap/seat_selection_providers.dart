@@ -101,6 +101,24 @@ class SeatSelectionController
     state = state.copyWith(selectedSeatIds: ids);
   }
 
+  /// 用 WebView 回传的整份选中集合覆盖当前状态。
+  ///
+  /// WebView 只是渲染层，这里仍按座位图数据做一次校验：
+  /// 只接受真实存在且可选的座位，并强制不超过 [SeatSelectionState.maxSeats]。
+  void setSelection(Iterable<int> seatIds) {
+    final next = <int>{};
+    for (final id in seatIds) {
+      if (next.length >= SeatSelectionState.maxSeats) break;
+      final seat = state.mapData.seatById(id);
+      if (seat != null && seat.isSelectable) next.add(id);
+    }
+    if (next.length == state.selectedSeatIds.length &&
+        next.containsAll(state.selectedSeatIds)) {
+      return;
+    }
+    state = state.copyWith(selectedSeatIds: next);
+  }
+
   /// 清空选择。
   void clear() {
     state = state.copyWith(selectedSeatIds: <int>{});

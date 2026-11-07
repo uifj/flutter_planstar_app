@@ -757,6 +757,8 @@ final class AppL10n {
   String get orderListCard_298 => _orderL10n.orderListCard_298;
   String orderListCard_305(Object minutes, Object seconds) => _orderL10n.orderListCard_305(minutes, seconds);
   String get paymentChannelSheet_52 => _orderL10n.paymentChannelSheet_52;
+  String get orderConfirmPage_seatsTitle => _orderL10n.orderConfirmPage_seatsTitle;
+  String get orderConfirmPage_seatsSubtotal => _orderL10n.orderConfirmPage_seatsSubtotal;
   String get proxyBuy_142 => _proxyBuyL10n.proxyBuy_142;
   String get proxyBuy_144 => _proxyBuyL10n.proxyBuy_144;
   String get proxyBuy_146 => _proxyBuyL10n.proxyBuy_146;

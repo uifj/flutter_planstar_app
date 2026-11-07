@@ -1233,5 +1233,13 @@
   "paymentChannelSheet_52": "选择支付方式",
   "@paymentChannelSheet_52": {
     "description": "来源：lib/features/order/widgets/payment_channel_sheet.dart:52；原文：'选择支付方式'"
+  },
+  "orderConfirmPage_seatsTitle": "已选座位",
+  "@orderConfirmPage_seatsTitle": {
+    "description": "确认订单页：已选座位分组标题"
+  },
+  "orderConfirmPage_seatsSubtotal": "座位小计",
+  "@orderConfirmPage_seatsSubtotal": {
+    "description": "确认订单页：所选座位票价合计"
   }
 }

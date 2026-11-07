@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../shared/ui/ps_price.dart';
 import 'seat_map.dart';
-import 'seat_map_view.dart';
+import 'seat_map_webview.dart';
 import 'seat_selection_providers.dart';
 import '../../../l10n/l10n.dart';
 
@@ -15,16 +15,19 @@ import '../../../l10n/l10n.dart';
 ///
 /// ## 结构
 ///
-/// 舞台标签 → 座位图（缩放/拖拽）→ 已选座位列表 → 底部确认栏。
+/// 舞台标签 → 座位图（WebView，支持拖动/双指缩放）→ 已选座位列表 → 底部确认栏。
+///
+/// ## 渲染方案
+///
+/// 座位图由 `assets/seatmap/seat_map.html` 在 WebView 里渲染：
+/// 手势与动画交给浏览器内核，Flutter 只保留图例、已选标签与确认栏。
+/// 选中态以 Riverpod 为唯一真源，WebView 通过 `PsSeatBridge` 通道回传全量
+/// 选中集合，Flutter 校验后落库，并在返回/重建时回写 WebView 完成回显。
 ///
 /// ## 与 Android 的差异
 ///
 /// - **不做 Mapbox**：企划星用 Mapbox GL 渲染场馆俯视图，点击区域后展开座位。
-///   本项目用**网格表格模式**（对齐 `ChooseTicketSeatTableFragment`），
-///   用 `CustomPainter` + `InteractiveViewer` 渲染。
-///   理由：Mapbox SDK 需要独立 token + 平台配置，演示项目不引入。
-///   网格模式的数据结构（区域→排→座）与 Mapbox 模式相同，
-///   后续接 Mapbox 时只需替换渲染层。
+///   本项目用**网格表格模式**（对齐 `ChooseTicketSeatTableFragment`）。
 /// - **不做锁座**：企划星在 `purchaseTicket` 时调 `checkGoodStock` 验证库存。
 ///   这里只做本地选择，不与服务端交互。
 /// - **不做连座**：企划星的 `isContinuousSeat` 要求选连续座位。
@@ -50,18 +53,28 @@ class SeatSelectionPage extends ConsumerWidget {
         children: <Widget>[
           // 图例
           _LegendBar(colors: colors),
-          // 座位图
-          // InteractiveViewer 自己负责缩放/拖拽，外层不能再套可滚动组件：
-          // 竖向滚动容器会给子节点无界高度，而座位图需要按视口尺寸布局。
+          // 座位图（WebView 渲染，Flutter 侧只保留状态真源）
           Expanded(
             child: Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(4),
               color: colors.bgSubtle,
-              child: SeatMapView(
-                state: state,
-                onToggle: (seat) => ref
-                    .read(seatSelectionProvider(showId).notifier)
-                    .toggleSeat(seat),
+              child: SeatMapWebView(
+                showId: showId,
+                onLimitReached: () {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          context.l10n.seatSelectionPage_191(
+                            state.count,
+                            SeatSelectionState.maxSeats,
+                          ),
+                        ),
+                        duration: const Duration(milliseconds: 1500),
+                      ),
+                    );
+                },
               ),
             ),
           ),
@@ -81,21 +94,10 @@ class SeatSelectionPage extends ConsumerWidget {
             state: state,
             colors: colors,
             onConfirm: () {
-              // 跳到确认订单页，带上选座信息。
-              // 目前 order/confirm 只接受 showId，选座信息暂不传入
-              // （需要扩展 OrderConfirmPage 以接受 seatIds 参数）。
-              // P0 切片先跳转，P1 补齐参数传递。
+              // 选座结果通过 `seatSelectionProvider(showId)` 传给确认订单页：
+              // 确认页与本页共享同一个 ProviderScope，读取到的是同一份
+              // 座位对象（区域/排/座/票价），无需在 URL 里重复编码。
               context.push('/order/confirm?showId=$showId');
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    context.l10n.seatSelectionPage_91(
-                      state.count,
-                      state.totalPrice.format(),
-                    ),
-                  ),
-                ),
-              );
             },
           ),
         ],

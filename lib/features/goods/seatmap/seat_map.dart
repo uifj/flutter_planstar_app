@@ -136,6 +136,18 @@ class SeatMapData {
   int get totalAvailable =>
       areas.fold(0, (sum, area) => sum + area.availableCount);
 
+  /// 按 ID 查座位（WebView 回传的选中集合需要映射回领域对象）。
+  Seat? seatById(int id) {
+    for (final area in areas) {
+      for (final row in area.rows) {
+        for (final seat in row.seats) {
+          if (seat.id == id) return seat;
+        }
+      }
+    }
+    return null;
+  }
+
   /// 网格总宽度（取最大区域宽度）。
   int get gridWidth => areas.isEmpty
       ? 0
