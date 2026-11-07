@@ -22,14 +22,14 @@ import 'order_l10n.dart';
 class OrderConfirmPage extends ConsumerWidget {
   const OrderConfirmPage({super.key, this.showId = '10086'});
 
-  /// 演出 id（从路由 query 来；缺省时用演示值）。
+  /// 企划 id（从路由 query 来；缺省时用演示值）。
   final String showId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(orderConfirmControllerProvider(showId));
     final seed = ref.watch(orderDraftSeedProvider(showId));
-    // 选座结果：与选座页共享同一个 provider family，座位对象完整传递。
+    // 选座结果：与选座页共享同一个 provider family，座席对象完整传递。
     final selectedSeats = ref
         .watch(seatSelectionProvider(showId))
         .selectedSeats;
@@ -276,7 +276,10 @@ class _ShowHeader extends StatelessWidget {
           Text(seed.showTitle, style: theme.textTheme.titleMedium),
           const SizedBox(height: 4),
           Text(
-            '${seed.sessionLabel} · 演出 ${seed.showId.value}',
+            context.l10n.orderConfirmPage_243(
+              seed.sessionLabel,
+              seed.showId.value,
+            ),
             style: theme.textTheme.bodySmall,
           ),
         ],

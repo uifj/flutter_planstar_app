@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import '../../../l10n/l10n.dart';
 import '../../goods/seatmap/seat_map.dart';
 
-/// 确认订单页的「已选座位」区块。
+/// 确认订单页的「已选座席」区块。
 ///
 /// 数据来自选座页写入的 `seatSelectionProvider(showId)`：
-/// 座位对象（区域 / 排 / 座 / 票价）原样带过来，不做二次编码，
-/// 因此不会出现"确认页只拿到数量、丢了座位信息"的情况。
-/// 没有选座（普通票档下单）时不渲染任何内容。
+/// 座席对象（区域 / 排 / 座 / 金额）原样带过来，不做二次编码，
+/// 因此不会出现"确认页只拿到数量、丢了座席信息"的情况。
+/// 没有选座（非线下回报场次型企划）时不渲染任何内容。
 class SelectedSeatsSection extends StatelessWidget {
   const SelectedSeatsSection({super.key, required this.seats});
 

@@ -2,9 +2,15 @@ import 'package:core/domain.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/network/network_providers.dart';
+import '../../auth/application/auth_providers.dart';
+import '../data/cached_ticket_order_repository.dart';
 import '../data/in_memory_order_number_sequence.dart';
 import '../data/in_memory_ticket_order_repository.dart';
+import '../data/local_order_store.dart';
+import '../data/remote_ticket_order_repository.dart';
 import '../domain/domain.dart';
+import 'order_api_providers.dart';
 import 'order_event_recorder.dart';
 import 'order_history_seed.dart';
 
@@ -13,16 +19,29 @@ final orderPricingServiceProvider = Provider<OrderPricingService>(
   (ref) => const OrderPricingService(),
 );
 
-/// 订单仓储（端口 → 内存适配器）。
-///
-/// 内存适配器在构造时灌入 6 张演示订单（覆盖全部业务状态），
-/// 否则"我的订单"第一次打开就是空态，看不出列表能力。
-///
-/// 换真实实现时只改这一行：`ref.watch(apiClientProvider)` 构造
-/// `HttpTicketOrderRepository`，种子数据一并删掉。
+/// 订单本地快照，按当前登录用户分区；未登录归到 `anonymous`。
+final localOrderStoreProvider = Provider<LocalOrderStore>((ref) {
+  final int? userId = ref.watch(
+    authControllerProvider.select((state) => state.user?.userId),
+  );
+  return LocalOrderStore(
+    store: ref.watch(appStoreProvider).preferences,
+    userId: userId == null || userId <= 0 ? 'anonymous' : '$userId',
+  );
+});
+
+/// 订单仓储：demo 走内存（保留演示种子），真实环境走远端 + 本地快照。
 final ticketOrderRepositoryProvider = Provider<TicketOrderRepository>((ref) {
-  return InMemoryTicketOrderRepository()..seed(
-    buildDemoOrderHistory(pricing: ref.watch(orderPricingServiceProvider)),
+  if (ref.watch(dataSourcePolicyProvider).isDemo) {
+    return InMemoryTicketOrderRepository()..seed(
+      buildDemoOrderHistory(pricing: ref.watch(orderPricingServiceProvider)),
+    );
+  }
+  return CachedTicketOrderRepository(
+    remote: RemoteTicketOrderRepository(
+      api: ref.watch(planstarOrderApiProvider),
+    ),
+    local: ref.watch(localOrderStoreProvider),
   );
 });
 

@@ -20,16 +20,15 @@ import '../../../l10n/l10n.dart';
 /// 顶部倒计时条 → 订单摘要卡 → 支付渠道列表 → 底部确认支付按钮。
 /// 支付成功后跳 `/order/pay-success`，失败后留在本页可重试。
 ///
-/// ## 与 Android 的差异
+/// ## 支付链路
 ///
-/// - **不做真实 SDK 调用**：企划星调微信 / 支付宝 / 银行 SDK，
-///   这里只做状态机演示（idle → requesting → paying → success）。
-///   理由：SDK 集成需要 fluwx / tobias + 平台配置，演示项目不引入。
-///   状态机本身完整，接 SDK 时替换 `_invokeSdk` 即可。
-/// - **倒计时**：企划星用服务端返回的 `leftTime` 做订单超时。
-///   这里用 15 分钟固定值，超时后标记失败。
-/// - **不做短信验证码**：企划星的 `needVerify` 分支在演示模式里不触发。
-/// - **不做招行 H5**：`CmbPayWebActivity` 走 WebView，本项目无 WebView。
+/// 真实模式：`POST /v1/unifiedPay/pay` 创建支付单 → 每 2 秒轮询
+/// `GET /v1/unifiedPay/payDetail`（截止 `expireAt`）→ success / failed / expired。
+/// 演示模式（`PS_USE_DEMO=true`）走明确标注的本地演示分支。
+///
+/// - **不做真实 SDK 调起**：`payParams` 当前为占位对象，拿到后交给后续 SDK 集成。
+/// - **倒计时**：优先使用支付单的 `expireAt`；创建前使用订单支付窗口。
+/// - **不做短信验证码 / 招行 H5**：契约未提供对应分支。
 class PayPage extends ConsumerWidget {
   const PayPage({
     super.key,
@@ -117,7 +116,13 @@ class _PayBody extends ConsumerWidget {
               const SizedBox(height: 12),
               // 错误信息
               if (state.errorMessage != null)
-                _ErrorBar(message: state.errorMessage!, colors: colors),
+                _ErrorBar(
+                  message: state.errorMessage!,
+                  colors: colors,
+                  onRetry: state.networkUnavailable
+                      ? controller.resetNetworkError
+                      : null,
+                ),
               // 说明
               Padding(
                 padding: const EdgeInsets.only(top: 8),
@@ -395,10 +400,15 @@ class _ChannelTile extends StatelessWidget {
 
 /// 错误信息条。
 class _ErrorBar extends StatelessWidget {
-  const _ErrorBar({required this.message, required this.colors});
+  const _ErrorBar({
+    required this.message,
+    required this.colors,
+    this.onRetry,
+  });
 
   final String message;
   final AppColors colors;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -419,6 +429,14 @@ class _ErrorBar extends StatelessWidget {
               style: TextStyle(fontSize: 13, color: colors.error),
             ),
           ),
+          if (onRetry != null)
+            TextButton(
+              onPressed: onRetry,
+              child: Text(
+                context.l10n.actionRetry,
+                style: TextStyle(color: colors.error),
+              ),
+            ),
         ],
       ),
     );
@@ -467,8 +485,8 @@ class _PayButton extends StatelessWidget {
         width: double.infinity,
         height: 48,
         child: FilledButton(
-          // 支付进行中不可点；其余状态可点（允许重试）。
-          onPressed: isProcessing ? null : onTap,
+          // 支付进行中 / 网络不可用 / 无可用渠道时禁用。
+          onPressed: isProcessing || !state.canPay ? null : onTap,
           style: FilledButton.styleFrom(
             backgroundColor: colors.brand,
             disabledBackgroundColor: colors.brandDisabled,

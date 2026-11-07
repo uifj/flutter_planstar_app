@@ -78,7 +78,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     PurchaseLimitPolicy limitPolicy = const PurchaseLimitPolicy(),
   }) {
     if (requiredVisitorCount < 0) {
-      return _fail('ORDER_VISITOR_COUNT_INVALID', '实名观演人数量不能为负');
+      return _fail('ORDER_VISITOR_COUNT_INVALID', '实名支持人数量不能为负');
     }
     if (paymentWindow <= Duration.zero) {
       return _fail('ORDER_PAYMENT_WINDOW_INVALID', '支付时限必须为正');
@@ -219,7 +219,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     if (existing == null) {
       _lines.add(line);
     } else if (existing.unitPrice != line.unitPrice) {
-      return _fail('ORDER_LINE_PRICE_CONFLICT', '票档价格已变化，请重新确认订单');
+      return _fail('ORDER_LINE_PRICE_CONFLICT', '回报档位价格已变化，请重新确认订单');
     } else {
       existing._changeQuantity(existing.quantity + line.quantity);
     }
@@ -235,7 +235,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
 
     final line = _lineOrNull(tierId);
     if (line == null) {
-      return _fail('ORDER_LINE_NOT_FOUND', '票档不存在：${tierId.value}');
+      return _fail('ORDER_LINE_NOT_FOUND', '回报档位不存在：${tierId.value}');
     }
 
     if (quantity.isZero) {
@@ -260,7 +260,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
   Result<void> removeLine(TicketTierId tierId) {
     final line = _lineOrNull(tierId);
     if (line == null) {
-      return _fail('ORDER_LINE_NOT_FOUND', '票档不存在：${tierId.value}');
+      return _fail('ORDER_LINE_NOT_FOUND', '回报档位不存在：${tierId.value}');
     }
     return changeLineQuantity(tierId, Quantity.zero);
   }
@@ -326,15 +326,15 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     }.values.toList(growable: false);
 
     if (unique.length != visitors.length) {
-      return _fail('ORDER_VISITOR_DUPLICATED', '同一观演人不能重复选择');
+      return _fail('ORDER_VISITOR_DUPLICATED', '同一支持人不能重复选择');
     }
     if (requiredVisitorCount == 0 && unique.isNotEmpty) {
-      return _fail('ORDER_VISITOR_NOT_REQUIRED', '本场次无需实名观演人');
+      return _fail('ORDER_VISITOR_NOT_REQUIRED', '本企划无需实名支持人');
     }
     if (requiredVisitorCount > 0 && unique.length != requiredVisitorCount) {
       return _fail(
         'ORDER_VISITOR_COUNT_MISMATCH',
-        '本单需选择 $requiredVisitorCount 位观演人，已选 ${unique.length} 位',
+        '本单需选择 $requiredVisitorCount 位支持人，已选 ${unique.length} 位',
       );
     }
 
@@ -370,7 +370,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     if (editable.isFailure) return editable;
 
     if (_lines.isEmpty) {
-      return _fail('ORDER_EMPTY', '请先选择票档');
+      return _fail('ORDER_EMPTY', '请先选择回报档位');
     }
     if (quote.isStaleFor(goodsTotal)) {
       return _fail('ORDER_QUOTE_STALE', '报价与当前订单内容不一致，请重新计算');
@@ -388,7 +388,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     if (editable.isFailure) return editable;
 
     if (_lines.isEmpty) {
-      return _fail('ORDER_EMPTY', '请先选择票档');
+      return _fail('ORDER_EMPTY', '请先选择回报档位');
     }
     if (!_agreementAccepted) {
       return _fail('ORDER_AGREEMENT_REQUIRED', '请阅读并勾选${buyType.name}协议');
@@ -404,7 +404,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     if (requiredVisitorCount > 0 && _visitors.length != requiredVisitorCount) {
       return _fail(
         'ORDER_VISITOR_COUNT_MISMATCH',
-        '请选择 $requiredVisitorCount 位观演人',
+        '请选择 $requiredVisitorCount 位支持人',
       );
     }
 

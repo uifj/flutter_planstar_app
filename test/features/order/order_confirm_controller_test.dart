@@ -100,7 +100,7 @@ void main() {
 
       expect(state().submitted, isFalse);
       expect(state().notice!.code, OrderNoticeCode.failure);
-      expect(state().notice!.detail, contains('请选择 1 位观演人'));
+      expect(state().notice!.detail, contains('请选择 1 位支持人'));
       expect(state().order.status, OrderStatus.draft, reason: '失败不应改状态');
     });
 

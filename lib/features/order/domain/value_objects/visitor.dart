@@ -124,7 +124,7 @@ final class IdCardNumber extends ValueObject {
 final class Visitor extends ValueObject {
   Visitor({required this.id, required this.name, required this.idCard}) {
     if (name.trim().isEmpty) {
-      throw ArgumentError.value(name, 'name', '观演人姓名不能为空');
+      throw ArgumentError.value(name, 'name', '支持人姓名不能为空');
     }
   }
 

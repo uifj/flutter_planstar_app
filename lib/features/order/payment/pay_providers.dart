@@ -1,27 +1,48 @@
 import 'dart:async';
 
 import 'package:core/domain.dart';
+import 'package:core/result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/network/network_providers.dart';
 import '../domain/domain.dart';
 import 'pay_info.dart';
+import 'pay_repository.dart';
+import 'planstar_pay_api.dart';
+
+/// 支付页面参数。
+typedef PayArg = ({String orderNumber, Money amount, String showTitle});
 
 /// 支付页面信息 Provider（按订单号分族）。
 ///
-/// 企划星的 `PayActivity` 在 onCreate 里调 `GET v1/unifiedPay/payDetail`。
-/// 本演示模式里用 [PayInfo.demo] 生成，金额由路由参数传入。
-/// 接真实接口时改成 `FutureProvider.family`，走 `PayRepository`。
+/// 真实金额、支付状态由 [PayRepository] 在创建支付单后拿到；
+/// 这里只构造页面壳（金额来自路由参数，渠道为客户端能力声明）。
 final payInfoProvider =
     Provider.family<
       PayInfo,
       ({String orderNumber, Money amount, String showTitle})
     >((ref, params) {
-      return PayInfo.demo(
+      return PayInfo.forOrder(
         orderNumber: params.orderNumber,
         payAmount: params.amount,
         showTitle: params.showTitle,
       );
     });
+
+/// 支付仓储：真实环境走 `/v1/unifiedPay/*`。
+final payRepositoryProvider = Provider<PayRepository>(
+  (ref) => RemotePayRepository(
+    api: PlanstarPayApi(client: ref.watch(apiClientProvider)),
+  ),
+);
+
+/// 轮询间隔（测试可覆盖为 `Duration.zero`）。
+final payPollIntervalProvider = Provider<Duration>(
+  (ref) => const Duration(seconds: 2),
+);
+
+/// 时钟（测试可注入固定时间，避免真实等待）。
+final payClockProvider = Provider<DateTime Function()>((ref) => DateTime.now);
 
 /// 支付页面状态。
 class PayState {
@@ -31,6 +52,8 @@ class PayState {
     this.status = PayStatus.idle,
     this.errorMessage,
     this.leftSeconds,
+    this.networkUnavailable = false,
+    this.payNo,
   });
 
   /// 支付页面信息。
@@ -48,129 +71,219 @@ class PayState {
   /// 倒计时剩余秒数。
   final int? leftSeconds;
 
+  /// 网络不可用（创建/轮询支付单时网络失败）。为 true 时禁用支付按钮。
+  final bool networkUnavailable;
+
+  /// 服务端支付单号（创建成功后回填）。
+  final String? payNo;
+
   /// 是否可以发起支付。
   bool get canPay =>
       selectedChannel != null &&
+      !networkUnavailable &&
       status != PayStatus.requesting &&
-      status != PayStatus.paying;
+      status != PayStatus.paying &&
+      status != PayStatus.success;
 
   PayState copyWith({
     PaymentChannel? selectedChannel,
     PayStatus? status,
     String? errorMessage,
+    bool clearError = false,
     int? leftSeconds,
+    bool? networkUnavailable,
+    String? payNo,
   }) {
     return PayState(
       info: info,
       selectedChannel: selectedChannel ?? this.selectedChannel,
       status: status ?? this.status,
-      errorMessage: errorMessage,
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       leftSeconds: leftSeconds ?? this.leftSeconds,
+      networkUnavailable: networkUnavailable ?? this.networkUnavailable,
+      payNo: payNo ?? this.payNo,
     );
   }
 }
 
 /// 支付页面控制器。
 ///
-/// ## 与 Android 的差异
-///
-/// - **不做真实 SDK 调用**：企划星的 `PayActivity` 调微信 / 支付宝 / 银行 SDK，
-///   这里只做**状态机演示**——选渠道 → 请求 → 模拟 SDK 调用 → 成功 / 失败。
-///   理由是 SDK 集成需要 fluwx / tobias 包 + 平台配置，演示项目不引入。
-///   但状态机本身是完整的：idle → requesting → paying → success / failure / cancelled，
-///   接 SDK 时只需替换 `_invokeSdk` 方法。
-/// - **倒计时**：企划星用 `leftTime` 字段做订单超时倒计时。这里也实现了，
-///   超时后自动标记为 failure。
-class PayController
-    extends
-        FamilyNotifier<
-          PayState,
-          ({String orderNumber, Money amount, String showTitle})
-        > {
+/// 真实流程：创建支付单 → 每 2 秒轮询 `payDetail`（截止 `expireAt`）→
+/// success / failed / expired。演示模式只在 `PS_USE_DEMO=true` 时走明确标注的分支。
+class PayController extends FamilyNotifier<PayState, PayArg> {
   Timer? _countdownTimer;
+  bool _disposed = false;
 
   @override
   PayState build(arg) {
     final info = ref.read(payInfoProvider(arg));
 
-    // 默认选中第一个可用渠道（企划星也这样做）。
-    final firstAvailable = info.channels.where((c) => c.available).firstOrNull;
+    final firstAvailable = info.channels
+        .where((option) => option.available)
+        .firstOrNull;
     final state = PayState(
       info: info,
       selectedChannel: firstAvailable?.channel,
       leftSeconds: info.leftSeconds,
     );
 
-    // 启动倒计时。
     _startCountdown(state.leftSeconds ?? 0);
-
-    // 选中默认渠道后重建，让 UI 高亮。
-    ref.onDispose(() => _countdownTimer?.cancel());
+    ref.onDispose(() {
+      _disposed = true;
+      _countdownTimer?.cancel();
+    });
     return state;
   }
 
   /// 选择支付渠道。
   void selectChannel(PaymentChannel channel) {
-    state = state.copyWith(selectedChannel: channel, errorMessage: null);
+    state = state.copyWith(
+      selectedChannel: channel,
+      clearError: true,
+      networkUnavailable: false,
+    );
+  }
+
+  /// 网络错误后允许用户手动重试。
+  void resetNetworkError() {
+    state = state.copyWith(
+      networkUnavailable: false,
+      clearError: true,
+      status: PayStatus.idle,
+    );
   }
 
   /// 发起支付。
-  ///
-  /// 流程：idle → requesting（请求支付参数）→ paying（SDK 调起）→ success / failure。
   Future<PayResult> pay() async {
     if (!state.canPay) return const PayFailure('当前状态不可支付');
 
-    final channel = state.selectedChannel!;
-    state = state.copyWith(status: PayStatus.requesting, errorMessage: null);
+    final PaymentChannel channel = state.selectedChannel!;
 
-    // 模拟请求支付参数（POST v1/unifiedPay/pay）。
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-
-    state = state.copyWith(status: PayStatus.paying);
-
-    // 模拟 SDK 调用。
-    final result = await _invokeSdk(channel);
-
-    switch (result) {
-      case PaySuccess():
-        state = state.copyWith(status: PayStatus.success);
-        _countdownTimer?.cancel();
-      case PayFailure(:final message):
-        state = state.copyWith(
-          status: PayStatus.failure,
-          errorMessage: message,
-        );
-      case PayCancelled():
-        state = state.copyWith(status: PayStatus.cancelled);
+    // 演示模式：仅 `PS_USE_DEMO=true` 时进入，明确标注、不调任何 SDK/接口。
+    if (ref.read(dataSourcePolicyProvider).isDemo) {
+      return _payDemo();
     }
 
-    return result;
+    state = state.copyWith(
+      status: PayStatus.requesting,
+      clearError: true,
+      networkUnavailable: false,
+    );
+
+    final Result<PaymentOrder> created = await ref
+        .read(payRepositoryProvider)
+        .createPayment(orderNumber: arg.orderNumber, channel: channel);
+    if (_disposed) return const PayCancelled();
+    if (created.isFailure) return _applyFailure(created.failure!);
+
+    final PaymentOrder first = created.requireData;
+    _applyDeadline(first.expireAt);
+    state = state.copyWith(
+      status: PayStatus.paying,
+      payNo: first.payNo,
+      clearError: true,
+    );
+
+    PaymentOrder current = first;
+    while (!_disposed) {
+      final PayResult? terminal = _terminalResult(current);
+      if (terminal != null) return terminal;
+
+      final DateTime? expireAt = current.expireAt;
+      if (expireAt != null &&
+          !ref.read(payClockProvider)().isBefore(expireAt)) {
+        return _expire();
+      }
+
+      await Future<void>.delayed(ref.read(payPollIntervalProvider));
+      if (_disposed) return const PayCancelled();
+
+      final Result<PaymentOrder> detail = await ref
+          .read(payRepositoryProvider)
+          .fetchPaymentDetail(
+            payNo: current.payNo,
+            orderNumber: arg.orderNumber,
+          );
+      if (_disposed) return const PayCancelled();
+      if (detail.isFailure) return _applyFailure(detail.failure!);
+      current = detail.requireData;
+    }
+    return const PayCancelled();
   }
 
-  /// 模拟第三方 SDK 调用。
-  ///
-  /// 接真实 SDK 时替换此方法：
-  /// - 微信：`fluwx.payWithWeChat(...)` → 注册回调
-  /// - 支付宝：`tobias.pay(paymentParams)` → 返回 result code
-  /// - 银联：跳银联 SDK
-  /// - 余额：直接调服务端确认
-  Future<PayResult> _invokeSdk(PaymentChannel channel) async {
-    // 模拟 SDK 延迟。
-    await Future<void>.delayed(const Duration(seconds: 1));
-
-    // 演示模式：所有渠道都成功。
-    // 接真实 SDK 后：
-    // - 微信成功码：errCode == 0
-    // - 支付宝成功码：resultStatus == "9000"
-    // - 银联成功码：respCode == "00"
+  /// 演示分支：明确标注，不调起任何真实 SDK。
+  Future<PayResult> _payDemo() async {
+    state = state.copyWith(status: PayStatus.paying, clearError: true);
+    _countdownTimer?.cancel();
+    state = state.copyWith(status: PayStatus.success);
     return const PaySuccess();
+  }
+
+  PayResult? _terminalResult(PaymentOrder order) {
+    switch (order.status) {
+      case PaymentStatus.success:
+        _countdownTimer?.cancel();
+        state = state.copyWith(
+          status: PayStatus.success,
+          clearError: true,
+          payNo: order.payNo,
+        );
+        return const PaySuccess();
+      case PaymentStatus.failed:
+        return _fail('支付失败，请更换支付方式后重试');
+      case PaymentStatus.expired:
+        return _expire();
+      case PaymentStatus.pending:
+        return null;
+    }
+  }
+
+  PayResult _fail(String message) {
+    state = state.copyWith(
+      status: PayStatus.failure,
+      errorMessage: message,
+    );
+    return PayFailure(message);
+  }
+
+  PayResult _expire() {
+    _countdownTimer?.cancel();
+    state = state.copyWith(
+      status: PayStatus.failure,
+      leftSeconds: 0,
+      errorMessage: '支付已过期，请重新下单',
+    );
+    return const PayFailure('支付已过期，请重新下单');
+  }
+
+  PayResult _applyFailure(Failure failure) {
+    final bool network =
+        failure.type == FailureType.network ||
+        failure.type == FailureType.timeout;
+    final String message = network ? '网络不可用，请检查网络后重试' : failure.message;
+    state = state.copyWith(
+      status: PayStatus.failure,
+      errorMessage: message,
+      networkUnavailable: network,
+    );
+    return PayFailure(message);
+  }
+
+  void _applyDeadline(DateTime? expireAt) {
+    if (expireAt == null) return;
+    final int seconds = expireAt
+        .difference(ref.read(payClockProvider)())
+        .inSeconds;
+    if (seconds <= 0) return;
+    state = state.copyWith(leftSeconds: seconds);
+    _startCountdown(seconds);
   }
 
   /// 启动倒计时。
   void _startCountdown(int seconds) {
+    _countdownTimer?.cancel();
     if (seconds <= 0) return;
 
-    _countdownTimer?.cancel();
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final remaining = state.leftSeconds ?? 0;
       if (remaining <= 1) {
@@ -196,8 +309,6 @@ class PayController
 
 /// 支付页面控制器 Provider。
 final payControllerProvider =
-    NotifierProvider.family<
-      PayController,
-      PayState,
-      ({String orderNumber, Money amount, String showTitle})
-    >(PayController.new);
+    NotifierProvider.family<PayController, PayState, PayArg>(
+      PayController.new,
+    );

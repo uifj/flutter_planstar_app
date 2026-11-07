@@ -16,7 +16,7 @@ final class OrderLine extends Entity<TicketTierId> {
   }) : _quantity = quantity,
        super(id) {
     if (tierName.trim().isEmpty) {
-      throw ArgumentError.value(tierName, 'tierName', '票档名不能为空');
+      throw ArgumentError.value(tierName, 'tierName', '回报档位名不能为空');
     }
     if (unitPrice.isNegative) {
       throw ArgumentError.value(unitPrice, 'unitPrice', '单价不能为负');

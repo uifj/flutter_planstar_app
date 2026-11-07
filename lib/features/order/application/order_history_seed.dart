@@ -121,7 +121,7 @@ List<TicketOrder> buildDemoOrderHistory({
     if (stage == _Stage.refunded) {
       order.refund(
         amount: order.quote!.paymentAmount,
-        reason: '演出延期，全额退款',
+        reason: '企划延期，全额退款',
         now: placedAt.add(const Duration(days: 2)),
       );
     }

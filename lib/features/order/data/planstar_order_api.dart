@@ -116,6 +116,39 @@ final class PlanstarOrderApi {
     return 'ps-$stamp-$random';
   }
 
+  /// 契约 JSON → 订单聚合（本地快照、测试夹具复用同一套映射）。
+  static TicketOrder? parseOrderJson(Map<String, dynamic> json) =>
+      _tryParseOrder(json);
+
+  /// 订单聚合 → 本地快照 JSON（字段与 [parseOrderJson] 对齐）。
+  static Map<String, dynamic> orderToJson(TicketOrder order) {
+    final OrderQuote? quote = order.quote;
+    final int payAmount =
+        quote?.paymentAmount.minorUnits ?? order.goodsTotal.minorUnits;
+    return <String, dynamic>{
+      'orderId': order.id.value,
+      'orderNumber': order.number.value,
+      'showId': order.showId.value,
+      'sessionId': order.sessionId.value,
+      'createTime': (order.submittedAt ?? order.placedAt).toIso8601String(),
+      'orderType': order.orderType.wireCode,
+      'buyType': order.buyType.wireCode,
+      // draft 没有 wire code；本地快照只保存已提交订单，兜底 1（服务端 INIT）。
+      'status': order.status.wireCode ?? 1,
+      'title': order.lines.isEmpty ? '' : order.lines.first.tierName,
+      'payAmount': payAmount,
+      'items': <Map<String, dynamic>>[
+        for (final OrderLine line in order.lines)
+          <String, dynamic>{
+            'ticketId': line.id.value,
+            'tierName': line.tierName,
+            'price': line.unitPrice.minorUnits,
+            'count': line.quantity.value,
+          },
+      ],
+    };
+  }
+
   // ---------------------------------------------------------------------------
   // DTO 映射
   // ---------------------------------------------------------------------------
@@ -259,7 +292,7 @@ final class PlanstarOrderApi {
             item['ticketName']?.toString() ??
             item['name']?.toString() ??
             item['title']?.toString() ??
-            '票档';
+            '回报档位';
         lines.add(
           OrderLine(
             id: TicketTierId(

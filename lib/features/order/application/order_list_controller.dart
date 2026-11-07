@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/network/network_providers.dart';
+import '../data/cached_ticket_order_repository.dart';
 import '../domain/domain.dart';
 import 'order_api_providers.dart';
 import 'order_providers.dart';
@@ -53,19 +54,19 @@ final orderListFilterProvider = StateProvider<OrderListFilter>(
   (ref) => OrderListFilter.all,
 );
 
+/// 列表是否来自本地陈旧快照（远端失败时置为 `true`）。
+final orderListStaleProvider = StateProvider<bool>((ref) => false);
+
 /// 全部订单（按提交时间倒序）。
 ///
-/// demo 模式读内存仓储（含种子订单）；真实模式走 `GET /v1/order/list`。
+/// demo 模式读内存仓储（含种子订单）；真实模式读「远端优先 + 本地快照」仓储。
 final orderListProvider = FutureProvider<List<TicketOrder>>((ref) async {
-  if (ref.watch(useDemoProvider)) {
-    final repository = ref.watch(ticketOrderRepositoryProvider);
-    final result = await repository.findAll();
-    return result.requireData;
-  }
-
-  final result = await ref
-      .watch(planstarOrderApiProvider)
-      .fetchOrderList(pageIndex: 1, pageSize: 100);
+  final repository = ref.watch(ticketOrderRepositoryProvider);
+  final result = await repository.findAll();
+  ref.read(orderListStaleProvider.notifier).state =
+      repository is OrderStaleness
+      ? (repository as OrderStaleness).isStale
+      : false;
   return result.fold(
     onSuccess: (orders) => orders,
     onFailure: (failure) => throw failure,
@@ -127,7 +128,7 @@ final orderDetailProvider = FutureProvider.family<TicketOrder?, String>((
 /// demo 模式复用 [orderListProvider]，保证详情与列表看到同一份状态。
 final orderByNumberProvider = Provider.family<AsyncValue<TicketOrder?>, String>(
   (ref, String number) {
-    if (!ref.watch(useDemoProvider)) {
+    if (ref.watch(dataSourcePolicyProvider).isRemote) {
       return ref.watch(orderDetailProvider(number));
     }
     return ref.watch(orderListProvider).whenData((List<TicketOrder> orders) {
@@ -181,7 +182,7 @@ final class OrderActions {
   /// 保存 + 刷新列表。
   Future<String?> _persist(TicketOrder order) async {
     // 支付/取消/确认收货不在本批次契约内，真实模式不做静默本地写入。
-    if (!ref.read(useDemoProvider)) {
+    if (ref.read(dataSourcePolicyProvider).isRemote) {
       return '当前版本暂不支持该操作，请稍后重试';
     }
     final repository = ref.read(ticketOrderRepositoryProvider);

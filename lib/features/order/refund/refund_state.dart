@@ -1,3 +1,5 @@
+import 'package:core/domain.dart';
+
 /// 退款原因。
 ///
 /// 对齐 Android 退款 H5 页面中的原因选项。
@@ -42,6 +44,13 @@ class RefundState {
     this.customReason = '',
     this.status = RefundStatus.idle,
     this.errorMessage,
+    this.refundableAmount,
+    this.ruleMessage,
+    this.expectedArrivalDays,
+    this.notAllowed = false,
+    this.loadingRule = false,
+    this.orderId,
+    this.refundNo,
   });
 
   final RefundReason reason;
@@ -52,19 +61,60 @@ class RefundState {
   final RefundStatus status;
   final String? errorMessage;
 
-  /// 是否可提交（非提交中 / 非已提交）。
+  /// 服务端下发的可退金额；未下发时为 `null`（客户端不自行计算）。
+  final Money? refundableAmount;
+
+  /// 服务端下发的退款规则文案；未下发时为 `null`。
+  final String? ruleMessage;
+
+  /// 服务端下发的预计到账天数。
+  final int? expectedArrivalDays;
+
+  /// 规则不允许退款（如 409 / canRefund=false）。
+  final bool notAllowed;
+
+  /// 正在读取退款规则。
+  final bool loadingRule;
+
+  /// 订单 id（退款接口路径参数）。
+  final String? orderId;
+
+  /// 服务端返回的退款单号。
+  final String? refundNo;
+
+  /// 是否可提交（非提交中 / 非已提交 / 规则允许 / 规则已加载）。
   bool get canSubmit =>
-      status == RefundStatus.idle || status == RefundStatus.failed;
+      !loadingRule &&
+      !notAllowed &&
+      (status == RefundStatus.idle || status == RefundStatus.failed);
 
   RefundState copyWith({
     RefundReason? reason,
     String? customReason,
     RefundStatus? status,
     String? errorMessage,
+    bool clearError = false,
+    Money? refundableAmount,
+    String? ruleMessage,
+    bool clearRuleMessage = false,
+    int? expectedArrivalDays,
+    bool? notAllowed,
+    bool? loadingRule,
+    String? orderId,
+    String? refundNo,
   }) => RefundState(
     reason: reason ?? this.reason,
     customReason: customReason ?? this.customReason,
     status: status ?? this.status,
-    errorMessage: errorMessage,
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+    refundableAmount: refundableAmount ?? this.refundableAmount,
+    ruleMessage: clearRuleMessage
+        ? null
+        : (ruleMessage ?? this.ruleMessage),
+    expectedArrivalDays: expectedArrivalDays ?? this.expectedArrivalDays,
+    notAllowed: notAllowed ?? this.notAllowed,
+    loadingRule: loadingRule ?? this.loadingRule,
+    orderId: orderId ?? this.orderId,
+    refundNo: refundNo ?? this.refundNo,
   );
 }

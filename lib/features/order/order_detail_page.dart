@@ -23,7 +23,7 @@ import '../../l10n/l10n.dart';
 /// ## 为什么从面板改成独立页
 ///
 /// 订单列表原本用一个 `_OrderDetailSheet` 底部面板展示详情。面板的问题不是
-/// 样式，而是**装不下**：完整详情有状态头、演出、票档、观演人、取票方式、
+/// 样式，而是**装不下**：完整详情有状态头、企划、回报档位、支持人、交付方式、
 /// 金额明细、订单信息七段，塞进半屏面板只能滚动，且返回手势与列表滚动冲突。
 /// 企划星在 Android 侧也是独立 Activity（`OrderDetailWebActivity` 走 H5，
 /// 原生详情在 `MyOrderActivity` 里）。
@@ -31,8 +31,8 @@ import '../../l10n/l10n.dart';
 /// ## 数据来源
 ///
 /// 通过订单号从 [orderByNumberProvider] 取——**与列表页同一个 provider**，
-/// 所以详情里点了「确认收货」，返回列表时状态已经变了，不会出现
-/// "详情显示已收货、列表还显示待收货"。
+/// 所以详情里点了「确认收到回报」，返回列表时状态已经变了，不会出现
+/// "详情显示已收到回报、列表还显示待交付"。
 ///
 /// ## 状态驱动，而不是 if 判断
 ///
@@ -86,10 +86,29 @@ class _OrderDetailBody extends ConsumerWidget {
 
   final TicketOrder order;
 
+  /// 优先取本单回报档位的预计交付时间，其次退到企划整体交付计划。
+  String? _expectedDeliveryOf(ShowSummary show) {
+    for (final OrderLine line in order.lines) {
+      for (final TicketTier tier in show.tiers) {
+        if (tier.name == line.tierName &&
+            tier.estimatedDeliveryTime.isNotEmpty) {
+          return tier.estimatedDeliveryTime;
+        }
+      }
+    }
+    if (show.deliveryPlan.isNotEmpty) {
+      return show.deliveryPlan;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final ShowSummary? show = ref.watch(showByIdProvider(order.showId.value));
+    final String? expectedDelivery = show == null
+        ? null
+        : _expectedDeliveryOf(show);
 
     return Column(
       children: <Widget>[
@@ -115,6 +134,11 @@ class _OrderDetailBody extends ConsumerWidget {
                     label: context.l10n.orderDetailPage_108,
                     value: order.delivery.describeOf(context),
                   ),
+                  if (expectedDelivery != null)
+                    _InfoRow(
+                      label: context.l10n.orderDetailPage_expectedDelivery,
+                      value: expectedDelivery,
+                    ),
                   if (order.visitors.isNotEmpty) ...<Widget>[
                     const Divider(height: 20),
                     _SectionTitle(title: context.l10n.orderDetailPage_113),
@@ -291,6 +315,13 @@ class _ShowSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final hasOfflineSession = show.tiers.any(
+      (TicketTier tier) => tier.rewardType == '线下参与',
+    );
+    final primaryLine = hasOfflineSession
+        ? show.firstSessionLabelOf(context)
+        : show.deliveryPlan;
+    final secondaryLine = hasOfflineSession ? show.venueLabel : show.artist;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => context.push('/show/${show.id}'),
@@ -318,16 +349,31 @@ class _ShowSection extends StatelessWidget {
                       color: colors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    show.firstSessionLabelOf(context),
-                    style: TextStyle(fontSize: 12, color: colors.textSecondary),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    show.venueLabel,
-                    style: TextStyle(fontSize: 12, color: colors.textTertiary),
-                  ),
+                  if (primaryLine.isNotEmpty) ...<Widget>[
+                    const SizedBox(height: 6),
+                    Text(
+                      primaryLine,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.textSecondary,
+                      ),
+                    ),
+                  ],
+                  if (secondaryLine.isNotEmpty &&
+                      secondaryLine != primaryLine) ...<Widget>[
+                    const SizedBox(height: 3),
+                    Text(
+                      secondaryLine,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.textTertiary,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

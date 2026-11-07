@@ -129,7 +129,7 @@ final class OrderConfirmController
   /// 真实模式下重试建单复用同一个幂等键。
   String? _idempotencyKey;
 
-  bool get _serverMode => !ref.read(useDemoProvider);
+  bool get _serverMode => ref.read(dataSourcePolicyProvider).isRemote;
 
   @override
   OrderConfirmState build(String showId) {
@@ -150,7 +150,9 @@ final class OrderConfirmController
     // 默认选中第一个票档；数量与已选座位数保持一致（1 座 = 1 票），
     // 这样本地/服务端报价与确认页的「座位小计」口径一致。
     if (seed.tiers.isNotEmpty) {
-      final seatCount = ref.watch(seatSelectionProvider(showId)).count;
+      final seatCount = ref.watch(
+        seatSelectionProvider(showId).select((state) => state.count),
+      );
       final first = seed.tiers.first;
       order.addLine(
         OrderLine(
@@ -499,7 +501,7 @@ final class OrderConfirmController
   String _readableMessage(Failure failure) {
     final code = failure.code.toUpperCase();
     if (code.contains('SOLD_OUT') || code.contains('STOCK')) {
-      return '票档已售罄，请重新选择';
+      return '回报档位已售罄，请重新选择';
     }
     if (code.contains('PRICE') || code.contains('QUOTE')) {
       return '价格已变化，请确认最新金额后重试';

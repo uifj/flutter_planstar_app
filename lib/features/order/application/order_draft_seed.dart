@@ -76,7 +76,7 @@ final orderDraftSeedProvider = Provider.family<OrderDraftSeed, String>((
   ref,
   showId,
 ) {
-  if (ref.watch(useDemoProvider)) return _demoSeed(showId);
+  if (ref.watch(dataSourcePolicyProvider).isDemo) return _demoSeed(showId);
 
   final show = ref.watch(showFullProvider(showId));
   if (show == null) return _emptySeed(showId);
@@ -113,7 +113,7 @@ OrderDraftSeed _emptySeed(String showId) {
   return OrderDraftSeed(
     showId: ShowId(showId),
     sessionId: const SessionId(''),
-    showTitle: '演出详情加载中',
+    showTitle: '企划详情加载中',
     sessionLabel: '',
     tiers: const <TicketTierOffer>[],
     requiredVisitorCount: 0,
@@ -131,7 +131,7 @@ OrderDraftSeed _demoSeed(String showId) {
   return OrderDraftSeed(
     showId: ShowId(showId),
     sessionId: const SessionId('S-20261108-1930'),
-    showTitle: '《剧院魅影》中文版',
+    showTitle: '《星海回声》企划',
     sessionLabel: '2026-11-08（周日）19:30',
     tiers: <TicketTierOffer>[
       TicketTierOffer(

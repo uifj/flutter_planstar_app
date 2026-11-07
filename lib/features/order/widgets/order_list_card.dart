@@ -12,15 +12,15 @@ import '../order_l10n.dart';
 import '../domain/domain.dart';
 import '../../../l10n/l10n.dart';
 
-/// 订单卡片（`item_order_ticket.xml`）。
+/// 支持卡片（`item_order_ticket.xml`）。
 ///
 /// 结构：14dp 内边距的白卡 →
-/// 标题行（16dp 标题 + 可选「代购」标 + 右侧 12dp 品牌色状态）→
+/// 标题行（16dp 标题 + 可选「代支持」标 + 右侧 12dp 品牌色状态）→
 /// 58×76 海报 + 右侧描述区 → 1dp 分隔线（上边距 16）→
 /// 46dp 的金额 / 按钮行。
 ///
-/// 金额在企划星是 14dp `text_2` 的灰字。这里把"实付"两个字保持灰色、
-/// 数字改用价格色 16dp 加粗——订单卡上最该被一眼看到的数字是实付金额，
+/// 金额在企划星是 14dp `text_2` 的灰字。这里把"支持金额"几个字保持灰色、
+/// 数字改用价格色 16dp 加粗——支持卡上最该被一眼看到的数字是支持金额，
 /// 灰掉它是可读性问题，属于刻意改动。
 class OrderListCard extends StatelessWidget {
   const OrderListCard({
@@ -38,7 +38,7 @@ class OrderListCard extends StatelessWidget {
 
   final TicketOrder order;
 
-  /// 关联演出（标题 / 场次 / 海报都从这里取）。
+  /// 关联企划（标题 / 交付信息 / 海报都从这里取）。
   final ShowSummary? show;
 
   final VoidCallback? onTap;
@@ -49,13 +49,42 @@ class OrderListCard extends StatelessWidget {
   final VoidCallback? onBuyAgain;
   final VoidCallback? onContactService;
 
+  /// 企划默认展示预计交付时间；线下回报场次型企划保留场次信息。
+  String _deliveryLabel(BuildContext context) {
+    final show = this.show;
+    if (show == null) {
+      return context.l10n.orderListCard_53;
+    }
+    if (!show.isProject) {
+      return show.firstSessionLabelOf(context);
+    }
+    for (final line in order.lines) {
+      for (final tier in show.tiers) {
+        if (tier.name != line.tierName) {
+          continue;
+        }
+        if (tier.rewardType == '线下参与') {
+          return show.firstSessionLabelOf(context);
+        }
+        if (tier.estimatedDeliveryTime.isNotEmpty) {
+          return context.l10n.orderListCard_delivery(
+            tier.estimatedDeliveryTime,
+          );
+        }
+      }
+    }
+    if (show.deliveryPlan.isNotEmpty) {
+      return context.l10n.orderListCard_delivery(show.deliveryPlan);
+    }
+    return context.l10n.orderListCard_53;
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final title =
         show?.title ?? context.l10n.orderListCard_52(order.showId.value);
-    final sessionLabel =
-        show?.firstSessionLabelOf(context) ?? context.l10n.orderListCard_53;
+    final deliveryLabel = _deliveryLabel(context);
     final payable = order.quote?.paymentAmount;
 
     return GestureDetector(
@@ -118,7 +147,7 @@ class OrderListCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        sessionLabel,
+                        deliveryLabel,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

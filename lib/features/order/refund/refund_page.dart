@@ -17,9 +17,8 @@ import '../../../l10n/l10n.dart';
 ///
 /// - 企划星的退款是 WebView（`OrderRefundWebActivity` 加载 H5）。
 ///   这里做原生表单：原因选择 + 金额展示 + 提交。
-/// - 遵循「假功能不做」约定：表单真实可用，提交调用模拟 API，
-///   成功后 toast 提示并返回订单详情。等 `PUT v1/order/{orderId}/refund`
-///   接上后替换 `RefundController.submit()` 内部即可。
+/// - 退款金额与规则来自订单详情下发的字段；缺失时不自行计算。
+/// - 提交走 `POST /v1/order/{id}/refund`，成功后展示服务端返回的可退金额。
 class RefundPage extends ConsumerWidget {
   const RefundPage({
     super.key,
@@ -55,7 +54,7 @@ class RefundPage extends ConsumerWidget {
       }
     });
 
-    final refundAmount = orderAmount; // 简化：全额退（实际按状态算）
+    final refundAmount = state.refundableAmount;
 
     return PopScope(
       canPop: state.status != RefundStatus.submitting,
@@ -63,7 +62,10 @@ class RefundPage extends ConsumerWidget {
         backgroundColor: colors.bgPage,
         appBar: AdaptiveAppBar(title: context.l10n.refundPage_62),
         body: state.status == RefundStatus.submitted
-            ? _SuccessView(amount: refundAmount)
+            ? _SuccessView(
+                amount: refundAmount ?? orderAmount,
+                expectedArrivalDays: state.expectedArrivalDays,
+              )
             : ListView(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
                 children: <Widget>[
@@ -71,6 +73,14 @@ class RefundPage extends ConsumerWidget {
                     orderAmount: orderAmount,
                     refundAmount: refundAmount,
                   ),
+                  if (state.ruleMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        state.ruleMessage!,
+                        style: TextStyle(fontSize: 12, color: colors.warning),
+                      ),
+                    ),
                   const SizedBox(height: 12),
                   _ReasonSection(
                     selectedReason: state.reason,
@@ -122,7 +132,7 @@ class _RefundAmountCard extends StatelessWidget {
   });
 
   final Money orderAmount;
-  final Money refundAmount;
+  final Money? refundAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +178,7 @@ class _RefundAmountCard extends StatelessWidget {
                 style: TextStyle(fontSize: 13, color: colors.textTertiary),
               ),
               Text(
-                refundAmount.format(),
+                refundAmount?.format() ?? '--',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -352,9 +362,10 @@ class _RefundPolicy extends StatelessWidget {
 
 /// 提交成功视图。
 class _SuccessView extends StatelessWidget {
-  const _SuccessView({required this.amount});
+  const _SuccessView({required this.amount, this.expectedArrivalDays});
 
   final Money amount;
+  final int? expectedArrivalDays;
 
   @override
   Widget build(BuildContext context) {
@@ -382,6 +393,13 @@ class _SuccessView extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13, color: colors.textTertiary),
             ),
+            if (expectedArrivalDays != null && expectedArrivalDays! > 0) ...[
+              const SizedBox(height: 6),
+              Text(
+                '预计 $expectedArrivalDays 天内到账',
+                style: TextStyle(fontSize: 12, color: colors.textTertiary),
+              ),
+            ],
             const SizedBox(height: 24),
             FilledButton(
               onPressed: () => context.go('/order'),

@@ -15,19 +15,19 @@ import 'domain/domain.dart';
 import 'widgets/order_list_card.dart';
 import '../../l10n/l10n.dart';
 
-/// 我的订单（`activity_my_order.xml` + `fragment_my_activity_order.xml`）。
+/// 我的支持（`activity_my_order.xml` + `fragment_my_activity_order.xml`）。
 ///
 /// ## 两层 tab
 ///
-/// 1. 顶部 40dp 的「演出 / 商品」——企划星把演出票和商品（周边）分成两个列表；
-/// 2. 40dp 的「全部 / 待付款 / 待发货 / 待收货 / 待评论」——等宽、24×2dp 下划线。
+/// 1. 顶部 40dp 的「企划 / 商品」——企划星把企划支持记录和商品（周边）分成两个列表；
+/// 2. 40dp 的「全部 / 待支付 / 众筹中 / 交付中 / 待评价」——等宽、24×2dp 下划线。
 ///
-/// 商品列表**没有数据源**（本项目只做了演出票链路），所以那一栏渲染空态
+/// 商品列表**没有数据源**（本项目只做了企划支持链路），所以那一栏渲染空态
 /// 而不是假装有数据。
 ///
 /// ## 筛选在应用层做
 ///
-/// 仓储只返回"全部订单"，过滤发生在 [OrderListFilter.matches]。
+/// 仓储只返回"全部支持"，过滤发生在 [OrderListFilter.matches]。
 /// 理由写在 `order_list_controller.dart`：企划星列表的 0–3 筛选码是第三套编码，
 /// 不该污染仓储端口。
 class OrderListPage extends ConsumerStatefulWidget {
@@ -38,7 +38,7 @@ class OrderListPage extends ConsumerStatefulWidget {
 }
 
 class _OrderListPageState extends ConsumerState<OrderListPage> {
-  /// `0` = 演出，`1` = 商品。
+  /// `0` = 企划，`1` = 商品。
   int _tab = 0;
 
   @override
@@ -46,6 +46,7 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final filter = ref.watch(orderListFilterProvider);
     final ordersAsync = ref.watch(filteredOrderListProvider);
+    final isStale = ref.watch(orderListStaleProvider);
     final actions = ref.read(orderActionsProvider);
 
     return AdaptiveScaffold(
@@ -63,6 +64,31 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
                   ref.read(orderListFilterProvider.notifier).state = next,
             ),
             Container(height: 1, color: colors.divider),
+            if (isStale)
+              Container(
+                width: double.infinity,
+                color: colors.warning.withValues(alpha: 0.12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      LucideIcons.cloudOff,
+                      size: 14,
+                      color: colors.warning,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        context.l10n.stateOfflineCache,
+                        style: TextStyle(fontSize: 12, color: colors.warning),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async => ref.refresh(orderListProvider.future),

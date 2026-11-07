@@ -1,6 +1,9 @@
 import 'package:core/domain.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../domain/domain.dart';
+
+part 'pay_info.freezed.dart';
 
 /// 支付页面信息（对齐企划星 `GET v1/unifiedPay/payDetail` 的 `PayInfo`）。
 ///
@@ -11,20 +14,21 @@ import '../domain/domain.dart';
 /// - `detailInfo[]`：订单摘要行（演出名 / 票档 / 数量等）
 /// - `payReturnPage`：成功 / 失败页配置
 ///
-/// 本演示模式里用 [PayInfo.demo] 生成；接真实接口时由 repository 从
-/// `v1/unifiedPay/payDetail` 拉取并映射到这里。
-class PayInfo {
-  const PayInfo({
-    required this.orderNumber,
-    required this.payAmount,
-    required this.leftSeconds,
-    required this.channels,
-    required this.detailLines,
-    required this.showTitle,
-  });
+/// 页面壳由 [PayInfo.forOrder] 按路由参数构造；真实支付金额与状态
+/// 由 `PaymentOrder`（`/v1/unifiedPay/pay`）驱动。
+@freezed
+abstract class PayInfo with _$PayInfo {
+  const factory PayInfo({
+    required String orderNumber,
+    required Money payAmount,
+    required int leftSeconds,
+    required List<PayChannelOption> channels,
+    required List<PayDetailLine> detailLines,
+    required String showTitle,
+  }) = _PayInfo;
 
-  /// 演示数据。
-  factory PayInfo.demo({
+  /// 按订单参数构造支付页信息（渠道为客户端能力声明）。
+  factory PayInfo.forOrder({
     required String orderNumber,
     required Money payAmount,
     required String showTitle,
@@ -62,24 +66,6 @@ class PayInfo {
       ],
     );
   }
-
-  /// 订单号。
-  final String orderNumber;
-
-  /// 应付金额。
-  final Money payAmount;
-
-  /// 剩余支付时间（秒）。超时后订单自动取消。
-  final int leftSeconds;
-
-  /// 可用支付渠道。
-  final List<PayChannelOption> channels;
-
-  /// 订单摘要行。
-  final List<PayDetailLine> detailLines;
-
-  /// 演出名（用于成功页展示）。
-  final String showTitle;
 }
 
 /// 支付渠道下方的提示类型。
@@ -95,32 +81,30 @@ enum PayChannelTip {
 }
 
 /// 一个支付渠道选项（对齐 `PayInfo.channels[]`）。
-class PayChannelOption {
-  const PayChannelOption({
-    required this.channel,
-    required this.tip,
-    required this.available,
-  });
+@freezed
+abstract class PayChannelOption with _$PayChannelOption {
+  const factory PayChannelOption({
+    /// 渠道。
+    required PaymentChannel channel,
 
-  /// 渠道。
-  final PaymentChannel channel;
+    /// 提示类型（展示文案由 UI 层按 l10n 解析）。
+    required PayChannelTip tip,
 
-  /// 提示类型（展示文案由 UI 层按 l10n 解析）。
-  final PayChannelTip tip;
-
-  /// 是否可选。余额不足 / 未绑卡时为 false。
-  final bool available;
+    /// 是否可选。余额不足 / 未绑卡时为 false。
+    required bool available,
+  }) = _PayChannelOption;
 }
 
 /// 订单摘要行类型。
 enum PayDetailKind { show, orderNumber }
 
 /// 订单摘要行（对齐 `PayInfo.detailInfo[]`）。
-class PayDetailLine {
-  const PayDetailLine({required this.kind, required this.value});
-
-  final PayDetailKind kind;
-  final String value;
+@freezed
+abstract class PayDetailLine with _$PayDetailLine {
+  const factory PayDetailLine({
+    required PayDetailKind kind,
+    required String value,
+  }) = _PayDetailLine;
 }
 
 /// 支付结果（对齐 `POST v1/unifiedPay/pay` 的响应 + SDK 回调）。
