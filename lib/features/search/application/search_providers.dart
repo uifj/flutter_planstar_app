@@ -115,10 +115,13 @@ final searchResultsProvider = Provider.family<SearchResults, String>((
           .toList(growable: false) ??
       const <ShowSummary>[];
 
-  final List<FeedPost> feeds = ref
-      .watch(feedControllerProvider)
-      .where((FeedPost post) => _matchesFeed(post, query))
-      .toList(growable: false);
+  final List<FeedPost> feeds =
+      ref
+          .watch(feedControllerProvider)
+          .valueOrNull
+          ?.where((FeedPost post) => _matchesFeed(post, query))
+          .toList(growable: false) ??
+      const <FeedPost>[];
 
   return SearchResults(shows: shows, feeds: feeds);
 });

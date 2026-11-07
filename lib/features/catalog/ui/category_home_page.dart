@@ -28,8 +28,8 @@ import '../../../l10n/l10n.dart';
 ///
 /// - 原页有"日历"入口和"城市日历"楼层（`autoOpenCalendar`）。
 ///   日历需要服务端数据（按日期返回演出），这里没有数据源，不做。
-/// - 原页的列表是服务端分页返回。这里从本地 `showCatalogProvider` 过滤，
-///   数据量有限（演示数据每分类 3–5 条），不需要分页。
+/// - 原页的列表是服务端分页返回；这里同样按 `page/pageSize` 触底追加，
+///   分类与二级标签仍是客户端过滤（演出没有 `subCategoryId` 字段）。
 /// - 分类切换时不做 `ViewPager` 预加载——数据来自同一个 provider，
 ///   切换只是改变过滤条件，不需要多页面实例。
 class CategoryHomePage extends ConsumerStatefulWidget {
@@ -45,11 +45,22 @@ class CategoryHomePage extends ConsumerStatefulWidget {
 class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
   late int _selectedCategoryId;
   final Set<int> _selectedSubTagIds = <int>{};
+  bool _loadingMore = false;
 
   @override
   void initState() {
     super.initState();
     _selectedCategoryId = widget.initialCategoryId ?? 0;
+  }
+
+  /// 触底追加下一页；provider 会保留已有列表并在失败时停止继续请求。
+  Future<void> _loadMore() async {
+    if (_loadingMore) return;
+    final notifier = ref.read(showCatalogProvider.notifier);
+    if (!notifier.hasMore) return;
+    setState(() => _loadingMore = true);
+    await notifier.loadMore();
+    if (mounted) setState(() => _loadingMore = false);
   }
 
   @override
@@ -68,8 +79,9 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
         .firstOrNull;
 
     final city = ref.watch(selectedCityProvider);
-    final allShows =
-        ref.watch(cityShowsProvider).valueOrNull ?? const <ShowSummary>[];
+    final showsAsync = ref.watch(cityShowsProvider);
+    final allShows = showsAsync.valueOrNull ?? const <ShowSummary>[];
+    final hasError = showsAsync.hasError && !showsAsync.hasValue;
 
     // 按分类 + 二级标签筛选。
     final filteredShows = allShows.where((show) {
@@ -114,7 +126,19 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
               }),
             ),
           Expanded(
-            child: filteredShows.isEmpty
+            child: hasError
+                ? PsEmptyState(
+                    title: context.l10n.categoryHomePage_116(
+                      city,
+                      selectedCategory?.name ??
+                          context.l10n.categoryHomePage_unknownCategory,
+                    ),
+                    description: psErrorMessage(showsAsync.error!),
+                    icon: LucideIcons.wifiOff,
+                    actionLabel: context.l10n.actionRetry,
+                    onAction: () => ref.invalidate(showCatalogProvider),
+                  )
+                : filteredShows.isEmpty
                 ? PsEmptyState(
                     title: context.l10n.categoryHomePage_116(
                       city,
@@ -126,19 +150,27 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
                     actionLabel: context.l10n.categoryHomePage_119,
                     onAction: () => context.go('/'),
                   )
-                : ListView.builder(
-                    padding: EdgeInsets.only(
-                      top: 8,
-                      bottom: PsFloatingTabBar.bottomClearance(context),
-                    ),
-                    itemCount: filteredShows.length,
-                    itemBuilder: (context, index) {
-                      final show = filteredShows[index];
-                      return _CategoryShowCard(
-                        show: show,
-                        onTap: () => context.push('/show/${show.id}'),
-                      );
+                : NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification notification) {
+                      if (notification.metrics.extentAfter < 300) {
+                        _loadMore();
+                      }
+                      return false;
                     },
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(
+                        top: 8,
+                        bottom: PsFloatingTabBar.bottomClearance(context),
+                      ),
+                      itemCount: filteredShows.length,
+                      itemBuilder: (context, index) {
+                        final show = filteredShows[index];
+                        return _CategoryShowCard(
+                          show: show,
+                          onTap: () => context.push('/show/${show.id}'),
+                        );
+                      },
+                    ),
                   ),
           ),
         ],

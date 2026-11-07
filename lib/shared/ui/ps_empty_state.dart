@@ -1,7 +1,14 @@
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:core/result.dart';
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/l10n.dart';
+
+/// 把错误转成可读文案：优先用 [Failure.message]，不展示堆栈。
+String psErrorMessage(Object error) {
+  if (error is Failure) return error.message;
+  return '加载失败，请检查网络后重试';
+}
 
 /// 空态。
 ///

@@ -81,7 +81,9 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final show = ref.watch(showByIdProvider(widget.showId));
+    final detail = ref.watch(showDetailProvider(widget.showId));
+    final show =
+        detail.valueOrNull ?? ref.watch(showByIdProvider(widget.showId));
 
     if (show == null) {
       return AdaptiveScaffold(

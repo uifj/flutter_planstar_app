@@ -13,9 +13,12 @@ import '../../../l10n/l10n.dart';
 /// 所以这里用**品牌渐变的运营位**承载同样的信息：标题 + 副标题 + 角标。
 /// 接真实接口后把 `_slides` 换成 `bannerList` 即可，尺寸与轮播逻辑不用动。
 class HomeBannerFloor extends StatefulWidget {
-  const HomeBannerFloor({super.key, this.onTap});
+  const HomeBannerFloor({super.key, this.onTap, this.slides});
 
   final void Function(BannerSlide slide)? onTap;
+
+  /// 真实运营位；为空时用内置视觉兜底（demo / 加载失败）。
+  final List<BannerSlide>? slides;
 
   @override
   State<HomeBannerFloor> createState() => _HomeBannerFloorState();
@@ -29,6 +32,7 @@ class BannerSlide {
     required this.badge,
     required this.colors,
     this.showId,
+    this.imageUrl,
   });
 
   final String title;
@@ -40,10 +44,16 @@ class BannerSlide {
 
   /// 点击后跳转的演出 id（`null` = 纯运营位，没有落地页）。
   final String? showId;
+
+  /// 服务端运营图；有值时优先展示图片。
+  final String? imageUrl;
 }
 
 class _HomeBannerFloorState extends State<HomeBannerFloor> {
-  List<BannerSlide> get _slides => <BannerSlide>[
+  List<BannerSlide> get _slides =>
+      (widget.slides?.isNotEmpty ?? false) ? widget.slides! : _defaultSlides;
+
+  List<BannerSlide> get _defaultSlides => <BannerSlide>[
     BannerSlide(
       title: context.l10n.homeBannerFloor_47,
       subtitle: context.l10n.homeBannerFloor_48,
@@ -90,6 +100,18 @@ class _HomeBannerFloorState extends State<HomeBannerFloor> {
   }
 
   @override
+  void didUpdateWidget(covariant HomeBannerFloor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final oldCount = (oldWidget.slides?.isNotEmpty ?? false)
+        ? oldWidget.slides!.length
+        : _defaultSlides.length;
+    if (oldCount != _slides.length && _controller.hasClients) {
+      _index = 0;
+      _controller.jumpToPage(0);
+    }
+  }
+
+  @override
   void dispose() {
     _timer?.cancel();
     _controller.dispose();
@@ -124,60 +146,73 @@ class _HomeBannerFloorState extends State<HomeBannerFloor> {
                           colors: <Color>[slide.colors.$1, slide.colors.$2],
                         ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    slide.title,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: <Widget>[
+                          if (slide.imageUrl != null)
+                            Image.network(
+                              slide.imageUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, _, _) =>
+                                  const SizedBox.shrink(),
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        slide.title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          height: 1.2,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        slide.subtitle,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          height: 1.2,
+                                          color: Color(0xE6FFFFFF),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.24),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    slide.badge,
                                     style: const TextStyle(
-                                      fontSize: 18,
-                                      height: 1.2,
+                                      fontSize: 11,
                                       fontWeight: FontWeight.w700,
                                       color: Colors.white,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    slide.subtitle,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      height: 1.2,
-                                      color: Color(0xE6FFFFFF),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 3,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.24),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                slide.badge,
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   );

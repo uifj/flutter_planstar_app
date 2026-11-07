@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/network/network_providers.dart';
 import '../data/demo_catalog.dart';
 import '../data/demo_categories.dart';
 import '../data/planstar_catalog_api.dart';
@@ -7,32 +8,52 @@ import '../domain/show_category.dart';
 import '../domain/show_summary.dart';
 import 'catalog_api_providers.dart';
 
-// ── 功能开关 ────────────────────────────────────────────────────────────
-
-/// **演示模式开关**：为 `true` 时所有演出数据走本地假数据，
-/// 为 `false` 时走真实接口。
-///
-/// 这是**临时开关**：等后端接口全部调通后删掉它，让代码始终走网络。
-const bool _demoMode = true;
-
 // ── 演出库 ──────────────────────────────────────────────────────────────
 
 /// 演出库（全量）。
 ///
-/// 换真实接口时把 [_demoMode] 改成 `false`。
-/// 所有页面都从这一个人口读数据，所以"分页/缓存/离线"这类横切能力只需要在这里做一次。
+/// demo 与真实数据由 `useDemoProvider`（编译期 `PS_USE_DEMO`）决定，
+/// 默认走网络；所有页面都从这一个人口读数据，分页/刷新只在这里做一次。
 final showCatalogProvider =
     AsyncNotifierProvider<ShowCatalogController, List<ShowSummary>>(
       ShowCatalogController.new,
     );
 
 class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
+  static const int _pageSize = 100;
+
+  int _pageIndex = 1;
+  bool _hasMore = true;
+  String? _city;
+
+  /// 是否还有下一页（给列表页做触底加载用）。
+  bool get hasMore => _hasMore;
+
   @override
   Future<List<ShowSummary>> build() async {
-    if (_demoMode) return buildDemoCatalog();
+    _pageIndex = 1;
+    _hasMore = true;
+    if (ref.watch(useDemoProvider)) {
+      // 演示数据一次给全，不做分页。
+      _hasMore = false;
+      return buildDemoCatalog();
+    }
+    // 城市切换由 provider 重建承担：服务端按 city 过滤，避免超过一页后
+    // 当前城市的数据被挤到后面几页而查不到。
+    _city = ref.watch(selectedCityProvider);
+    final first = await _fetchPage(1);
+    // 首页数据不足一页即没有下一页，避免触底时多打一次空请求。
+    _hasMore = first.length >= _pageSize;
+    return first;
+  }
 
-    final PlanstarCatalogApi api = ref.watch(planstarCatalogApiProvider);
-    final result = await api.fetchShows(page: 1, pageSize: 100);
+  Future<List<ShowSummary>> _fetchPage(int pageIndex) async {
+    final PlanstarCatalogApi api = ref.read(planstarCatalogApiProvider);
+    final result = await api.fetchShows(
+      city: _city,
+      pageIndex: pageIndex,
+      pageSize: _pageSize,
+    );
     return result.fold(
       onSuccess: (shows) => shows,
       onFailure: (failure) => throw failure, // AsyncValue 会捕获为 error 态
@@ -40,16 +61,40 @@ class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
   }
 
   Future<void> refresh() async {
+    _pageIndex = 1;
+    _hasMore = true;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      if (_demoMode) return buildDemoCatalog();
-      final api = ref.read(planstarCatalogApiProvider);
-      final result = await api.fetchShows(page: 1, pageSize: 100);
-      return result.fold(
-        onSuccess: (shows) => shows,
-        onFailure: (failure) => throw failure,
-      );
+      if (ref.read(useDemoProvider)) {
+        _hasMore = false;
+        return buildDemoCatalog();
+      }
+      _city = ref.read(selectedCityProvider);
+      final first = await _fetchPage(1);
+      _hasMore = first.length >= _pageSize;
+      return first;
     });
+  }
+
+  /// 加载下一页并追加到当前列表；失败时保留已有数据。
+  Future<void> loadMore() async {
+    if (!_hasMore || state.isLoading) return;
+    if (ref.read(useDemoProvider)) return;
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    try {
+      final next = await _fetchPage(_pageIndex + 1);
+      _pageIndex += 1;
+      if (next.isEmpty) {
+        _hasMore = false;
+        return;
+      }
+      state = AsyncValue.data(<ShowSummary>[...current, ...next]);
+    } catch (_) {
+      // 触底加载失败不覆盖已有列表，避免整页变错误态。
+      _hasMore = false;
+    }
   }
 }
 
@@ -98,9 +143,67 @@ final cityHasDataProvider = Provider<bool>(
 
 // ── 分类 ────────────────────────────────────────────────────────────────
 
-/// 分类目录（编译期常量；本地 assets 已移除，不再运行时读资源）。
+/// 分类目录。
+///
+/// 后端没有独立的分类端点，真实模式下从活动列表的 `categoryId/categoryName`
+/// 聚合；demo 模式继续用编译期分类数据。
 final showCategoriesProvider = FutureProvider<List<ShowCategory>>((ref) async {
-  return demoCategories.where((c) => c.isActive).toList(growable: false);
+  if (ref.watch(useDemoProvider)) {
+    return demoCategories.where((c) => c.isActive).toList(growable: false);
+  }
+
+  final shows = await ref.watch(showCatalogProvider.future);
+  final seen = <int, ShowCategory>{};
+  for (final show in shows) {
+    if (show.categoryId == 0) continue;
+    seen.putIfAbsent(
+      show.categoryId,
+      () => ShowCategory(
+        id: show.categoryId,
+        name: show.categoryName.isEmpty ? '其他' : show.categoryName,
+        enName: '',
+        pinyin: '',
+        subTags: const <SubCategoryTag>[],
+      ),
+    );
+  }
+  return seen.values.toList(growable: false);
+});
+
+// ── 首页 Banner / 热门 ──────────────────────────────────────────────────
+
+/// 首页 Banner；demo 模式返回空列表，由页面继续用内置视觉兜底。
+final homeBannersProvider = FutureProvider<List<BannerDto>>((ref) async {
+  if (ref.watch(useDemoProvider)) return const <BannerDto>[];
+  final result = await ref.watch(planstarCatalogApiProvider).fetchBanners();
+  return result.getOrElse((_) => const <BannerDto>[]);
+});
+
+/// 热门演出；demo 模式按想看人数排序，真实模式走 `/v1/activities/hot`。
+final hotShowsProvider = FutureProvider<List<ShowSummary>>((ref) async {
+  if (ref.watch(useDemoProvider)) {
+    final city = ref.watch(selectedCityProvider);
+    final shows = await ref.watch(showCatalogProvider.future);
+    final sorted = shows.where((show) => show.city == city).toList()
+      ..sort((a, b) => b.wishCount.compareTo(a.wishCount));
+    return sorted;
+  }
+  final result = await ref
+      .watch(planstarCatalogApiProvider)
+      .fetchHotShows(pageIndex: 1, pageSize: 20);
+  return result.getOrElse((_) => const <ShowSummary>[]);
+});
+
+/// 演出详情（真实模式调用 `/v3/activities/{id}`，失败时由页面回退到列表数据）。
+final showDetailProvider = FutureProvider.family<ShowSummary?, String>((
+  ref,
+  id,
+) async {
+  if (ref.watch(useDemoProvider)) return ref.watch(showByIdProvider(id));
+  final result = await ref
+      .watch(planstarCatalogApiProvider)
+      .fetchShowDetail(id);
+  return result.getOrElse((_) => null);
 });
 
 // ── 精选推荐 ────────────────────────────────────────────────────────────

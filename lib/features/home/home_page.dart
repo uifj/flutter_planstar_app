@@ -10,6 +10,7 @@ import '../../shared/ui/ps_floating_tab_bar.dart';
 import '../../shared/ui/ps_shortcut_grid.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/data/demo_catalog.dart';
+import '../catalog/data/planstar_catalog_api.dart';
 import '../catalog/domain/show_category.dart';
 import '../catalog/domain/show_summary.dart';
 import 'application/home_shortcuts.dart';
@@ -49,6 +50,12 @@ class HomePage extends ConsumerWidget {
 
   /// 分类楼层（分类 id）。
   static const List<int> _categoryFloorIds = <int>[1, 2, 3, 4];
+
+  /// 从运营位链接里提取演出 id（`.../show/2001`）。
+  static String? _showIdFromUrl(String? url) {
+    if (url == null || url.isEmpty) return null;
+    return RegExp(r'/show/([^/?#]+)').firstMatch(url)?.group(1);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -102,11 +109,30 @@ class HomePage extends ConsumerWidget {
           }
         }
 
-        final hotShows = <ShowSummary>[...shows]
-          ..sort((a, b) => b.wishCount.compareTo(a.wishCount));
+        // 热门楼层优先用服务端 `v1/activities/hot`；首帧/失败时用当前城市
+        // 列表按想看数兜底，避免楼层空着。
+        final hotShows =
+            ref.watch(hotShowsProvider).valueOrNull ??
+            (<ShowSummary>[...shows]
+              ..sort((a, b) => b.wishCount.compareTo(a.wishCount)));
 
         final groups = groupsAsync.valueOrNull ?? const <ChoicenessGroup>[];
         final venues = venuesAsync.valueOrNull ?? const <VenueSummary>[];
+        final banners =
+            ref.watch(homeBannersProvider).valueOrNull ?? const <BannerDto>[];
+        final bannerSlides = banners.isEmpty
+            ? null
+            : <BannerSlide>[
+                for (final banner in banners)
+                  BannerSlide(
+                    title: banner.title.isEmpty ? '精选演出' : banner.title,
+                    subtitle: '企划星 × 严选好戏',
+                    badge: '推荐',
+                    colors: (Color(0xFFFF6AB9), Color(0xFFFE3870)),
+                    showId: banner.showId ?? _showIdFromUrl(banner.url),
+                    imageUrl: banner.image.isEmpty ? null : banner.image,
+                  ),
+              ];
 
         return AdaptiveScaffold(
           body: CustomScrollView(
@@ -152,6 +178,7 @@ class HomePage extends ConsumerWidget {
               ),
               SliverToBoxAdapter(
                 child: HomeBannerFloor(
+                  slides: bannerSlides,
                   onTap: (slide) {
                     if (slide.showId != null) {
                       context.push('/show/${slide.showId}');
@@ -372,7 +399,10 @@ class _ErrorScaffold extends StatelessWidget {
               padding: EdgeInsets.only(top: topPadding + 60),
               child: PsEmptyState(
                 title: context.l10n.homePage_363,
-                description: context.l10n.homePage_364(city, error.toString()),
+                description: context.l10n.homePage_364(
+                  city,
+                  psErrorMessage(error),
+                ),
                 icon: LucideIcons.wifiOff,
                 actionLabel: context.l10n.actionRetry,
                 onAction: onRetry,

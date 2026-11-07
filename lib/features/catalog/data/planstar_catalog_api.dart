@@ -1,6 +1,7 @@
 import 'package:core/network.dart';
 import 'package:core/result.dart';
 
+import '../../../app/network/api_paths.dart';
 import '../domain/show_summary.dart';
 
 /// 演出库 API（首页 Banner、演出列表、热门演出）。
@@ -23,7 +24,7 @@ final class PlanstarCatalogApi {
   /// 首页运营 Banner。
   Future<Result<List<BannerDto>>> fetchBanners() {
     return _client.get<List<BannerDto>>(
-      'v1/home/banners',
+      ApiPaths.homeBanners,
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {
         final list = data as List<dynamic>? ?? <dynamic>[];
@@ -37,12 +38,17 @@ final class PlanstarCatalogApi {
 
   /// 热门演出。
   Future<Result<List<ShowSummary>>> fetchHotShows({
-    int page = 1,
+    int pageIndex = 1,
     int pageSize = 20,
   }) {
     return _client.get<List<ShowSummary>>(
-      'v1/activities/hot',
-      queryParameters: <String, dynamic>{'page': page, 'pageSize': pageSize},
+      ApiPaths.activitiesHot,
+      // 契约为 pageIndex；保留 page 兼容当前后端实现。
+      queryParameters: <String, dynamic>{
+        'pageIndex': pageIndex,
+        'page': pageIndex,
+        'pageSize': pageSize,
+      },
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {
         final list = data as List<dynamic>? ?? <dynamic>[];
@@ -58,17 +64,19 @@ final class PlanstarCatalogApi {
   Future<Result<List<ShowSummary>>> fetchShows({
     int? categoryId,
     String? city,
-    int page = 1,
+    int pageIndex = 1,
     int pageSize = 20,
   }) {
     final query = <String, dynamic>{
-      'page': page,
+      // 契约为 pageIndex；保留 page 兼容当前后端实现。
+      'pageIndex': pageIndex,
+      'page': pageIndex,
       'pageSize': pageSize,
       'categoryId': ?categoryId,
       if (city != null && city.isNotEmpty) 'city': city,
     };
     return _client.get<List<ShowSummary>>(
-      'v1/activities',
+      ApiPaths.activities,
       queryParameters: query,
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {
@@ -84,7 +92,7 @@ final class PlanstarCatalogApi {
   /// 演出详情。
   Future<Result<ShowSummary?>> fetchShowDetail(String id) {
     return _client.get<ShowSummary?>(
-      'v3/activities/$id',
+      ApiPaths.activityDetail(id),
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {
         if (data is! Map<String, dynamic>) return null;

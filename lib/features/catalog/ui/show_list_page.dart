@@ -25,10 +25,9 @@ import '../../../l10n/l10n.dart';
 ///
 /// ## 与 Android 的差异
 ///
-/// - 原页的分页是 `RecyclerView` + 上拉加载；这里是**一次性渲染**——
-///   演示数据只有几十条，做假分页只会让"到底有没有下一页"变成谎言。
-///   接真实接口时把 `ListView.separated` 换成 `ListView.builder` +
-///   `ScrollController` 触发 `loadMore` 即可，页面结构不用动。
+/// - 原页的分页是 `RecyclerView` + 上拉加载；这里用 `NotificationListener`
+///   监听滚动到底部时调用 `ShowCatalogController.loadMore()`，真实接口按
+///   `page/pageSize` 追加；演示数据一次给全，不再触发网络。
 /// - 原页有「筛选」抽屉（价格区间/时间/场馆）；这里只保留排序。
 ///   筛选需要服务端支持多维聚合，客户端硬筛会把"筛完是空"变成常态。
 class ShowListPage extends ConsumerStatefulWidget {
@@ -50,14 +49,26 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
 
   _SortMode _sort = _SortMode.recommended;
 
+  bool _loadingMore = false;
+
+  /// 触底追加下一页；失败时 provider 会保留已有列表并把 `hasMore` 置 false。
+  Future<void> _loadMore() async {
+    if (_loadingMore) return;
+    final notifier = ref.read(showCatalogProvider.notifier);
+    if (!notifier.hasMore) return;
+    setState(() => _loadingMore = true);
+    await notifier.loadMore();
+    if (mounted) setState(() => _loadingMore = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final shows = _sorted(
-      ref.watch(cityShowsProvider).valueOrNull ?? const <ShowSummary>[],
-    );
+    final showsAsync = ref.watch(cityShowsProvider);
+    final shows = _sorted(showsAsync.valueOrNull ?? const <ShowSummary>[]);
     final categories =
         ref.watch(showCategoriesProvider).valueOrNull ?? const <ShowCategory>[];
+    final hasError = showsAsync.hasError && !showsAsync.hasValue;
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
@@ -76,7 +87,15 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
           ),
           Container(height: 1, color: colors.divider),
           Expanded(
-            child: shows.isEmpty
+            child: hasError
+                ? PsEmptyState(
+                    title: context.l10n.showListPage_78,
+                    description: psErrorMessage(showsAsync.error!),
+                    icon: LucideIcons.wifiOff,
+                    actionLabel: context.l10n.actionRetry,
+                    onAction: () => ref.invalidate(showCatalogProvider),
+                  )
+                : shows.isEmpty
                 ? PsEmptyState(
                     title: context.l10n.showListPage_78,
                     description: context.l10n.showListPage_79,
@@ -84,18 +103,30 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
                     actionLabel: context.l10n.showListPage_81,
                     onAction: () => setState(() => _categoryId = null),
                   )
-                : ListView.separated(
-                    padding: const EdgeInsets.only(bottom: 24),
-                    itemCount: shows.length,
-                    separatorBuilder: (_, _) =>
-                        Divider(height: 1, thickness: 1, color: colors.divider),
-                    itemBuilder: (BuildContext context, int index) {
-                      final ShowSummary show = shows[index];
-                      return ShowCardRow(
-                        show: show,
-                        onTap: () => context.push('/show/${show.id}'),
-                      );
+                : NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification notification) {
+                      // 距底部 300px 内追加下一页；provider 内部会去重与限流。
+                      if (notification.metrics.extentAfter < 300) {
+                        _loadMore();
+                      }
+                      return false;
                     },
+                    child: ListView.separated(
+                      padding: const EdgeInsets.only(bottom: 24),
+                      itemCount: shows.length,
+                      separatorBuilder: (_, _) => Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: colors.divider,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        final ShowSummary show = shows[index];
+                        return ShowCardRow(
+                          show: show,
+                          onTap: () => context.push('/show/${show.id}'),
+                        );
+                      },
+                    ),
                   ),
           ),
         ],
