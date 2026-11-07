@@ -78,7 +78,7 @@ final orderDraftSeedProvider = Provider.family<OrderDraftSeed, String>((
 ) {
   if (ref.watch(useDemoProvider)) return _demoSeed(showId);
 
-  final show = ref.watch(showByIdProvider(showId));
+  final show = ref.watch(showFullProvider(showId));
   if (show == null) return _emptySeed(showId);
 
   final tiers = <TicketTierOffer>[

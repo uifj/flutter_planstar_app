@@ -52,7 +52,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
 
   /// 单笔限购上限（从票档的 `remaining` 或默认 6 取较小值）。
   int get _maxQuantity {
-    final show = ref.read(showByIdProvider(widget.showId));
+    final show = ref.read(showFullProvider(widget.showId));
     if (show == null || show.tiers.isEmpty) return 6;
     final tier = _selectedTier >= 0 ? show.tiers[_selectedTier] : null;
     if (tier == null) return 6;
@@ -68,7 +68,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final show = ref.watch(showByIdProvider(widget.showId));
+    final show = ref.watch(showFullProvider(widget.showId));
 
     if (show == null) {
       return AdaptiveScaffold(

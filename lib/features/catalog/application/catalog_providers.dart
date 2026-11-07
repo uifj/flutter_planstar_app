@@ -206,6 +206,18 @@ final showDetailProvider = FutureProvider.family<ShowSummary?, String>((
   return result.getOrElse((_) => null);
 });
 
+/// 演出完整信息：详情接口优先，列表项兜底。
+///
+/// 列表接口（`/v1/activities`）不返回 `tiers`，只用列表项会让选票页和
+/// 确认订单页拿不到票档（表现为「暂无票档信息」、订单无行、提交按钮禁用）。
+/// 这里统一从详情接口取票档/场次，详情未返回或失败时退回列表数据。
+final showFullProvider = Provider.family<ShowSummary?, String>((ref, id) {
+  final summary = ref.watch(showByIdProvider(id));
+  if (ref.watch(useDemoProvider)) return summary;
+  final detail = ref.watch(showDetailProvider(id)).valueOrNull;
+  return detail ?? summary;
+});
+
 // ── 精选推荐 ────────────────────────────────────────────────────────────
 
 /// 精选推荐：按分类分组后的演出（首页「精选」楼层每个 tab 一组）。
