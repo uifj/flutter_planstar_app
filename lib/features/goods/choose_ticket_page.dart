@@ -266,13 +266,15 @@ class _ShowInfoCard extends StatelessWidget {
                       color: colors.textTertiary,
                     ),
                     const SizedBox(width: 2),
-                    Text(
-                      '${show.firstSessionLabelOf(context)} · ${show.duration}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: colors.textTertiary,
+                    Expanded(
+                      child: Text(
+                        '${show.firstSessionLabelOf(context)} · ${show.duration}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colors.textTertiary,
+                        ),
                       ),
                     ),
                   ],
