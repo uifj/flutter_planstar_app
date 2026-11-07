@@ -41,7 +41,8 @@
         android:name="${applicationName}"
         android:allowBackup="false"
         android:usesCleartextTraffic="true"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round">
         <!-- ── SDK 声明式配置（取自原 com.planstar.app 清单）───────────── -->
         <!-- 百度地图 / 定位 API Key（com.baidu.mapapi + com.baidu.location 消费）。 -->
         <meta-data
