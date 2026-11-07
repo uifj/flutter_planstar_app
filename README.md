@@ -1,5 +1,7 @@
 # planstar
 
+> 适用版本：planstar Flutter 9.9.39 · 最后核对：2026-11-07 · 维护：客户端组
+
 企划星 Flutter 重构工程。monorepo（pub workspace）+ Clean DDD + Riverpod + GoRouter。
 
 ## 目录
@@ -27,6 +29,70 @@ tool/gen_l10n.dart      l10n 统一生成入口
 > `packages/` 下还有 `pudding` / `appunits` 与 `infras/sentry`，是 vendored 的
 > 腾讯 CloudSpace / Stow / TRTC 示例代码，**不在 workspace 里**、不参与解析，
 > 也没有企划星业务代码。Android 反编译资料与迁移评估见工程内 `docs/`。
+
+## 本地运行与联调
+
+### 1. 拉依赖
+
+```bash
+flutter pub get
+```
+
+`packages/infras/core` 与 `packages/infras/core_design_system` 是 pub workspace 成员，
+随根工程一起解析，不需要单独 `pub get`。
+
+### 2. 直接运行（不连后端）
+
+```bash
+flutter run
+```
+
+默认 base 是 `https://api.planstar.com/`，这是**占位域名，当前不可用**。
+不覆盖的话真实请求会失败；加 `--dart-define=PS_USE_DEMO=true` 可离线跑演示数据。
+
+### 3. 连本地后端
+
+后端（`planstar_kratos_server`）需先在本机 `8098` 端口启动，具体启动方式见
+该仓库的 README。
+
+**Android 模拟器**（模拟器内 `10.0.2.2` 指向宿主机）：
+
+```bash
+flutter run --dart-define=PS_API_BASE=http://10.0.2.2:8098/
+```
+
+**真机**（手机与电脑在同一局域网，替换成电脑的局域网 IP）：
+
+```bash
+flutter run --dart-define=PS_API_BASE=http://192.168.1.10:8098/
+```
+
+若真机连不上，检查电脑防火墙是否放行 `8098`（业务端口）；后端健康检查在运维端口
+`9108`，可用 `http://<局域网 IP>:9108/healthz` 确认后端是否存活。
+
+本机同进程访问（如桌面调试）可直接用：
+
+```bash
+flutter run --dart-define=PS_API_BASE=http://127.0.0.1:8098/
+```
+
+其他可选参数：
+
+| 参数 | 作用 |
+| --- | --- |
+| `PS_API_ENV=prod` / `beta` | 选择默认环境（`PS_API_BASE` 优先级更高） |
+| `PS_USE_DEMO=true` | 不连后端，全部页面读本地演示数据（测试同样强制此模式） |
+| `PS_HTTP_LOG=true` | 打印请求/响应体，默认关闭（避免会话、手机号进日志） |
+
+> `PS_API_BASE` **必须以 `/` 结尾**。Android manifest 已允许明文 HTTP，
+> 本地联调不需要额外改网络配置。
+
+### 4. 当前接入范围
+
+后端注册的 23 个唯一端点已全部接通：登录、演出库（分页/城市过滤/详情/Banner）、
+动态（热门/关注/详情/评论）、消息（列表/未读/标记已读）、订单（列表/详情/报价/下单）、
+用户资料与收货地址。默认真实接口；要离线跑页面或测试时加
+`--dart-define=PS_USE_DEMO=true`。逐条对照见 `docs/api-contract.md` §5。
 
 ## 本地化（一 feature 一套 ARB）
 

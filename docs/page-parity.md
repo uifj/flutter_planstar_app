@@ -1,5 +1,7 @@
 # features/ 各页面对照 Android 原项目的完成情况
 
+> 适用版本：planstar Flutter 9.9.39 · 最后核对：2026-11-07 · 维护：客户端组
+
 > 口径：逐个页面拿 Android 原项目的 `res/layout/*.xml` 与
 > `drawable/*`、`values/*` 当唯一依据核对，尺寸/字号/颜色**不靠感觉**，
 > 每处刻意不一致都在代码的类文档注释里写明了原因。
@@ -181,7 +183,7 @@ min = 安全区 + 48），全幅海报 + `#8C000000` 遮罩 + 92×124 小海报 
 |---|---|---|
 | 获取验证码 | `POST v3/user/sendLoginCode` | `errorMsg`（`发送失败` / `请输入图形验证码`） |
 | 验证码登录 | `POST v1/user/login`（`code`） | 服务端 `text/plain` 原文（`验证码不正确`） |
-| 密码登录 | `POST v1/user/login`（`pw`） | 原文（`请使用手机号验证码登录…`，服务端已关闭该入口） |
+| 密码登录 | `POST v1/user/login`（`pw`） | 服务端原文（无密码账号返回 `401`；演示账号 `13800000001 / 123456` 可用） |
 | 图形验证码 | `GET v1/user/captcha` | 弹框内提示并可"换一张" |
 
 - 风控要图形码时：弹框 → 用户输字符 → **用同一个请求体补 `captcha` 重放**，
@@ -200,8 +202,44 @@ min = 安全区 + 48），全幅海报 + `#8C000000` 遮罩 + 92×124 小海报 
    `l10n/*.arb` 只有标题类 key。Android 侧本身没有 i18n，所以不影响对齐，
    但和 `l10n.yaml` 里"包级 l10n"的约定不一致；要补齐就得给 6 个 feature 各加
    几十条 key，属于独立的一轮改造。
-2. **没有网络层**：`catalog` / `feed` / `message` / `order` 全是内存假数据，
-   没有 Dio 客户端、没有分页、没有错误重试 UI（只有 `AsyncValue.error` 的空状态）。
+2. **网络层按域逐步接通**：`ApiClient`（基于 Dio、永不抛异常、统一
+   `Result<T>`）、`PsNetworkInterceptor`（UA / `dvid` / `Cookie: psSession` /
+   401 钩子）与 `ApiConfig` 已在 `lib/app/network/` 装配；默认真实接口，
+   `--dart-define=PS_USE_DEMO=true` 回落演示数据。当前状态：
+   - `auth`：`POST v3/user/sendLoginCode`、`POST v1/user/login`、`GET v1/user/captcha`；
+   - `catalog`：`GET v1/activities`（服务端分页 + `city` 过滤）、
+     `GET v1/activities/hot`、`GET v3/activities/{id}`、`GET v1/home/banners`；
+     列表页触底调用 `ShowCatalogController.loadMore()` 追加下一页；
+   - `order`：列表/详情/确认/下单走真实接口（`Idempotency-Key` + 报价快照）；
+     取消、确认收货等写操作在本批契约外，真实模式明确提示"暂不支持"；
+   - `user`：资料与收货地址走真实接口；券、余额等仍为演示值；
+   - `discover`：热门/关注流走 `GET v4/feed/hot`、`GET v1/feed`，详情
+     `GET v1/tweets/{id}`，评论 `GET v1/userReply?tweetId=`；详情查不到时回
+     「动态不存在」空态，评论失败按「暂无评论」降级，不阻断正文；
+   - `message`：`GET v1/messages?type=1/2/3` 分别拉三类通知并累加未读，组成
+     三个系统入口（活动通知 / 回复我的 / 赞和关注）；入口点击走
+     `POST v1/messages/read` 逐条标已读；「我的」页角标走
+     `GET v1/messages/unreadCount`（只取一个整数，未登录不发）。后端没有
+     会话/聊天表，真实模式下会话列表是空态，`/message/thread/:id` 深链回兜底空态。
+
+   至此后端注册的 23 个唯一端点已全部接通（`v1/user/` 尾斜杠别名同 handler），
+   逐端点对照见 [api-contract.md](api-contract.md) §5；2026-11-07 对本地后端
+   做过 24 次运行态请求核对，失败 0 条。
+
+   分页：演出库列表已接服务端分页（触底 `loadMore`）；动态、消息、订单列表
+   仍是一次性取全量，参数已写进 API 类，UI 尚未接翻页。消息与动态页已有
+   `invalidate` 重试按钮，其余页面失败仍是 `AsyncValue.error` 直出；
+   `core` 内已有 `RetryInterceptor`，但 `dioProvider`
+   当前未挂载它。跑 `dart run tool/verify_catalog_api.dart --base=<host>` 可对真实
+   后端做 6 项契约自检（列表/分页/详情/城市过滤/热门/Banner）。
 3. **图片是占位**：见 §1，海报与分类图标没有真实资源。
-4. **未迁移的独立页面**：动态详情、商品订单、选座、代抢、拼团、求票、粉丝社区、
-   评价、资讯、设置、消息详情、个人主页。本次范围是 `features/` 下已存在的页面。
+4. **仍需补齐的独立页面**：评价、粉丝社区、资讯、个人主页、商品订单尚未迁移
+   （完整清单见 [unimplemented-modules.md](unimplemented-modules.md) §1）。
+   `feed_detail_page.dart`、`chat_page.dart`、`settings_page.dart` 已存在，但分别
+   只读/无 IM 通道/部分入口为占位；`proxy_buy_page.dart`、`group_buy_page.dart`、
+   `pay_page.dart`、`seat_selection_page.dart` 已有页面，仍是**本地模拟流程**，
+   未接真实活动数据、库存锁座与支付 SDK（详见
+   [unimplemented-modules.md](unimplemented-modules.md) §2.1/§2.2/§2.7）。
+   其中**支付与选座暂时固定 mock**：`PayInfo.demo` + `PayController._invokeSdk`
+   模拟渠道回调，`demo_seat_map.dart` 生成本地座位图；两者都不随
+   `PS_USE_DEMO` 切换，也不会请求后端。
