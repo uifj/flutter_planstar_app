@@ -10,9 +10,11 @@ import '../../shared/ui/ps_tag.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_summary.dart';
 import '../catalog/ui/show_cards.dart';
+import 'application/bilibili_launcher.dart';
 import 'application/feed_providers.dart';
 import 'domain/feed_post.dart';
 import 'feed_l10n.dart';
+import 'widgets/bilibili_open_sheet.dart';
 import '../../shared/ui/ps_network_images.dart';
 import '../../l10n/l10n.dart';
 
@@ -80,6 +82,9 @@ class _FeedDetailBody extends ConsumerWidget {
     final ShowSummary? show = post.showId == null
         ? null
         : ref.watch(showByIdProvider(post.showId!));
+    final String? bvid = post.hasVideo
+        ? extractBvid(post.bvid) ?? extractBvid(post.videoUrl)
+        : null;
 
     return ListView(
       padding: const EdgeInsets.only(bottom: 24),
@@ -118,7 +123,7 @@ class _FeedDetailBody extends ConsumerWidget {
               ],
               if (post.hasVideo) ...<Widget>[
                 const SizedBox(height: 4),
-                _VideoNotice(),
+                _VideoNotice(bvid: bvid),
               ],
               const SizedBox(height: 8),
               _InteractionBar(post: post),
@@ -245,32 +250,60 @@ class _AuthorRow extends StatelessWidget {
   }
 }
 
-/// 视频占位说明。
+/// 视频入口。
+///
+/// 能解析出 bvid 时是一个可点击的入口，弹出「应用内播放 / 打开哔哩哔哩」；
+/// 拿不到 bvid 时退回说明文案，不假装能播。
 class _VideoNotice extends StatelessWidget {
+  const _VideoNotice({required this.bvid});
+
+  final String? bvid;
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: colors.bgSubtle,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Row(
-        children: <Widget>[
-          Icon(LucideIcons.circlePlay, size: 20, color: colors.textTertiary),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              context.l10n.feedDetailPage_252,
-              style: TextStyle(
-                fontSize: 12,
-                height: 1.4,
-                color: colors.textTertiary,
+    final String? videoId = bvid;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: videoId == null
+          ? null
+          : () => showBilibiliSheet(context, bvid: videoId),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: colors.bgSubtle,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(
+          children: <Widget>[
+            Icon(
+              LucideIcons.circlePlay,
+              size: 20,
+              color: videoId == null ? colors.textTertiary : colors.brand,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                videoId == null
+                    ? context.l10n.feedDetailPage_252
+                    : context.l10n.bilibiliOpenSheet_32,
+                style: TextStyle(
+                  fontSize: 12,
+                  height: 1.4,
+                  color: videoId == null
+                      ? colors.textTertiary
+                      : colors.textPrimary,
+                ),
               ),
             ),
-          ),
-        ],
+            if (videoId != null)
+              Icon(
+                LucideIcons.chevronRight,
+                size: 16,
+                color: colors.textTertiary,
+              ),
+          ],
+        ),
       ),
     );
   }

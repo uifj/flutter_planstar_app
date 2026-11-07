@@ -3,8 +3,8 @@ import '../domain/feed_post.dart';
 /// 演示社区动态。
 ///
 /// 企划星的发现页数据来自 feed 接口（`v1/feed/list`），带图文/视频/演出卡三种类型。
-/// 这里只造图文类型——视频要播放器与 CDN，演出卡已经由首页/详情覆盖，
-/// 再造一份只会让"看起来做完了"变成假象。
+/// 视频动态只补 bvid / 视频页链接，不造 CDN 地址——播放交给哔哩哔哩官方页，
+/// 真实可验证，也不会出现"链接过期"的假象。
 ///
 /// 时间相对"今天"生成，保证列表里出现"3小时前""昨天"这类真实时间文案。
 List<FeedPost> buildDemoFeed({DateTime? now}) {
@@ -21,6 +21,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
     String? showId,
     int likeCount = 0,
     bool hasVideo = false,
+    String? videoUrl,
+    String? bvid,
   }) {
     return FeedPost(
       id: id,
@@ -33,14 +35,16 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       likeCount: likeCount,
       hasVideo: hasVideo,
       body: body,
+      videoUrl: videoUrl,
+      bvid: bvid,
     );
   }
 
   return <FeedPost>[
     post(
       id: 'f1',
-      title: '《剧院魅影》中文版首演repo：吊灯落下的那一刻全场屏住呼吸',
-      author: '剧院常驻民',
+      title: '《星海回声》首映repo：灯光落下的那一刻全场屏住呼吸',
+      author: '企划常驻民',
       viewCount: 32_400,
       ago: const Duration(hours: 3),
       tag: '网友热议',
@@ -54,17 +58,20 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
     ),
     post(
       id: 'f2',
-      title: '周杰伦上海站抢票攻略：这三个时间点最容易捡漏',
-      author: '抢票小分队',
+      title: '夏日回声企划支持攻略：这三个时间点最容易捡漏',
+      author: '支持小分队',
       viewCount: 128_000,
       ago: const Duration(hours: 5),
       tag: '攻略',
       showId: '1001',
       likeCount: 4_560,
       hasVideo: true,
+      // 完整 URL + 查询参数：验证 `extractBvid` 从链接里归一 bvid。
+      videoUrl:
+          'https://www.bilibili.com/video/BV1MU4pzAEyy/?spm_id_from=333.788',
       body:
-          '开票后 15 分钟、开演前 7 天、开演前 48 小时——'
-          '这三个时间点是退票回流最集中的窗口。\n\n'
+          '开放支持后 15 分钟、支持截止前 7 天、支持截止前 48 小时——'
+          '这三个时间点是取消支持回流最集中的窗口。\n\n'
           '前两个靠蹲，第三个靠"回流提醒"。'
           '另外内场 A 区靠后的位置其实视野被前区挡住，别为了区域名多花钱。',
     ),
@@ -74,7 +81,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       author: '看展的猫',
       viewCount: 18_600,
       ago: const Duration(hours: 8),
-      tag: '观演repo',
+      tag: '体验repo',
       showId: '5001',
       likeCount: 902,
       body:
@@ -98,7 +105,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
     ),
     post(
       id: 'f5',
-      title: '上海大剧院选座指南：楼座 2 层其实比池座后排看得清',
+      title: '上海文化中心选座指南：楼座 2 层其实比池座后排看得清',
       author: '选座研究所',
       viewCount: 24_100,
       ago: const Duration(days: 1),
@@ -106,7 +113,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       showId: '2002',
       likeCount: 1_540,
       body:
-          '大剧院的池座后排有遮挡，楼座 2 层虽然远但视线完整，'
+          '文化中心的池座后排有遮挡，楼座 2 层虽然远但视线完整，'
           '而且票价比池座后排低一档。\n\n'
           '看话剧优先选正对舞台的楼座 1 层前区；看舞剧选偏一点的侧区，'
           '因为调度会用到舞台深处。',
@@ -121,6 +128,8 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       showId: '1002',
       likeCount: 3_320,
       hasVideo: true,
+      // 裸 bvid：五月天鸟巢《温柔》合唱现场。
+      bvid: 'BV1Xm4y1x7H8',
       body:
           '安可第三首才是《温柔》，全场自动打开手机灯。\n\n'
           '内场站区很挤，体力不好的建议看台。音响这次调得不错，'
@@ -137,7 +146,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       likeCount: 288,
       body:
           '读过绘本的孩子能认出角色，全程注意力明显更集中。\n\n'
-          '演出 70 分钟没有中场，5 岁以下建议坐靠走道的位置，'
+          '现场 70 分钟没有中场，5 岁以下建议坐靠走道的位置，'
           '方便中途出去。',
     ),
     post(
@@ -146,7 +155,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       author: '看台第十二人',
       viewCount: 12_900,
       ago: const Duration(days: 2, hours: 6),
-      tag: '观演repo',
+      tag: '体验repo',
       showId: '8001',
       likeCount: 640,
       body:
@@ -173,7 +182,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       author: '段子收集器',
       viewCount: 8_200,
       ago: const Duration(days: 3, hours: 8),
-      tag: '观演repo',
+      tag: '体验repo',
       showId: '7002',
       likeCount: 356,
       body:
@@ -186,7 +195,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       author: '芭蕾笔记',
       viewCount: 21_300,
       ago: const Duration(days: 4),
-      tag: '观演repo',
+      tag: '体验repo',
       showId: '6001',
       likeCount: 1_102,
       body:
@@ -240,7 +249,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       author: '召唤师峡谷',
       viewCount: 51_200,
       ago: const Duration(days: 6),
-      tag: '观演repo',
+      tag: '体验repo',
       showId: '8002',
       likeCount: 2_460,
       body:
@@ -253,7 +262,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       author: '小剧场常客',
       viewCount: 4_100,
       ago: const Duration(days: 7),
-      tag: '观演repo',
+      tag: '体验repo',
       showId: '2005',
       likeCount: 198,
       body:
@@ -279,7 +288,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
       author: '看展的猫',
       viewCount: 3_800,
       ago: const Duration(days: 9),
-      tag: '观演repo',
+      tag: '体验repo',
       showId: '5002',
       likeCount: 146,
       body:
@@ -302,11 +311,11 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
     ),
     post(
       id: 'f20',
-      title: '上海京剧院折子戏：80 块能看到这个水平，太值了',
+      title: '上海京昆艺术中心折子戏：80 块能看到这个水平，太值了',
       author: '戏迷老王',
       viewCount: 2_400,
       ago: const Duration(days: 12),
-      tag: '观演repo',
+      tag: '体验repo',
       showId: '7003',
       likeCount: 88,
       body:
@@ -358,7 +367,7 @@ List<FeedComment> buildDemoComments(String postId, {DateTime? now}) {
       ),
       comment(
         id: 'c1-3',
-        author: '剧院常驻民',
+        author: '企划常驻民',
         text: '楼座中区没问题，边角位会挡到一点。',
         ago: const Duration(hours: 1),
         likeCount: 21,

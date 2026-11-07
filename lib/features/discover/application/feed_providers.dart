@@ -14,7 +14,7 @@ import 'feed_api_providers.dart';
 class FeedController extends AsyncNotifier<List<FeedPost>> {
   @override
   Future<List<FeedPost>> build() async {
-    if (ref.watch(useDemoProvider)) return buildDemoFeed();
+    if (ref.watch(dataSourcePolicyProvider).isDemo) return buildDemoFeed();
     final PlanstarFeedApi api = ref.read(planstarFeedApiProvider);
     final result = await api.fetchHotFeeds(page: 1, pageSize: 20);
     return result.fold(
@@ -66,7 +66,7 @@ final feedPostByIdProvider = FutureProvider.family<FeedPost?, String>((
   for (final FeedPost post in loaded) {
     if (post.id == id) return post;
   }
-  if (ref.watch(useDemoProvider)) return null;
+  if (ref.watch(dataSourcePolicyProvider).isDemo) return null;
 
   final result = await ref.read(planstarFeedApiProvider).fetchFeedDetail(id);
   return result.fold(
@@ -83,7 +83,9 @@ final feedCommentsProvider = FutureProvider.family<List<FeedComment>, String>((
   ref,
   postId,
 ) async {
-  if (ref.watch(useDemoProvider)) return buildDemoComments(postId);
+  if (ref.watch(dataSourcePolicyProvider).isDemo) {
+    return buildDemoComments(postId);
+  }
   final result = await ref.read(planstarFeedApiProvider).fetchComments(postId);
   return result.fold(
     onSuccess: (List<FeedComment> comments) => comments,
@@ -96,7 +98,7 @@ final feedCommentsProvider = FutureProvider.family<List<FeedComment>, String>((
 /// 真实模式走 `GET v1/feed`；演示模式**诚实地返回空**——没有社交关系数据，
 /// 拿热门流冒充关注流会让用户以为关注了别人。页面会渲染空态并引导去看热门。
 final followingFeedProvider = FutureProvider<List<FeedPost>>((ref) async {
-  if (ref.watch(useDemoProvider)) return const <FeedPost>[];
+  if (ref.watch(dataSourcePolicyProvider).isDemo) return const <FeedPost>[];
   final result = await ref
       .read(planstarFeedApiProvider)
       .fetchFollowingFeeds(page: 1, pageSize: 20);

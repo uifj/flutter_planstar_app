@@ -17,7 +17,13 @@ import '../../../shared/ui/ps_network_images.dart';
 /// 海报与渐变之间的层叠关系是这个卡片的识别特征，所以不用 `Card` + `ListTile`
 /// 拼——那样会把角标压到海报里面去。
 class FeedCard extends StatelessWidget {
-  const FeedCard({super.key, required this.post, this.show, this.onTap});
+  const FeedCard({
+    super.key,
+    required this.post,
+    this.show,
+    this.onTap,
+    this.onTapVideo,
+  });
 
   final FeedPost post;
 
@@ -25,6 +31,9 @@ class FeedCard extends StatelessWidget {
   final ShowSummary? show;
 
   final VoidCallback? onTap;
+
+  /// 点击视频角标的回调；`null` 时角标只是装饰，点击落到卡片本身。
+  final VoidCallback? onTapVideo;
 
   @override
   Widget build(BuildContext context) {
@@ -75,16 +84,20 @@ class FeedCard extends StatelessWidget {
                     Positioned(
                       right: 8,
                       top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(3),
-                        decoration: const BoxDecoration(
-                          color: Color(0x66000000),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          LucideIcons.play,
-                          size: 14,
-                          color: Colors.white,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: onTapVideo,
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: const BoxDecoration(
+                            color: Color(0x66000000),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            LucideIcons.play,
+                            size: 14,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),

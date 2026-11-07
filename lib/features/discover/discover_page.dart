@@ -9,8 +9,10 @@ import '../../shared/ui/ps_empty_state.dart';
 import '../../shared/ui/ps_floating_tab_bar.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_summary.dart';
+import 'application/bilibili_launcher.dart';
 import 'application/feed_providers.dart';
 import 'domain/feed_post.dart';
+import 'widgets/bilibili_open_sheet.dart';
 import 'widgets/feed_card.dart';
 import 'widgets/publish_sheet.dart';
 import '../../l10n/l10n.dart';
@@ -235,9 +237,17 @@ class _MasonryFeed extends ConsumerWidget {
       final ShowSummary? show = showId == null
           ? null
           : ref.watch(showByIdProvider(showId));
+      final String? bvid = extractBvid(post.bvid) ?? extractBvid(post.videoUrl);
       return Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: FeedCard(post: post, show: show, onTap: () => onTapPost(post)),
+        child: FeedCard(
+          post: post,
+          show: show,
+          onTap: () => onTapPost(post),
+          onTapVideo: bvid == null
+              ? null
+              : () => showBilibiliSheet(context, bvid: bvid),
+        ),
       );
     }
 
