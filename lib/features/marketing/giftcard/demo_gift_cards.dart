@@ -26,7 +26,7 @@ class DemoGiftCards {
     ),
     GiftCard(
       id: 2,
-      title: '演出补贴卡',
+      title: '企划补贴卡',
       desc: '会员日赠送',
       denomination: Money.fromYuan(200),
       balance: Money.fromYuan(150),

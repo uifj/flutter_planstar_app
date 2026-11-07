@@ -26,7 +26,7 @@ final class DemoWallet {
         ),
         WalletTransaction(
           id: 2,
-          title: '购买「五月天演唱会」门票',
+          title: '支持「五月天音乐影像企划」',
           amount: Money.fromMinorUnits(38000),
           balanceAfter: Money.fromMinorUnits(2850),
           time: now.subtract(const Duration(days: 5)),
@@ -50,7 +50,7 @@ final class DemoWallet {
         ),
         WalletTransaction(
           id: 5,
-          title: '购买「脱口秀大会」门票',
+          title: '支持「脱口秀大会现场企划」',
           amount: Money.fromMinorUnits(9800),
           balanceAfter: Money.fromMinorUnits(2850),
           time: now.subtract(const Duration(days: 15)),

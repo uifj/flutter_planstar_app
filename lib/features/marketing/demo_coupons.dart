@@ -24,7 +24,7 @@ final class DemoCoupons {
       Coupon(
         id: 1001,
         title: '新人立减券',
-        desc: '全场演出通用',
+        desc: '全场企划通用',
         discountType: CouponDiscountType.amount,
         discountAmount: Money.fromMinorUnits(3000),
         discountRate: 0,
@@ -37,8 +37,8 @@ final class DemoCoupons {
       // 可使用：满 200 减 50（固定金额，即将过期）
       Coupon(
         id: 1002,
-        title: '演出满减券',
-        desc: '演唱会 / 音乐节专用',
+        title: '企划满减券',
+        desc: '音乐企划 / 现场企划专用',
         discountType: CouponDiscountType.amount,
         discountAmount: Money.fromMinorUnits(5000),
         discountRate: 0,
@@ -54,7 +54,7 @@ final class DemoCoupons {
       Coupon(
         id: 1003,
         title: '限时折扣券',
-        desc: '全场演出 85 折',
+        desc: '全场企划 85 折',
         discountType: CouponDiscountType.rate,
         discountAmount: Money.zero(),
         discountRate: 85,
@@ -68,7 +68,7 @@ final class DemoCoupons {
       Coupon(
         id: 1004,
         title: '无门槛代金券',
-        desc: '任意演出可用',
+        desc: '任意企划可用',
         discountType: CouponDiscountType.amount,
         discountAmount: Money.fromMinorUnits(1500),
         discountRate: 0,
