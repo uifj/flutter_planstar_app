@@ -137,3 +137,20 @@ env -u HTTP_PROXY -u HTTPS_PROXY -u http_proxy -u https_proxy flutter test
 ```
 
 平台无关的 `packages/infras/core` 可以直接 `dart test`（更快）。
+
+## 许可证
+
+本项目采用 **PolyForm Noncommercial License 1.0.0**（SPDX：`PolyForm-Noncommercial-1.0.0`），
+完整条款见 [LICENSE](LICENSE)。核心约定：
+
+- **允许**：任何非商业目的，包括个人学习、研究、实验、爱好项目，以及教育机构、
+  慈善组织、公共研究机构、政府机构等非商业主体的使用与修改
+- **禁止**：任何商业用途；商业使用需另行取得版权所有者授权（版权所有者 uifj 本人不受限制）
+- **义务**：分发时须附带本许可证或其链接，并保留 `Required Notice` 版权声明
+
+如需商业授权，请通过 GitHub（@uifj）联系。
+
+`packages/` 下 vendored 的第三方示例代码（`appunits`、`pudding`、`infras/sentry`）
+保留其各自的原始许可证，不受本项目许可证影响。
+
+Copyright (C) 2026 uifj
