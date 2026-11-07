@@ -24,7 +24,7 @@ bool get _nativeMobileSupported =>
 /// 隐私政策同意状态。
 class PrivacyConsentController extends Notifier<bool> {
   @override
-  bool build() => false; // TODO: 从 package:core/storage.dart 读取上次同意结果（冷启动不重复弹窗）
+  bool build() => false; // 冷启动由 SplashPage 读取持久化结果后调用 grant()。
 
   /// 用户点击"同意"后调用，触发 [sdkBootstrapProvider] 重算并初始化。
   void grant() => state = true;

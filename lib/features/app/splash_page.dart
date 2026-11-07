@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../app/network/network_providers.dart';
+import '../../app/sdk/sdk_bootstrap.dart';
 import '../../l10n/l10n.dart';
 
-/// 隐私协议同意状态。
-///
-/// 企划星用 `PrivacyHelper`（SharedPreferences 存储）。
-/// 这里用 Riverpod 内存状态——应用重启后需要重新同意。
-/// 接入 `shared_preferences` 持久化时只需把 `StateProvider` 换成
-/// `StateNotifierProvider` + `SharedPreferences` 读写。
-final privacyAgreedProvider = StateProvider<bool>((ref) => false);
+/// 隐私协议同意状态在普通偏好里的键。
+const String privacyAgreedStorageKey = 'privacyAgreed';
 
 /// 隐私协议 + 启动页（企划星 `PrivacyActivity` + `SplashActivity`）。
 ///
@@ -36,8 +33,8 @@ final privacyAgreedProvider = StateProvider<bool>((ref) => false);
 /// - 不做倒计时跳过按钮：没有广告就没有倒计时的必要。
 /// - 不做"浏览模式"（不同意隐私协议时的降级浏览）：
 ///   企划星的浏览模式是一套独立的只读列表，本项目不做。
-/// - 隐私同意状态用内存 `StateProvider` 存储（重启需重新同意），
-///   接入 `shared_preferences` 后可持久化。
+/// - 同意结果写入普通偏好（[privacyAgreedStorageKey]），冷启动不再重复弹窗；
+///   同时同步到 `privacyConsentProvider`，让第三方 SDK 在同意后才初始化。
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
@@ -49,12 +46,12 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkAndNavigate());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _boot());
   }
 
-  void _checkAndNavigate() {
+  Future<void> _boot() async {
+    final agreed = await _readAgreed();
     if (!mounted) return;
-    final agreed = ref.read(privacyAgreedProvider);
 
     if (!agreed) {
       // 未同意 → 显示隐私弹窗。
@@ -62,11 +59,37 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       return;
     }
 
-    // 已同意 → 2 秒后进首页。
-    Future<void>.delayed(const Duration(seconds: 2)).then((_) {
-      if (!mounted) return;
-      context.go('/');
-    });
+    // 已同意 → 恢复 SDK 初始化资格，品牌屏停留 2 秒后进首页。
+    ref.read(privacyConsentProvider.notifier).grant();
+    await Future<void>.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+    context.go('/');
+  }
+
+  Future<bool> _readAgreed() async {
+    try {
+      final raw = await ref
+          .read(appBootstrapProvider)
+          .store
+          .preferences
+          .read(privacyAgreedStorageKey);
+      return raw == 'true';
+    } catch (_) {
+      // 存储不可用（测试/预览/平台通道异常）时按未同意处理。
+      return false;
+    }
+  }
+
+  Future<void> _persistAgreed() async {
+    try {
+      await ref
+          .read(appBootstrapProvider)
+          .store
+          .preferences
+          .write(privacyAgreedStorageKey, 'true');
+    } catch (_) {
+      // 持久化失败只影响下次是否再弹窗，不阻断本次使用。
+    }
   }
 
   void _showPrivacyDialog() {
@@ -74,9 +97,12 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => _PrivacyDialog(
-        onAgree: () {
-          ref.read(privacyAgreedProvider.notifier).state = true;
-          Navigator.of(dialogContext).pop();
+        onAgree: () async {
+          final navigator = Navigator.of(dialogContext);
+          ref.read(privacyConsentProvider.notifier).grant();
+          await _persistAgreed();
+          if (!mounted) return;
+          navigator.pop();
           // 同意后进首页。
           context.go('/');
         },

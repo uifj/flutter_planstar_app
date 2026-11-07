@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 冷启动背景色：与 Flutter SplashPage 的 brand 色（#1C66E5）保持一致，
+         避免系统占位层与首帧之间出现白屏闪烁。 -->
+    <color name="launch_background">#1C66E5</color>
+</resources>
