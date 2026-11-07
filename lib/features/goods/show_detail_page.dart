@@ -11,28 +11,27 @@ import '../../shared/ui/ps_price.dart';
 import '../../shared/ui/ps_tag.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_summary.dart';
-import '../catalog/ui/catalog_l10n.dart';
 import '../../shared/ui/ps_network_images.dart';
 import '../../l10n/l10n.dart';
 
-/// 演出详情（`layout_show_detail.xml`）。
+/// 企划详情（沿用 `layout_show_detail.xml` 的视觉结构）。
 ///
 /// ## 结构
 ///
 /// - 顶部沉浸式头图（`view_show_detail_header_picture.xml`）：海报 92×124、
-///   标题 14sp 白字最多 3 行、评分、底部 20dp 白色圆角压住；
-/// - 42dp 的锚点 tab（简介 / 票档 / 须知），点击滚动到对应段落；
-/// - 内容：演出信息（时长 + 场馆 + 地址 + 导航）→ 安心入场保障条 →
-///   票档 → 阵容 → 演出介绍 → 购票须知 → 服务保障；
-/// - 底部 46dp 购买栏（`view_show_detail_purchase.xml`）：客服 / 想看 + 立即购买。
+///   标题 14sp 白字最多 3 行、达成率与支持人数、底部 20dp 白色圆角压住；
+/// - 42dp 的锚点 tab（目标进度 / 回报档位 / 进度更新 / 风险说明），点击滚动到对应段落；
+/// - 内容：目标进度 → 截止/交付信息 → 保障条 → 回报档位 → 进度更新 →
+///   风险说明 → 创作者信息 → 企划故事 → 支持须知 → 支持保障；
+/// - 底部 46dp 支持栏（`view_show_detail_purchase.xml`）：客服 / 关注 + 支持此企划。
 ///
 /// ## 与 Android 的差异
 ///
 /// - 企划星详情页的 UI 实际跑在 Flutter 引擎里（`ShowDetailActivity` 只是一个
 ///   转发壳），`layout_show_detail.xml` 是它的原生降级版。这里以原生 layout
 ///   为基准复刻，因为它是仓库里唯一可核对的规格。
-/// - 没有实现「代抢 / 拼团 / 选座 / 求票浮标」四个分支：它们各自需要独立的下单
-///   链路（`orderType=5` / 选座图 / 求票表单），本项目只做了普通购票。
+/// - 没有实现「代抢 / 拼团 / 选座 / 求票浮标」四个分支：它们属于旧票务叙事，
+///   线下活动型企划仅保留回报档位与场次能力。
 class ShowDetailPage extends ConsumerStatefulWidget {
   const ShowDetailPage({super.key, required this.showId});
 
@@ -44,15 +43,17 @@ class ShowDetailPage extends ConsumerStatefulWidget {
 
 class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
   List<String> get _tabs => <String>[
-    context.l10n.showDetailPage_44,
-    context.l10n.showDetailPage_44_2,
-    context.l10n.showDetailPage_44_3,
+    context.l10n.projectTabProgress,
+    context.l10n.projectTabRewards,
+    context.l10n.projectTabUpdates,
+    context.l10n.projectTabRisk,
   ];
 
   final ScrollController _scrollController = ScrollController();
-  final GlobalKey _introKey = GlobalKey();
-  final GlobalKey _tiersKey = GlobalKey();
-  final GlobalKey _noticeKey = GlobalKey();
+  final GlobalKey _progressKey = GlobalKey();
+  final GlobalKey _rewardsKey = GlobalKey();
+  final GlobalKey _updatesKey = GlobalKey();
+  final GlobalKey _riskKey = GlobalKey();
   int _tab = 0;
 
   @override
@@ -64,9 +65,10 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
   void _jumpTo(int index) {
     setState(() => _tab = index);
     final key = switch (index) {
-      0 => _introKey,
-      1 => _tiersKey,
-      _ => _noticeKey,
+      0 => _progressKey,
+      1 => _rewardsKey,
+      2 => _updatesKey,
+      _ => _riskKey,
     };
     final target = key.currentContext;
     if (target != null) {
@@ -129,20 +131,26 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
                 ),
                 SliverList(
                   delegate: SliverChildListDelegate(<Widget>[
-                    _InfoSection(key: _introKey, show: show),
+                    _ProgressSection(key: _progressKey, show: show),
+                    _InfoSection(show: show),
                     _GuaranteeBanner(
                       onTap: () =>
                           _toast(context, context.l10n.showDetailPage_125),
                     ),
                     _TierSection(
-                      key: _tiersKey,
+                      key: _rewardsKey,
                       show: show,
                       onBuy: () => _buy(context),
                     ),
-                    if (show.lineup.isNotEmpty) _LineupSection(show: show),
+                    _UpdatesSection(key: _updatesKey, show: show),
+                    _RiskSection(key: _riskKey, show: show),
+                    _ReviewSection(show: show),
+                    _FaqSection(show: show),
+                    _CreatorSection(show: show),
                     _IntroSection(show: show),
-                    _NoticeSection(key: _noticeKey, show: show),
+                    _NoticeSection(show: show),
                     _ServiceGuaranteeSection(),
+                    const _ReportEntry(),
                     const SizedBox(height: 24),
                   ]),
                 ),
@@ -161,13 +169,13 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
   }
 
   void _buy(BuildContext context) {
-    if (ref.watch(showByIdProvider(widget.showId))?.soldOut ?? false) {
-      _toast(context, context.l10n.showDetailPage_154);
+    final current = ref.watch(showByIdProvider(widget.showId));
+    if (current != null && (!current.isFundingOpen || current.soldOut)) {
+      _toast(context, context.l10n.projectSupportClosed);
       return;
     }
-    // 详情页 → 选票页 → 确认订单。
-    // 选票页负责"选哪场、哪个票档、几张"——这些参数必须由用户选出来，
-    // 不能在详情页假设默认值。
+    // 详情页 → 选择回报档位 → 确认支持。
+    // 档位与数量必须由用户选出来，不能在详情页假设默认值。
     context.push('/show/${widget.showId}/choose-ticket');
   }
 
@@ -247,9 +255,9 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
                       Row(
                         children: <Widget>[
                           Text(
-                            show.rating > 0
-                                ? show.rating.toStringAsFixed(1)
-                                : context.l10n.showDetailPage_228,
+                            context.l10n.projectCardAchievement(
+                              (show.achievementPermille / 10).round(),
+                            ),
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
@@ -257,14 +265,15 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
                             ),
                           ),
                           const SizedBox(width: 6),
-                          if (show.ratingCount > 0)
-                            Text(
-                              context.l10n.showDetailPage_238(show.ratingCount),
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: Color(0xCCFFFFFF),
-                              ),
+                          Text(
+                            context.l10n.projectCardSupporters(
+                              show.supporterCount,
                             ),
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: Color(0xCCFFFFFF),
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -294,7 +303,7 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
                         child: PsPrice(
                           amount: show.priceFrom,
                           size: 18,
-                          suffix: context.l10n.showDetailPage_264,
+                          suffix: context.l10n.projectSupportFrom,
                         ),
                       ),
                     ],
@@ -425,15 +434,145 @@ class _AnchorTabs extends SliverPersistentHeaderDelegate {
       oldDelegate.selected != selected;
 }
 
-/// 演出信息（`view_show_detail_header_other.xml`）。
-class _InfoSection extends StatelessWidget {
-  const _InfoSection({super.key, required this.show});
+/// 目标进度（企划详情页固定第一屏区块）。
+class _ProgressSection extends StatelessWidget {
+  const _ProgressSection({super.key, required this.show});
 
   final ShowSummary show;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final goal = show.goalAmount;
+    final raised = show.raisedAmount;
+    final rate = (show.achievementPermille / 10).round();
+    final days = show.remainingDays;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 14, 15, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                context.l10n.projectCardAchievement(rate),
+                style: TextStyle(
+                  fontSize: 28,
+                  height: 1,
+                  fontWeight: FontWeight.w700,
+                  color: show.achievementPermille >= 1000
+                      ? colors.price
+                      : colors.brand,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: Text(
+                  context.l10n.projectAchievement,
+                  style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                ),
+              ),
+              const Spacer(),
+              Text(
+                show.fundingStatusValue == 'failed'
+                    ? context.l10n.projectStatusFailed
+                    : (days <= 0
+                          ? context.l10n.projectCardEnded
+                          : context.l10n.projectDaysLeft(days)),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: show.fundingStatusValue == 'failed'
+                      ? colors.textDisabled
+                      : colors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: LinearProgressIndicator(
+              value: (show.achievementPermille / 1000).clamp(0.0, 1.0),
+              minHeight: 6,
+              backgroundColor: colors.bgSubtle,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                show.achievementPermille >= 1000 ? colors.price : colors.brand,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: _MetricCell(
+                  label: context.l10n.projectGoalAmount,
+                  value: goal == null ? '—' : goal.format(withSymbol: false),
+                ),
+              ),
+              Expanded(
+                child: _MetricCell(
+                  label: context.l10n.projectRaisedAmount,
+                  value: raised == null
+                      ? '—'
+                      : raised.format(withSymbol: false),
+                ),
+              ),
+              Expanded(
+                child: _MetricCell(
+                  label: context.l10n.projectSupporters,
+                  value: '${show.supporterCount}',
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetricCell extends StatelessWidget {
+  const _MetricCell({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            color: colors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(label, style: TextStyle(fontSize: 11, color: colors.textTertiary)),
+      ],
+    );
+  }
+}
+
+/// 企划截止与交付信息（`view_show_detail_header_other.xml`）。
+class _InfoSection extends StatelessWidget {
+  const _InfoSection({required this.show});
+
+  final ShowSummary show;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    // 企划没有场馆：用交付计划占位，避免出现空白信息块。
+    final hasVenue = show.venue.isNotEmpty || show.venueAddress.isNotEmpty;
+    final infoTitle = hasVenue ? show.venue : show.deliveryPlan;
+    final infoSubtitle = hasVenue ? show.venueAddress : '';
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 8, 15, 15),
       child: Column(
@@ -443,7 +582,8 @@ class _InfoSection extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  '${show.firstSessionLabelOf(context)} · ${show.duration}',
+                  '${context.l10n.projectDeadline} · '
+                  '${formatDate(show.projectDeadline)}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -454,58 +594,57 @@ class _InfoSection extends StatelessWidget {
                 ),
               ),
               Text(
-                show.saleStatusLabelOf(context),
+                _fundingStatusLabel(context, show),
                 style: TextStyle(fontSize: 12, color: colors.price),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Icon(LucideIcons.mapPin, size: 16, color: colors.textSecondary),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      show.venue,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: colors.textPrimary,
+          if (infoTitle.isNotEmpty) ...<Widget>[
+            const SizedBox(height: 10),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Icon(LucideIcons.truck, size: 16, color: colors.textSecondary),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        infoTitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: colors.textPrimary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      show.venueAddress,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: colors.textTertiary,
-                      ),
-                    ),
-                  ],
+                      if (infoSubtitle.isNotEmpty) ...<Widget>[
+                        const SizedBox(height: 4),
+                        Text(
+                          infoSubtitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: colors.textTertiary,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
-              ),
-              Icon(
-                LucideIcons.navigation,
-                size: 22,
-                color: colors.textSecondary,
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ],
       ),
     );
   }
 }
 
-/// 安心入场保障条（`btnTicketSource`，34dp）。
+/// 支持保障条（`btnTicketSource`，34dp）。
 class _GuaranteeBanner extends StatelessWidget {
   const _GuaranteeBanner({required this.onTap});
 
@@ -561,7 +700,7 @@ class _GuaranteeBanner extends StatelessWidget {
   }
 }
 
-/// 票档（详情页的「选择票档」段）。
+/// 回报档位（详情页的「选择回报」段）。
 class _TierSection extends StatelessWidget {
   const _TierSection({super.key, required this.show, required this.onBuy});
 
@@ -577,7 +716,7 @@ class _TierSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            context.l10n.showDetailPage_519,
+            context.l10n.projectRewardsTitle,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -585,10 +724,15 @@ class _TierSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
+          if (show.tiers.isEmpty)
+            Text(
+              context.l10n.projectRewardsEmpty,
+              style: TextStyle(fontSize: 13, color: colors.textTertiary),
+            ),
           for (final tier in show.tiers)
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: tier.soldOut ? null : onBuy,
+              onTap: tier.soldOut || !show.isFundingOpen ? null : onBuy,
               child: Container(
                 margin: const EdgeInsets.only(bottom: 10),
                 padding: const EdgeInsets.symmetric(
@@ -600,18 +744,51 @@ class _TierSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            tier.name,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: colors.textPrimary,
-                            ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  tier.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: colors.textPrimary,
+                                  ),
+                                ),
+                              ),
+                              if (tier.rewardType.isNotEmpty)
+                                PsTag(
+                                  label: tier.rewardType,
+                                  fontSize: 9,
+                                  radius: 2,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                    vertical: 2,
+                                  ),
+                                ),
+                            ],
                           ),
+                          if (tier.items.isNotEmpty) ...<Widget>[
+                            const SizedBox(height: 4),
+                            Text(
+                              tier.items.join(' · '),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 11,
+                                height: 1.5,
+                                color: colors.textTertiary,
+                              ),
+                            ),
+                          ],
                           if (tier.note != null) ...<Widget>[
                             const SizedBox(height: 2),
                             Text(
@@ -622,12 +799,29 @@ class _TierSection extends StatelessWidget {
                               ),
                             ),
                           ],
+                          if (tier
+                              .estimatedDeliveryTime
+                              .isNotEmpty) ...<Widget>[
+                            const SizedBox(height: 4),
+                            Text(
+                              context.l10n.projectRewardDelivery(
+                                tier.estimatedDeliveryTime,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: colors.textTertiary,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
+                    const SizedBox(width: 10),
                     if (tier.soldOut)
                       Text(
-                        context.l10n.showDetailPage_560,
+                        context.l10n.projectSupportClosed,
                         style: TextStyle(
                           fontSize: 13,
                           color: colors.textDisabled,
@@ -645,9 +839,9 @@ class _TierSection extends StatelessWidget {
   }
 }
 
-/// 阵容（`view_show_detail_lineup.xml`）。
-class _LineupSection extends StatelessWidget {
-  const _LineupSection({required this.show});
+/// 进度更新（企划详情页固定区块）。
+class _UpdatesSection extends StatelessWidget {
+  const _UpdatesSection({super.key, required this.show});
 
   final ShowSummary show;
 
@@ -655,12 +849,294 @@ class _LineupSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 14, 15, 0),
+      padding: const EdgeInsets.fromLTRB(15, 24, 15, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            context.l10n.showDetailPage_590,
+            context.l10n.projectUpdatesTitle,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: colors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          if (show.updates.isEmpty)
+            Text(
+              context.l10n.projectUpdatesEmpty,
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.6,
+                color: colors.textTertiary,
+              ),
+            ),
+          for (final update in show.updates)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          update.title,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: colors.textPrimary,
+                          ),
+                        ),
+                      ),
+                      if (update.publishTime != null)
+                        Text(
+                          formatDate(update.publishTime!),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: colors.textTertiary,
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    update.content,
+                    style: TextStyle(
+                      fontSize: 13,
+                      height: 1.6,
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 风险说明（企划详情页固定区块）。
+class _RiskSection extends StatelessWidget {
+  const _RiskSection({super.key, required this.show});
+
+  final ShowSummary show;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final refundText = show.refundRule.isEmpty
+        ? ''
+        : '${show.refundRule}（${context.l10n.projectRefundArrival(show.refundDays)}）';
+    final entries = <(String, String)>[
+      (context.l10n.projectRiskNote, show.riskNote),
+      (context.l10n.projectDeliveryPlan, show.deliveryPlan),
+      (context.l10n.projectFundUsage, show.fundUsage),
+      (context.l10n.projectRefundRule, refundText),
+    ];
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 24, 15, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            context.l10n.projectRiskTitle,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: colors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          if (show.riskNote.isEmpty && show.deliveryPlan.isEmpty)
+            Text(
+              context.l10n.projectRiskEmpty,
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.6,
+                color: colors.textTertiary,
+              ),
+            ),
+          for (final (label, value) in entries)
+            if (value.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: colors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 13,
+                        height: 1.6,
+                        color: colors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 评价晒单（企划详情页固定区块，仅展示最近 3 条）。
+class _ReviewSection extends StatelessWidget {
+  const _ReviewSection({required this.show});
+
+  final ShowSummary show;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final reviews = show.reviews.take(3).toList(growable: false);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 24, 15, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                context.l10n.projectReviewsTitle,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: colors.textPrimary,
+                ),
+              ),
+              const Spacer(),
+              if (show.reviewCount > 0)
+                Text(
+                  context.l10n.projectReviewsSummary(
+                    show.ratingAverage.toStringAsFixed(1),
+                    show.reviewCount,
+                    show.showCount,
+                  ),
+                  style: TextStyle(fontSize: 11, color: colors.textTertiary),
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (reviews.isEmpty)
+            Text(
+              context.l10n.projectReviewsEmpty,
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.6,
+                color: colors.textTertiary,
+              ),
+            )
+          else
+            for (final review in reviews)
+              Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colors.bgSubtle,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: colors.border),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(
+                            review.displayName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: colors.textPrimary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          '★' * review.rating,
+                          style: TextStyle(fontSize: 11, color: colors.price),
+                        ),
+                        if (review.isShow) ...<Widget>[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 5,
+                              vertical: 1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: colors.bgSubtle,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              context.l10n.projectReviewShowBadge,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: colors.brand,
+                              ),
+                            ),
+                          ),
+                        ],
+                        const Spacer(),
+                        if (review.likeCount > 0)
+                          Text(
+                            '♥ ${review.likeCount}',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: colors.textTertiary,
+                            ),
+                          ),
+                      ],
+                    ),
+                    if (review.content.isNotEmpty) ...<Widget>[
+                      const SizedBox(height: 6),
+                      Text(
+                        review.content,
+                        style: TextStyle(
+                          fontSize: 13,
+                          height: 1.5,
+                          color: colors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 常见问题（企划详情页固定区块）。
+class _FaqSection extends StatelessWidget {
+  const _FaqSection({required this.show});
+
+  final ShowSummary show;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 24, 15, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            context.l10n.projectFaqTitle,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -668,53 +1144,223 @@ class _LineupSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            height: 84,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: show.lineup.length,
-              separatorBuilder: (_, _) => const SizedBox(width: 16),
-              itemBuilder: (context, index) {
-                return SizedBox(
-                  width: 60,
-                  child: Column(
-                    children: <Widget>[
-                      ClipOval(
-                        child: Image.network(
-                          PsImages.defaultAvatar,
-                          width: 56,
-                          height: 56,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Container(
-                            width: 56,
-                            height: 56,
-                            color: colors.brandSubtle,
-                          ),
-                        ),
+          if (show.faqs.isEmpty)
+            Text(
+              context.l10n.projectFaqEmpty,
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.6,
+                color: colors.textTertiary,
+              ),
+            )
+          else
+            for (final faq in show.faqs)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      faq.question,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: colors.textPrimary,
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        show.lineup[index],
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: colors.textSecondary,
-                        ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      faq.answer,
+                      style: TextStyle(
+                        fontSize: 13,
+                        height: 1.6,
+                        color: colors.textSecondary,
                       ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
+                    ),
+                  ],
+                ),
+              ),
         ],
       ),
     );
   }
 }
 
-/// 演出介绍（`view_show_detail_intro.xml`）。
+/// 举报入口（P2 风控）：选择原因后提交，当前为客户端演示反馈。
+class _ReportEntry extends StatelessWidget {
+  const _ReportEntry();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 20, 15, 0),
+      child: Center(
+        child: GestureDetector(
+          onTap: () => _showReportSheet(context),
+          child: Text(
+            context.l10n.projectReportEntry,
+            style: TextStyle(
+              fontSize: 12,
+              color: colors.textTertiary,
+              decoration: TextDecoration.underline,
+              decorationColor: colors.textTertiary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showReportSheet(BuildContext context) async {
+    final reasons = <String>[
+      context.l10n.projectReportFraud,
+      context.l10n.projectReportInfringe,
+      context.l10n.projectReportPorn,
+      context.l10n.projectReportOther,
+    ];
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Text(
+                context.l10n.projectReportTitle,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            for (final reason in reasons)
+              ListTile(
+                title: Text(reason, style: const TextStyle(fontSize: 14)),
+                onTap: () => Navigator.of(sheetContext).pop(reason),
+              ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+    if (selected == null || !context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.l10n.projectReportSubmitted)),
+    );
+  }
+}
+
+/// 创作者信息（企划详情页固定区块）。
+class _CreatorSection extends StatelessWidget {
+  const _CreatorSection({required this.show});
+
+  final ShowSummary show;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final rate = (show.creatorFulfillmentPermille / 10).round();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 24, 15, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            context.l10n.projectCreatorTitle,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: colors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: <Widget>[
+              ClipOval(
+                child: Image.network(
+                  PsImages.defaultAvatar,
+                  width: 48,
+                  height: 48,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => Container(
+                    width: 48,
+                    height: 48,
+                    color: colors.brandSubtle,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(
+                            show.artist,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: colors.textPrimary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        PsTag(
+                          label: show.creatorVerified
+                              ? context.l10n.projectCreatorVerified
+                              : context.l10n.projectCreatorUnverified,
+                          fontSize: 9,
+                          radius: 2,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      show.creatorProjectNum > 0
+                          ? context.l10n.projectCreatorStats(
+                              show.creatorProjectNum,
+                              show.creatorSuccessNum,
+                              rate,
+                            )
+                          : context.l10n.projectCreatorBioEmpty,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.textTertiary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (show.creatorBio.isNotEmpty) ...<Widget>[
+            const SizedBox(height: 10),
+            Text(
+              show.creatorBio,
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.6,
+                color: colors.textSecondary,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// 企划故事（`view_show_detail_intro.xml`）。
 class _IntroSection extends StatelessWidget {
   const _IntroSection({required this.show});
 
@@ -730,7 +1376,7 @@ class _IntroSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            context.l10n.homeEntryShowDetail,
+            context.l10n.projectStoryTitle,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -752,9 +1398,9 @@ class _IntroSection extends StatelessWidget {
   }
 }
 
-/// 购票须知（`dialog_show_detail_more_purchase_notice`）。
+/// 支持须知（`dialog_show_detail_more_purchase_notice`）。
 class _NoticeSection extends StatelessWidget {
-  const _NoticeSection({super.key, required this.show});
+  const _NoticeSection({required this.show});
 
   final ShowSummary show;
 
@@ -773,7 +1419,7 @@ class _NoticeSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            context.l10n.showDetailPage_693,
+            context.l10n.projectNoticeTitle,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -823,10 +1469,10 @@ class _ServiceGuaranteeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final labels = <String>[
-      context.l10n.showDetailPage_726,
-      context.l10n.showDetailPage_727,
-      context.l10n.showDetailPage_728,
-      context.l10n.showDetailPage_729,
+      context.l10n.projectGuaranteeFund,
+      context.l10n.projectGuaranteeRefund,
+      context.l10n.projectGuaranteeProgress,
+      context.l10n.projectGuaranteeDelivery,
     ];
     return Container(
       margin: const EdgeInsets.only(top: 24),
@@ -841,7 +1487,7 @@ class _ServiceGuaranteeSection extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
-                  context.l10n.showDetailPage_748,
+                  context.l10n.projectGuaranteeTitle,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -879,7 +1525,7 @@ class _ServiceGuaranteeSection extends StatelessWidget {
   }
 }
 
-/// 底部购买栏（`view_show_detail_purchase.xml`）。
+/// 底部支持栏（`view_show_detail_purchase.xml`）。
 class _PurchaseBar extends StatelessWidget {
   const _PurchaseBar({
     required this.show,
@@ -936,15 +1582,15 @@ class _PurchaseBar extends StatelessWidget {
                         height: 46,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: show.soldOut
+                          color: !show.isFundingOpen || show.soldOut
                               ? colors.brandDisabled
                               : colors.price,
                           borderRadius: BorderRadius.circular(25),
                         ),
                         child: Text(
-                          show.soldOut
-                              ? context.l10n.showDetailPage_840
-                              : context.l10n.showDetailPage_840_2,
+                          !show.isFundingOpen || show.soldOut
+                              ? context.l10n.projectSupportClosed
+                              : context.l10n.projectSupportButton,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
@@ -1002,4 +1648,15 @@ class _BarAction extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 筹资状态文案。
+String _fundingStatusLabel(BuildContext context, ShowSummary show) {
+  return switch (show.fundingStatusValue) {
+    'preheating' => context.l10n.projectStatusPreheating,
+    'achieved' => context.l10n.projectStatusAchieved,
+    'delivered' => context.l10n.projectStatusDelivered,
+    'failed' => context.l10n.projectStatusFailed,
+    _ => context.l10n.projectStatusOngoing,
+  };
 }

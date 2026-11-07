@@ -14,23 +14,23 @@ import '../catalog/domain/show_summary.dart';
 import '../catalog/ui/catalog_l10n.dart';
 import '../../l10n/l10n.dart';
 
-/// 选票页（企划星 `ChooseTicketB2CActivity` + 3 个 Fragment）。
+/// 选档页（企划星 `ChooseTicketB2CActivity` + 3 个 Fragment）。
 ///
-/// ## 在购票漏斗中的位置
+/// ## 在支持漏斗中的位置
 ///
-/// 演出详情 → **选票页** → 确认订单 → 支付
+/// 企划详情 → **选档页** → 确认支持 → 支付
 ///
-/// 详情页的「立即购买」跳到这里，而不是直接跳确认订单：
-/// 确认订单需要知道「选了哪场、哪个票档、几张」，这些选择就发生在这一页。
+/// 详情页的「立即支持」跳到这里，而不是直接跳确认支持：
+/// 确认支持需要知道「选了哪场、哪个回报档位、几份」，这些选择就发生在这一页。
 ///
 /// ## 与 Android 的差异
 ///
 /// - 企划星用 ViewPager + 3 个 Fragment（Aggregation / SeatMap / SeatTable）来
-///   切换"聚合选票 / 选座图 / 档位表"三种模式。本项目只做**聚合选票**（普通购票），
-///   不做选座图（Mapbox 引擎，不做假实现）和档位表（只是另一种排列，数据源相同）。
+///   切换"聚合选档 / 座席图 / 档位表"三种模式。本项目只做**聚合选档**（普通支持），
+///   不做座席图（Mapbox 引擎，不做假实现）和档位表（只是另一种排列，数据源相同）。
 /// - 原页有 15 分钟倒计时（`CountDownTimer`），到时自动返回。这里不加：
 ///   演示数据没有真实的库存锁定，倒计时只会给用户制造不必要的焦虑。
-/// - 原页有「代抢 / 拼团」两个分支 tab。本项目不做这两种下单模式。
+/// - 原页有「代支持 / 拼团」两个分支 tab。本项目不做这两种支持模式。
 class ChooseTicketPage extends ConsumerStatefulWidget {
   const ChooseTicketPage({super.key, required this.showId});
 
@@ -44,20 +44,20 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
   /// 选中的场次索引（`-1` = 未选）。
   int _selectedSession = -1;
 
-  /// 选中的票档索引（`-1` = 未选）。
+  /// 选中的回报档位索引（`-1` = 未选）。
   int _selectedTier = -1;
 
-  /// 购买数量。
+  /// 支持份数。
   int _quantity = 1;
 
-  /// 单笔限购上限（从票档的 `remaining` 或默认 6 取较小值）。
+  /// 单笔支持上限（从回报档位的 `remaining` 或默认 6 取较小值）。
   int get _maxQuantity {
     final show = ref.read(showFullProvider(widget.showId));
     if (show == null || show.tiers.isEmpty) return 6;
     final tier = _selectedTier >= 0 ? show.tiers[_selectedTier] : null;
     if (tier == null) return 6;
-    // 企划星的限购通常是 6 张（见 `purchase_limit_policy.dart`）。
-    // 如果余票更少，以余票为准。
+    // 企划星的限支持通常是 6 份（见 `purchase_limit_policy.dart`）。
+    // 如果余量更少，以余量为准。
     final remaining = tier.remaining;
     if (remaining != null && remaining > 0) {
       return remaining < 6 ? remaining : 6;
@@ -85,6 +85,9 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
 
     final sessions = show.sessions;
     final tiers = show.tiers;
+    final hasOfflineSession = tiers.any(
+      (TicketTier tier) => tier.rewardType == '线下参与',
+    );
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
@@ -102,28 +105,30 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _ShowInfoCard(show: show),
-                  if (sessions.isNotEmpty) ...<Widget>[
-                    _SectionTitle(title: context.l10n.chooseTicketPage_100),
-                    _SessionList(
-                      sessions: sessions,
-                      selectedIndex: _selectedSession,
-                      onSelect: (index) => setState(() {
-                        _selectedSession = index;
-                      }),
-                    ),
-                  ] else ...<Widget>[
-                    _SectionTitle(title: context.l10n.chooseTicketPage_109),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 8, 15, 0),
-                      child: Text(
-                        show.firstSessionLabelOf(context),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: colors.textSecondary,
+                  if (hasOfflineSession) ...<Widget>[
+                    if (sessions.isNotEmpty) ...<Widget>[
+                      _SectionTitle(title: context.l10n.chooseTicketPage_100),
+                      _SessionList(
+                        sessions: sessions,
+                        selectedIndex: _selectedSession,
+                        onSelect: (index) => setState(() {
+                          _selectedSession = index;
+                        }),
+                      ),
+                    ] else ...<Widget>[
+                      _SectionTitle(title: context.l10n.chooseTicketPage_109),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 8, 15, 0),
+                        child: Text(
+                          show.firstSessionLabelOf(context),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: colors.textSecondary,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
+                      const SizedBox(height: 8),
+                    ],
                   ],
                   _SectionTitle(title: context.l10n.chooseTicketPage_122),
                   if (tiers.isEmpty)
@@ -143,7 +148,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
                       selectedIndex: _selectedTier,
                       onSelect: (index) => setState(() {
                         _selectedTier = index;
-                        // 切票档时重置数量，避免超过新票档的余票。
+                        // 切回报档位时重置份数，避免超过新档位的余量。
                         _quantity = 1;
                       }),
                     ),
@@ -200,7 +205,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
   }
 }
 
-/// 演出信息卡（头部）。
+/// 企划信息卡（头部）。
 class _ShowInfoCard extends StatelessWidget {
   const _ShowInfoCard({required this.show});
 
@@ -239,14 +244,16 @@ class _ShowInfoCard extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Icon(
-                      LucideIcons.mapPin,
+                      show.venueLabel.isEmpty
+                          ? LucideIcons.user
+                          : LucideIcons.mapPin,
                       size: 12,
                       color: colors.textTertiary,
                     ),
                     const SizedBox(width: 2),
                     Expanded(
                       child: Text(
-                        '${show.city} · ${show.venue}',
+                        show.venueLabel.isEmpty ? show.artist : show.venueLabel,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -268,7 +275,10 @@ class _ShowInfoCard extends StatelessWidget {
                     const SizedBox(width: 2),
                     Expanded(
                       child: Text(
-                        '${show.firstSessionLabelOf(context)} · ${show.duration}',
+                        show.isProject
+                            ? '${context.l10n.projectDeadline} · '
+                                  '${formatDate(show.projectDeadline)}'
+                            : '${show.firstSessionLabelOf(context)} · ${show.duration}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -324,7 +334,7 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
-/// 场次列表（水平横滑卡片）。
+/// 场次列表（水平横滑卡片，仅线下回报场次型企划展示）。
 class _SessionList extends StatelessWidget {
   const _SessionList({
     required this.sessions,
@@ -399,7 +409,7 @@ class _SessionList extends StatelessWidget {
   }
 }
 
-/// 票档列表（纵向卡片）。
+/// 回报档位列表（纵向卡片）。
 class _TierList extends StatelessWidget {
   const _TierList({
     required this.tiers,
@@ -603,7 +613,7 @@ class _QtyButton extends StatelessWidget {
   }
 }
 
-/// 购票须知卡。
+/// 支持须知卡。
 class _PurchaseNoticeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -667,7 +677,7 @@ class _PurchaseNoticeCard extends StatelessWidget {
   }
 }
 
-/// 底部购买栏（金额 + 确认按钮）。
+/// 底部支持栏（金额 + 确认按钮）。
 class _BottomBar extends StatelessWidget {
   const _BottomBar({
     required this.show,
@@ -689,9 +699,12 @@ class _BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
 
-    // 选中票档时显示单价 × 数量；否则显示起价。
+    // 选中回报档位时显示单价 × 份数；否则显示起价。
     final tier = tierIndex >= 0 ? show.tiers[tierIndex] : null;
     final amount = tier != null ? tier.price * quantity : show.priceFrom;
+    final hasOfflineSession = show.tiers.any(
+      (TicketTier item) => item.rewardType == '线下参与',
+    );
 
     return Container(
       color: colors.bgCard,
@@ -699,29 +712,30 @@ class _BottomBar extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          // 「选座购票」入口：对于有座位图的演出，用户可以选择具体座位。
-          // 企划星在选票页顶部有选座入口，这里放在底部栏上方更符合 Flutter 习惯。
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 6, 15, 0),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => context.push('/show/$showId/seat-selection'),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(LucideIcons.armchair, size: 14, color: colors.brand),
-                    const SizedBox(width: 4),
-                    Text(
-                      context.l10n.chooseTicketPage_669,
-                      style: TextStyle(fontSize: 13, color: colors.brand),
-                    ),
-                  ],
+          // 「选座支持」入口：仅线下回报场次型企划提供具体座席选择。
+          // 企划星在选档页顶部有选座入口，这里放在底部栏上方更符合 Flutter 习惯。
+          if (hasOfflineSession)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 6, 15, 0),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => context.push('/show/$showId/seat-selection'),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(LucideIcons.armchair, size: 14, color: colors.brand),
+                      const SizedBox(width: 4),
+                      Text(
+                        context.l10n.chooseTicketPage_669,
+                        style: TextStyle(fontSize: 13, color: colors.brand),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
           Container(height: 1, color: colors.divider),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),

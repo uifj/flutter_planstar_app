@@ -28,11 +28,10 @@ import '../../../l10n/l10n.dart';
 ///
 /// - **不做 Mapbox**：企划星用 Mapbox GL 渲染场馆俯视图，点击区域后展开座位。
 ///   本项目用**网格表格模式**（对齐 `ChooseTicketSeatTableFragment`）。
-/// - **不做锁座**：企划星在 `purchaseTicket` 时调 `checkGoodStock` 验证库存。
-///   这里只做本地选择，不与服务端交互。
-/// - **不做连座**：企划星的 `isContinuousSeat` 要求选连续座位。
-///   这里允许任意选，连座逻辑留 P1 补齐。
-/// - **不做倒计时**：演示模式没有真实库存锁定，倒计时无意义。
+/// - **锁座是本地锁**：选中即写入本地锁表（默认 10 分钟），取消 / 清空 / 超时释放。
+///   服务端座位库存尚未接入，锁只在当前 App 进程内有效。
+/// - **连座校验**：进入确认页前校验「同一区域 + 同一排 + 列号连续」。
+/// - **选座倒计时**：默认 10 分钟，归零后清空选择并释放本地锁。
 class SeatSelectionPage extends ConsumerWidget {
   const SeatSelectionPage({super.key, required this.showId});
 
@@ -42,6 +41,19 @@ class SeatSelectionPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final state = ref.watch(seatSelectionProvider(showId));
+
+    // 倒计时归零：控制器已清空选择并释放锁，这里只负责提示。
+    ref.listen<bool>(seatSelectionProvider(showId).select((s) => s.timedOut), (
+      previous,
+      next,
+    ) {
+      if (!next) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text(context.l10n.seatSelectionTimeout)),
+        );
+    });
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
@@ -53,6 +65,8 @@ class SeatSelectionPage extends ConsumerWidget {
         children: <Widget>[
           // 图例
           _LegendBar(colors: colors),
+          // 选座倒计时
+          _CountdownBar(seconds: state.leftSeconds, colors: colors),
           // 座位图（WebView 渲染，Flutter 侧只保留状态真源）
           Expanded(
             child: Container(
@@ -94,6 +108,18 @@ class SeatSelectionPage extends ConsumerWidget {
             state: state,
             colors: colors,
             onConfirm: () {
+              // 进入确认页前做连座校验，不通过时提示并阻止跳转。
+              final result = ref
+                  .read(seatSelectionProvider(showId).notifier)
+                  .validateContinuity();
+              if (result.isFailure) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(content: Text(context.l10n.seatContinuityError)),
+                  );
+                return;
+              }
               // 选座结果通过 `seatSelectionProvider(showId)` 传给确认订单页：
               // 确认页与本页共享同一个 ProviderScope，读取到的是同一份
               // 座位对象（区域/排/座/票价），无需在 URL 里重复编码。
@@ -173,6 +199,41 @@ class _LegendDot extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// 选座倒计时条。
+class _CountdownBar extends StatelessWidget {
+  const _CountdownBar({required this.seconds, required this.colors});
+
+  final int seconds;
+  final AppColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    final urgent = seconds < 60;
+    final color = urgent ? colors.error : colors.textTertiary;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      color: colors.bgCard,
+      child: Row(
+        children: <Widget>[
+          Icon(LucideIcons.timer, size: 14, color: color),
+          const SizedBox(width: 4),
+          Text(
+            context.l10n.seatSelectionCountdown(
+              SeatSelectionController.formatCountdown(seconds),
+            ),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
