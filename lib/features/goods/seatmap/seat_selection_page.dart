@@ -51,17 +51,17 @@ class SeatSelectionPage extends ConsumerWidget {
           // 图例
           _LegendBar(colors: colors),
           // 座位图
+          // InteractiveViewer 自己负责缩放/拖拽，外层不能再套可滚动组件：
+          // 竖向滚动容器会给子节点无界高度，而座位图需要按视口尺寸布局。
           Expanded(
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                color: colors.bgSubtle,
-                child: SeatMapView(
-                  state: state,
-                  onToggle: (seat) => ref
-                      .read(seatSelectionProvider(showId).notifier)
-                      .toggleSeat(seat),
-                ),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              color: colors.bgSubtle,
+              child: SeatMapView(
+                state: state,
+                onToggle: (seat) => ref
+                    .read(seatSelectionProvider(showId).notifier)
+                    .toggleSeat(seat),
               ),
             ),
           ),
@@ -335,6 +335,10 @@ class _ConfirmBar extends StatelessWidget {
             child: FilledButton(
               onPressed: canConfirm ? onConfirm : null,
               style: FilledButton.styleFrom(
+                // 主题把 FilledButton 的 minimumSize 设为 Size.fromHeight(44)，
+                // 即 minWidth 为无穷大；放在 Row 的非 flex 槽位会拿到无界宽度，
+                // 触发布局断言。这里显式给出有限最小宽度。
+                minimumSize: const Size(96, 44),
                 backgroundColor: colors.brand,
                 disabledBackgroundColor: colors.brandDisabled,
                 shape: RoundedRectangleBorder(
