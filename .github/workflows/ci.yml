@@ -1,0 +1,46 @@
+# Flutter 客户端 CI：静态检查 + 单元/组件测试
+# 说明：客户端为独立仓库，因此质量门禁在本仓库内闭环；后端仓库 CI 只负责 Go/契约/compose。
+name: Flutter CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "lib/**"
+      - "test/**"
+      - "packages/**"
+      - "pubspec.yaml"
+      - "l10n.yaml"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "lib/**"
+      - "test/**"
+      - "packages/**"
+      - "pubspec.yaml"
+      - "l10n.yaml"
+      - ".github/workflows/ci.yml"
+
+jobs:
+  analyze-test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: flutter pub get
+        run: flutter pub get
+
+      # 只检查参与构建的目录，避免历史备份目录干扰门禁。
+      - name: flutter analyze
+        run: flutter analyze lib test packages/infras/core/lib
+
+      - name: flutter test
+        run: flutter test
