@@ -43,7 +43,8 @@ class AddressPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final List<ShippingAddress> addresses = ref.watch(addressListProvider);
+    final addressesAsync = ref.watch(addressListProvider);
+    final addresses = addressesAsync.valueOrNull ?? const <ShippingAddress>[];
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
@@ -51,33 +52,49 @@ class AddressPage extends ConsumerWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: addresses.isEmpty
-                ? PsEmptyState(
-                    title: context.l10n.addressPage_55,
-                    description: context.l10n.addressPage_56,
-                    icon: LucideIcons.mapPinOff,
-                    actionLabel: context.l10n.addressPage_58,
-                    onAction: () => _openForm(context, ref),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(15, 12, 15, 12),
-                    itemCount: addresses.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final ShippingAddress address = addresses[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: _AddressCard(
-                          address: address,
-                          onSetDefault: () => ref
-                              .read(addressListProvider.notifier)
-                              .setDefault(address.id),
-                          onEdit: () =>
-                              _openForm(context, ref, editing: address),
-                          onDelete: () => _confirmDelete(context, ref, address),
-                        ),
-                      );
-                    },
-                  ),
+            child: addressesAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (Object error, _) => PsEmptyState(
+                title: context.l10n.addressPage_55,
+                description: addressErrorText(error),
+                icon: LucideIcons.mapPinOff,
+                actionLabel: context.l10n.actionRetry,
+                onAction: () => ref.invalidate(addressListProvider),
+              ),
+              data: (List<ShippingAddress> addresses) => addresses.isEmpty
+                  ? PsEmptyState(
+                      title: context.l10n.addressPage_55,
+                      description: context.l10n.addressPage_56,
+                      icon: LucideIcons.mapPinOff,
+                      actionLabel: context.l10n.addressPage_58,
+                      onAction: () => _openForm(context, ref),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(15, 12, 15, 12),
+                      itemCount: addresses.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final ShippingAddress address = addresses[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: _AddressCard(
+                            address: address,
+                            onSetDefault: () async {
+                              final error = await ref
+                                  .read(addressListProvider.notifier)
+                                  .setDefault(address.id);
+                              if (error != null && context.mounted) {
+                                _showError(context, error);
+                              }
+                            },
+                            onEdit: () =>
+                                _openForm(context, ref, editing: address),
+                            onDelete: () =>
+                                _confirmDelete(context, ref, address),
+                          ),
+                        );
+                      },
+                    ),
+            ),
           ),
           // 底部固定新增按钮。列表为空时上方空态里已有一个入口，
           // 这里仍然保留——两个入口都指向同一个表单，不冲突。
@@ -103,15 +120,16 @@ class AddressPage extends ConsumerWidget {
     final AddressListController controller = ref.read(
       addressListProvider.notifier,
     );
+    final String? error;
     if (editing == null) {
-      controller.add(
+      error = await controller.add(
         name: draft.name,
         mobile: draft.mobile,
         region: draft.region,
         detail: draft.detail,
       );
     } else {
-      controller.update(
+      error = await controller.edit(
         id: editing.id,
         name: draft.name,
         mobile: draft.mobile,
@@ -119,6 +137,13 @@ class AddressPage extends ConsumerWidget {
         detail: draft.detail,
       );
     }
+    if (error != null && context.mounted) _showError(context, error);
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<void> _confirmDelete(
@@ -146,8 +171,14 @@ class AddressPage extends ConsumerWidget {
       ),
     );
     if (!(confirmed ?? false)) return;
-    ref.read(addressListProvider.notifier).remove(address.id);
+    final error = await ref
+        .read(addressListProvider.notifier)
+        .remove(address.id);
     if (!context.mounted) return;
+    if (error != null) {
+      _showError(context, error);
+      return;
+    }
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(context.l10n.addressPage_150)));

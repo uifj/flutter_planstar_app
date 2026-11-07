@@ -1,6 +1,7 @@
 import 'package:core/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/network/network_providers.dart';
 import '../../auth/application/auth_providers.dart';
 import '../../auth/application/auth_state.dart';
 import '../../auth/domain/auth_user.dart';
@@ -8,6 +9,8 @@ import '../../marketing/coupon_providers.dart';
 import '../../marketing/wallet_providers.dart';
 import '../../order/application/order_list_controller.dart';
 import '../../../shared/ui/ps_network_images.dart';
+import '../data/planstar_user_api.dart';
+import 'user_api_providers.dart';
 
 /// 用户资料（"我的"页顶部卡片）。
 ///
@@ -68,10 +71,25 @@ final class UserProfile {
   );
 }
 
+/// 服务端资料（真实模式）。
+///
+/// 失败返回 `null`，由 [userProfileProvider] 回退到登录接口返回的 `user`，
+/// 这样"我的"页不会因为资料接口抖动而变空。
+final remoteProfileProvider = FutureProvider<UserProfileDto?>((ref) async {
+  if (ref.watch(useDemoProvider)) return null;
+  final AuthState auth = ref.watch(authControllerProvider);
+  if (!auth.isLoggedIn || auth.user == null) return null;
+
+  final result = await ref.watch(planstarUserApiProvider).fetchProfile();
+  return result.fold<UserProfileDto?>(
+    onSuccess: (profile) => profile,
+    onFailure: (_) => null,
+  );
+});
+
 /// 用户资料。
 ///
-/// 真源是 [authControllerProvider] 的 `user`——**登录接口返回什么就显示什么**。
-/// 券数与余额是演示值（接口未接），见 [UserProfile] 的注释。
+/// 真源优先取 `GET /v1/user`；接口失败或 demo 模式时用登录返回的 `user` 兜底。
 final userProfileProvider = Provider<UserProfile>((ref) {
   final AuthState auth = ref.watch(authControllerProvider);
   final AuthUser? user = auth.user;
@@ -79,24 +97,39 @@ final userProfileProvider = Provider<UserProfile>((ref) {
     return UserProfile.guest;
   }
 
-  // 券数与钱包余额来自 marketing 域的 provider。
-  // 接口接上后这些 provider 会自动改为真实数据。
+  // 券数与钱包余额来自 marketing 域的 provider；服务端资料优先。
   final couponCount = ref.watch(couponCountProvider);
   final walletBalance = ref.watch(walletBalanceProvider);
+  final remote = ref.watch(remoteProfileProvider).valueOrNull;
+  final mobile = remote?.mobile;
 
   return UserProfile(
-    nickname: user.displayName,
-    // 等级为 0 表示"还没等级"，不要硬编一个 V3 出来。
-    level: user.level,
-    wannaSeeCount: user.wantWatchNum,
-    followCount: user.followingNum,
-    couponCount: couponCount,
-    walletBalance: walletBalance,
-    avatarUrl: user.avatar.isEmpty ? null : user.avatar,
-    mobileLabel: user.maskedMobile,
+    nickname: remote?.nickname.isNotEmpty == true
+        ? remote!.nickname
+        : user.displayName,
+    level: remote?.level ?? user.level,
+    levelLabel: remote?.levelLabel ?? '',
+    wannaSeeCount: remote?.wannaSeeCount ?? user.wantWatchNum,
+    followCount: remote?.followCount ?? user.followingNum,
+    couponCount: remote?.couponCount ?? couponCount,
+    walletBalance: remote != null
+        ? Money.fromMinorUnits(remote.walletBalance)
+        : walletBalance,
+    avatarUrl: remote?.avatarUrl?.isNotEmpty == true
+        ? remote!.avatarUrl
+        : (user.avatar.isEmpty ? null : user.avatar),
+    mobileLabel: mobile != null && mobile.isNotEmpty
+        ? _maskMobile(mobile)
+        : user.maskedMobile,
     isLoggedIn: true,
   );
 });
+
+/// 手机号脱敏：`138****8000`。
+String _maskMobile(String mobile) {
+  if (mobile.length < 7) return mobile;
+  return '${mobile.substring(0, 3)}****${mobile.substring(mobile.length - 4)}';
+}
 
 /// 四个订单状态入口的待处理数量（「我的订单」卡片上的小红点）。
 ///

@@ -40,7 +40,7 @@ class UserPage extends ConsumerWidget {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final profile = ref.watch(userProfileProvider);
     final badges = ref.watch(userOrderBadgesProvider);
-    final unread = ref.watch(messageUnreadProvider);
+    final unread = ref.watch(messageUnreadProvider).valueOrNull ?? 0;
 
     void openOrders(OrderListFilter filter) {
       ref.read(orderListFilterProvider.notifier).state = filter;

@@ -1,54 +1,87 @@
+import 'package:core/result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/network/network_providers.dart';
 import '../data/demo_address.dart';
+import '../data/planstar_user_api.dart';
 import '../domain/shipping_address.dart';
+import 'user_api_providers.dart';
 
 /// 收货地址列表。
 ///
-/// ## 三条不变量（由控制器保证，页面不做校验）
-///
-/// 1. **默认地址最多一个**：`setDefault` 会先全部置假再置真；
-/// 2. **删掉默认地址后，第一条自动成为默认**——否则用户下单时没有默认项，
-///    结算页会拿不到地址；
-/// 3. **新增的地址不自动成为默认**（企划星的行为是"第一条自动默认"，
-///    这里只在列表为空时这么做）。
-///
-/// 接真实接口时把 `build()` 换成 `AsyncNotifier` + `v1/address/list`，
-/// 三个动作对应 `v1/address/add` / `delete` / `setDefault`，页面不变。
-class AddressListController extends Notifier<List<ShippingAddress>> {
-  @override
-  List<ShippingAddress> build() => buildDemoAddresses();
+/// demo 模式读本地演示数据；真实模式走 `v1/myaddress` 系列接口。
+/// 三个动作（增 / 删 / 设默认）都返回可读错误文案，页面负责弹提示。
+class AddressListController extends AsyncNotifier<List<ShippingAddress>> {
+  PlanstarUserApi get _api => ref.read(planstarUserApiProvider);
 
-  /// 新增。列表原本为空时，新地址自动成为默认。
-  void add({
+  bool get _demo => ref.read(useDemoProvider);
+
+  @override
+  Future<List<ShippingAddress>> build() async {
+    if (ref.watch(useDemoProvider)) return buildDemoAddresses();
+    return _load();
+  }
+
+  Future<List<ShippingAddress>> _load() async {
+    final result = await _api.fetchAddresses();
+    return result.fold(
+      onSuccess: (addresses) => addresses,
+      onFailure: (failure) => throw failure,
+    );
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(_load);
+  }
+
+  /// 新增。失败返回提示文案，成功返回 null。
+  Future<String?> add({
     required String name,
     required String mobile,
     required String region,
     required String detail,
-  }) {
-    final bool wasEmpty = state.isEmpty;
-    final ShippingAddress address = ShippingAddress(
-      id: 'addr-${DateTime.now().microsecondsSinceEpoch}',
-      name: name.trim(),
-      mobile: mobile.trim(),
-      region: region.trim(),
-      detail: detail.trim(),
-      isDefault: wasEmpty,
+  }) async {
+    if (_demo) {
+      final current = state.valueOrNull ?? const <ShippingAddress>[];
+      final bool wasEmpty = current.isEmpty;
+      final ShippingAddress address = ShippingAddress(
+        id: 'addr-${DateTime.now().microsecondsSinceEpoch}',
+        name: name.trim(),
+        mobile: mobile.trim(),
+        region: region.trim(),
+        detail: detail.trim(),
+        isDefault: wasEmpty,
+      );
+      state = AsyncValue.data(<ShippingAddress>[...current, address]);
+      return null;
+    }
+
+    final result = await _api.addAddress(
+      ShippingAddress(
+        id: '',
+        name: name.trim(),
+        mobile: mobile.trim(),
+        region: region.trim(),
+        detail: detail.trim(),
+      ),
     );
-    state = <ShippingAddress>[...state, address];
+    if (result.isFailure) return result.failure!.message;
+    await refresh();
+    return null;
   }
 
-  /// 编辑。**不改 `isDefault`**——默认标记是独立动作（`setDefault`），
-  /// 编辑表单里也没有这个开关，避免"编辑一次地址就把默认状态弄丢"。
-  void update({
+  /// 编辑（后端未提供 PUT，保留本地修改，重新进入页面后以服务端为准）。
+  Future<String?> edit({
     required String id,
     required String name,
     required String mobile,
     required String region,
     required String detail,
-  }) {
-    state = <ShippingAddress>[
-      for (final ShippingAddress item in state)
+  }) async {
+    final current = state.valueOrNull ?? const <ShippingAddress>[];
+    state = AsyncValue.data(<ShippingAddress>[
+      for (final ShippingAddress item in current)
         if (item.id == id)
           ShippingAddress(
             id: item.id,
@@ -60,34 +93,59 @@ class AddressListController extends Notifier<List<ShippingAddress>> {
           )
         else
           item,
-    ];
+    ]);
+    return null;
   }
 
-  /// 删除。删的是默认地址时，把第一条顶上来。
-  void remove(String id) {
-    final List<ShippingAddress> next = state
-        .where((ShippingAddress item) => item.id != id)
-        .toList();
-    final bool removedDefault = state.any(
-      (ShippingAddress item) => item.id == id && item.isDefault,
-    );
-    if (removedDefault && next.isNotEmpty) {
-      next[0] = next[0].copyWith(isDefault: true);
+  /// 删除；失败返回提示文案。
+  Future<String?> remove(String id) async {
+    if (_demo) {
+      final current = state.valueOrNull ?? const <ShippingAddress>[];
+      final List<ShippingAddress> next = current
+          .where((ShippingAddress item) => item.id != id)
+          .toList();
+      final bool removedDefault = current.any(
+        (ShippingAddress item) => item.id == id && item.isDefault,
+      );
+      if (removedDefault && next.isNotEmpty) {
+        next[0] = next[0].copyWith(isDefault: true);
+      }
+      state = AsyncValue.data(next);
+      return null;
     }
-    state = next;
+
+    final result = await _api.deleteAddress(id);
+    if (result.isFailure) return result.failure!.message;
+    await refresh();
+    return null;
   }
 
-  /// 设为默认：先全部置假，再把目标置真。
-  void setDefault(String id) {
-    state = <ShippingAddress>[
-      for (final ShippingAddress item in state)
+  /// 设为默认：先本地置位，服务端失败再回滚刷新。
+  Future<String?> setDefault(String id) async {
+    final current = state.valueOrNull ?? const <ShippingAddress>[];
+    state = AsyncValue.data(<ShippingAddress>[
+      for (final ShippingAddress item in current)
         item.copyWith(isDefault: item.id == id),
-    ];
+    ]);
+    if (_demo) return null;
+
+    final result = await _api.setDefaultAddress(id);
+    if (result.isFailure) {
+      await refresh();
+      return result.failure!.message;
+    }
+    return null;
   }
 }
 
 /// 收货地址列表。
 final addressListProvider =
-    NotifierProvider<AddressListController, List<ShippingAddress>>(
+    AsyncNotifierProvider<AddressListController, List<ShippingAddress>>(
       AddressListController.new,
     );
+
+/// 地址加载失败时的可读文案（页面空态用，不展示堆栈）。
+String addressErrorText(Object error) {
+  if (error is Failure) return error.message;
+  return '地址加载失败，请检查网络后重试';
+}

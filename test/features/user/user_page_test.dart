@@ -1,6 +1,7 @@
 import 'package:core/result.dart';
 import 'package:flutter/material.dart';
 import 'package:planstar/app/app.dart' show appLocalizationsDelegates;
+import 'package:planstar/app/network/network_providers.dart';
 import 'package:planstar/app/theme.dart';
 import 'package:planstar/features/auth/application/auth_providers.dart';
 import 'package:planstar/features/auth/domain/auth_repository.dart';
@@ -30,6 +31,7 @@ void main() {
 
     final ProviderContainer container = ProviderContainer(
       overrides: <Override>[
+        useDemoProvider.overrideWithValue(true),
         authRepositoryProvider.overrideWithValue(
           _RestoreOnlyRepository(restored),
         ),

@@ -1,6 +1,7 @@
 import 'package:core/network.dart';
 import 'package:core/result.dart';
 
+import '../../../app/network/api_paths.dart';
 import '../domain/shipping_address.dart';
 
 /// 用户 API。
@@ -9,13 +10,14 @@ import '../domain/shipping_address.dart';
 ///
 /// | 用途 | 方法 | 路径 |
 /// |---|---|---|
-/// | 个人资料 | GET | `v1/user/` |
-/// | 批量用户信息 | GET | `v1/user/users` |
-/// | 修改资料 | PUT | `v1/user/baseInfo` |
+/// | 个人资料 | GET | `v1/user` |
 /// | 地址列表 | GET | `v1/myaddress` |
 /// | 添加地址 | POST | `v1/myaddress` |
 /// | 删除地址 | DELETE | `v1/myaddress/{id}` |
 /// | 设为默认地址 | POST | `v1/myaddress/default/{id}` |
+///
+/// 批量用户信息（`v1/user/users`）与修改资料（`PUT v1/user/baseInfo`）后端
+/// 未实现，不封装。
 final class PlanstarUserApi {
   PlanstarUserApi({required ApiClient client}) : _client = client;
 
@@ -24,7 +26,7 @@ final class PlanstarUserApi {
   /// 个人资料。
   Future<Result<UserProfileDto>> fetchProfile() {
     return _client.get<UserProfileDto>(
-      'v1/user/',
+      ApiPaths.userProfile,
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {
         if (data is! Map<String, dynamic>) {
@@ -38,7 +40,7 @@ final class PlanstarUserApi {
   /// 地址列表。
   Future<Result<List<ShippingAddress>>> fetchAddresses() {
     return _client.get<List<ShippingAddress>>(
-      'v1/myaddress',
+      ApiPaths.addresses,
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {
         final list = data as List<dynamic>? ?? <dynamic>[];
@@ -53,7 +55,7 @@ final class PlanstarUserApi {
   /// 添加地址。
   Future<Result<ShippingAddress>> addAddress(ShippingAddress address) {
     return _client.post<ShippingAddress>(
-      'v1/myaddress',
+      ApiPaths.addresses,
       data: _addressToJson(address),
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {
@@ -66,7 +68,7 @@ final class PlanstarUserApi {
   /// 删除地址。
   Future<Result<void>> deleteAddress(String id) {
     return _client.delete<void>(
-      'v1/myaddress/$id',
+      ApiPaths.addressDelete(id),
       envelope: const PassthroughEnvelope(),
       parser: (_) {},
     );
@@ -75,7 +77,7 @@ final class PlanstarUserApi {
   /// 设为默认地址。
   Future<Result<void>> setDefaultAddress(String id) {
     return _client.post<void>(
-      'v1/myaddress/default/$id',
+      ApiPaths.addressDefault(id),
       envelope: const PassthroughEnvelope(),
       parser: (_) {},
     );
