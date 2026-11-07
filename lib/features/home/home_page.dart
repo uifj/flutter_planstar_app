@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../shared/ui/ps_empty_state.dart';
 import '../../shared/ui/ps_floating_tab_bar.dart';
 import '../../shared/ui/ps_shortcut_grid.dart';
+import '../../app/network/network_providers.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/data/demo_catalog.dart';
 import '../catalog/data/planstar_catalog_api.dart';
@@ -19,8 +20,8 @@ import 'widgets/home_banner_floor.dart';
 import 'widgets/home_choiceness_floor.dart';
 import 'widgets/home_guarantee_floor.dart';
 import 'widgets/home_header.dart';
+import 'widgets/home_ranking_floor.dart';
 import 'widgets/home_show_floor.dart';
-import 'widgets/home_venues_floor.dart';
 import '../../l10n/l10n.dart';
 
 /// 首页（`layout_home.xml` + `HomeFragment`）。
@@ -34,10 +35,10 @@ import '../../l10n/l10n.dart';
 /// 2. 分类快捷入口（5 列 × 2 行，超一页带指示器）
 /// 3. 运营 banner（80dp，4 秒轮播）
 /// 4. 服务保障条（26dp）
-/// 5. 精选推荐（可横滑分类 tab + 105dp 卡片）
-/// 6. 热门演出（76dp 卡片楼层）
-/// 7. 分类楼层 ×4（演唱会 / 话剧歌剧 / 音乐会 / 儿童亲子）
-/// 8. 热门场馆
+/// 5. 精选企划（可横滑分类 tab + 105dp 企划卡）
+/// 6. 正在支持的企划（76dp 卡片楼层）
+/// 7. 企划榜单（热度 / 达成 / 冲刺三榜切换）
+/// 8. 分类楼层 ×4（游戏 / 小说 / 同人 / 面经）
 /// 9. 页脚 logo
 ///
 /// ## 与 Android 的差异（写在页面里，避免"看起来一样其实不同"）
@@ -48,10 +49,10 @@ import '../../l10n/l10n.dart';
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
-  /// 分类楼层（分类 id）。
+  /// 分类楼层（分类 id）：游戏 / 小说 / 同人 / 面经四大主品类。
   static const List<int> _categoryFloorIds = <int>[1, 2, 3, 4];
 
-  /// 从运营位链接里提取演出 id（`.../show/2001`）。
+  /// 从运营位链接里提取企划 id（`.../show/2001`）。
   static String? _showIdFromUrl(String? url) {
     if (url == null || url.isEmpty) return null;
     return RegExp(r'/show/([^/?#]+)').firstMatch(url)?.group(1);
@@ -60,15 +61,15 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final city = ref.watch(selectedCityProvider);
+    // 企划数据没有城市维度（全国发行）：真实模式固定展示「全国」，
+    // 且不提供城市切换入口；demo 数据仍按城市过滤。
+    final policy = ref.watch(dataSourcePolicyProvider);
+    final String city = policy.isDemo ? ref.watch(selectedCityProvider) : '全国';
     final AsyncValue<List<ShowSummary>> showsAsync = ref.watch(
       cityShowsProvider,
     );
     final AsyncValue<List<ChoicenessGroup>> groupsAsync = ref.watch(
       choicenessGroupsProvider,
-    );
-    final AsyncValue<List<VenueSummary>> venuesAsync = ref.watch(
-      popularVenuesProvider,
     );
     final categories =
         ref.watch(showCategoriesProvider).valueOrNull ?? const <ShowCategory>[];
@@ -83,9 +84,6 @@ class HomePage extends ConsumerWidget {
         onRetry: () => ref.read(showCatalogProvider.notifier).refresh(),
       ),
       data: (shows) {
-        final showsById = <String, ShowSummary>{
-          for (final show in shows) show.id: show,
-        };
         final hints = _hints(shows);
 
         void openShow(ShowSummary show) => context.push('/show/${show.id}');
@@ -109,15 +107,14 @@ class HomePage extends ConsumerWidget {
           }
         }
 
-        // 热门楼层优先用服务端 `v1/activities/hot`；首帧/失败时用当前城市
-        // 列表按想看数兜底，避免楼层空着。
+        // 热门楼层优先用服务端 `v1/projects/hot`；首帧/失败时用当前列表
+        // 按想看数兜底，避免楼层空着。
         final hotShows =
             ref.watch(hotShowsProvider).valueOrNull ??
             (<ShowSummary>[...shows]
               ..sort((a, b) => b.wishCount.compareTo(a.wishCount)));
 
         final groups = groupsAsync.valueOrNull ?? const <ChoicenessGroup>[];
-        final venues = venuesAsync.valueOrNull ?? const <VenueSummary>[];
         final banners =
             ref.watch(homeBannersProvider).valueOrNull ?? const <BannerDto>[];
         final bannerSlides = banners.isEmpty
@@ -125,8 +122,10 @@ class HomePage extends ConsumerWidget {
             : <BannerSlide>[
                 for (final banner in banners)
                   BannerSlide(
-                    title: banner.title.isEmpty ? '精选演出' : banner.title,
-                    subtitle: '企划星 × 严选好戏',
+                    title: banner.title.isEmpty
+                        ? context.l10n.homeProjectPicked
+                        : banner.title,
+                    subtitle: context.l10n.homeProjectBannerSubtitle,
                     badge: '推荐',
                     colors: (Color(0xFFFF6AB9), Color(0xFFFE3870)),
                     showId: banner.showId ?? _showIdFromUrl(banner.url),
@@ -143,24 +142,30 @@ class HomePage extends ConsumerWidget {
                   topPadding: topPadding,
                   city: city,
                   hints: hints,
-                  onTapCity: () => CityPickerSheet.show(
-                    context,
-                    current: city,
-                    onSelected: (next) {
-                      ref.read(selectedCityProvider.notifier).select(next);
-                      if (!citiesWithData.contains(next)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(context.l10n.homePage_132(next)),
-                          ),
-                        );
-                      }
-                    },
-                    onMore: () {
-                      Navigator.of(context).maybePop();
-                      context.push('/cities');
-                    },
-                  ),
+                  onTapCity: policy.isDemo
+                      ? () => CityPickerSheet.show(
+                          context,
+                          current: city,
+                          onSelected: (next) {
+                            ref
+                                .read(selectedCityProvider.notifier)
+                                .select(next);
+                            if (!citiesWithData.contains(next)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    context.l10n.homePage_132(next),
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          onMore: () {
+                            Navigator.of(context).maybePop();
+                            context.push('/cities');
+                          },
+                        )
+                      : null,
                   onTapSearch: () => openSearch(),
                   onTapField: () => openSearch(),
                 ),
@@ -197,15 +202,21 @@ class HomePage extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 40),
-                    child: PsEmptyState(
-                      title: context.l10n.homePage_175(city),
-                      description: context.l10n.homePage_176,
-                      icon: LucideIcons.building2,
-                      actionLabel: context.l10n.homePage_178,
-                      onAction: () => ref
-                          .read(selectedCityProvider.notifier)
-                          .select(context.l10n.cityListPage_57),
-                    ),
+                    child: policy.isDemo
+                        ? PsEmptyState(
+                            title: context.l10n.homePage_175(city),
+                            description: context.l10n.homePage_176,
+                            icon: LucideIcons.building2,
+                            actionLabel: context.l10n.homePage_178,
+                            onAction: () => ref
+                                .read(selectedCityProvider.notifier)
+                                .select(context.l10n.cityListPage_57),
+                          )
+                        : PsEmptyState(
+                            title: context.l10n.homePage_175(city),
+                            description: context.l10n.showListPage_79,
+                            icon: LucideIcons.inbox,
+                          ),
                   ),
                 )
               else ...<Widget>[
@@ -217,12 +228,15 @@ class HomePage extends ConsumerWidget {
                 ),
                 SliverToBoxAdapter(
                   child: HomeShowFloor(
-                    title: context.l10n.homePage_193,
-                    description: context.l10n.homePage_194,
+                    title: context.l10n.homeHotProjectTitle,
+                    description: context.l10n.homeHotProjectDesc,
                     shows: hotShows.take(8).toList(growable: false),
                     onTapShow: openShow,
                     onTapMore: () => openShows(),
                   ),
+                ),
+                SliverToBoxAdapter(
+                  child: HomeRankingFloor(shows: shows, onTapShow: openShow),
                 ),
                 for (final categoryId in _categoryFloorIds)
                   SliverToBoxAdapter(
@@ -239,16 +253,6 @@ class HomePage extends ConsumerWidget {
                       ),
                     ),
                   ),
-                SliverToBoxAdapter(
-                  child: HomeVenuesFloor(
-                    venues: venues,
-                    showsById: showsById,
-                    onTapVenue: (venue) => context.push(
-                      '/venue/${Uri.encodeComponent(venue.name)}',
-                    ),
-                    onTapShow: openShow,
-                  ),
-                ),
               ],
               SliverToBoxAdapter(
                 child: Padding(
@@ -297,20 +301,20 @@ class HomePage extends ConsumerWidget {
 
   static String _floorTitle(BuildContext context, int categoryId) {
     return switch (categoryId) {
-      1 => context.l10n.homePage_270,
-      2 => context.l10n.homePage_271,
-      3 => context.l10n.homePage_272,
-      4 => context.l10n.homePage_273,
-      _ => context.l10n.homePage_274,
+      1 => context.l10n.homeFloorGame,
+      2 => context.l10n.homeFloorNovel,
+      3 => context.l10n.homeFloorDoujin,
+      4 => context.l10n.homeFloorInterview,
+      _ => context.l10n.homeFloorOther,
     };
   }
 
   static String _categoryDescription(BuildContext context, int categoryId) {
     return switch (categoryId) {
-      1 => context.l10n.homePage_51,
-      2 => context.l10n.homePage_52,
-      3 => context.l10n.homePage_53,
-      _ => context.l10n.homePage_54,
+      1 => context.l10n.homeFloorGameDesc,
+      2 => context.l10n.homeFloorNovelDesc,
+      3 => context.l10n.homeFloorDoujinDesc,
+      _ => context.l10n.homeFloorInterviewDesc,
     };
   }
 

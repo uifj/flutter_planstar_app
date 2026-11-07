@@ -42,7 +42,7 @@ class BannerSlide {
   /// 渐变两端色。
   final (Color, Color) colors;
 
-  /// 点击后跳转的演出 id（`null` = 纯运营位，没有落地页）。
+  /// 点击后跳转的企划 id（`null` = 纯运营位，没有落地页）。
   final String? showId;
 
   /// 服务端运营图；有值时优先展示图片。
@@ -71,7 +71,7 @@ class _HomeBannerFloorState extends State<HomeBannerFloor> {
       subtitle: context.l10n.homeBannerFloor_60,
       badge: context.l10n.homeBannerFloor_61,
       colors: (Color(0xFF9B7BFF), Color(0xFF6C4BE0)),
-      showId: '2001',
+      showId: '1001',
     ),
     BannerSlide(
       title: context.l10n.homeBannerFloor_66,

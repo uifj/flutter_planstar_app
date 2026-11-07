@@ -55,7 +55,7 @@ class HomeShowFloor extends StatelessWidget {
             horizontalPadding: 10,
           ),
           const SizedBox(height: 12),
-          ShowCardFloorStrip(shows: shows, onTapShow: onTapShow, height: 172),
+          ShowCardFloorStrip(shows: shows, onTapShow: onTapShow, height: 188),
         ],
       ),
     );

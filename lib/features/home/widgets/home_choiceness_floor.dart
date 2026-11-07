@@ -141,7 +141,7 @@ class _HomeChoicenessFloorState extends State<HomeChoicenessFloor> {
           ),
           const SizedBox(height: 10),
           SizedBox(
-            height: 210,
+            height: 220,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.only(left: 17, right: 12),
