@@ -71,7 +71,7 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
                       const Center(child: CircularProgressIndicator()),
                   error: (error, _) => PsEmptyState(
                     title: context.l10n.orderListPage_71,
-                    description: '$error',
+                    description: psErrorMessage(error),
                     icon: LucideIcons.circleAlert,
                     actionLabel: context.l10n.actionRetry,
                     onAction: () => ref.invalidate(orderListProvider),

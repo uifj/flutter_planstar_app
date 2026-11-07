@@ -13,8 +13,9 @@ import 'order_l10n.dart';
 
 /// 确认订单页。
 ///
-/// 页面是**纯展示**：所有金额来自 [OrderConfirmState.quote]（领域服务算的），
-/// 所有校验来自聚合返回的 `Result`。页面自己不做任何业务判断——
+/// 页面是**纯展示**：所有金额来自 [OrderConfirmState.displayQuote]
+/// （服务端报价优先、领域服务预演兜底），所有校验来自聚合返回的 `Result`。
+/// 页面自己不做任何业务判断——
 /// 这与企划星 `OrderConfirmActivity`（2,633 行，金额/校验/埋点/跳转混在一起）相反。
 class OrderConfirmPage extends ConsumerWidget {
   const OrderConfirmPage({super.key, this.showId = '10086'});
@@ -38,11 +39,11 @@ class OrderConfirmPage extends ConsumerWidget {
       next,
     ) {
       if (previous != null && !previous.submitted && next.submitted) {
-        final order = next.order;
+        final number = next.placedOrderNumber ?? next.order.number.value;
         context.go(
           '/order/pay'
-          '?number=${Uri.encodeComponent(order.number.value)}'
-          '&amount=${next.quote.paymentAmount.minorUnits}'
+          '?number=${Uri.encodeComponent(number)}'
+          '&amount=${next.displayQuote.paymentAmount.minorUnits}'
           '&title=${Uri.encodeComponent(seed.showTitle)}',
         );
       }
@@ -183,7 +184,7 @@ class OrderConfirmPage extends ConsumerWidget {
                   title: context.l10n.orderConfirmPage_167,
                   child: Column(
                     children: <Widget>[
-                      for (final line in state.quote.breakdown)
+                      for (final line in state.displayQuote.breakdown)
                         _AmountRow(
                           label: line.labelOf(context),
                           value: line.amount.format(),
@@ -191,11 +192,11 @@ class OrderConfirmPage extends ConsumerWidget {
                       const Divider(height: 20),
                       _AmountRow(
                         label: context.l10n.orderConfirmPage_173,
-                        value: state.quote.totalAmount.format(),
+                        value: state.displayQuote.totalAmount.format(),
                       ),
                       _AmountRow(
                         label: context.l10n.orderConfirmPage_175,
-                        value: state.quote.paymentAmount.format(),
+                        value: state.displayQuote.paymentAmount.format(),
                         emphasized: true,
                       ),
                     ],
@@ -229,7 +230,7 @@ class OrderConfirmPage extends ConsumerWidget {
             ),
           ),
           _SubmitBar(
-            payable: state.quote.paymentAmount,
+            payable: state.displayQuote.paymentAmount,
             enabled: state.canSubmit,
             submitting: state.submitting,
             submitted: state.submitted,

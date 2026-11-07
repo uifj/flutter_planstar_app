@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/network/network_providers.dart';
 import '../domain/domain.dart';
+import 'order_api_providers.dart';
 import 'order_providers.dart';
 
 /// 订单列表的状态筛选。
@@ -51,11 +53,23 @@ final orderListFilterProvider = StateProvider<OrderListFilter>(
   (ref) => OrderListFilter.all,
 );
 
-/// 全部订单（按提交时间倒序，排序在仓储里做）。
+/// 全部订单（按提交时间倒序）。
+///
+/// demo 模式读内存仓储（含种子订单）；真实模式走 `GET /v1/order/list`。
 final orderListProvider = FutureProvider<List<TicketOrder>>((ref) async {
-  final repository = ref.watch(ticketOrderRepositoryProvider);
-  final result = await repository.findAll();
-  return result.requireData;
+  if (ref.watch(useDemoProvider)) {
+    final repository = ref.watch(ticketOrderRepositoryProvider);
+    final result = await repository.findAll();
+    return result.requireData;
+  }
+
+  final result = await ref
+      .watch(planstarOrderApiProvider)
+      .fetchOrderList(pageIndex: 1, pageSize: 100);
+  return result.fold(
+    onSuccess: (orders) => orders,
+    onFailure: (failure) => throw failure,
+  );
 });
 
 /// 按当前筛选过滤后的订单。
@@ -87,16 +101,35 @@ final orderStatusCountsProvider = Provider<Map<OrderListFilter, int>>((ref) {
   };
 });
 
+/// 订单详情（真实模式单查详情；404/不存在返回 `null`）。
+final orderDetailProvider = FutureProvider.family<TicketOrder?, String>((
+  ref,
+  number,
+) async {
+  final result = await ref
+      .watch(planstarOrderApiProvider)
+      .fetchOrderDetail(number);
+  return result.fold(
+    onSuccess: (order) => order,
+    onFailure: (failure) {
+      // 订单不存在属于正常空态，其余错误继续抛给页面展示。
+      if (failure.statusCode == 404 || failure.code == 'NOT_FOUND') return null;
+      throw failure;
+    },
+  );
+});
+
 /// 按订单号取订单（订单详情页用）。
 ///
 /// 查不到返回 `null` 而不是抛异常：深链带了不存在的订单号是正常情况
 /// （订单被删、链接过期），页面渲染空态比抛错更合适。
 ///
-/// 复用 [orderListProvider] 而不是新增仓储方法：详情页与列表页必须看到
-/// **同一份**订单状态——如果详情单独 `findByNumber`，用户从详情返回列表时
-/// 就可能看到两个不同的状态。
+/// demo 模式复用 [orderListProvider]，保证详情与列表看到同一份状态。
 final orderByNumberProvider = Provider.family<AsyncValue<TicketOrder?>, String>(
   (ref, String number) {
+    if (!ref.watch(useDemoProvider)) {
+      return ref.watch(orderDetailProvider(number));
+    }
     return ref.watch(orderListProvider).whenData((List<TicketOrder> orders) {
       for (final TicketOrder order in orders) {
         if (order.number.value == number) return order;
@@ -147,6 +180,10 @@ final class OrderActions {
 
   /// 保存 + 刷新列表。
   Future<String?> _persist(TicketOrder order) async {
+    // 支付/取消/确认收货不在本批次契约内，真实模式不做静默本地写入。
+    if (!ref.read(useDemoProvider)) {
+      return '当前版本暂不支持该操作，请稍后重试';
+    }
     final repository = ref.read(ticketOrderRepositoryProvider);
     final saved = await repository.save(order);
     if (saved.isFailure) return saved.failure!.message;

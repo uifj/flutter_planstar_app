@@ -1,6 +1,8 @@
 import 'package:core/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/network/network_providers.dart';
+import '../../catalog/application/catalog_providers.dart';
 import '../domain/domain.dart';
 
 /// 一个可选票档（展示 + 下单用）。
@@ -21,12 +23,11 @@ final class TicketTierOffer {
 /// 对应企划星 `GET v1/unifiedOrder/confirm` 的响应（`OrderConfirmInfo`）：
 /// 票档、限购、实名要求、可用券/活动/礼品卡都在这里。
 ///
-/// ⚠ 现在是一份**写死的演示数据**（`orderDraftSeedProvider`）。
-/// 接真实接口时，只需要换掉这个 provider 的实现——聚合、报价、事件都不用动。
-/// 这也是把"领域"和"数据来源"分开的直接收益。
+/// demo 模式用固定数据；真实模式从已加载的演出详情映射票档/场次。
 final class OrderDraftSeed {
   const OrderDraftSeed({
     required this.showId,
+    required this.sessionId,
     required this.showTitle,
     required this.sessionLabel,
     required this.tiers,
@@ -40,6 +41,7 @@ final class OrderDraftSeed {
   });
 
   final ShowId showId;
+  final SessionId sessionId;
   final String showTitle;
   final String sessionLabel;
   final List<TicketTierOffer> tiers;
@@ -66,16 +68,69 @@ final class OrderDraftSeed {
   final Money speedPackBalance;
 }
 
-/// 演示数据：一个 11 月 8 日晚场的演出。
+/// 确认页种子数据。
 ///
-/// 金额刻意选得能暴露精度问题（`680.00` / `580.00` / `380.00`），
-/// 优惠选得能覆盖两条分支（券 = 减固定额、活动 = 按比例 + 封顶）。
+/// demo 模式保留原演示场次；真实模式从已加载的演出映射票档和首个场次，
+/// 详情尚未返回时给一个空票档种子，由 UI 展示不可提交状态。
 final orderDraftSeedProvider = Provider.family<OrderDraftSeed, String>((
   ref,
   showId,
 ) {
+  if (ref.watch(useDemoProvider)) return _demoSeed(showId);
+
+  final show = ref.watch(showByIdProvider(showId));
+  if (show == null) return _emptySeed(showId);
+
+  final tiers = <TicketTierOffer>[
+    for (var i = 0; i < show.tiers.length; i++)
+      TicketTierOffer(
+        id: TicketTierId('tier-$i'),
+        name: show.tiers[i].name,
+        price: show.tiers[i].price,
+      ),
+  ];
+  final session = show.sessions.isEmpty ? null : show.sessions.first;
   return OrderDraftSeed(
     showId: ShowId(showId),
+    sessionId: SessionId('${show.id}-0'),
+    showTitle: show.title,
+    sessionLabel: session == null
+        ? show.firstSessionAt.toString()
+        : session.startsAt.toString(),
+    tiers: tiers,
+    // 真实下单接口当前不要求客户端选集观演人。
+    requiredVisitorCount: 0,
+    purchaseLimit: const PurchaseLimit.unlimited(),
+    availableCoupon: null,
+    availableCampaign: null,
+    giftCard: null,
+    speedPackUnitPrice: null,
+    speedPackBalance: Money.zero(),
+  );
+});
+
+OrderDraftSeed _emptySeed(String showId) {
+  return OrderDraftSeed(
+    showId: ShowId(showId),
+    sessionId: const SessionId(''),
+    showTitle: '演出详情加载中',
+    sessionLabel: '',
+    tiers: const <TicketTierOffer>[],
+    requiredVisitorCount: 0,
+    purchaseLimit: const PurchaseLimit.unlimited(),
+    availableCoupon: null,
+    availableCampaign: null,
+    giftCard: null,
+    speedPackUnitPrice: null,
+    speedPackBalance: Money.zero(),
+  );
+}
+
+/// 演示数据：一个 11 月 8 日晚场的演出。
+OrderDraftSeed _demoSeed(String showId) {
+  return OrderDraftSeed(
+    showId: ShowId(showId),
+    sessionId: const SessionId('S-20261108-1930'),
     showTitle: '《剧院魅影》中文版',
     sessionLabel: '2026-11-08（周日）19:30',
     tiers: <TicketTierOffer>[
@@ -115,4 +170,4 @@ final orderDraftSeedProvider = Provider.family<OrderDraftSeed, String>((
     speedPackUnitPrice: Money.fromYuan(30),
     speedPackBalance: Money.fromYuan(30),
   );
-});
+}

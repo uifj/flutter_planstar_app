@@ -1,5 +1,6 @@
 import 'package:core/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:planstar/app/network/network_providers.dart';
 import 'package:planstar/features/order/application/order_confirm_controller.dart';
 import 'package:planstar/features/order/application/order_providers.dart';
 import 'package:planstar/features/order/data/in_memory_ticket_order_repository.dart';
@@ -14,7 +15,9 @@ void main() {
   late ProviderContainer container;
 
   setUp(() {
-    container = ProviderContainer();
+    container = ProviderContainer(
+      overrides: <Override>[useDemoProvider.overrideWithValue(true)],
+    );
     addTearDown(container.dispose);
   });
 

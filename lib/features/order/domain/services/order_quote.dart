@@ -160,3 +160,79 @@ final class OrderQuote extends ValueObject {
     }
   }
 }
+
+/// 服务端确认报价（`POST /v1/unifiedOrder/confirm`）。
+///
+/// 建单金额以服务端返回为准；本地 [OrderQuote] 只用于预演与拆解展示。
+final class OrderServerQuote {
+  const OrderServerQuote({
+    this.quoteId,
+    required this.totalAmount,
+    required this.paymentAmount,
+    this.expiresAt,
+  });
+
+  final String? quoteId;
+  final Money totalAmount;
+  final Money paymentAmount;
+  final DateTime? expiresAt;
+
+  /// 把服务端报价转成自洽的 [OrderQuote]，供确认页展示。
+  ///
+  /// 服务端只承诺原价/实付两个数，这里把差额记成优惠，保证
+  /// `total = goods + postage + split`、`payment = payable - discount`。
+  OrderQuote toDisplayQuote() {
+    final total = totalAmount.minorUnits;
+    final rawPayment = paymentAmount.minorUnits;
+    final payment = rawPayment < 0
+        ? 0
+        : (rawPayment > total ? total : rawPayment);
+    return OrderQuote(
+      goodsTotal: totalAmount,
+      postage: Money.zero(),
+      splitFee: Money.zero(),
+      discountApplied: Money.fromMinorUnits(total - payment),
+      totalAmount: totalAmount,
+      giftCardApplied: Money.zero(),
+      speedPackCash: Money.zero(),
+      speedPackBalance: Money.zero(),
+      paymentAmount: Money.fromMinorUnits(payment),
+    );
+  }
+
+  /// 解析服务端报价；缺少金额字段时返回 `null`（调用方回退本地报价）。
+  static OrderServerQuote? tryParse(Map<String, dynamic> json) {
+    final nested = json['data'] ?? json['quote'] ?? json['orderAmount'];
+    final source = nested is Map<String, dynamic> ? nested : json;
+    final totalRaw =
+        source['totalAmount'] ?? source['total'] ?? source['orderAmount'];
+    if (totalRaw is! num) return null;
+
+    final payRaw =
+        source['paymentAmount'] ??
+        source['payAmount'] ??
+        source['amount'] ??
+        totalRaw;
+    final quoteId =
+        source['quoteId']?.toString() ?? source['quoteNo']?.toString();
+    final expiresRaw =
+        source['expiresAt'] ?? source['expireAt'] ?? source['expireTime'];
+
+    return OrderServerQuote(
+      quoteId: quoteId == null || quoteId.isEmpty ? null : quoteId,
+      // 后端金额统一为分；用 `fromMinorUnits` 避免 double 误差。
+      totalAmount: Money.fromMinorUnits(totalRaw.toInt()),
+      paymentAmount: Money.fromMinorUnits(
+        payRaw is num ? payRaw.toInt() : totalRaw.toInt(),
+      ),
+      expiresAt: _parseTime(expiresRaw),
+    );
+  }
+
+  static DateTime? _parseTime(Object? raw) {
+    if (raw is num) {
+      return DateTime.fromMillisecondsSinceEpoch(raw.toInt());
+    }
+    return DateTime.tryParse(raw?.toString() ?? '');
+  }
+}

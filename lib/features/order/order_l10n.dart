@@ -191,6 +191,7 @@ extension OrderNoticeL10n on OrderNotice {
       OrderNoticeCode.saveFailed => context.l10n.orderConfirmController_246(
         detail ?? '',
       ),
+      OrderNoticeCode.priceChanged => '价格已更新，请确认最新金额后重新提交',
       OrderNoticeCode.submitted => context.l10n.orderConfirmController_257(
         detail ?? '',
       ),

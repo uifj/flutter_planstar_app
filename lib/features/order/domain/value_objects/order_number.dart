@@ -24,7 +24,7 @@ final class OrderNumber extends ValueObject {
     return OrderNumber('PN$y$m$d${sequence.toString().padLeft(6, '0')}');
   }
 
-  static final RegExp _pattern = RegExp(r'^PN\d{14}$');
+  static final RegExp _pattern = RegExp(r'^PN\d{14,20}$');
 
   /// 订单号本体。
   final String value;
@@ -32,7 +32,7 @@ final class OrderNumber extends ValueObject {
   static String _validate(String raw) {
     final trimmed = raw.trim().toUpperCase();
     if (!_pattern.hasMatch(trimmed)) {
-      throw ArgumentError.value(raw, 'raw', '订单号格式应为 PN + 8 位日期 + 6 位序号');
+      throw ArgumentError.value(raw, 'raw', '订单号格式应为 PN + 日期 + 序号');
     }
     return trimmed;
   }
