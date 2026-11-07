@@ -48,8 +48,8 @@ const List<LocalizationsDelegate<Object>> appLocalizationsDelegates =
 ///
 /// ## l10n 是「一 feature 一套 ARB」
 ///
-/// 每个 feature 有自己的 ARB 与生成类，**源文件统一放在 `lib/l10n`**
-/// （`lib/l10n/features/<name>/<name>_zh.arb`），这里只是把它们的 delegate
+/// 每个 feature 有自己的 ARB 与生成类，**ARB 源统一放在 `lib/l10n/arb`**
+/// （`lib/l10n/arb/features/<name>/<name>_zh.arb`），这里只是把它们的 delegate
 /// 汇总挂上（见 [appLocalizationsDelegates]）。**不要把 feature 文案搬进
 /// 应用级 ARB**——那正是 §3.4 要治的病（一个几千行的巨型 ARB，
 /// 谁都不敢删任何一个 key）。

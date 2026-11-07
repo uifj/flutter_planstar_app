@@ -9,14 +9,15 @@ import '../features/catalog/ui/category_home_page.dart';
 import '../features/catalog/ui/show_list_page.dart';
 import '../features/discover/discover_page.dart';
 import '../features/discover/feed_detail_page.dart';
+import '../features/discover/ui/bilibili_player_page.dart';
 import '../features/goods/choose_ticket_page.dart';
 import '../features/goods/seatmap/seat_selection_page.dart';
 import '../features/goods/show_detail_page.dart';
 import '../features/goods/venue_page.dart';
 import '../features/home/city_list_page.dart';
 import '../features/home/home_page.dart';
-import '../features/group_buy/group_buy_detail_page.dart';
-import '../features/group_buy/group_buy_page.dart';
+import '../features/group_buy/ui/group_buy_detail_page.dart';
+import '../features/group_buy/ui/group_buy_page.dart';
 import '../features/marketing/coupon_page.dart';
 import '../features/marketing/exchange_coupon_page.dart';
 import '../features/marketing/giftcard/add_gift_card_page.dart';
@@ -30,7 +31,7 @@ import '../features/order/order_list_page.dart';
 import '../features/order/pay_success_page.dart';
 import '../features/order/payment/pay_page.dart';
 import '../features/order/refund/refund_page.dart';
-import '../features/proxy_buy/proxy_buy_page.dart';
+import '../features/proxy_buy/ui/proxy_buy_page.dart';
 import '../features/search/search_page.dart';
 import '../features/search/search_result_page.dart';
 import '../features/user/address_page.dart';
@@ -239,6 +240,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'feedDetail',
         builder: (context, state) =>
             FeedDetailPage(postId: state.pathParameters['id'] ?? ''),
+      ),
+      // 应用内哔哩哔哩播放页。视频动态选择「应用内播放」后进这里，
+      // 用 WebView 托管官方 H5 播放页（不做自定义播放器）。
+      GoRoute(
+        path: '/bilibili/:bvid',
+        name: 'bilibiliPlayer',
+        builder: (context, state) =>
+            BilibiliPlayerPage(bvid: state.pathParameters['bvid'] ?? ''),
       ),
       // 会话详情。同样在 shell 之外：聊天页需要全屏（输入栏贴底、
       // 底栏会让它悬空）。`/message` 本身仍在 shell 里。

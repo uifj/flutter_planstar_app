@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:planstar/app/app.dart' show appLocalizationsDelegates;
 import 'package:planstar/app/network/network_providers.dart';
 import 'package:planstar/app/theme.dart';
-import 'package:planstar/l10n/app_localizations.dart';
+import 'package:planstar/l10n/generated/app_localizations.dart';
 import 'package:planstar/features/catalog/ui/show_list_page.dart';
 import 'package:planstar/features/discover/discover_page.dart';
 import 'package:planstar/features/discover/feed_detail_page.dart';
@@ -165,7 +165,7 @@ void main() {
       kSurfaces.first,
     );
 
-    expect(find.text('演出不存在或已下架'), findsOneWidget);
+    expect(find.text('企划不存在或已下架'), findsOneWidget);
     expect(find.text('返回首页'), findsOneWidget);
   });
 
@@ -224,7 +224,7 @@ void main() {
       kSurfaces.first,
     );
 
-    expect(find.text('订单不存在'), findsOneWidget);
+    expect(find.text('支持记录不存在'), findsOneWidget);
   });
 
   testWidgets('场馆详情', (WidgetTester tester) async {

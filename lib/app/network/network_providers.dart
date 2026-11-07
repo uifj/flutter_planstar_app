@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'api_config.dart';
 import 'app_bootstrap.dart';
+import 'data_source_policy.dart';
 import 'ps_network_interceptor.dart';
 import 'ps_request_context.dart';
 
@@ -33,7 +34,17 @@ final apiConfigProvider = Provider<ApiConfig>(
   (ref) => ref.watch(appBootstrapProvider).apiConfig,
 );
 
+/// 全局数据源策略（demo / 真实接口）。
+///
+/// 业务层统一读这个 provider，不要直接判断 `useDemoProvider`。
+final dataSourcePolicyProvider = Provider<DataSourcePolicy>(
+  (ref) => DataSourcePolicy(isDemo: ref.watch(useDemoProvider)),
+);
+
 /// 是否使用演示数据；仅当 `--dart-define=PS_USE_DEMO=true` 时为 true。
+///
+/// **仅限 `app/network` 内部使用**——它是 [dataSourcePolicyProvider] 的
+/// 底层实现。业务层请用 `dataSourcePolicyProvider`（架构测试会拦截）。
 final useDemoProvider = Provider<bool>(
   (ref) => ref.watch(apiConfigProvider).useDemo,
 );

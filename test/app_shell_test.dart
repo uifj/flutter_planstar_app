@@ -2,7 +2,7 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:planstar/app/app.dart';
 import 'package:planstar/app/theme.dart';
-import 'package:planstar/l10n/app_localizations.dart';
+import 'package:planstar/l10n/generated/app_localizations.dart';
 import 'package:planstar/shell/root_shell.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

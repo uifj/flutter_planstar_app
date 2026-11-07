@@ -7,10 +7,13 @@
 abstract final class ApiPaths {
   // ── catalog ──────────────────────────────────────────────────────────
   static const String homeBanners = 'v1/home/banners';
-  static const String activitiesHot = 'v1/activities/hot';
-  static const String activities = 'v1/activities';
 
-  static String activityDetail(String id) => 'v3/activities/$id';
+  // ── project ──────────────────────────────────────────────────────────
+  static const String projectsHot = 'v1/projects/hot';
+  static const String projects = 'v1/projects';
+  static const String rankings = 'v1/rankings';
+
+  static String projectDetail(String id) => 'v1/projects/$id';
 
   // ── feed ─────────────────────────────────────────────────────────────
   static const String feedHot = 'v4/feed/hot';
@@ -24,11 +27,34 @@ abstract final class ApiPaths {
   static const String messagesUnreadCount = 'v1/messages/unreadCount';
   static const String messagesRead = 'v1/messages/read';
 
+  // ── chat ─────────────────────────────────────────────────────────────
+  static const String chatThreads = 'v1/chat/threads';
+
+  static String chatMessages(String threadId) =>
+      'v1/chat/threads/$threadId/messages';
+
+  static String chatRead(String threadId) => 'v1/chat/threads/$threadId/read';
+
   // ── order ────────────────────────────────────────────────────────────
   static const String orderList = 'v1/order/list';
   static const String orderDetail = 'v1/order/detail';
   static const String orderConfirm = 'v1/unifiedOrder/confirm';
   static const String orderMake = 'v3/unifiedOrder/makeOrder';
+
+  static String orderRefund(String orderId) => 'v1/order/$orderId/refund';
+
+  // ── pay ──────────────────────────────────────────────────────────────
+  static const String unifiedPay = 'v1/unifiedPay/pay';
+  static const String unifiedPayDetail = 'v1/unifiedPay/payDetail';
+
+  // ── proxy_buy ────────────────────────────────────────────────────────
+  static const String proxyBuyOrders = 'v1/proxyBuyOrder/myOrders';
+
+  // ── group_buy ────────────────────────────────────────────────────────
+  static const String groupBuyOrders = 'v1/pinTuanOrder/myOrders';
+  static const String groupBuyJoin = 'v1/pinTuanOrder/make';
+
+  static String groupBuyCampaign(int id) => 'v1/pinTuanCampaign/$id';
 
   // ── user ─────────────────────────────────────────────────────────────
   static const String userProfile = 'v1/user';
@@ -45,9 +71,10 @@ abstract final class ApiPaths {
   /// 所有实际使用的路径（动态段用示例 id `1` 展开），供契约自检。
   static List<String> get all => <String>[
     homeBanners,
-    activitiesHot,
-    activities,
-    activityDetail('1'),
+    projectsHot,
+    projects,
+    projectDetail('1'),
+    rankings,
     feedHot,
     feed,
     feedComments,
@@ -55,10 +82,20 @@ abstract final class ApiPaths {
     messages,
     messagesUnreadCount,
     messagesRead,
+    chatThreads,
+    chatMessages('1'),
+    chatRead('1'),
     orderList,
     orderDetail,
     orderConfirm,
     orderMake,
+    orderRefund('1'),
+    unifiedPay,
+    unifiedPayDetail,
+    proxyBuyOrders,
+    groupBuyOrders,
+    groupBuyJoin,
+    groupBuyCampaign(1),
     userProfile,
     addresses,
     addressDelete('1'),
