@@ -12,7 +12,7 @@ import 'catalog_api_providers.dart';
 
 /// 演出库（全量）。
 ///
-/// demo 与真实数据由 `useDemoProvider`（编译期 `PS_USE_DEMO`）决定，
+/// demo 与真实数据由 `dataSourcePolicyProvider`（终态来自编译期 `PS_USE_DEMO`）决定，
 /// 默认走网络；所有页面都从这一个人口读数据，分页/刷新只在这里做一次。
 final showCatalogProvider =
     AsyncNotifierProvider<ShowCatalogController, List<ShowSummary>>(
@@ -24,7 +24,6 @@ class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
 
   int _pageIndex = 1;
   bool _hasMore = true;
-  String? _city;
 
   /// 是否还有下一页（给列表页做触底加载用）。
   bool get hasMore => _hasMore;
@@ -33,14 +32,12 @@ class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
   Future<List<ShowSummary>> build() async {
     _pageIndex = 1;
     _hasMore = true;
-    if (ref.watch(useDemoProvider)) {
+    if (ref.watch(dataSourcePolicyProvider).isDemo) {
       // 演示数据一次给全，不做分页。
       _hasMore = false;
       return buildDemoCatalog();
     }
-    // 城市切换由 provider 重建承担：服务端按 city 过滤，避免超过一页后
-    // 当前城市的数据被挤到后面几页而查不到。
-    _city = ref.watch(selectedCityProvider);
+    // 企划数据没有城市字段：一次取满一页，城市筛选只在 demo 模式生效。
     final first = await _fetchPage(1);
     // 首页数据不足一页即没有下一页，避免触底时多打一次空请求。
     _hasMore = first.length >= _pageSize;
@@ -50,7 +47,6 @@ class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
   Future<List<ShowSummary>> _fetchPage(int pageIndex) async {
     final PlanstarCatalogApi api = ref.read(planstarCatalogApiProvider);
     final result = await api.fetchShows(
-      city: _city,
       pageIndex: pageIndex,
       pageSize: _pageSize,
     );
@@ -65,11 +61,10 @@ class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
     _hasMore = true;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      if (ref.read(useDemoProvider)) {
+      if (ref.read(dataSourcePolicyProvider).isDemo) {
         _hasMore = false;
         return buildDemoCatalog();
       }
-      _city = ref.read(selectedCityProvider);
       final first = await _fetchPage(1);
       _hasMore = first.length >= _pageSize;
       return first;
@@ -79,7 +74,7 @@ class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
   /// 加载下一页并追加到当前列表；失败时保留已有数据。
   Future<void> loadMore() async {
     if (!_hasMore || state.isLoading) return;
-    if (ref.read(useDemoProvider)) return;
+    if (ref.read(dataSourcePolicyProvider).isDemo) return;
     final current = state.valueOrNull;
     if (current == null) return;
 
@@ -125,12 +120,16 @@ class SelectedCityController extends Notifier<String> {
   void select(String city) => state = city;
 }
 
-/// 当前城市的演出。
+/// 当前城市的企划。
+///
+/// 企划数据没有城市字段（全国发行），真实模式直接返回全量；
+/// demo 数据仍带城市，保留按城市过滤的行为。
 final cityShowsProvider = Provider<AsyncValue<List<ShowSummary>>>((ref) {
-  final city = ref.watch(selectedCityProvider);
   final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(
     showCatalogProvider,
   );
+  if (ref.watch(dataSourcePolicyProvider).isRemote) return asyncShows;
+  final city = ref.watch(selectedCityProvider);
   return asyncShows.whenData(
     (shows) => shows.where((show) => show.city == city).toList(growable: false),
   );
@@ -148,7 +147,7 @@ final cityHasDataProvider = Provider<bool>(
 /// 后端没有独立的分类端点，真实模式下从活动列表的 `categoryId/categoryName`
 /// 聚合；demo 模式继续用编译期分类数据。
 final showCategoriesProvider = FutureProvider<List<ShowCategory>>((ref) async {
-  if (ref.watch(useDemoProvider)) {
+  if (ref.watch(dataSourcePolicyProvider).isDemo) {
     return demoCategories.where((c) => c.isActive).toList(growable: false);
   }
 
@@ -174,14 +173,14 @@ final showCategoriesProvider = FutureProvider<List<ShowCategory>>((ref) async {
 
 /// 首页 Banner；demo 模式返回空列表，由页面继续用内置视觉兜底。
 final homeBannersProvider = FutureProvider<List<BannerDto>>((ref) async {
-  if (ref.watch(useDemoProvider)) return const <BannerDto>[];
+  if (ref.watch(dataSourcePolicyProvider).isDemo) return const <BannerDto>[];
   final result = await ref.watch(planstarCatalogApiProvider).fetchBanners();
   return result.getOrElse((_) => const <BannerDto>[]);
 });
 
-/// 热门演出；demo 模式按想看人数排序，真实模式走 `/v1/activities/hot`。
+/// 热门企划；demo 模式按想看人数排序，真实模式走 `/v1/projects/hot`。
 final hotShowsProvider = FutureProvider<List<ShowSummary>>((ref) async {
-  if (ref.watch(useDemoProvider)) {
+  if (ref.watch(dataSourcePolicyProvider).isDemo) {
     final city = ref.watch(selectedCityProvider);
     final shows = await ref.watch(showCatalogProvider.future);
     final sorted = shows.where((show) => show.city == city).toList()
@@ -194,12 +193,14 @@ final hotShowsProvider = FutureProvider<List<ShowSummary>>((ref) async {
   return result.getOrElse((_) => const <ShowSummary>[]);
 });
 
-/// 演出详情（真实模式调用 `/v3/activities/{id}`，失败时由页面回退到列表数据）。
+/// 企划详情（真实模式调用 `/v1/projects/{id}`，失败时由页面回退到列表数据）。
 final showDetailProvider = FutureProvider.family<ShowSummary?, String>((
   ref,
   id,
 ) async {
-  if (ref.watch(useDemoProvider)) return ref.watch(showByIdProvider(id));
+  if (ref.watch(dataSourcePolicyProvider).isDemo) {
+    return ref.watch(showByIdProvider(id));
+  }
   final result = await ref
       .watch(planstarCatalogApiProvider)
       .fetchShowDetail(id);
@@ -208,15 +209,27 @@ final showDetailProvider = FutureProvider.family<ShowSummary?, String>((
 
 /// 演出完整信息：详情接口优先，列表项兜底。
 ///
-/// 列表接口（`/v1/activities`）不返回 `tiers`，只用列表项会让选票页和
+/// 列表接口（`/v1/projects`）不返回票档，只用列表项会让选票页和
 /// 确认订单页拿不到票档（表现为「暂无票档信息」、订单无行、提交按钮禁用）。
 /// 这里统一从详情接口取票档/场次，详情未返回或失败时退回列表数据。
 final showFullProvider = Provider.family<ShowSummary?, String>((ref, id) {
   final summary = ref.watch(showByIdProvider(id));
-  if (ref.watch(useDemoProvider)) return summary;
+  if (ref.watch(dataSourcePolicyProvider).isDemo) return summary;
   final detail = ref.watch(showDetailProvider(id)).valueOrNull;
   return detail ?? summary;
 });
+
+/// 服务端企划榜单；demo 或请求失败时返回空列表，由页面本地排序兜底。
+final projectRankingProvider =
+    FutureProvider.family<List<RankingEntry>, String>((ref, type) async {
+      if (ref.watch(dataSourcePolicyProvider).isDemo) {
+        return const <RankingEntry>[];
+      }
+      final result = await ref
+          .watch(planstarCatalogApiProvider)
+          .fetchRankings(type: type, limit: 10);
+      return result.getOrElse((_) => const <RankingEntry>[]);
+    });
 
 // ── 精选推荐 ────────────────────────────────────────────────────────────
 

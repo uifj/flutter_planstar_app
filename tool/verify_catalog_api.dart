@@ -1,7 +1,7 @@
-// 演出库接口联调验证脚本（默认域名来自 `ApiConfig.resolve()`，可用 `--base=` 覆盖）。
+// 企划库接口联调验证脚本（默认域名来自 `ApiConfig.resolve()`，可用 `--base=` 覆盖）。
 //
 // 和 `tool/verify_login_api.dart` 同一思路：用**生产代码里同一份**
-// `PlanstarCatalogApi` 打真接口，验证请求形状、字段解析与分页/城市过滤行为，
+// `PlanstarCatalogApi` 打真接口，验证请求形状、字段解析与分页/榜单行为，
 // 而不是另抄一份 curl。
 //
 // 用法：
@@ -59,7 +59,7 @@ Future<void> main(List<String> args) async {
   );
   final api = PlanstarCatalogApi(client: ApiClient(dio));
 
-  stdout.writeln('== 演出库接口联调 ==');
+  stdout.writeln('== 企划库接口联调 ==');
   stdout.writeln('base: $baseUrl');
   stdout.writeln('');
 
@@ -70,7 +70,7 @@ Future<void> main(List<String> args) async {
     results.add(await _checkPage2(api, page1));
     results.add(await _checkDetail(api, page1.first));
   }
-  results.add(await _checkCity(api));
+  results.add(await _checkRanking(api));
   results.add(await _checkHot(api));
   results.add(await _checkBanners(api));
 
@@ -92,18 +92,16 @@ Future<List<ShowSummary>?> _fetch(
   PlanstarCatalogApi api, {
   int pageIndex = 1,
   int pageSize = 20,
-  String? city,
 }) async {
   final Result<List<ShowSummary>> result = await api.fetchShows(
     pageIndex: pageIndex,
     pageSize: pageSize,
-    city: city,
   );
   return result.fold(onFailure: (Failure _) => null, onSuccess: (v) => v);
 }
 
 CheckResult _checkPage1(List<ShowSummary>? shows) {
-  const name = '列表首页 GET v1/activities';
+  const name = '列表首页 GET v1/projects';
   if (shows == null) {
     return const CheckResult(name: name, passed: false, detail: '请求失败（见网络日志）');
   }
@@ -118,14 +116,16 @@ CheckResult _checkPage1(List<ShowSummary>? shows) {
   final bool complete =
       first.id.isNotEmpty &&
       first.title.isNotEmpty &&
-      first.city.isNotEmpty &&
-      first.venue.isNotEmpty;
+      first.artist.isNotEmpty &&
+      first.goalAmount != null;
   return CheckResult(
     name: name,
     passed: complete,
     detail: complete
-        ? '5 条；首条 ${first.id} / ${first.title} / ${first.city} / ${first.priceFrom}'
-        : '字段缺失：id=${first.id} title=${first.title} city=${first.city} venue=${first.venue}',
+        ? '5 条；首条 ${first.id} / ${first.title} / ${first.artist} / '
+              '${first.priceFrom}'
+        : '字段缺失：id=${first.id} title=${first.title} '
+              'creator=${first.artist} goal=${first.goalAmount}',
   );
 }
 
@@ -148,7 +148,7 @@ Future<CheckResult> _checkPage2(
 }
 
 Future<CheckResult> _checkDetail(PlanstarCatalogApi api, ShowSummary show) async {
-  final name = '详情 GET v3/activities/{id}';
+  final name = '详情 GET v1/projects/{id}';
   final Result<ShowSummary?> result = await api.fetchShowDetail(show.id);
   return result.fold(
     onFailure: (Failure f) => CheckResult(
@@ -172,23 +172,33 @@ Future<CheckResult> _checkDetail(PlanstarCatalogApi api, ShowSummary show) async
   );
 }
 
-Future<CheckResult> _checkCity(PlanstarCatalogApi api) async {
-  const name = '城市过滤 GET v1/activities?city=上海';
-  const city = '上海';
-  final shows = await _fetch(api, pageSize: 50, city: city);
-  if (shows == null) {
-    return const CheckResult(name: name, passed: false, detail: '请求失败');
-  }
-  final other = shows.where((ShowSummary s) => !s.city.contains(city)).length;
-  return CheckResult(
-    name: name,
-    passed: other == 0,
-    detail: '${shows.length} 条，非「$city」$other 条',
+Future<CheckResult> _checkRanking(PlanstarCatalogApi api) async {
+  const name = '榜单 GET v1/rankings?type=hot';
+  final Result<List<RankingEntry>> result = await api.fetchRankings(
+    type: 'hot',
+    limit: 5,
+  );
+  return result.fold(
+    onFailure: (Failure f) => CheckResult(
+      name: name,
+      passed: false,
+      detail: '失败：${f.type.name} / ${f.message}',
+    ),
+    onSuccess: (List<RankingEntry> entries) {
+      final bool ordered = <int>[
+        for (final entry in entries) entry.rank,
+      ].indexed.every((pair) => pair.$2 == pair.$1 + 1);
+      return CheckResult(
+        name: name,
+        passed: entries.isEmpty || ordered,
+        detail: '${entries.length} 条${entries.isEmpty ? '（空）' : '，首条第 ${entries.first.rank} 名'}',
+      );
+    },
   );
 }
 
 Future<CheckResult> _checkHot(PlanstarCatalogApi api) async {
-  const name = '热门 GET v1/activities/hot';
+  const name = '热门 GET v1/projects/hot';
   final Result<List<ShowSummary>> result = await api.fetchHotShows(pageSize: 5);
   return result.fold(
     onFailure: (Failure f) => CheckResult(

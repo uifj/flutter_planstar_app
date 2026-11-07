@@ -158,10 +158,19 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
 
     switch (_sort) {
       case _SortMode.recommended:
-        // 「推荐」= 想看人数降序，与原项目默认排序一致。
-        filtered.sort((a, b) => b.wishCount.compareTo(a.wishCount));
+        // 「推荐」= 热度降序；企划看支持人数，演示数据看想看人数。
+        filtered.sort((a, b) {
+          final int av = a.isProject ? a.supporterCount : a.wishCount;
+          final int bv = b.isProject ? b.supporterCount : b.wishCount;
+          return bv.compareTo(av);
+        });
       case _SortMode.soonest:
-        filtered.sort((a, b) => a.firstSessionAt.compareTo(b.firstSessionAt));
+        // 「最近开演」对企划等价于「即将截止」。
+        filtered.sort((a, b) {
+          final DateTime av = a.isProject ? a.projectDeadline : a.firstSessionAt;
+          final DateTime bv = b.isProject ? b.projectDeadline : b.firstSessionAt;
+          return av.compareTo(bv);
+        });
       case _SortMode.priceAsc:
         filtered.sort(
           (a, b) => a.priceFrom.minorUnits.compareTo(b.priceFrom.minorUnits),

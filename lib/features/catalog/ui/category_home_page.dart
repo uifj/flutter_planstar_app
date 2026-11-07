@@ -10,6 +10,7 @@ import '../../../shared/ui/ps_floating_tab_bar.dart';
 import '../../../shared/ui/ps_poster.dart';
 import '../../../shared/ui/ps_price.dart';
 import '../../../shared/ui/ps_tag.dart';
+import '../../../app/network/network_providers.dart';
 import '../application/catalog_providers.dart';
 import '../domain/show_category.dart';
 import '../domain/show_summary.dart';
@@ -78,7 +79,8 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
         .where((c) => c.id == _selectedCategoryId)
         .firstOrNull;
 
-    final city = ref.watch(selectedCityProvider);
+    final policy = ref.watch(dataSourcePolicyProvider);
+    final city = policy.isDemo ? ref.watch(selectedCityProvider) : '全国';
     final showsAsync = ref.watch(cityShowsProvider);
     final allShows = showsAsync.valueOrNull ?? const <ShowSummary>[];
     final hasError = showsAsync.hasError && !showsAsync.hasValue;
@@ -101,7 +103,7 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
           _CategoryTopBar(
             topPadding: topPadding,
             city: city,
-            onTapCity: () => context.push('/cities'),
+            onTapCity: policy.isDemo ? () => context.push('/cities') : null,
             onTapSearch: () => context.push('/search'),
           ),
           if (categories.isNotEmpty)
@@ -190,7 +192,9 @@ class _CategoryTopBar extends StatelessWidget {
 
   final double topPadding;
   final String city;
-  final VoidCallback onTapCity;
+
+  /// 城市入口；`null` 时不展示下拉箭头（企划为全国发行）。
+  final VoidCallback? onTapCity;
   final VoidCallback onTapSearch;
 
   @override
@@ -218,11 +222,12 @@ class _CategoryTopBar extends StatelessWidget {
                         color: colors.textPrimary,
                       ),
                     ),
-                    Icon(
-                      LucideIcons.chevronDown,
-                      size: 18,
-                      color: colors.textTertiary,
-                    ),
+                    if (onTapCity != null)
+                      Icon(
+                        LucideIcons.chevronDown,
+                        size: 18,
+                        color: colors.textTertiary,
+                      ),
                   ],
                 ),
               ),
@@ -419,7 +424,10 @@ class _CategoryShowCard extends StatelessWidget {
                     ),
                   const SizedBox(height: 6),
                   Text(
-                    '${show.firstSessionLabelOf(context)} · ${show.duration}',
+                    show.isProject
+                        ? '${context.l10n.projectDeadline} · '
+                              '${formatDate(show.projectDeadline)}'
+                        : '${show.firstSessionLabelOf(context)} · ${show.duration}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 12, color: colors.textTertiary),
@@ -428,14 +436,18 @@ class _CategoryShowCard extends StatelessWidget {
                   Row(
                     children: <Widget>[
                       Icon(
-                        LucideIcons.mapPin,
+                        show.venueLabel.isEmpty
+                            ? LucideIcons.user
+                            : LucideIcons.mapPin,
                         size: 12,
                         color: colors.textTertiary,
                       ),
                       const SizedBox(width: 2),
                       Expanded(
                         child: Text(
-                          '${show.city} · ${show.venue}',
+                          show.venueLabel.isEmpty
+                              ? show.artist
+                              : show.venueLabel,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -466,7 +478,11 @@ class _CategoryShowCard extends StatelessWidget {
                       ),
                       const Spacer(),
                       Text(
-                        context.l10n.categoryHomePage_406(show.wishCount),
+                        show.isProject
+                            ? context.l10n.projectCardSupporters(
+                                show.supporterCount,
+                              )
+                            : context.l10n.categoryHomePage_406(show.wishCount),
                         style: TextStyle(
                           fontSize: 11,
                           color: colors.textTertiary,

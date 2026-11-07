@@ -7,63 +7,43 @@
 /// "分类是什么"。
 library;
 
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'show_category.freezed.dart';
+part 'show_category.g.dart';
+
 /// 二级分类标签（`subCategoryTags[]`）。
-final class SubCategoryTag {
-  const SubCategoryTag({
-    required this.id,
-    required this.categoryId,
-    required this.name,
-  });
+@freezed
+abstract class SubCategoryTag with _$SubCategoryTag {
+  const factory SubCategoryTag({
+    @JsonKey(readValue: _readSubCategoryId) required int id,
+    @JsonKey(readValue: _readCategoryId) required int categoryId,
+    @JsonKey(readValue: _readName) required String name,
+  }) = _SubCategoryTag;
 
-  final int id;
-  final int categoryId;
-  final String name;
-
-  factory SubCategoryTag.fromJson(Map<String, dynamic> json) {
-    return SubCategoryTag(
-      id: (json['subCategoryId'] as num).toInt(),
-      categoryId: (json['categoryId'] as num?)?.toInt() ?? 0,
-      name: json['name'] as String? ?? '',
-    );
-  }
+  factory SubCategoryTag.fromJson(Map<String, dynamic> json) =>
+      _$SubCategoryTagFromJson(json);
 }
 
 /// 一级分类。
-final class ShowCategory {
-  const ShowCategory({
-    required this.id,
-    required this.name,
-    required this.enName,
-    required this.pinyin,
-    required this.subTags,
-    this.status = 1,
-  });
+@freezed
+abstract class ShowCategory with _$ShowCategory {
+  const ShowCategory._();
 
-  final int id;
-  final String name;
-  final String enName;
-  final String pinyin;
-  final List<SubCategoryTag> subTags;
+  const factory ShowCategory({
+    @JsonKey(readValue: _readShowCategoryId) required int id,
+    @JsonKey(readValue: _readShowCategoryName) required String name,
+    @JsonKey(readValue: _readShowCategoryEnName) required String enName,
+    @JsonKey(readValue: _readShowCategoryPinyin) required String pinyin,
+    @JsonKey(readValue: _readSubTags, fromJson: _subTagList)
+    required List<SubCategoryTag> subTags,
+    @JsonKey(readValue: _readShowCategoryStatus) @Default(1) int status,
+  }) = _ShowCategory;
 
-  /// `1` = 上架。企划星用它做软下架，客户端只渲染 `status == 1` 的分类。
-  final int status;
+  factory ShowCategory.fromJson(Map<String, dynamic> json) =>
+      _$ShowCategoryFromJson(json);
 
   bool get isActive => status == 1;
-
-  factory ShowCategory.fromJson(Map<String, dynamic> json) {
-    final tags = (json['subCategoryTags'] as List<dynamic>? ?? <dynamic>[])
-        .whereType<Map<String, dynamic>>()
-        .map(SubCategoryTag.fromJson)
-        .toList(growable: false);
-    return ShowCategory(
-      id: (json['id'] as num).toInt(),
-      name: json['name'] as String? ?? '',
-      enName: json['enName'] as String? ?? '',
-      pinyin: json['pinyin'] as String? ?? '',
-      status: (json['status'] as num?)?.toInt() ?? 1,
-      subTags: tags,
-    );
-  }
 }
 
 /// 热门场馆（首页「热门场馆」楼层）。
@@ -90,4 +70,43 @@ final class VenueSummary {
 
   /// 该场馆近期演出 id（最多取 2 个用于卡片）。
   final List<String> showIds;
+}
+
+// ── JSON 兼容读取 ───────────────────────────────────────────────────────
+
+Object? _readSubCategoryId(Map<dynamic, dynamic> json, String key) =>
+    (json['subCategoryId'] as num).toInt();
+
+Object? _readCategoryId(Map<dynamic, dynamic> json, String key) =>
+    (json['categoryId'] as num?)?.toInt() ?? 0;
+
+Object? _readName(Map<dynamic, dynamic> json, String key) =>
+    json['name'] as String? ?? '';
+
+Object? _readShowCategoryId(Map<dynamic, dynamic> json, String key) =>
+    (json['id'] as num).toInt();
+
+Object? _readShowCategoryName(Map<dynamic, dynamic> json, String key) =>
+    json['name'] as String? ?? '';
+
+Object? _readShowCategoryEnName(Map<dynamic, dynamic> json, String key) =>
+    json['enName'] as String? ?? '';
+
+Object? _readShowCategoryPinyin(Map<dynamic, dynamic> json, String key) =>
+    json['pinyin'] as String? ?? '';
+
+Object? _readShowCategoryStatus(Map<dynamic, dynamic> json, String key) =>
+    (json['status'] as num?)?.toInt() ?? 1;
+
+Object? _readSubTags(Map<dynamic, dynamic> json, String key) =>
+    json['subCategoryTags'];
+
+List<SubCategoryTag> _subTagList(Object? raw) {
+  if (raw is List) {
+    return raw
+        .whereType<Map<String, dynamic>>()
+        .map(SubCategoryTag.fromJson)
+        .toList(growable: false);
+  }
+  return const <SubCategoryTag>[];
 }

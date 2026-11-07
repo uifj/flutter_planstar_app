@@ -2,15 +2,14 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/ui/ps_poster.dart';
-import '../../../shared/ui/ps_price.dart';
-import '../../../shared/ui/ps_tag.dart';
 import '../domain/show_summary.dart';
 import '../../../l10n/l10n.dart';
 import 'catalog_l10n.dart';
 
 /// 精选卡片（`item_home_choiceness.xml`）。
 ///
-/// 105dp 宽、海报 105×140 圆角 2dp、标题 14sp 粗体 2 行、价格 16sp 粗体 `text_red`。
+/// 105dp 宽、海报 105×112 圆角 2dp、标题 14sp 粗体 2 行，
+/// 下方固定展示达成率进度条、达成率、目标金额、支持人数与剩余天数。
 /// 卡片之间靠 10dp 的 `marginStart` 留白——企划星用 margin 而不是 `spacing`，
 /// 所以横向列表的最后一项要补一个尾部 padding。
 class ShowCardChoiceness extends StatelessWidget {
@@ -41,7 +40,7 @@ class ShowCardChoiceness extends StatelessWidget {
             PsPoster(
               seed: show.title,
               width: width,
-              height: 140,
+              height: 112,
               radius: 2,
               dimmed: show.soldOut,
               overlay: discountLabel == null
@@ -55,48 +54,67 @@ class ShowCardChoiceness extends StatelessWidget {
                     ),
             ),
             const SizedBox(height: 6),
-            Text(
-              show.title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 14,
-                height: 1.25,
-                fontWeight: FontWeight.w700,
-                color: colors.textPrimary,
+            SizedBox(
+              // 固定两行标题高度，单行标题顶部对齐，下方信息不会上下跳动。
+              height: MediaQuery.textScalerOf(context).scale(14) * 1.25 * 2,
+              child: Text(
+                show.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 14,
+                  height: 1.25,
+                  fontWeight: FontWeight.w700,
+                  color: colors.textPrimary,
+                ),
               ),
             ),
-            const SizedBox(height: 3),
+            const SizedBox(height: 4),
+            _ProjectProgressBar(show: show, height: 4),
+            const SizedBox(height: 4),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Expanded(
-                  child: show.soldOut
-                      ? Text(
-                          context.l10n.showCards_72,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: colors.textTertiary,
-                          ),
-                        )
-                      : PsPrice(
-                          amount: show.priceFrom,
-                          size: 16,
-                          suffix: context.l10n.showCards_75,
-                        ),
-                ),
-                if (show.tags.isNotEmpty)
-                  Flexible(
-                    child: PsTag(
-                      label: show.tags.first,
-                      fontSize: 9,
-                      radius: 2,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 3,
-                      ),
-                    ),
+                Text(
+                  context.l10n.projectCardAchievement(
+                    (show.achievementPermille / 10).round(),
                   ),
+                  style: TextStyle(
+                    fontSize: 16,
+                    height: 1.1,
+                    fontWeight: FontWeight.w700,
+                    color: show.achievementPermille >= 1000
+                        ? colors.price
+                        : colors.brand,
+                  ),
+                ),
+                const SizedBox(width: 3),
+                Expanded(
+                  child: Text(
+                    show.achievementPermille >= 1000
+                        ? context.l10n.projectCardAchieved
+                        : context.l10n.projectAchievement,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 10, color: colors.textTertiary),
+                  ),
+                ),
               ],
+            ),
+            const SizedBox(height: 2),
+            Text(
+              context.l10n.projectCardGoal(show.goalAmount?.format() ?? '—'),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 10, color: colors.textTertiary),
+            ),
+            const SizedBox(height: 1),
+            Text(
+              '${context.l10n.projectCardSupporters(show.supporterCount)} · '
+              '${_remainingLabel(context, show)}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 10, color: colors.textTertiary),
             ),
           ],
         ),
@@ -105,10 +123,47 @@ class ShowCardChoiceness extends StatelessWidget {
   }
 }
 
+/// 达成率进度条（企划卡通用）。
+class _ProjectProgressBar extends StatelessWidget {
+  const _ProjectProgressBar({required this.show, this.height = 4});
+
+  final ShowSummary show;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final value = (show.achievementPermille / 1000).clamp(0.0, 1.0);
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(height / 2),
+      child: LinearProgressIndicator(
+        value: value,
+        minHeight: height,
+        backgroundColor: colors.bgSubtle,
+        valueColor: AlwaysStoppedAnimation<Color>(
+          show.achievementPermille >= 1000 ? colors.price : colors.brand,
+        ),
+      ),
+    );
+  }
+}
+
+/// 卡片底部剩余时间 / 已结束文案。
+String _remainingLabel(BuildContext context, ShowSummary show) {
+  if (show.fundingStatusValue == 'failed' ||
+      show.fundingStatusValue == 'delivered') {
+    return context.l10n.projectCardEnded;
+  }
+  final days = show.remainingDays;
+  return days <= 0
+      ? context.l10n.projectCardEnded
+      : context.l10n.projectCardDays(days);
+}
+
 /// 楼层卡片（`item_home_show_list_common.xml`）。
 ///
-/// 76dp 宽、海报 76×101 圆角 8dp（底部压一条 24dp 城市渐变条 + 右上角角标）、
-/// 标题 13dp 2 行、价格 12dp 粗体 `#ffff2261`。
+/// 76dp 宽、海报 76×101 圆角 8dp（底部压一条 24dp 品类渐变条 + 右上角角标）、
+/// 标题 13dp 2 行、达成率 12dp 粗体。
 class ShowCardFloor extends StatelessWidget {
   const ShowCardFloor({super.key, required this.show, this.onTap});
 
@@ -120,7 +175,6 @@ class ShowCardFloor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final discountLabel = show.discountLabelOf(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -148,7 +202,7 @@ class ShowCardFloor extends StatelessWidget {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    child: PsPosterCityBar(city: show.city),
+                    child: PsPosterCityBar(city: show.categoryName),
                   ),
                 ],
               ),
@@ -165,34 +219,41 @@ class ShowCardFloor extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            if (show.soldOut)
-              Text(
-                context.l10n.showCards_156,
-                style: TextStyle(fontSize: 11, color: colors.textTertiary),
-              )
-            else
-              // 76dp 的窄卡里 `¥1,280` + `9.8折起` 放不下：`PsPrice` 内部的
-              // `FittedBox` 只有在拿到**有界**约束时才会缩，而这里是 Row 的
-              // 非 flex 子节点（宽度无界），所以它会按自然宽度铺开并把
-              // 折扣标签顶出卡片——360dp 屏上实测溢出 19px。
-              // 整块等比缩到 76dp 以内，比截断成 `¥1,…` 更接近来源的观感
-              // （Android 那边是固定宽度 LinearLayout，超出部分直接裁掉）。
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: AlignmentDirectional.centerStart,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    PsPrice(amount: show.priceFrom, size: 12),
-                    if (discountLabel != null) ...<Widget>[
-                      const SizedBox(width: 2),
-                      PsDiscountTag(
-                        label: context.l10n.showCards_175(discountLabel),
-                      ),
-                    ],
-                  ],
-                ),
+            _ProjectProgressBar(show: show, height: 3),
+            const SizedBox(height: 4),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerStart,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    context.l10n.projectCardAchievement(
+                      (show.achievementPermille / 10).round(),
+                    ),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: show.achievementPermille >= 1000
+                          ? colors.price
+                          : colors.brand,
+                    ),
+                  ),
+                  const SizedBox(width: 2),
+                  Text(
+                    context.l10n.projectCardAchieved,
+                    style: TextStyle(fontSize: 10, color: colors.textTertiary),
+                  ),
+                ],
               ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              _remainingLabel(context, show),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 10, color: colors.textTertiary),
+            ),
           ],
         ),
       ),
@@ -203,7 +264,8 @@ class ShowCardFloor extends StatelessWidget {
 /// 横向列表卡片（发现流 / 搜索结果 / 相似推荐）。
 ///
 /// 结构对应企划星的 `item_feed_detail_relate_show.xml` 一类"左图右文"卡片：
-/// 90×120 海报、标题 15dp 粗体、场馆/时间 12dp `text_3`、价格 + 标签。
+/// 90×120 海报、标题 15dp 粗体、创作者 / 品类 / 支持人数 12dp `text_3`、
+/// 底部达成率与剩余天数。
 class ShowCardRow extends StatelessWidget {
   const ShowCardRow({super.key, required this.show, this.onTap, this.trailing});
 
@@ -242,7 +304,9 @@ class ShowCardRow extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: SizedBox(
-                height: 120,
+                // 海报高度 120 是视觉基线；文案多一行「达成率 + 剩余天数」，
+                // 给到 126 以避免 360dp 宽下底部行溢出。
+                height: 126,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -269,7 +333,7 @@ class ShowCardRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      show.firstSessionLabelOf(context),
+                      show.categoryName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -279,7 +343,7 @@ class ShowCardRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      show.venueLabel,
+                      context.l10n.projectCardSupporters(show.supporterCount),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -291,22 +355,30 @@ class ShowCardRow extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        if (show.soldOut)
-                          Text(
-                            context.l10n.showCards_270,
+                        Text(
+                          context.l10n.projectCardAchievement(
+                            (show.achievementPermille / 10).round(),
+                          ),
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            color: show.achievementPermille >= 1000
+                                ? colors.price
+                                : colors.brand,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            _remainingLabel(context, show),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 13,
+                              fontSize: 12,
                               color: colors.textTertiary,
                             ),
-                          )
-                        else
-                          PsPrice(
-                            amount: show.priceFrom,
-                            size: 17,
-                            suffix: context.l10n.showCards_277,
-                            strikeThroughAmount: show.listPriceFrom,
                           ),
-                        const Spacer(),
+                        ),
                         if (trailing != null) ?trailing,
                       ],
                     ),
