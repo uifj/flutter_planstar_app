@@ -33,7 +33,10 @@ class MessagePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final state = ref.watch(messageCenterProvider);
+    final AsyncValue<MessageCenterState> center = ref.watch(
+      messageCenterProvider,
+    );
+    final MessageCenterState? current = center.valueOrNull;
     final controller = ref.read(messageCenterProvider.notifier);
     final now = DateTime.now();
 
@@ -42,74 +45,86 @@ class MessagePage extends ConsumerWidget {
       body: Column(
         children: <Widget>[
           _MessageTopBar(
-            onClear: state.isEmpty
+            onClear: (current?.isEmpty ?? true)
                 ? null
                 : () => _confirmClear(context, controller.clearThreads),
           ),
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.only(
-                top: 15,
-                bottom: PsFloatingTabBar.bottomClearance(context),
-              ),
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: _SystemEntryCard(
-                    entries: state.entries,
-                    onTap: (entry) {
-                      controller.markEntryRead(entry.id);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            context.l10n.messagePage_62(entry.title),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+            child: center.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (_, _) => Center(
+                child: PsEmptyState(
+                  title: context.l10n.messagePage_72,
+                  description: context.l10n.messagePage_73,
+                  icon: LucideIcons.messagesSquare,
+                  actionLabel: context.l10n.actionRetry,
+                  onAction: () => ref.invalidate(messageCenterProvider),
                 ),
-                const SizedBox(height: 15),
-                if (state.isEmpty)
+              ),
+              data: (MessageCenterState state) => ListView(
+                padding: EdgeInsets.only(
+                  top: 15,
+                  bottom: PsFloatingTabBar.bottomClearance(context),
+                ),
+                children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: 24),
-                    child: PsEmptyState(
-                      title: context.l10n.messagePage_72,
-                      description: context.l10n.messagePage_73,
-                      icon: LucideIcons.messagesSquare,
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: _SystemEntryCard(
+                      entries: state.entries,
+                      onTap: (entry) {
+                        controller.markEntryRead(entry.id);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              context.l10n.messagePage_62(entry.title),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  )
-                else
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: colors.bgCard,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(20),
+                  ),
+                  const SizedBox(height: 15),
+                  if (state.isEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(top: 24),
+                      child: PsEmptyState(
+                        title: context.l10n.messagePage_72,
+                        description: context.l10n.messagePage_73,
+                        icon: LucideIcons.messagesSquare,
+                      ),
+                    )
+                  else
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: colors.bgCard,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Column(
+                        children: <Widget>[
+                          for (var i = 0; i < state.threads.length; i++)
+                            _ThreadRow(
+                              thread: state.threads[i],
+                              now: now,
+                              showDivider: i != state.threads.length - 1,
+                              onTap: () {
+                                // 先在列表侧把未读清掉，再进会话页：会话页
+                                // 也会调一次 `markThreadRead`（它可能被深链
+                                // 直接打开，没经过列表），两次都幂等。
+                                controller.markThreadRead(state.threads[i].id);
+                                context.push(
+                                  '/message/thread/${state.threads[i].id}',
+                                );
+                              },
+                            ),
+                        ],
                       ),
                     ),
-                    clipBehavior: Clip.antiAlias,
-                    child: Column(
-                      children: <Widget>[
-                        for (var i = 0; i < state.threads.length; i++)
-                          _ThreadRow(
-                            thread: state.threads[i],
-                            now: now,
-                            showDivider: i != state.threads.length - 1,
-                            onTap: () {
-                              // 先在列表侧把未读清掉，再进会话页：会话页
-                              // 也会调一次 `markThreadRead`（它可能被深链
-                              // 直接打开，没经过列表），两次都幂等。
-                              controller.markThreadRead(state.threads[i].id);
-                              context.push(
-                                '/message/thread/${state.threads[i].id}',
-                              );
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

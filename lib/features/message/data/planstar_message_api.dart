@@ -1,6 +1,7 @@
 import 'package:core/network.dart';
 import 'package:core/result.dart';
 
+import '../../../app/network/api_paths.dart';
 import '../domain/message_thread.dart';
 
 /// 消息中心 API。
@@ -11,8 +12,9 @@ import '../domain/message_thread.dart';
 /// |---|---|---|
 /// | 消息列表 | GET | `v1/messages` |
 /// | 标记已读 | POST | `v1/messages/read` |
-/// | 删除消息 | DELETE | `v1/messages/{id}` |
 /// | 未读计数 | GET | `v1/messages/unreadCount` |
+///
+/// 删除消息（`DELETE v1/messages/{id}`）后端未实现，不封装。
 ///
 /// `MessagesService` 原方法签名是 `fetchMessages(type, pageIndex, pageSize)`，
 /// 对应 `GET v1/messages?type=&pageIndex=&pageSize=`。
@@ -30,7 +32,7 @@ final class PlanstarMessageApi {
     int pageSize = 20,
   }) {
     return _client.get<List<MessageThread>>(
-      'v1/messages',
+      ApiPaths.messages,
       queryParameters: <String, dynamic>{
         'pageIndex': pageIndex,
         'pageSize': pageSize,
@@ -61,7 +63,7 @@ final class PlanstarMessageApi {
   /// 未读消息计数。
   Future<Result<int>> fetchUnreadCount() {
     return _client.get<int>(
-      'v1/messages/unreadCount',
+      ApiPaths.messagesUnreadCount,
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {
         if (data is int) return data;
@@ -76,7 +78,7 @@ final class PlanstarMessageApi {
   /// 标记消息已读。
   Future<Result<void>> markRead(String messageId) {
     return _client.post<void>(
-      'v1/messages/read',
+      ApiPaths.messagesRead,
       data: <String, dynamic>{'messageId': messageId},
       envelope: const PassthroughEnvelope(),
       parser: (_) {},
