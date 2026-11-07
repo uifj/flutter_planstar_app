@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planstar/app/app.dart' show appLocalizationsDelegates;
+import 'package:planstar/app/network/network_providers.dart';
 import 'package:planstar/app/theme.dart';
 import 'package:planstar/l10n/app_localizations.dart';
 import 'package:planstar/features/catalog/ui/show_list_page.dart';
@@ -99,6 +100,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
+        overrides: <Override>[useDemoProvider.overrideWithValue(true)],
         child: MaterialApp.router(
           routerConfig: router,
           theme: AppTheme.light(),

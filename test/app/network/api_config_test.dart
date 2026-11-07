@@ -24,6 +24,10 @@ void main() {
     expect(ApiConfig.resolve().enableLogging, isFalse);
   });
 
+  test('演示数据默认关闭（生产必须走真实接口）', () {
+    expect(ApiConfig.resolve().useDemo, isFalse);
+  });
+
   test('超时是有限值（不是 0 / 不是无限等）', () {
     final config = ApiConfig.resolve();
     expect(config.connectTimeout.inMilliseconds, greaterThan(0));

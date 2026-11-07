@@ -33,6 +33,11 @@ final apiConfigProvider = Provider<ApiConfig>(
   (ref) => ref.watch(appBootstrapProvider).apiConfig,
 );
 
+/// 是否使用演示数据；仅当 `--dart-define=PS_USE_DEMO=true` 时为 true。
+final useDemoProvider = Provider<bool>(
+  (ref) => ref.watch(apiConfigProvider).useDemo,
+);
+
 /// 请求上下文（`dvid` / `psSession` / 经纬度）。
 final pnRequestContextProvider = Provider<PsRequestContext>(
   (ref) => ref.watch(appBootstrapProvider).requestContext,

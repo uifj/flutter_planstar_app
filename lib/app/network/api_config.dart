@@ -2,7 +2,7 @@
 ///
 /// 取值来源与优先级（高 → 低）：
 ///
-/// 1. `--dart-define`（`PS_API_ENV` / `PS_API_BASE` / `PS_HTTP_LOG`）——调试与 CI；
+/// 1. `--dart-define`（`PS_API_ENV` / `PS_API_BASE` / `PS_HTTP_LOG` / `PS_USE_DEMO`）——调试与 CI；
 /// 2. 本文件里的编译期默认值。
 ///
 /// 本地 `assets/` 已整体移除，不再从 `api_config.json` 运行时读配置。
@@ -36,6 +36,7 @@ final class ApiConfig {
     required this.receiveTimeout,
     required this.sendTimeout,
     required this.enableLogging,
+    this.useDemo = false,
   });
 
   /// 生产 API base（`planstar` 占位域名）。
@@ -100,11 +101,17 @@ final class ApiConfig {
   /// 这里默认 **false**，只有显式打开才打印。
   final bool enableLogging;
 
+  /// 是否使用本地演示数据（`PS_USE_DEMO=true`）。
+  ///
+  /// 生产默认 **false**：只有显式传参时才走 demo，避免打包后误用假数据。
+  final bool useDemo;
+
   /// 解析配置。[asset] 是可选的外部配置（本地 assets 已移除，通常为空）。
   factory ApiConfig.resolve({AppConfig? asset}) {
     const String envOverride = String.fromEnvironment('PS_API_ENV');
     const String baseOverride = String.fromEnvironment('PS_API_BASE');
     const String logOverride = String.fromEnvironment('PS_HTTP_LOG');
+    const String demoOverride = String.fromEnvironment('PS_USE_DEMO');
 
     final api = asset?.section('api') ?? AppConfig.empty;
     final client = asset?.section('client') ?? AppConfig.empty;
@@ -145,6 +152,8 @@ final class ApiConfig {
       enableLogging: logOverride.isNotEmpty
           ? logOverride == 'true'
           : (http.getBool('enableLogging') ?? false),
+      // 只认显式的 `PS_USE_DEMO=true`，缺省即生产数据。
+      useDemo: demoOverride == 'true',
     );
   }
 

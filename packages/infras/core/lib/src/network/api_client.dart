@@ -1,6 +1,7 @@
 /// `ApiClient`：包一层 Dio，**永不抛**，全部返回 `Result<T>`。
 library;
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:core/result.dart';
@@ -8,6 +9,15 @@ import 'package:dio/dio.dart';
 
 import 'failure_carrying_error.dart';
 import 'response_envelope.dart';
+
+/// 从错误响应体里抽出的统一信息。
+final class _ErrorPayload {
+  const _ErrorPayload({this.code, this.message, this.requestId});
+
+  final String? code;
+  final String? message;
+  final String? requestId;
+}
 
 /// 基于 [Dio] 的 API 客户端。
 ///
@@ -18,7 +28,7 @@ import 'response_envelope.dart';
 final class ApiClient {
   /// 用给定的 [Dio] 与可选构造级信封创建客户端。
   ApiClient(this._dio, {ResponseEnvelope? envelope})
-      : _envelope = envelope ?? const PassthroughEnvelope();
+    : _envelope = envelope ?? const PassthroughEnvelope();
 
   final Dio _dio;
   final ResponseEnvelope _envelope;
@@ -194,14 +204,15 @@ final class ApiClient {
     try {
       if (!active.isSuccess(body, response.statusCode)) {
         final err = active.extractError(body, response.statusCode);
+        final payload = _errorOf(body);
         return Fail<T>(
           Failure(
-            code: err.code ?? 'BIZ_ERROR',
-            message: err.message ?? '业务处理失败',
+            code: err.code ?? payload.code ?? 'BIZ_ERROR',
+            message: err.message ?? payload.message ?? '业务处理失败',
             type: FailureType.server,
             statusCode: response.statusCode,
             cause: err,
-            requestId: err.requestId,
+            requestId: err.requestId ?? payload.requestId,
           ),
         );
       }
@@ -236,10 +247,7 @@ final class ApiClient {
       case DioExceptionType.receiveTimeout:
       // dio 5.10+ 新增：响应体 transform 阶段的超时。语义上仍是超时。
       case DioExceptionType.transformTimeout:
-        return Failure.timeout(
-          message: '网络超时，请稍后重试',
-          cause: e,
-        );
+        return Failure.timeout(message: '网络超时，请稍后重试', cause: e);
       case DioExceptionType.badCertificate:
         // 证书校验失败必须暴露，不能降级重试。
         return Failure(
@@ -271,95 +279,112 @@ final class ApiClient {
   }
 
   Failure _mapStatusCode(int? statusCode, Object? data) {
-    final message = _messageOf(data);
+    final payload = _errorOf(data);
+    final message = payload.message;
     switch (statusCode) {
       case 400:
         return Failure.server(
-          code: 'BAD_REQUEST',
+          code: payload.code ?? 'BAD_REQUEST',
           message: message ?? '请求参数有误',
           statusCode: 400,
+          requestId: payload.requestId,
         );
       case 401:
-        return Failure.unauthorized(message: message ?? '登录已失效');
+        // 401 仍然交给上层登录失效流程处理；服务端文案优先。
+        return Failure.unauthorized(
+          message: message ?? '登录已失效',
+          code: payload.code ?? 'UNAUTHORIZED',
+          requestId: payload.requestId,
+        );
       case 403:
         return Failure(
-          code: 'FORBIDDEN',
+          code: payload.code ?? 'FORBIDDEN',
           message: message ?? '没有访问权限',
           type: FailureType.authentication,
           statusCode: 403,
+          requestId: payload.requestId,
         );
       case 404:
         return Failure.server(
-          code: 'NOT_FOUND',
+          code: payload.code ?? 'NOT_FOUND',
           message: message ?? '资源不存在',
           statusCode: 404,
+          requestId: payload.requestId,
         );
       case 409:
         return Failure.server(
-          code: 'CONFLICT',
+          code: payload.code ?? 'CONFLICT',
           message: message ?? '状态冲突，请刷新后重试',
           statusCode: 409,
+          requestId: payload.requestId,
         );
       case 429:
         return Failure.server(
-          code: 'TOO_MANY_REQUESTS',
+          code: payload.code ?? 'TOO_MANY_REQUESTS',
           message: message ?? '操作过于频繁',
           statusCode: 429,
+          requestId: payload.requestId,
         );
       default:
         if (statusCode != null && statusCode >= 500) {
           return Failure.server(
-            code: 'SERVER_ERROR',
+            code: payload.code ?? 'SERVER_ERROR',
             message: message ?? '服务开小差了，请稍后重试',
             statusCode: statusCode,
+            requestId: payload.requestId,
           );
         }
         return Failure.server(
-          code: 'HTTP_ERROR',
+          code: payload.code ?? 'HTTP_ERROR',
           message: message ?? '请求失败（HTTP $statusCode）',
           statusCode: statusCode,
+          requestId: payload.requestId,
         );
     }
   }
 
-  /// 从错误体里取可直接展示给用户的文案。
+  /// 统一解析错误体：JSON 信封 `{code,message,traceId}` 或旧 `text/plain`。
   ///
-  /// 两种真实形态都要支持：
-  ///
-  /// 1. `{code, message}` 这类 JSON 信封（大部分业务接口）；
-  /// 2. **纯文本**——企划星的登录类接口失败时返回的是
-  ///    `HTTP 4xx/5xx` + `Content-Type: text/plain;charset=UTF-8`，正文就是
-  ///    给用户看的中文。实测（2026-11，`api.planstar.com`）：
-  ///
-  ///    ```text
-  ///    POST /v1/user/login  {"ua":"13800138000","code":"000000","ct":11}
-  ///    → 500 text/plain  «验证码不正确»
-  ///
-  ///    POST /v1/user/login  {"ua":"123","pw":"x","ct":11}
-  ///    → 500 text/plain  «请使用手机号验证码登录，若手机号登录异常，请联系客服»
-  ///    ```
-  ///
-  ///    来源实现是 `showToast(response.errorBody().string())`，即**原文直弹**。
-  ///    这里不这么做就会退化成「服务开小差了」，把"验证码错 / 账号被锁定"
-  ///    这类唯一有用的信息丢掉。
-  ///
-  /// 纯文本仍要设边界：CDN / 网关返回的 HTML 错误页（`<!DOCTYPE html>…`）
-  /// 不能弹给用户，超长正文截断。
-  String? _messageOf(Object? data) {
-    if (data is Map<Object?, Object?>) {
-      final raw = data['message'] ?? data['msg'] ?? data['ResultMessage'];
-      if (raw is String && raw.isNotEmpty) {
-        return raw;
-      }
-      return null;
-    }
+  /// JSON 可能是原始 Map，也可能是被 content-type 识别成字符串的正文
+  /// （网关/后端混用），所以字符串会再尝试一次 JSON 解码。
+  _ErrorPayload _errorOf(Object? data) {
+    if (data is Map<Object?, Object?>) return _payloadFromMap(data);
+    if (data is List<dynamic>) return const _ErrorPayload();
     if (data is String) {
       final text = data.trim();
       if (text.isEmpty || text.startsWith('<')) {
-        return null;
+        return const _ErrorPayload();
       }
-      return text.length > 120 ? '${text.substring(0, 120)}…' : text;
+      if (text.startsWith('{') || text.startsWith('[')) {
+        try {
+          final decoded = jsonDecode(text);
+          if (decoded is Map<Object?, Object?>) return _payloadFromMap(decoded);
+        } catch (_) {
+          // 不是合法 JSON，按纯文本处理。
+        }
+      }
+      // 源码里旧接口直接弹原文；这里限制长度，避免把网关 HTML 塞给用户。
+      return _ErrorPayload(
+        message: text.length > 120 ? '${text.substring(0, 120)}…' : text,
+      );
     }
-    return null;
+    return const _ErrorPayload();
+  }
+
+  _ErrorPayload _payloadFromMap(Map<Object?, Object?> map) {
+    final rawMessage =
+        map['message'] ?? map['msg'] ?? map['ResultMessage'] ?? map['error'];
+    final rawCode = map['code'] ?? map['errorCode'];
+    final rawTrace =
+        map['traceId'] ?? map['trace_id'] ?? map['requestId'] ?? map['reqId'];
+    final message = rawMessage is String && rawMessage.isNotEmpty
+        ? rawMessage
+        : null;
+    final code = rawCode?.toString();
+    return _ErrorPayload(
+      code: code == null || code.isEmpty ? null : code,
+      message: message,
+      requestId: rawTrace?.toString(),
+    );
   }
 }
