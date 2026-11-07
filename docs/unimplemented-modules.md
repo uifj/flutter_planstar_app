@@ -2,9 +2,9 @@
 
 > 适用版本：planstar Flutter 9.9.39 · 最后核对：2026-11-07 · 维护：客户端组
 
-> **时点**：2026-11-05（页面数与测试数为该日快照，2026-11-07 未逐项复测）  
-> **项目快照**：24 个路由页 / 156 个 lib dart 文件 / 31,831 行（lib 25,061 + core 6,770）  
-> **静态检查**：`flutter analyze` 零 issue / `flutter test` 130 个全通过  
+> **时点**：2026-11-07 全流程回归复测  
+> **项目快照**：36 个路由页 / 268 个 lib dart 文件 / 54,977 行（lib 51,488 + core 3,489）  
+> **静态检查**：`flutter analyze` 零 issue / `flutter test` 202 个全通过  
 > **Android 对照**：约 210 个界面单元（132 Activity + 95 Fragment，去 base 后），当前覆盖约 11%
 
 本文档逐模块列出 Android 原项目有、Flutter 侧尚未实现的页面与功能，
@@ -12,7 +12,7 @@
 
 ---
 
-## 0. 已实现模块速览（24 页）
+## 0. 已实现模块速览（36 页）
 
 | # | 路由 | 页面文件 | 对应 Android | 完成度 |
 |---|------|---------|-------------|-------|
@@ -20,26 +20,38 @@
 | 2 | `/` | `home/home_page.dart` | `MainActivity` + `HomeFragment` | 部分（7/11 楼层，缺运营配置型楼层） |
 | 3 | `/discover` | `discover/discover_page.dart` | `DiscoveryFragment` | 部分（热门/关注 + 发布，缺话题/视频） |
 | 4 | `/message` | `message/message_page.dart` | `ChatListActivity` | 部分（会话列表 + 三角色卡，缺 IM 长连接） |
-| 5 | `/order` | `order/order_list_page.dart` | `MyOrderActivity` | 部分（演出 Tab，缺商品 Tab / 待评论 Tab） |
+| 5 | `/order` | `order/order_list_page.dart` | `MyOrderActivity` | 部分（企划 / 商品一级 Tab，商品 Tab 为显式空态；待评论用 completed 近似） |
 | 6 | `/me` | `user/user_page.dart` | `UserFragment` | 部分（资料/订单/资产/菜单卡，缺想看卡） |
 | 7 | `/login` | `auth/login_page.dart` | `LoginActivity` | **高**（已接真实接口，验证码/密码/图形验证码） |
-| 8 | `/show/:showId` | `goods/show_detail_page.dart` | `ShowDetailActivity` | 部分（详情本体完成；选座为独立路由，缺代抢/拼团/评价） |
+| 8 | `/show/:showId` | `goods/show_detail_page.dart` | `ShowDetailActivity` | 部分（详情本体完成；选座为独立路由，代抢/拼团为独立路由，缺评价） |
 | 9 | `/show/:showId/choose-ticket` | `goods/choose_ticket_page.dart` | `ChooseSkuActivity` + `SelectTicketNormalActivity` | 部分（场次/票档/数量；选座见 `/show/:showId/seat-selection`） |
 | 10 | `/venue/:name` | `goods/venue_page.dart` | `VenueDetailActivity` | 部分（场馆信息 + 近期演出，缺地图） |
 | 11 | `/category/:categoryId` | `catalog/ui/category_home_page.dart` | `CategoryHomeActivity` | 完成（分类 Tab + 子标签筛选 + 演出列表） |
 | 12 | `/shows` | `catalog/ui/show_list_page.dart` | `HotListActivity` | 完成（排序 + 分类 Tab + 空态） |
 | 13 | `/search` | `search/search_page.dart` | `SearchActivity` | 完成（历史/热搜/联想三态） |
 | 14 | `/search/result` | `search/search_result_page.dart` | `SearchResultActivity` | 完成（分域结果：演出/动态） |
-| 15 | `/feed/:id` | `discover/feed_detail_page.dart` | `FeedDetailActivity` | 部分（正文/评论/互动条，缺视频播放/评论发布） |
-| 16 | `/message/thread/:id` | `message/chat_page.dart` | `UserMsgDetailActivity` | 部分（气泡列表 + 输入栏，无 IM 通道） |
+| 15 | `/feed/:id` | `discover/feed_detail_page.dart` | `FeedDetailActivity` | 部分（正文/评论/互动条/视频双通道，缺评论发布） |
+| 16 | `/message/thread/:id` | `message/chat_page.dart` | `UserMsgDetailActivity` | **高**（气泡列表 + 输入栏 + `v1/chat/threads` 收发/已读，缺长连接推送） |
 | 17 | `/order/confirm` | `order/order_confirm_page.dart` | `OrderConfirmActivity` | **高**（优惠券/观演人/限购/金额试算/提交；支付见 `/order/pay`） |
-| 18 | `/order/detail` | `order/order_detail_page.dart` | `OrderDetailWebActivity` | 部分（7 种状态 + 动作栏；退款页已存在，缺真实退款接口/物流） |
+| 18 | `/order/detail` | `order/order_detail_page.dart` | `OrderDetailWebActivity` | 部分（7 种状态 + 动作栏；退款已接真实接口，缺物流） |
 | 19 | `/order/pay-success` | `order/pay_success_page.dart` | `PaySuccessActivity` | 完成（结果页 + 订单摘要 + 继续浏览） |
 | 20 | `/settings` | `user/settings_page.dart` | `MoreSettingActivity` | 部分（深色模式/退出/意见反馈，其余 toast 占位） |
 | 21 | `/address` | `user/address_page.dart` | `AddressListActivity` + `AddAddressActivity` | 完成（列表/新增/编辑/删除/设默认） |
 | 22 | `/cities` | `home/city_list_page.dart` | `CityListActivity` | 部分（热门/全部城市，缺 A-Z 索引/定位） |
 | 23 | `/me/edit-profile` | `user/edit_profile_page.dart` | `EditProfileActivity` | 部分（昵称/性别/简介，toast 占位提交） |
 | 24 | `/feedback` | `user/feedback_page.dart` | `FeedbackActivity` | 完成（分类/内容/联系方式，toast 占位提交） |
+| 25 | `/show/:showId/seat-selection` | `goods/seatmap/seat_selection_page.dart` | `SelectTicketSeatMapActivity` | 部分（本地锁座 + 连座校验 + mm:ss 倒计时；座位图/库存为本地数据） |
+| 26 | `/bilibili/:bvid` | `discover/bilibili_player_page.dart` | `VideoPlayerActivity` | 完成（WebView 内嵌 B 站播放器） |
+| 27 | `/order/pay` | `order/payment/pay_page.dart` | `PayActivity` | **高**（服务端支付单 + 轮询；未调起第三方 SDK） |
+| 28 | `/order/refund` | `order/refund/refund_page.dart` | `OrderRefundWebActivity` | **高**（`POST/GET /v1/order/{id}/refund` 已接通） |
+| 29 | `/coupons` | `marketing/coupon_page.dart` | `CouponActivity` | 部分（三 Tab；演示数据） |
+| 30 | `/coupons/exchange` | `marketing/exchange_coupon_page.dart` | `ExchangeCouponActivity` | 部分（兑换码；演示数据） |
+| 31 | `/wallet` | `marketing/wallet_page.dart` | `MyWalletActivity` | 部分（余额 + 流水；演示数据） |
+| 32 | `/giftcards` | `marketing/giftcard/gift_card_page.dart` | `GiftCardActivity` | 部分（面值色块；演示数据） |
+| 33 | `/giftcards/add` | `marketing/giftcard/add_gift_card_page.dart` | `AddGiftCardActivity` | 部分（绑定表单；演示数据） |
+| 34 | `/proxy-buy` | `proxy_buy/ui/proxy_buy_page.dart` | `ProxyBuyChooseTicketActivity` | 部分（四层结构；后端无对应端点） |
+| 35 | `/group-buy` | `group_buy/ui/group_buy_page.dart` | `PinTuanChooseTicketPurchaseFragment` | 部分（四层结构；后端无对应端点） |
+| 36 | `/group-buy/:id` | `group_buy/ui/group_buy_detail_page.dart` | `PinTuanOrderListActivity` | 部分（四层结构；后端无对应端点） |
 
 ---
 
@@ -47,14 +59,14 @@
 
 | 模块 | Android 界面数 | 缺失代表页面 | 未实现原因 | 建议优先级 |
 |------|-------------|-----------|---------|----------|
-| ~~支付~~ | ~~3~~ | ~~`PayActivity`~~ | ~~已实现（pay_page.dart，模拟 SDK 调用）~~ | ~~P0~~ ✅ |
-| ~~选座~~ | ~~5~~ | ~~`SelectTicketSeatMapActivity`~~ | ~~已实现（seat_selection_page.dart，CustomPainter 渲染）~~ | ~~P0~~ ✅ |
+| ~~支付~~ | ~~3~~ | ~~`PayActivity`~~ | ~~已实现（pay_page.dart，服务端支付单 + 轮询；未调第三方 SDK）~~ | ~~P0~~ ✅ |
+| ~~选座~~ | ~~5~~ | ~~`SelectTicketSeatMapActivity`~~ | ~~已实现（seat_selection_page.dart，本地锁座 + 连座 + 倒计时）~~ | ~~P0~~ ✅ |
 | ~~优惠券 / 红包~~ | ~~3~~ | ~~`CouponActivity` / `ExchangeCouponActivity`~~ | ~~已实现（coupon_page.dart + exchange_coupon_page.dart，三 Tab + 兑换码）~~ | ~~P1~~ ✅ |
 | ~~礼品卡~~ | ~~2~~ | ~~`GiftCardActivity` / `AddGiftCardActivity`~~ | ~~已实现（gift_card_page.dart + add_gift_card_page.dart，面值色块 + 绑定）~~ | ~~P1~~ ✅ |
 | ~~钱包~~ | ~~1~~ | ~~`MyWalletActivity`~~ | ~~已实现（wallet_page.dart，余额 + 交易记录）~~ | ~~P1~~ ✅ |
-| ~~退款~~ | ~~2~~ | ~~`OrderRefundWebActivity`~~ | ~~已实现（refund_page.dart，原生退款表单）~~ | ~~P1~~ ✅ |
-| ~~代抢~~ | ~~2~~ | ~~`ProxyBuyChooseTicketActivity` / `ProxyBuyConfirmActivity`~~ | ~~已实现（proxy_buy_page.dart，规则 + 截止选项 + 订单列表）~~ | ~~P1~~ ✅ |
-| ~~拼团~~ | ~~3~~ | ~~`PinTuanChooseTicketPurchaseFragment` / `PinTuanOrderListActivity`~~ | ~~已实现（group_buy_page.dart + group_buy_detail_page.dart，进度条 + 成员头像 + 参团）~~ | ~~P1~~ ✅ |
+| ~~退款~~ | ~~2~~ | ~~`OrderRefundWebActivity`~~ | ~~已实现（refund_page.dart，`POST/GET /v1/order/{id}/refund`）~~ | ~~P1~~ ✅ |
+| ~~代抢~~ | ~~2~~ | ~~`ProxyBuyChooseTicketActivity` / `ProxyBuyConfirmActivity`~~ | ~~已实现并四层拆分；后端未注册对应端点~~ | ~~P1~~ ✅ |
+| ~~拼团~~ | ~~3~~ | ~~`PinTuanChooseTicketPurchaseFragment` / `PinTuanOrderListActivity`~~ | ~~已实现并四层拆分；后端未注册对应端点~~ | ~~P1~~ ✅ |
 | 评论 / 评价 | 4 | `ReviewCreateActivity` / `ReviewListActivity` / `ReviewMyListActivity` / `OrderCommentActivity` | 需评论服务 + 图片上传 | P2 |
 | 话题 | 5 | `TopicDetailActivity` / `TopicHotActivity` / `TopicMineActivity` / `TopicSearchActivity` / `TagFeedListActivity` | 需话题数据源 | P2 |
 | 视频播放 | 4 | `VideoPlayerActivity` / `ImmersiveVideoActivity` / `VideoDetailActivity` / `FeaturedVideosActivity` | 需 CDN + 播放器内核 | P2 |
@@ -87,22 +99,21 @@
 
 **Android 对应**：`PayActivity` / `CmbPayWebActivity` / `WXPayEntryActivity` / `AbcPayEntryActivity`
 
-**现状**：**页面与状态机已实现**，路由 `/order/pay`，代码在
+**现状**：**已接真实支付单**，路由 `/order/pay`，代码在
 `lib/features/order/payment/pay_page.dart` + `pay_providers.dart`。具备渠道选择、
 15 分钟倒计时、`idle → requesting → paying → success / failure / cancelled`
 状态机；`OrderConfirmPage` 提交后进入该页，成功后跳 `/order/pay-success`。
+真实模式调用 `POST v1/unifiedPay/pay` 创建支付单，再每 2 秒轮询
+`GET v1/unifiedPay/payDetail` 直到 success / failed / expired；演示分支仅在
+`PS_USE_DEMO=true` 时进入，且明确标注为演示。
 
-**未接真实渠道 / SDK**：
-- 支付信息由 `PayInfo.demo` 生成，未调 `GET v1/unifiedPay/payDetail`；
-- `PayController._invokeSdk` 固定返回成功，未调 `POST v1/unifiedPay/pay`，
-  也未调用微信（`fluwx`）/ 支付宝 / 银联 SDK；
-- 无支付结果回调、签名校验、服务端确认；
-- 招商银行 H5（`CmbPayWebActivity`）未实现——当前项目无 WebView 容器；
-- 失败 / 取消态只在本页展示，未回写服务端订单状态。
+**未接第三方渠道 SDK**：
+- 未调用微信（`fluwx`）/ 支付宝 / 银联 SDK，真实模式依赖服务端支付状态推进；
+- 无客户端签名校验与渠道结果回调；
+- 招商银行 H5（`CmbPayWebActivity`）未实现——当前项目无专用 WebView 支付容器；
+- 失败 / 取消态在本页展示，订单状态以服务端查询为准。
 
 **待接清单**：
-- `GET v1/unifiedPay/payDetail`、`POST v1/unifiedPay/pay`（见
-  `lib/features/order/data/planstar_order_api.dart` 文件头注释，尚未封装方法）；
 - 微信 / 支付宝 / 银联 SDK 与平台配置；
 - 支付超时、库存释放与订单取消的服务端联动。
 
@@ -114,21 +125,25 @@
 
 **现状**：**页面已实现**，路由 `/show/:showId/seat-selection`，代码在
 `lib/features/goods/seatmap/`：`seat_selection_page.dart`（舞台标签 → 座位图 →
-已选列表 → 底部确认栏）、`seat_map_view.dart`（`CustomPainter` +
-`InteractiveViewer`，缩放/拖拽）、`seat_map.dart`（区域 → 排 → 座三级模型）、
-`seat_selection_providers.dart`。
+已选列表 → 底部确认栏 + 10 分钟倒计时）、`seat_map_webview.dart`（WebView 渲染，
+`seat_map.html` 负责手势 / 缩放）、`seat_map.dart`（区域 → 排 → 座三级模型）、
+`seat_selection_providers.dart`、`seat_lock_service.dart`（本地锁表）、
+`domain/seat_continuity_policy.dart`（连座校验）。
 
 **未接真实数据 / 库存**：
 - 座位图数据来自 `demo_seat_map.dart`，未对接座位图数据源；采用**网格表格模式**
   对齐 `ChooseTicketSeatTableFragment`，未使用 Mapbox；
-- 只做本地选择，未调库存校验 / 锁座接口，无 15 分钟释放；
-- 不做连座校验（`isContinuousSeat` 等价逻辑未实现）；
-- 未与订单草稿打通：选好的座位尚未传入确认页 / 提单请求；
-- 无选座倒计时。
+- **锁座为本地锁，服务端座位库存未接入**：`SeatLockService` 只在当前 App 进程内
+  维护「座位 ID → 到期时间」，默认 TTL 10 分钟；换设备 / 重启 / 其他用户不可见，
+  没有服务端占座，也没有 `checkGoodStock` 库存校验；
+- 连座校验已实现（同一区域 + 同一排 + 列号连续），进入确认页前拦截；
+- 选座倒计时已实现（10 分钟，归零清空并释放本地锁），但未与服务端库存释放联动；
+- 未与订单草稿打通：选好的座位尚未传入确认页 / 提单请求。
 
 **待接清单**：
 - 座位图数据接口（区域 / 排 / 座位状态）；
-- 锁座与释放、库存校验；
+- **服务端锁座与释放、库存校验**（替换本地 `SeatLockService`，并把锁定座位
+  下发给 WebView 置灰）；
 - 连座规则与订单草稿联动。
 
 ---
@@ -178,13 +193,14 @@
 
 **Android 对应**：`OrderRefundWebActivity` + 退款申请页
 
-**现状**：**页面已实现**：`lib/features/order/refund/refund_page.dart`（原生退款表单），
-订单详情页（状态相关动作）可跳转 `/order/refund`。退款接口与进度查询未接。
+**现状**：**页面与接口已接通**：`lib/features/order/refund/refund_page.dart`（原生退款表单），
+订单详情页（状态相关动作）可跳转 `/order/refund`。真实模式走
+`POST /v1/order/{id}/refund` 申请、`GET /v1/order/{id}/refund` 查询进度；
+演示模式仅受 `PS_USE_DEMO=true` 控制。
 
 **待接**：
-- 退款申请 / 进度查询接口；
-- 退款金额按「已出票 / 未出票」规则由服务端计算；
-- 退款结果通知。
+- 退款金额明细展示（按「已出票 / 未出票」规则由服务端计算）；
+- 退款结果通知（推送 / 站内信）。
 
 ---
 
@@ -192,16 +208,18 @@
 
 **Android 对应**：`ProxyBuyChooseTicketActivity` / `ProxyBuyConfirmActivity` / `PinTuanChooseTicketPurchaseFragment` / `PinTuanOrderListActivity`
 
-**现状**：**代抢与拼团页面已实现**：`lib/features/proxy_buy/proxy_buy_page.dart`
-（规则 + 截止选项 + 本地订单列表）、`lib/features/group_buy/group_buy_page.dart` 与
-`group_buy_detail_page.dart`（进度条 + 成员头像 + 参团）。两者均为**本地模拟流程**，
-未接活动数据源与真实支付。求票浮球仍未迁移。
+**现状**：**代抢与拼团已按 `ui / application / domain / data` 四层拆分**：
+`lib/features/proxy_buy/ui/proxy_buy_page.dart`（规则 + 截止选项 + 订单列表）、
+`lib/features/group_buy/ui/group_buy_page.dart` 与 `group_buy_detail_page.dart`
+（进度条 + 成员头像 + 参团）。页面本身不发起 API、不做定价计算、不写
+`Future.delayed`；真实模式由 data 层调用 `v1/proxyBuyOrder/myOrders`、
+`v1/pinTuanOrder/*`、`v1/pinTuanCampaign/{id}`。这 4 条是来源 Android 的遗留路径，
+**当前后端未注册**，真实模式会 404；演示模式不受影响。求票浮球仍未迁移。
 
 **待接**：
-- 代抢 / 拼团活动数据与下单接口；
+- 后端实现代抢 / 拼团端点；
 - 拼团分享拉人（依赖分享能力，见 §2.14）；
-- 求票浮球与求票信息表单；
-- 代抢 / 拼团的订单列表与服务端状态同步。
+- 求票浮球与求票信息表单。
 
 ---
 
@@ -249,15 +267,18 @@
 
 **Android 对应**：`VideoPlayerActivity` / `ImmersiveVideoActivity` / `VideoDetailActivity` / `FeaturedVideosActivity`
 
-**现状**：`FeedDetailPage` 的 `hasVideo` 为真时只显示一个"播放器尚未接入"的说明条。完全没有视频播放能力。
+**现状**：发现页 / 动态详情遇到 B 站视频时弹出「应用内播放 / 打开哔哩哔哩」两个选项
+（`discover/widgets/bilibili_open_sheet.dart`）：应用内走 `/bilibili/:bvid`
+（`ui/bilibili_player_page.dart`，WebView 内嵌官方播放器），外部走
+`bilibili://video/<bvid>`，未安装客户端时回退网页版。
 
 **缺失内容**：
-- 视频播放器内核（ExoPlayer 等价物）
-- 沉浸式视频流（上下滑动切换）
-- 视频详情页（视频 + 信息 + 评论）
-- 精选视频列表
+- 自有视频播放器内核（ExoPlayer 等价物），目前复用 B 站 WebView；
+- 沉浸式视频流（上下滑动切换）；
+- 视频详情页（自有视频 + 信息 + 评论）；
+- 精选视频列表。
 
-**未实现原因**：播放器需要 CDN 配置、缓冲策略、codec 适配，不是画一个 UI 就能用的。
+**未实现原因**：自有播放器需要 CDN 配置、缓冲策略、codec 适配。
 
 **实现建议**：
 - 使用 `video_player` 包（官方）或 `chewie`（带 UI）
@@ -551,12 +572,12 @@
 
 | 缺口 | 影响范围 | 说明 |
 |------|--------|------|
-| **后端接线** | 全部模块 | 后端已注册的 23 个唯一端点已全部接通（`auth` / `catalog` / `feed` / `message` / `order` / `user` 含地址），演示开关为 `--dart-define=PS_USE_DEMO=true`。仍缺的是**后端没有端点**的能力：支付、选座锁座、优惠券/钱包、评价、IM、推送，见 §2.1–§2.7。 |
+| **后端接线** | 全部模块 | 后端注册 **46 条路由 / 45 个唯一端点**；客户端 `ApiPaths.all` 33 条，其中 29 条在后端有对应注册。已接通 `auth` / `catalog` / `feed` / `message`（含 `v1/chat/threads`）/ `order`（含支付、退款）/ `user`（含地址）。演示开关为 `--dart-define=PS_USE_DEMO=true`。仍缺的是**后端没有端点**的能力：代抢/拼团（4 条遗留路径）、选座锁座、优惠券/钱包、评价、推送，见 §2.1–§2.7。 |
 | **图片资源** | 全部页面 | 138 张图里没有海报 / 分类图标。海报走 `PsPoster` 渐变占位。 |
-| **文案 l10n** | 全部页面 | 除登录页外，中文是字面量，ARB 只有标题类 key。 |
+| **文案 l10n** | 全部页面 | 已按 feature 拆分到 `lib/l10n/arb/**`（13 个命名空间 / 922 条），`tool/gen_l10n.dart --check` 保持一致。 |
 | **A/B 测试 / 埋点** | 全部页面 | Android 有完整埋点体系（`Statistics` / `TrackEvent`），Flutter 侧无。 |
 | **推送** | 消息 / 订单 | Android 用 JPush，Flutter 侧无推送能力。 |
-| **IM 长连接** | 消息 | Android 用环信 IM，Flutter 侧 `ChatPage` 只有本地消息。 |
+| **IM 长连接** | 消息 | Android 用环信 IM；Flutter 侧已接 `v1/chat/threads` 收发/已读接口，但没有长连接与推送。 |
 | **地图 / 定位** | 场馆 / 城市 | Android 用高德地图，Flutter 侧无地图 SDK。 |
 | **资源流水线** | 全部页面 | 2,387 个 drawable 里的 `.9.png` / `selector` / `shape` / `vector` 没有等价物。 |
 

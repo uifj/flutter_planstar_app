@@ -14,13 +14,13 @@
 | 首页 | `fragment_home.xml` + 各 `view_home_*.xml` + `HomeMultiAdapter` | 完成（11 个楼层里做了 7 个） | 运营位/瀑布流/明星/推荐词等**服务端配置型**楼层不做 |
 | 发现 | `fragment_discovery.xml` + 动态卡 | 完成 | 动态详情页、点赞/关注无数据源，只做展示 |
 | 消息 | `layout_user_message.xml` + `item_user_message.xml` + `item_system_message_header.xml` | 完成 | 清空是本地操作；无 IM 长连接 |
-| 订单列表 | `activity_my_order.xml` + `fragment_my_activity_order.xml` + `item_order_ticket.xml` | 完成（演出 Tab） | 「商品」Tab 是显式空状态；「待评论」用 `completed` 近似 |
+| 订单列表 | `activity_my_order.xml` + `fragment_my_activity_order.xml` + `item_order_ticket.xml` | 完成（企划 Tab） | 「商品」Tab 是显式空状态；「待评论」用 `completed` 近似 |
 | 我的 | `layout_user.xml` + `view_user_info.xml` + `view_user_order.xml` + `view_user_menu.xml` | 完成 | 粉色「想看」卡无数据源，去掉；兜礼/等级为演示值 |
 | 演出详情 | `layout_show_detail.xml` + 5 个 `view_show_detail_*.xml` | 完成 | 选座/代抢/拼团/求票/粉丝社区/评价/资讯不做 |
 | 登录注册 | `layout_login_register.xml` | 完成（**已接真实接口**） | 微信登录未接 SDK；图形验证码改成按需弹框（来源是内联一行） |
 | 确认订单 | 既有实现 | **未改动** | 上一轮 DDD 交付时已完成 |
 
-验证：`flutter analyze lib test` 无问题；`flutter test` **83 passed**。
+验证：`flutter analyze lib test tool packages/infras/core/lib` 无问题；`flutter test` **202 passed**。
 新增两条测试：
 
 - `test/features/pages_smoke_test.dart`——每个页面在 360dp / 320dp 两档窄屏各渲染一次，
@@ -198,20 +198,21 @@ min = 安全区 + 48），全幅海报 + `#8C000000` 遮罩 + 92×124 小海报 
 
 ## 3. 仍然存在的系统性差异
 
-1. **文案没走 l10n**：除登录页外，页面里的中文是字面量，而各 feature 的
-   `l10n/*.arb` 只有标题类 key。Android 侧本身没有 i18n，所以不影响对齐，
-   但和 `l10n.yaml` 里"包级 l10n"的约定不一致；要补齐就得给 6 个 feature 各加
-   几十条 key，属于独立的一轮改造。
+1. **文案已走 l10n**：`lib/l10n/arb/**` 按 13 个命名空间（app + 12 个 feature）
+   拆分，共 922 条，`dart tool/gen_l10n.dart --check` 与 `lib/l10n/generated`
+   完全一致；页面里的中文不再以字面量散落。
 2. **网络层按域逐步接通**：`ApiClient`（基于 Dio、永不抛异常、统一
    `Result<T>`）、`PsNetworkInterceptor`（UA / `dvid` / `Cookie: psSession` /
    401 钩子）与 `ApiConfig` 已在 `lib/app/network/` 装配；默认真实接口，
    `--dart-define=PS_USE_DEMO=true` 回落演示数据。当前状态：
    - `auth`：`POST v3/user/sendLoginCode`、`POST v1/user/login`、`GET v1/user/captcha`；
-   - `catalog`：`GET v1/activities`（服务端分页 + `city` 过滤）、
-     `GET v1/activities/hot`、`GET v3/activities/{id}`、`GET v1/home/banners`；
+   - `catalog`：`GET v1/projects/hot`、`GET v1/projects`（服务端分页 + 城市/分类过滤）、
+     `GET v1/projects/{id}`、`GET v1/rankings`、`GET v1/home/banners`；
      列表页触底调用 `ShowCatalogController.loadMore()` 追加下一页；
-   - `order`：列表/详情/确认/下单走真实接口（`Idempotency-Key` + 报价快照）；
-     取消、确认收货等写操作在本批契约外，真实模式明确提示"暂不支持"；
+   - `order`：列表/详情/确认/下单、`POST/GET v1/order/{id}/refund`、
+     `POST v1/unifiedPay/pay` 与 `GET v1/unifiedPay/payDetail` 全部走真实接口
+     （`Idempotency-Key` + 报价快照）；取消、确认收货等写操作在本批契约外，
+     真实模式明确提示"暂不支持"；
    - `user`：资料与收货地址走真实接口；券、余额等仍为演示值；
    - `discover`：热门/关注流走 `GET v4/feed/hot`、`GET v1/feed`，详情
      `GET v1/tweets/{id}`，评论 `GET v1/userReply?tweetId=`；详情查不到时回
@@ -219,27 +220,62 @@ min = 安全区 + 48），全幅海报 + `#8C000000` 遮罩 + 92×124 小海报 
    - `message`：`GET v1/messages?type=1/2/3` 分别拉三类通知并累加未读，组成
      三个系统入口（活动通知 / 回复我的 / 赞和关注）；入口点击走
      `POST v1/messages/read` 逐条标已读；「我的」页角标走
-     `GET v1/messages/unreadCount`（只取一个整数，未登录不发）。后端没有
-     会话/聊天表，真实模式下会话列表是空态，`/message/thread/:id` 深链回兜底空态。
+     `GET v1/messages/unreadCount`。会话列表走 `GET v1/chat/threads`，会话页
+     `GET/POST /v1/chat/threads/{id}/messages` 收发、`POST .../read` 标已读；
+   - `proxy_buy` / `group_buy`：已按 `ui / application / domain / data` 四层拆分，
+     真实模式调用 `v1/proxyBuyOrder/myOrders`、`v1/pinTuanOrder/*`、
+     `v1/pinTuanCampaign/{id}`。这 4 条是来源 Android 的遗留路径，**当前后端未注册**，
+     真实模式会返回 404（演示模式不受影响）。
 
-   至此后端注册的 23 个唯一端点已全部接通（`v1/user/` 尾斜杠别名同 handler），
-   逐端点对照见 [api-contract.md](api-contract.md) §5；2026-11-07 对本地后端
-   做过 24 次运行态请求核对，失败 0 条。
+   后端当前注册 **46 条路由 / 45 个唯一端点**（`GET /v1/user/` 是 `GET /v1/user`
+   的尾斜杠别名）。客户端 `ApiPaths.all` 共 33 条，由
+   `test/api_paths_test.dart` 锁定；其中 29 条在后端有对应注册。逐端点对照见
+   [api-contract.md](api-contract.md) §5。
 
-   分页：演出库列表已接服务端分页（触底 `loadMore`）；动态、消息、订单列表
+   分页：企划列表已接服务端分页（触底 `loadMore`）；动态、消息、订单列表
    仍是一次性取全量，参数已写进 API 类，UI 尚未接翻页。消息与动态页已有
    `invalidate` 重试按钮，其余页面失败仍是 `AsyncValue.error` 直出；
    `core` 内已有 `RetryInterceptor`，但 `dioProvider`
    当前未挂载它。跑 `dart run tool/verify_catalog_api.dart --base=<host>` 可对真实
-   后端做 6 项契约自检（列表/分页/详情/城市过滤/热门/Banner）。
+   后端做契约自检（列表/分页/详情/城市过滤/榜单/热门/Banner）。
 3. **图片是占位**：见 §1，海报与分类图标没有真实资源。
 4. **仍需补齐的独立页面**：评价、粉丝社区、资讯、个人主页、商品订单尚未迁移
    （完整清单见 [unimplemented-modules.md](unimplemented-modules.md) §1）。
-   `feed_detail_page.dart`、`chat_page.dart`、`settings_page.dart` 已存在，但分别
-   只读/无 IM 通道/部分入口为占位；`proxy_buy_page.dart`、`group_buy_page.dart`、
-   `pay_page.dart`、`seat_selection_page.dart` 已有页面，仍是**本地模拟流程**，
-   未接真实活动数据、库存锁座与支付 SDK（详见
-   [unimplemented-modules.md](unimplemented-modules.md) §2.1/§2.2/§2.7）。
-   其中**支付与选座暂时固定 mock**：`PayInfo.demo` + `PayController._invokeSdk`
-   模拟渠道回调，`demo_seat_map.dart` 生成本地座位图；两者都不随
-   `PS_USE_DEMO` 切换，也不会请求后端。
+   `feed_detail_page.dart` 已支持 B 站视频双通道（应用内播放 / 打开哔哩哔哩）；
+   `chat_page.dart` 已接真实会话接口；`settings_page.dart` 部分入口为占位；
+   `pay_page.dart` 走服务端支付单 + 轮询，仍未调起第三方 SDK；
+   `seat_selection_page.dart` 有本地锁座 / 连座 / mm:ss 倒计时，座位图与库存仍由本地
+   `demo_seat_map.dart` 生成。详见
+   [unimplemented-modules.md](unimplemented-modules.md) §2.1/§2.2/§2.7。
+
+## 4. 订单 / 个人中心企划化：文案保留例外
+
+订单与个人中心已按企划语义改写（支持人、回报档位、支持份数、支持金额、预计交付时间、
+支持编号）；本轮又把 `app` / `auth` / `catalog` / `discover` / `goods` / `group_buy` /
+`home` / `marketing` / `message` / `order` / `proxy_buy` 的 ARB 与 Dart 硬编码字符串
+统一为企划口径（演出→企划、票档→回报档位、购票/售票→支持、艺人→创作者、
+剧院/场馆→活动场地、演唱会→音乐影像企划、代抢→代购、抢票→代购、开票→开放支持）。
+`order_zh.arb` / `user_zh.arb` 中「演出|票档|座位|观演」已清零。
+
+**例外清单（`tool/check_forbidden_terms.dart` 的结果）**：
+
+- `goods_zh.arb` `chooseTicketPage_100` / `chooseTicketPage_109`「选择线下回报场次」
+  （英文 `Select offline reward session`）——线下回报场次型企划必须按场次选择。
+- `order_zh.arb` `refundState_11_2`「买错了线下回报场次或回报档位」
+  （英文 `Selected the wrong offline reward session or reward tier`）——退款原因针对
+  线下回报场次型企划。
+- `lib/features/catalog/data/demo_catalog.dart:595`「线下点映城市取决于支持者分布，
+  具体场次将提前公告。」——线下点映（线下回报）语境。
+- 「商品」一级 Tab 及空态 `orderListPage_130`「暂无商品订单」——商品订单尚未迁移，
+  按需求保留该分类，不并入企划（不含禁词，仅作说明）。
+
+上述「场次」全部满足脚本的**线下上下文豁免**规则（同行含「线下」），因此
+`tool/forbidden_terms_whitelist.json` 仍为空数组（0 条白名单），没有为了让检查通过而
+放宽任何条目。检查脚本扫描 `lib/**/*.dart` 与 `lib/l10n/arb/**/*.arb`，命中
+`演出|观演|票档|抢票|开票|门票|剧院|演唱会|艺人` 以及非线下语境的「场次 / 座位」即失败；
+CI 在 l10n 校验之后运行 `dart tool/check_forbidden_terms.dart`。
+
+场次信息的展示是**按回报档位类型收敛**的：仅当档位 `rewardType == '线下参与'` 时，
+订单卡片、订单详情与选档页才展示场次 / 座席与选座入口；其余企划一律改为展示
+「预计交付时间」（档位 `estimatedDeliveryTime` 优先，其次企划 `deliveryPlan`）、
+回报档位、支持人、支持编号，不再出现票务字段。
