@@ -24,6 +24,7 @@ import 'package:core/network.dart';
 import 'package:core/result.dart';
 import 'package:dio/dio.dart' show Options, ResponseType;
 
+import '../../../app/network/api_paths.dart';
 import 'dto/json_shape.dart';
 import 'dto/login_response_dto.dart';
 import 'dto/send_code_response_dto.dart';
@@ -40,13 +41,13 @@ final class PlanstarAuthApi {
   final int clientType;
 
   /// 登录路径。
-  static const String loginPath = 'v1/user/login';
+  static const String loginPath = ApiPaths.login;
 
   /// 发登录验证码路径。
-  static const String sendLoginCodePath = 'v3/user/sendLoginCode';
+  static const String sendLoginCodePath = ApiPaths.sendLoginCode;
 
   /// 图形验证码路径。
-  static const String captchaPath = 'v1/user/captcha';
+  static const String captchaPath = ApiPaths.captcha;
 
   /// 登录。`code` 与 `password` 二选一（都为空时服务端会报错，这里不拦）。
   ///
