@@ -44,6 +44,10 @@ dependencies:
   core: ^0.1.0
   core_design_system: ^0.1.0
 
+  # 网络 DTO / 领域数据类的不可变模型（生成 copyWith / == / hashCode / JSON）。
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.12.0
+
   # 网络/存储底层实现（core 只暴露端口，实现依赖由应用侧注入）
   dio: ^5.11.1
   shared_preferences: ^2.5.6
@@ -58,6 +62,8 @@ dependencies:
   flutter_baidu_mapapi_search: ^4.0.2
   flutter_baidu_mapapi_base: 4.0.2
   webview_flutter: ^4.14.1
+  url_launcher: ^6.3.3
+  lpinyin: ^2.0.3
 
   # 已移除 lottie：本地动画资源随 assets/ 一并删除，加载态改为代码绘制。
 
@@ -65,6 +71,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+
+  # 代码生成：freezed（不可变数据类）+ json_serializable（JSON 映射）。
+  build_runner: ^2.7.0
+  freezed: ^3.1.0
+  json_serializable: ^6.9.0
 
 flutter:
   # 开启 gen-l10n 代码生成（l10n.yaml 驱动，产物在 lib/l10n/ 下）。

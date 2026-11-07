@@ -1,0 +1,17 @@
+# 代码生成范围：只处理网络 DTO / 领域数据类，避免全仓扫描拖慢构建。
+# - lib/features/**/domain/**  ：领域数据载体（Freezed）
+# - lib/features/**/data/**    ：接口层 DTO（含 data/dto）
+# - lib/features/**/payment/** ：支付 DTO
+targets:
+  $default:
+    builders:
+      freezed:
+        generate_for:
+          - lib/features/**/domain/**
+          - lib/features/**/data/**
+          - lib/features/**/payment/**
+      json_serializable:
+        generate_for:
+          - lib/features/**/domain/**
+          - lib/features/**/data/**
+          - lib/features/**/payment/**
