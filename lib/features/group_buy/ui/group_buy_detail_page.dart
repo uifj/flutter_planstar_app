@@ -4,9 +4,9 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'group_buy.dart';
-import 'group_buy_providers.dart';
-import '../../l10n/l10n.dart';
+import '../../../l10n/l10n.dart';
+import '../application/group_buy_controller.dart';
+import '../domain/group_buy.dart';
 
 /// 拼团详情页。
 ///
@@ -16,6 +16,8 @@ import '../../l10n/l10n.dart';
 ///   这里做原生页面：顶部演出信息 + 成员头像列表 + 参团按钮。
 /// - 参团遵循"假功能不做"：按钮是真实的，提交后 toast 说明"模拟参团"。
 /// - 规则页面（Android WebView 加载 `pinTuanRule.html`）用展开文本替代。
+///
+/// 进度、剩余时间、库存与参团资格全部来自 `GroupBuyView`，页面不计算。
 class GroupBuyDetailPage extends ConsumerWidget {
   const GroupBuyDetailPage({super.key, required this.groupId});
 
@@ -23,8 +25,10 @@ class GroupBuyDetailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final group = ref.watch(groupBuyByIdProvider(groupId));
-    final joinState = ref.watch(joinGroupControllerProvider);
+    final AsyncValue<GroupBuyView?> groupState = ref.watch(
+      groupBuyByIdProvider(groupId),
+    );
+    final JoinGroupState joinState = ref.watch(joinGroupControllerProvider);
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
 
     // 监听参团结果
@@ -42,45 +46,66 @@ class GroupBuyDetailPage extends ConsumerWidget {
       }
     });
 
-    if (group == null) {
-      return AdaptiveScaffold(
+    return groupState.when(
+      data: (GroupBuyView? group) {
+        if (group == null) {
+          return AdaptiveScaffold(
+            appBar: AdaptiveAppBar(title: context.l10n.groupBuyDetailPage_46),
+            body: Center(
+              child: Text(
+                context.l10n.groupBuyDetailPage_49,
+                style: TextStyle(fontSize: 14, color: colors.textTertiary),
+              ),
+            ),
+          );
+        }
+
+        final bool isJoining = joinState is JoinGroupSubmitting;
+
+        return AdaptiveScaffold(
+          appBar: AdaptiveAppBar(title: context.l10n.groupBuyDetailPage_60),
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    _ShowInfoCard(group: group),
+                    _ProgressCard(group: group),
+                    _MembersCard(group: group),
+                    _RuleCard(),
+                    const SizedBox(height: 80),
+                  ],
+                ),
+              ),
+              // 底部参团按钮
+              if (group.progress.canJoin)
+                _BottomBar(
+                  group: group,
+                  isJoining: isJoining,
+                  onJoin: () => ref
+                      .read(joinGroupControllerProvider.notifier)
+                      .join(groupId),
+                ),
+            ],
+          ),
+        );
+      },
+      loading: () => AdaptiveScaffold(
+        appBar: AdaptiveAppBar(title: context.l10n.groupBuyDetailPage_46),
+        body: const Center(child: CircularProgressIndicator()),
+      ),
+      error: (Object error, StackTrace stackTrace) => AdaptiveScaffold(
         appBar: AdaptiveAppBar(title: context.l10n.groupBuyDetailPage_46),
         body: Center(
-          child: Text(
-            context.l10n.groupBuyDetailPage_49,
-            style: TextStyle(fontSize: 14, color: colors.textTertiary),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              '$error',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 13, color: colors.textTertiary),
+            ),
           ),
         ),
-      );
-    }
-
-    final isJoining = joinState is JoinGroupSubmitting;
-    final canJoin = group.status == GroupBuyStatus.grouping && !group.isFull;
-
-    return AdaptiveScaffold(
-      appBar: AdaptiveAppBar(title: context.l10n.groupBuyDetailPage_60),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView(
-              children: <Widget>[
-                _ShowInfoCard(group: group),
-                _ProgressCard(group: group),
-                _MembersCard(group: group),
-                _RuleCard(),
-                const SizedBox(height: 80),
-              ],
-            ),
-          ),
-          // 底部参团按钮
-          if (canJoin)
-            _BottomBar(
-              group: group,
-              isJoining: isJoining,
-              onJoin: () =>
-                  ref.read(joinGroupControllerProvider.notifier).join(groupId),
-            ),
-        ],
       ),
     );
   }
@@ -90,7 +115,7 @@ class GroupBuyDetailPage extends ConsumerWidget {
 class _ShowInfoCard extends StatelessWidget {
   const _ShowInfoCard({required this.group});
 
-  final GroupBuyInfo group;
+  final GroupBuyView group;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +153,7 @@ class _ShowInfoCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      group.showTitle,
+                      group.info.showTitle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -139,7 +164,7 @@ class _ShowInfoCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      group.venue,
+                      group.info.venue,
                       style: TextStyle(
                         fontSize: 12,
                         color: colors.textTertiary,
@@ -147,7 +172,7 @@ class _ShowInfoCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      group.eventTime,
+                      group.info.eventTime,
                       style: TextStyle(
                         fontSize: 12,
                         color: colors.textTertiary,
@@ -173,7 +198,7 @@ class _ShowInfoCard extends StatelessWidget {
                   style: TextStyle(fontSize: 12, color: colors.textSecondary),
                 ),
                 Text(
-                  group.lowPrice.format(),
+                  group.info.lowPrice.format(),
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
@@ -181,10 +206,9 @@ class _ShowInfoCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                if (group.originalPrice.minorUnits >
-                    group.lowPrice.minorUnits) ...<Widget>[
+                if (group.hasDiscount) ...<Widget>[
                   Text(
-                    group.originalPrice.format(),
+                    group.info.originalPrice.format(),
                     style: TextStyle(
                       fontSize: 13,
                       color: colors.textDisabled,
@@ -226,7 +250,7 @@ class _ShowInfoCard extends StatelessWidget {
 class _ProgressCard extends StatelessWidget {
   const _ProgressCard({required this.group});
 
-  final GroupBuyInfo group;
+  final GroupBuyView group;
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +269,7 @@ class _ProgressCard extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                context.l10n.groupBuyDetailPage_249(group.succeedNum),
+                context.l10n.groupBuyDetailPage_249(group.info.succeedNum),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -253,11 +277,13 @@ class _ProgressCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              if (group.status == GroupBuyStatus.grouping)
+              if (group.info.status == GroupBuyStatus.grouping)
                 Text(
-                  group.isFull
+                  group.progress.isFull
                       ? context.l10n.groupBuyDetailPage_259
-                      : context.l10n.groupBuyDetailPage_259_2(group.remaining),
+                      : context.l10n.groupBuyDetailPage_259_2(
+                          group.progress.remainingSlots,
+                        ),
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -270,7 +296,7 @@ class _ProgressCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
-              value: group.progress,
+              value: group.progress.progress,
               backgroundColor: colors.divider,
               valueColor: const AlwaysStoppedAnimation<Color>(
                 Color(0xFFFD7700),
@@ -279,9 +305,12 @@ class _ProgressCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          if (group.status == GroupBuyStatus.grouping && !group.isExpired)
+          if (group.info.status == GroupBuyStatus.grouping &&
+              !group.progress.isExpired)
             Text(
-              context.l10n.groupBuyDetailPage_283(group.remainingHours),
+              context.l10n.groupBuyDetailPage_283(
+                group.progress.remainingHours,
+              ),
               style: TextStyle(fontSize: 12, color: colors.textTertiary),
             ),
         ],
@@ -294,7 +323,7 @@ class _ProgressCard extends StatelessWidget {
 class _MembersCard extends StatelessWidget {
   const _MembersCard({required this.group});
 
-  final GroupBuyInfo group;
+  final GroupBuyView group;
 
   @override
   Widget build(BuildContext context) {
@@ -312,8 +341,8 @@ class _MembersCard extends StatelessWidget {
         children: <Widget>[
           Text(
             context.l10n.groupBuyDetailPage_316(
-              group.currentMembers,
-              group.succeedNum,
+              group.info.currentMembers,
+              group.info.succeedNum,
             ),
             style: TextStyle(
               fontSize: 14,
@@ -326,9 +355,11 @@ class _MembersCard extends StatelessWidget {
             spacing: 12,
             runSpacing: 12,
             children: <Widget>[
-              for (final member in group.members) _MemberAvatar(member: member),
+              for (final member in group.info.members)
+                _MemberAvatar(member: member),
               // 空位占位
-              for (int i = 0; i < group.remaining; i++) _EmptySlot(),
+              for (int i = 0; i < group.progress.remainingSlots; i++)
+                _EmptySlot(),
             ],
           ),
         ],
@@ -484,7 +515,7 @@ class _BottomBar extends StatelessWidget {
     required this.onJoin,
   });
 
-  final GroupBuyInfo group;
+  final GroupBuyView group;
   final bool isJoining;
   final VoidCallback onJoin;
 
@@ -515,7 +546,7 @@ class _BottomBar extends StatelessWidget {
                   style: TextStyle(fontSize: 11, color: colors.textTertiary),
                 ),
                 Text(
-                  group.lowPrice.format(),
+                  group.info.lowPrice.format(),
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,

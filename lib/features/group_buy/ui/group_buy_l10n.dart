@@ -1,19 +1,19 @@
 import 'package:flutter/widgets.dart';
 
-import '../../l10n/l10n.dart';
-import 'group_buy.dart';
+import '../../../l10n/l10n.dart';
+import '../application/group_buy_controller.dart';
+import '../domain/group_buy.dart';
 
 /// 拼团展示文案的本地化映射。
-extension GroupBuyInfoL10n on GroupBuyInfo {
+extension GroupBuyViewL10n on GroupBuyView {
   /// 标语标签：未配置时回落到默认「超低价拼团」。
   String tagLabelOf(BuildContext context) =>
-      tag.isEmpty ? context.l10n.groupBuy_72 : tag;
+      info.tag.isEmpty ? context.l10n.groupBuy_72 : info.tag;
 
   /// 折扣文案（如 `5.5折`）；无折扣返回空字符串。
   String discountLabelOf(BuildContext context) {
-    if (originalPrice.minorUnits <= 0) return '';
-    final rate = (lowPrice.minorUnits * 10) ~/ originalPrice.minorUnits;
-    if (rate >= 10) return '';
+    final int? rate = discountRate;
+    if (rate == null) return '';
     if (rate % 10 == 0) {
       return context.l10n.groupBuy_144(rate ~/ 10);
     }
@@ -21,7 +21,7 @@ extension GroupBuyInfoL10n on GroupBuyInfo {
   }
 
   /// 状态文案。
-  String statusLabelOf(BuildContext context) => switch (status) {
+  String statusLabelOf(BuildContext context) => switch (info.status) {
     GroupBuyStatus.grouping => context.l10n.groupBuy_155,
     GroupBuyStatus.success => context.l10n.groupBuy_157,
     GroupBuyStatus.failed => context.l10n.groupBuy_159,

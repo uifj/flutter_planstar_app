@@ -6,10 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../shared/ui/ps_empty_state.dart';
-import 'group_buy.dart';
+import '../../../l10n/l10n.dart';
+import '../application/group_buy_controller.dart';
+import '../domain/group_buy.dart';
 import 'group_buy_l10n.dart';
-import 'group_buy_providers.dart';
-import '../../l10n/l10n.dart';
 
 /// 拼团列表页。
 ///
@@ -19,32 +19,49 @@ import '../../l10n/l10n.dart';
 ///   没有独立的拼团列表页。这里做列表页作为"我的拼团"入口，
 ///   方便用户查看所有进行中的拼团。
 /// - 拼团详情通过点击列表项进入 `/group-buy/:id`。
+///
+/// 页面只渲染 `GroupBuyListController` 暴露的 `GroupBuyView`。
 class GroupBuyPage extends ConsumerWidget {
   const GroupBuyPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final list = ref.watch(groupBuyListProvider);
+    final AsyncValue<List<GroupBuyView>> listState = ref.watch(
+      groupBuyListProvider,
+    );
 
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(title: context.l10n.groupBuyPage_28),
-      body: list.isEmpty
-          ? PsEmptyState(
-              title: context.l10n.groupBuyPage_31,
-              description: context.l10n.groupBuyPage_32,
-              icon: LucideIcons.users,
-            )
-          : ListView(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              children: <Widget>[
-                for (final group in list)
-                  _GroupBuyCard(
-                    group: group,
-                    onTap: () => context.push('/group-buy/${group.id}'),
-                  ),
-                const SizedBox(height: 24),
-              ],
+      body: listState.when(
+        data: (List<GroupBuyView> list) => list.isEmpty
+            ? PsEmptyState(
+                title: context.l10n.groupBuyPage_31,
+                description: context.l10n.groupBuyPage_32,
+                icon: LucideIcons.users,
+              )
+            : ListView(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                children: <Widget>[
+                  for (final group in list)
+                    _GroupBuyCard(
+                      group: group,
+                      onTap: () => context.push('/group-buy/${group.info.id}'),
+                    ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (Object error, StackTrace stackTrace) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              '$error',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 13),
             ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -53,13 +70,13 @@ class GroupBuyPage extends ConsumerWidget {
 class _GroupBuyCard extends StatelessWidget {
   const _GroupBuyCard({required this.group, required this.onTap});
 
-  final GroupBuyInfo group;
+  final GroupBuyView group;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final statusColor = _statusColor(group.status, colors);
+    final statusColor = _statusColor(group.info.status, colors);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -125,7 +142,7 @@ class _GroupBuyCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    group.showTitle,
+                    group.info.showTitle,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -136,7 +153,7 @@ class _GroupBuyCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${group.venue} · ${group.eventTime}',
+                    '${group.info.venue} · ${group.info.eventTime}',
                     style: TextStyle(fontSize: 12, color: colors.textTertiary),
                   ),
                   const SizedBox(height: 10),
@@ -153,7 +170,7 @@ class _GroupBuyCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        group.lowPrice.format(),
+                        group.info.lowPrice.format(),
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
@@ -161,10 +178,9 @@ class _GroupBuyCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      if (group.originalPrice.minorUnits >
-                          group.lowPrice.minorUnits) ...<Widget>[
+                      if (group.hasDiscount) ...<Widget>[
                         Text(
-                          group.originalPrice.format(),
+                          group.info.originalPrice.format(),
                           style: TextStyle(
                             fontSize: 12,
                             color: colors.textDisabled,
@@ -186,14 +202,14 @@ class _GroupBuyCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   // 进度条
-                  if (group.status == GroupBuyStatus.grouping) ...<Widget>[
+                  if (group.info.status == GroupBuyStatus.grouping) ...<Widget>[
                     Row(
                       children: <Widget>[
                         Expanded(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(3),
                             child: LinearProgressIndicator(
-                              value: group.progress,
+                              value: group.progress.progress,
                               backgroundColor: colors.divider,
                               valueColor: const AlwaysStoppedAnimation<Color>(
                                 Color(0xFFFD7700),
@@ -205,8 +221,8 @@ class _GroupBuyCard extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           context.l10n.groupBuyPage_210(
-                            group.currentMembers,
-                            group.succeedNum,
+                            group.info.currentMembers,
+                            group.info.succeedNum,
                           ),
                           style: TextStyle(
                             fontSize: 12,
@@ -218,7 +234,7 @@ class _GroupBuyCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      group.slogan,
+                      group.info.slogan,
                       style: TextStyle(
                         fontSize: 12,
                         color: colors.textSecondary,
@@ -226,7 +242,7 @@ class _GroupBuyCard extends StatelessWidget {
                     ),
                   ] else ...<Widget>[
                     Text(
-                      group.slogan,
+                      group.info.slogan,
                       style: TextStyle(
                         fontSize: 12,
                         color: colors.textSecondary,

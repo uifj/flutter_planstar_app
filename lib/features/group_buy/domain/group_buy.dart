@@ -47,11 +47,9 @@ final class GroupBuyMember {
 ///
 /// 对齐 Android `PinTuanInfo.java`（Kotlin data class）。
 ///
-/// ## 与 Android 的差异
-///
-/// - Android 字段全裸 `double` / `int` / `long`。
-/// - 这里用 `Money` 表示价格，`DateTime` 表示时间，
-///   `GroupBuyStatus` 枚举表示状态。
+/// 这里只保留数据；成团进度、剩余时间、过期与库存判定见
+/// `domain/services/group_buy_progress.dart`，价格见
+/// `domain/services/group_buy_pricing.dart`。
 final class GroupBuyInfo {
   const GroupBuyInfo({
     required this.id,
@@ -119,22 +117,4 @@ final class GroupBuyInfo {
 
   /// 库存（Android `stock`）。
   final int stock;
-
-  /// 还差多少人成团。
-  int get remaining => succeedNum - currentMembers;
-
-  /// 是否已满团。
-  bool get isFull => currentMembers >= succeedNum;
-
-  /// 进度百分比（0-1）。
-  double get progress => succeedNum > 0 ? currentMembers / succeedNum : 0;
-
-  /// 是否已过期。
-  bool get isExpired => DateTime.now().isAfter(effectiveTo);
-
-  /// 距到期剩余小时数。
-  int get remainingHours => effectiveTo.difference(DateTime.now()).inHours;
-
-  /// 节省金额。
-  Money get savedAmount => originalPrice - lowPrice;
 }

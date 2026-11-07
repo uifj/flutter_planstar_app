@@ -1,18 +1,16 @@
 import 'package:core/domain.dart';
 
-import 'group_buy.dart';
+import '../domain/group_buy.dart';
 
 /// 拼团演示数据。
 ///
 /// 对齐 Android `PinTuanService.fetchPinTuanCampaign()` 返回的 `PinTuanInfo`。
-class DemoGroupBuy {
-  DemoGroupBuy._();
-
+abstract final class DemoGroupBuy {
   /// 演示拼团列表。
   static final List<GroupBuyInfo> campaigns = <GroupBuyInfo>[
     GroupBuyInfo(
       id: 101,
-      showTitle: '五月天回到那一天巡回演唱会',
+      showTitle: '五月天「回到那一天」音乐影像企划',
       showPoster: null,
       venue: '上海体育场',
       eventTime: '2026-12-01 19:30',
@@ -29,7 +27,7 @@ class DemoGroupBuy {
       members: <GroupBuyMember>[
         GroupBuyMember(
           userId: 1,
-          nickname: '票友小王',
+          nickname: '同好小王',
           avatarUrl: null,
           isLeader: true,
           joinedAt: DateTime(2026, 11, 25, 10, 0),
@@ -45,7 +43,7 @@ class DemoGroupBuy {
     ),
     GroupBuyInfo(
       id: 102,
-      showTitle: '周杰伦嘉年华世界巡回演唱会',
+      showTitle: '周杰伦「嘉年华」音乐影像企划',
       showPoster: null,
       venue: '国家体育场（鸟巢）',
       eventTime: '2026-12-25 19:30',
@@ -76,7 +74,7 @@ class DemoGroupBuy {
         ),
         GroupBuyMember(
           userId: 5,
-          nickname: '演唱会常客',
+          nickname: '现场常客',
           avatarUrl: null,
           isLeader: false,
           joinedAt: DateTime(2026, 11, 22, 20, 30),
@@ -85,7 +83,7 @@ class DemoGroupBuy {
     ),
     GroupBuyInfo(
       id: 103,
-      showTitle: '林俊杰JJ20世界巡回演唱会',
+      showTitle: '林俊杰「JJ20」音乐影像企划',
       showPoster: null,
       venue: '广州奥体中心',
       eventTime: '2026-12-15 19:30',
@@ -125,7 +123,7 @@ class DemoGroupBuy {
     ),
     GroupBuyInfo(
       id: 104,
-      showTitle: '薛之谦天外来物巡回演唱会',
+      showTitle: '薛之谦「天外来物」音乐影像企划',
       showPoster: null,
       venue: '深圳湾体育中心',
       eventTime: '2026-11-20 19:30',
