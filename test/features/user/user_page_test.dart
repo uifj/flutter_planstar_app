@@ -7,6 +7,7 @@ import 'package:planstar/features/auth/application/auth_providers.dart';
 import 'package:planstar/features/auth/domain/auth_repository.dart';
 import 'package:planstar/features/auth/domain/auth_session.dart';
 import 'package:planstar/features/auth/domain/auth_user.dart';
+import 'package:planstar/features/marketing/demo_wallet_state.dart';
 import 'package:planstar/features/user/user_page.dart';
 import 'package:planstar/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +25,7 @@ void main() {
   Future<ProviderContainer> pumpUserPage(
     WidgetTester tester, {
     AuthSession? restored,
+    bool signedToday = false,
   }) async {
     tester.view.physicalSize = kSurface * 3;
     tester.view.devicePixelRatio = 3;
@@ -72,8 +74,23 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    if (signedToday) {
+      container.read(demoWalletStateProvider.notifier).signIn();
+      await tester.pumpAndSettle();
+    }
     return container;
   }
+
+  AuthSession loggedInSession() => AuthSession(
+    user: const AuthUser(
+      userId: 90012345,
+      userName: '票友小张',
+      level: 3,
+      wantWatchNum: 7,
+      followingNum: 38,
+    ),
+    token: 'tok_abc123',
+  );
 
   testWidgets('未登录：显示占位昵称与登录按钮', (WidgetTester tester) async {
     await pumpUserPage(tester);
@@ -107,6 +124,39 @@ void main() {
     expect(find.text('退出登录'), findsOneWidget);
     // 已登录就不该再出现"点击登录"。
     expect(find.text('点击登录，查看订单与优惠券'), findsNothing);
+  });
+
+  testWidgets('未签到：点击每日签到后变为今日已签到并提示奖励', (WidgetTester tester) async {
+    await pumpUserPage(tester, restored: loggedInSession());
+
+    expect(find.text('每日签到 · +100 星币'), findsOneWidget);
+    await tester.tap(find.text('每日签到 · +100 星币'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.text('今日已签到'), findsOneWidget);
+    expect(find.text('签到成功，+100 星币'), findsOneWidget);
+  });
+
+  testWidgets('已签到：卡片禁用，点击不再触发签到', (WidgetTester tester) async {
+    await pumpUserPage(tester, restored: loggedInSession(), signedToday: true);
+
+    expect(find.text('今日已签到'), findsOneWidget);
+    final InkWell card = tester.widget<InkWell>(
+      find
+          .ancestor(of: find.text('今日已签到'), matching: find.byType(InkWell))
+          .first,
+    );
+    expect(card.onTap, isNull);
+  });
+
+  testWidgets('未登录：点击签到跳转登录页', (WidgetTester tester) async {
+    await pumpUserPage(tester);
+
+    await tester.tap(find.text('每日签到 · +100 星币'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('login-page'), findsOneWidget);
   });
 
   testWidgets('等级为 0 时不硬编 V3，用脱敏手机号占位', (WidgetTester tester) async {

@@ -58,10 +58,23 @@ abstract final class ApiPaths {
 
   // ── user ─────────────────────────────────────────────────────────────
   static const String userProfile = 'v1/user';
+  static const String userSignIn = 'v1/user/signIn';
   static const String addresses = 'v1/myaddress';
 
   static String addressDelete(String id) => 'v1/myaddress/$id';
   static String addressDefault(String id) => 'v1/myaddress/default/$id';
+
+  // ── money account ────────────────────────────────────────────────────
+  static const String moneyAccount = 'v1/moneyaccount';
+  static const String moneyAccountSequences = 'v1/moneyaccount/sequences';
+
+  // ── shop ─────────────────────────────────────────────────────────────
+  static const String shopGoods = 'v1/shop/goods';
+
+  static String shopGoodsDetail(int id) => 'v1/shop/goods/$id';
+
+  static String shopGoodsRedeem(int goodsId, int skuId) =>
+      'v1/shop/goods/$goodsId/skus/$skuId/redeem';
 
   // ── auth ─────────────────────────────────────────────────────────────
   static const String captcha = 'v1/user/captcha';
@@ -97,9 +110,15 @@ abstract final class ApiPaths {
     groupBuyJoin,
     groupBuyCampaign(1),
     userProfile,
+    userSignIn,
     addresses,
     addressDelete('1'),
     addressDefault('1'),
+    moneyAccount,
+    moneyAccountSequences,
+    shopGoods,
+    shopGoodsDetail(1),
+    shopGoodsRedeem(1, 1),
     captcha,
     sendLoginCode,
     login,

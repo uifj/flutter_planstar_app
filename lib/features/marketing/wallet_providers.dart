@@ -1,72 +1,83 @@
 import 'package:core/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/network/network_providers.dart';
+import '../user/application/user_api_providers.dart';
+import '../user/data/planstar_user_api.dart';
+import 'demo_wallet_state.dart';
 import 'wallet.dart';
 
 /// 钱包演示数据。
 ///
 /// 对齐 Android `GET v1/moneyaccount` + `GET v1/moneyaccount/sequences`。
-/// 接口接上后把 [walletProvider] 改成 `FutureProvider` 即可。
 final class DemoWallet {
   DemoWallet._();
 
-  static WalletAccount generate() {
+  /// 生成与当前星币余额自洽的签到流水（星币唯一来源为每日签到）。
+  static WalletAccount generate({
+    required Money balance,
+    required bool signedToday,
+  }) {
     final now = DateTime.now();
+    const int reward = DemoWalletController.signInRewardMinorUnits;
+    const int count = 3;
+    final int start = balance.minorUnits - reward * count;
+    final DateTime anchor = signedToday
+        ? now.subtract(const Duration(days: 2))
+        : now.subtract(const Duration(days: 3));
+
+    final List<WalletTransaction> items = <WalletTransaction>[];
+    for (var i = 0; i < count; i++) {
+      items.add(
+        WalletTransaction(
+          id: i + 1,
+          title: '每日签到',
+          amount: Money.fromMinorUnits(reward),
+          balanceAfter: Money.fromMinorUnits(start + reward * (i + 1)),
+          time: anchor.add(Duration(days: i)),
+          type: WalletTransactionType.income,
+        ),
+      );
+    }
 
     return WalletAccount(
-      balance: Money.fromMinorUnits(12850),
-      transactions: <WalletTransaction>[
-        WalletTransaction(
-          id: 1,
-          title: '充值',
-          amount: Money.fromMinorUnits(10000),
-          balanceAfter: Money.fromMinorUnits(12850),
-          time: now.subtract(const Duration(days: 2)),
-          type: WalletTransactionType.income,
-        ),
-        WalletTransaction(
-          id: 2,
-          title: '支持「五月天音乐影像企划」',
-          amount: Money.fromMinorUnits(38000),
-          balanceAfter: Money.fromMinorUnits(2850),
-          time: now.subtract(const Duration(days: 5)),
-          type: WalletTransactionType.expense,
-        ),
-        WalletTransaction(
-          id: 3,
-          title: '退款入账 - 订单 P20261101001',
-          amount: Money.fromMinorUnits(28000),
-          balanceAfter: Money.fromMinorUnits(30850),
-          time: now.subtract(const Duration(days: 10)),
-          type: WalletTransactionType.income,
-        ),
-        WalletTransaction(
-          id: 4,
-          title: '新人注册赠送',
-          amount: Money.fromMinorUnits(5000),
-          balanceAfter: Money.fromMinorUnits(2850),
-          time: now.subtract(const Duration(days: 30)),
-          type: WalletTransactionType.income,
-        ),
-        WalletTransaction(
-          id: 5,
-          title: '支持「脱口秀大会现场企划」',
-          amount: Money.fromMinorUnits(9800),
-          balanceAfter: Money.fromMinorUnits(2850),
-          time: now.subtract(const Duration(days: 15)),
-          type: WalletTransactionType.expense,
-        ),
-      ],
+      balance: balance,
+      // 最新的在最前，与接口倒序一致。
+      transactions: items.reversed.toList(growable: false),
     );
   }
 }
 
 /// 钱包账户 Provider。
 ///
-/// 对齐 Android `MyWalletActivity` 的 `GET v1/moneyaccount`。
-final walletProvider = Provider<WalletAccount>((ref) => DemoWallet.generate());
+/// 真实模式请求 `GET v1/moneyaccount` + `GET v1/moneyaccount/sequences`；
+/// demo 模式保留本地演示数据。
+final walletProvider = FutureProvider<WalletAccount>((ref) async {
+  if (ref.watch(dataSourcePolicyProvider).isDemo) {
+    final DemoWalletState demo = ref.watch(demoWalletStateProvider);
+    return DemoWallet.generate(
+      balance: Money.fromMinorUnits(demo.balanceMinorUnits),
+      signedToday: demo.signedToday,
+    );
+  }
+
+  final api = ref.watch(planstarUserApiProvider);
+  final accountResult = await api.fetchWallet();
+  final WalletAccountInfo account = accountResult.fold(
+    onSuccess: (WalletAccountInfo info) => info,
+    onFailure: (failure) => throw failure,
+  );
+
+  final sequencesResult = await api.fetchWalletSequences();
+  final List<WalletTransaction> transactions = sequencesResult.fold(
+    onSuccess: (List<WalletTransaction> items) => items,
+    onFailure: (failure) => throw failure,
+  );
+
+  return WalletAccount(balance: account.balance, transactions: transactions);
+});
 
 /// 钱包余额 Provider（「我的」页资产卡用）。
 final walletBalanceProvider = Provider<Money>(
-  (ref) => ref.watch(walletProvider).balance,
+  (ref) => ref.watch(walletProvider).valueOrNull?.balance ?? Money.zero(),
 );

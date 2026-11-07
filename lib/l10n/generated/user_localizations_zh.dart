@@ -325,4 +325,23 @@ class UserLocalizationsZh extends UserLocalizations {
 
   @override
   String get userPage_656 => '卖家招募';
+
+  @override
+  String get userMenuMall => '星币商城';
+
+  @override
+  String signInReward(Object amount) {
+    return '每日签到 · +$amount 星币';
+  }
+
+  @override
+  String get signInDone => '今日已签到';
+
+  @override
+  String signInSuccess(Object amount) {
+    return '签到成功，+$amount 星币';
+  }
+
+  @override
+  String get signInFailed => '签到失败，请稍后重试';
 }

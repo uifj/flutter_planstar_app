@@ -30,6 +30,22 @@ final class WalletTransaction {
     required this.type,
   });
 
+  factory WalletTransaction.fromJson(Map<String, dynamic> json) {
+    final int amount = _asInt(json['amount']) ?? 0;
+    return WalletTransaction(
+      id: _asInt(json['id']) ?? 0,
+      title: json['title']?.toString() ?? '',
+      amount: Money.fromMinorUnits(amount.abs()),
+      balanceAfter: Money.fromMinorUnits(_asInt(json['balanceAfter']) ?? 0),
+      time:
+          DateTime.tryParse(json['happenTime']?.toString() ?? '') ??
+          DateTime.fromMillisecondsSinceEpoch(0),
+      type: json['type']?.toString() == 'expense'
+          ? WalletTransactionType.expense
+          : WalletTransactionType.income,
+    );
+  }
+
   final int id;
   final String title;
 
@@ -69,4 +85,11 @@ final class WalletAccount {
 
   /// 交易记录列表。
   final List<WalletTransaction> transactions;
+}
+
+int? _asInt(Object? value) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  if (value is String) return int.tryParse(value);
+  return null;
 }

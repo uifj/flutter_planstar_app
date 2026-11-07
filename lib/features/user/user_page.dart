@@ -13,6 +13,8 @@ import '../message/application/message_providers.dart';
 import '../order/application/order_list_controller.dart';
 import '../order/order_l10n.dart';
 import 'application/profile_providers.dart';
+import 'application/sign_in_providers.dart';
+import 'data/planstar_user_api.dart';
 import '../../l10n/l10n.dart';
 
 /// 我的 Tab（`layout_user.xml`）。
@@ -73,6 +75,7 @@ class UserPage extends ConsumerWidget {
             onTapAll: () => openOrders(OrderListFilter.all),
             onTapStatus: openOrders,
           ),
+          const _SignInCard(),
           _AssetsCard(
             profile: profile,
             onTapCoupon: () => context.push('/coupons'),
@@ -83,7 +86,7 @@ class UserPage extends ConsumerWidget {
             onTapVisitors: () => _toast(context, context.l10n.userPage_81),
             onTapService: () => _toast(context, context.l10n.userPage_82),
             onTapBusiness: () => _toast(context, context.l10n.userPage_83),
-            onTapGiftCard: () => context.push('/giftcards'),
+            onTapMall: () => context.push('/mall'),
             onTapProxyBuy: () => context.push('/proxy-buy'),
             onTapGroupBuy: () => context.push('/group-buy'),
           ),
@@ -546,6 +549,91 @@ class _OrderCard extends StatelessWidget {
   }
 }
 
+/// 每日签到卡。
+class _SignInCard extends ConsumerWidget {
+  const _SignInCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    final profile = ref.watch(userProfileProvider);
+    final status =
+        ref.watch(signInStatusProvider).valueOrNull ?? SignInStatus.guest;
+    final submitting = ref.watch(signInControllerProvider);
+    final label = status.signed
+        ? context.l10n.signInDone
+        : context.l10n.signInReward(status.todayReward);
+
+    Future<void> handleTap() async {
+      if (!profile.isLoggedIn) {
+        context.push('/login?from=%2Fme');
+        return;
+      }
+      final result = await ref.read(signInControllerProvider.notifier).submit();
+      if (!context.mounted) return;
+      if (result.success) {
+        final reward = result.status?.todayReward ?? status.todayReward;
+        UserPage._toast(context, context.l10n.signInSuccess('$reward'));
+      } else {
+        UserPage._toast(
+          context,
+          result.errorMessage ?? context.l10n.signInFailed,
+        );
+      }
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
+      decoration: BoxDecoration(
+        color: colors.bgCard,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: status.signed || submitting ? null : handleTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: <Widget>[
+              Icon(LucideIcons.calendarCheck, size: 22, color: colors.brand),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: status.signed
+                        ? colors.textTertiary
+                        : colors.textPrimary,
+                  ),
+                ),
+              ),
+              if (submitting)
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: colors.brand,
+                  ),
+                )
+              else
+                Icon(
+                  status.signed
+                      ? LucideIcons.circleCheck
+                      : LucideIcons.chevronRight,
+                  size: 18,
+                  color: colors.textDisabled,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// 资产卡（66dp）。
 class _AssetsCard extends StatelessWidget {
   const _AssetsCard({
@@ -641,7 +729,7 @@ class _MenuCard extends StatelessWidget {
     required this.onTapVisitors,
     required this.onTapService,
     required this.onTapBusiness,
-    required this.onTapGiftCard,
+    required this.onTapMall,
     required this.onTapProxyBuy,
     required this.onTapGroupBuy,
   });
@@ -650,7 +738,7 @@ class _MenuCard extends StatelessWidget {
   final VoidCallback onTapVisitors;
   final VoidCallback onTapService;
   final VoidCallback onTapBusiness;
-  final VoidCallback onTapGiftCard;
+  final VoidCallback onTapMall;
   final VoidCallback onTapProxyBuy;
   final VoidCallback onTapGroupBuy;
 
@@ -658,7 +746,7 @@ class _MenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final entries = <(String, VoidCallback)>[
-      (context.l10n.userPage_650, onTapGiftCard),
+      (context.l10n.userMenuMall, onTapMall),
       (context.l10n.userPage_651, onTapProxyBuy),
       (context.l10n.userPage_652, onTapGroupBuy),
       (context.l10n.userPage_653, onTapAddress),

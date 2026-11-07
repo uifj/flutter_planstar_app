@@ -417,5 +417,35 @@
   "userPage_656": "卖家招募",
   "@userPage_656": {
     "description": "来源：lib/features/user/user_page.dart:656；原文：'卖家招募'"
+  },
+  "userMenuMall": "星币商城",
+  "@userMenuMall": {
+    "description": "来源：lib/features/user/user_page.dart；菜单入口"
+  },
+  "signInReward": "每日签到 · +{amount} 星币",
+  "@signInReward": {
+    "description": "来源：lib/features/user/user_page.dart；未签到按钮",
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "signInDone": "今日已签到",
+  "@signInDone": {
+    "description": "来源：lib/features/user/user_page.dart；已签到按钮"
+  },
+  "signInSuccess": "签到成功，+{amount} 星币",
+  "@signInSuccess": {
+    "description": "来源：lib/features/user/user_page.dart；签到成功提示",
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "signInFailed": "签到失败，请稍后重试",
+  "@signInFailed": {
+    "description": "来源：lib/features/user/user_page.dart；签到失败提示"
   }
 }

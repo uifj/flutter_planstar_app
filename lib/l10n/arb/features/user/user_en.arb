@@ -103,5 +103,10 @@
   "userPage_653": "地址管理",
   "userPage_654": "支持人",
   "userPage_655": "联系客服",
-  "userPage_656": "卖家招募"
+  "userPage_656": "卖家招募",
+  "userMenuMall": "Star Coin Mall",
+  "signInReward": "Daily check-in · +{amount} star coins",
+  "signInDone": "Checked in today",
+  "signInSuccess": "Check-in successful, +{amount} star coins",
+  "signInFailed": "Check-in failed, please try again later"
 }

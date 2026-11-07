@@ -718,6 +718,36 @@ abstract class UserLocalizations {
   /// In zh, this message translates to:
   /// **'卖家招募'**
   String get userPage_656;
+
+  /// 来源：lib/features/user/user_page.dart；菜单入口
+  ///
+  /// In zh, this message translates to:
+  /// **'星币商城'**
+  String get userMenuMall;
+
+  /// 来源：lib/features/user/user_page.dart；未签到按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'每日签到 · +{amount} 星币'**
+  String signInReward(Object amount);
+
+  /// 来源：lib/features/user/user_page.dart；已签到按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'今日已签到'**
+  String get signInDone;
+
+  /// 来源：lib/features/user/user_page.dart；签到成功提示
+  ///
+  /// In zh, this message translates to:
+  /// **'签到成功，+{amount} 星币'**
+  String signInSuccess(Object amount);
+
+  /// 来源：lib/features/user/user_page.dart；签到失败提示
+  ///
+  /// In zh, this message translates to:
+  /// **'签到失败，请稍后重试'**
+  String get signInFailed;
 }
 
 class _UserLocalizationsDelegate extends LocalizationsDelegate<UserLocalizations> {

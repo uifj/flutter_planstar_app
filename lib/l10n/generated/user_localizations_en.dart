@@ -325,4 +325,23 @@ class UserLocalizationsEn extends UserLocalizations {
 
   @override
   String get userPage_656 => '卖家招募';
+
+  @override
+  String get userMenuMall => 'Star Coin Mall';
+
+  @override
+  String signInReward(Object amount) {
+    return 'Daily check-in · +$amount star coins';
+  }
+
+  @override
+  String get signInDone => 'Checked in today';
+
+  @override
+  String signInSuccess(Object amount) {
+    return 'Check-in successful, +$amount star coins';
+  }
+
+  @override
+  String get signInFailed => 'Check-in failed, please try again later';
 }

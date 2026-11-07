@@ -23,6 +23,7 @@ import '../features/marketing/exchange_coupon_page.dart';
 import '../features/marketing/giftcard/add_gift_card_page.dart';
 import '../features/marketing/giftcard/gift_card_page.dart';
 import '../features/marketing/wallet_page.dart';
+import '../features/mall/mall_page.dart';
 import '../features/message/chat_page.dart';
 import '../features/message/message_page.dart';
 import '../features/order/order_confirm_page.dart';
@@ -50,6 +51,7 @@ const List<String> _authGatedPrefixes = <String>[
   '/order',
   '/coupons',
   '/wallet',
+  '/mall',
   '/giftcards',
   '/proxy-buy',
   '/group-buy',
@@ -371,6 +373,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/wallet',
         name: 'wallet',
         builder: (context, state) => const WalletPage(),
+      ),
+      // 星币商城。从「我的 → 星币商城」进入。
+      GoRoute(
+        path: '/mall',
+        name: 'mall',
+        builder: (context, state) => const MallPage(),
       ),
       // 礼品卡列表页。从「我的 → 礼品卡」进入。
       // 对齐企划星 `GiftCardActivity`：可用/不可用列表 + 绑定入口。
