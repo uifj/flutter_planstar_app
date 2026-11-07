@@ -8,6 +8,7 @@ on:
     paths:
       - "lib/**"
       - "test/**"
+      - "tool/**"
       - "packages/**"
       - "pubspec.yaml"
       - "l10n.yaml"
@@ -17,6 +18,7 @@ on:
     paths:
       - "lib/**"
       - "test/**"
+      - "tool/**"
       - "packages/**"
       - "pubspec.yaml"
       - "l10n.yaml"
@@ -37,6 +39,18 @@ jobs:
 
       - name: flutter pub get
         run: flutter pub get
+
+      # 改 ARB 后忘记跑生成时在这里失败。必须先 --check 再生成：
+      # 顺序反过来（先重新生成）会让比对永远通过。
+      - name: l10n check (arb 与 generated 是否同步)
+        run: dart tool/gen_l10n.dart --check
+
+      - name: l10n generate
+        run: dart tool/gen_l10n.dart
+
+      # 演出票务语义门禁：用户可见文案只能是企划口径。
+      - name: forbidden terms check (演出票务语义)
+        run: dart tool/check_forbidden_terms.dart
 
       # 只检查参与构建的目录，避免历史备份目录干扰门禁。
       - name: flutter analyze
