@@ -1,0 +1,302 @@
+{
+  "@@locale": "zh",
+  "homeTitle": "企划星 · 首页",
+  "homeEntryShowDetail": "企划详情",
+  "homeEntryShowDetailSubtitle": "深链 planstar://activity_detail?showId=888 → /show/888",
+  "homeEntryOrderConfirm": "确认订单（需登录）",
+  "homeEntryOrderConfirmSubtitle": "planstar://order_confirm → /order/confirm，触发登录门禁",
+  "cityListPage_46": "{city} 暂无企划数据（演示数据仅覆盖部分城市）",
+  "@cityListPage_46": {
+    "description": "来源：lib/features/home/city_list_page.dart:46；原文：'$city 暂无演出数据（演示数据仅覆盖部分城市）'",
+    "placeholders": {
+      "city": {
+        "type": "Object"
+      }
+    }
+  },
+  "cityListPage_53": "选择城市",
+  "@cityListPage_53": {
+    "description": "来源：lib/features/home/city_list_page.dart:53；原文：'选择城市'"
+  },
+  "cityListPage_57": "上海",
+  "@cityListPage_57": {
+    "description": "来源：lib/features/home/city_list_page.dart:57；原文：'上海'"
+  },
+  "cityListPage_59": "热门城市",
+  "@cityListPage_59": {
+    "description": "来源：lib/features/home/city_list_page.dart:59；原文：'热门城市'"
+  },
+  "cityListPage_65": "全部城市",
+  "@cityListPage_65": {
+    "description": "来源：lib/features/home/city_list_page.dart:65；原文：'全部城市'"
+  },
+  "cityListPage_73": "演示数据只覆盖上海、北京、杭州、广州、深圳；其余城市会显示空态。",
+  "@cityListPage_73": {
+    "description": "来源：lib/features/home/city_list_page.dart:73；原文：'演示数据只覆盖上海、北京、杭州、广州、深圳；其余城市会显示空态。'"
+  },
+  "cityListPage_115": "当前定位：上海",
+  "@cityListPage_115": {
+    "description": "来源：lib/features/home/city_list_page.dart:115；原文：'当前定位：上海'"
+  },
+  "cityListPage_120": "演示环境没有接入定位，这里固定为上海",
+  "@cityListPage_120": {
+    "description": "来源：lib/features/home/city_list_page.dart:120；原文：'演示环境没有接入定位，这里固定为上海'"
+  },
+  "cityListPage_126": "上海",
+  "@cityListPage_126": {
+    "description": "来源：lib/features/home/city_list_page.dart:126；原文：'上海'"
+  },
+  "cityListPage_140": "使用",
+  "@cityListPage_140": {
+    "description": "来源：lib/features/home/city_list_page.dart:140；原文：'使用'"
+  },
+  "homePage_51": "音乐企划 · 现场企划 · 巡演企划",
+  "@homePage_51": {
+    "description": "来源：lib/features/home/home_page.dart:51；原文：'演唱会 · 音乐节 · 巡演'"
+  },
+  "homePage_52": "话剧 · 音乐剧 · 沉浸式",
+  "@homePage_52": {
+    "description": "来源：lib/features/home/home_page.dart:52；原文：'话剧 · 音乐剧 · 沉浸式'"
+  },
+  "homePage_53": "交响 · 独奏 · 室内乐",
+  "@homePage_53": {
+    "description": "来源：lib/features/home/home_page.dart:53；原文：'交响 · 独奏 · 室内乐'"
+  },
+  "homePage_54": "儿童剧 · 亲子活动",
+  "@homePage_54": {
+    "description": "来源：lib/features/home/home_page.dart:54；原文：'儿童剧 · 亲子活动'"
+  },
+  "homePage_132": "{next} 暂无企划数据（演示数据仅覆盖部分城市）",
+  "@homePage_132": {
+    "description": "来源：lib/features/home/home_page.dart:132；原文：'$next 暂无演出数据（演示数据仅覆盖部分城市）'",
+    "placeholders": {
+      "next": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePage_163": "{title} · 运营活动页（演示）",
+  "@homePage_163": {
+    "description": "来源：lib/features/home/home_page.dart:163；原文：'${slide.title} · 运营活动页（演示）'",
+    "placeholders": {
+      "title": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePage_175": "{city} 暂无企划",
+  "@homePage_175": {
+    "description": "来源：lib/features/home/home_page.dart:175；原文：'$city 暂无演出'",
+    "placeholders": {
+      "city": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePage_176": "演示数据只覆盖上海、北京、杭州、广州、深圳",
+  "@homePage_176": {
+    "description": "来源：lib/features/home/home_page.dart:176；原文：'演示数据只覆盖上海、北京、杭州、广州、深圳'"
+  },
+  "homePage_178": "切换到上海",
+  "@homePage_178": {
+    "description": "来源：lib/features/home/home_page.dart:178；原文：'切换到上海'"
+  },
+  "homePage_180": "上海",
+  "@homePage_180": {
+    "description": "来源：lib/features/home/home_page.dart:180；原文：'上海'"
+  },
+  "homePage_193": "热门企划",
+  "@homePage_193": {
+    "description": "来源：lib/features/home/home_page.dart:193；原文：'热门演出'"
+  },
+  "homePage_194": "本周想看人数最多",
+  "@homePage_194": {
+    "description": "来源：lib/features/home/home_page.dart:194；原文：'本周想看人数最多'"
+  },
+  "homePage_241": "企划星 · 让好企划被看见",
+  "@homePage_241": {
+    "description": "来源：lib/features/home/home_page.dart:241；原文：'企划星 · 让看演出更简单'"
+  },
+  "homePage_251": "让每一个企划都值得期待",
+  "@homePage_251": {
+    "description": "来源：lib/features/home/home_page.dart:251；原文：'让每一场演出都值得期待'"
+  },
+  "homePage_270": "音乐企划",
+  "@homePage_270": {
+    "description": "来源：lib/features/home/home_page.dart:270；原文：'演唱会'"
+  },
+  "homePage_271": "话剧歌剧",
+  "@homePage_271": {
+    "description": "来源：lib/features/home/home_page.dart:271；原文：'话剧歌剧'"
+  },
+  "homePage_272": "音乐会",
+  "@homePage_272": {
+    "description": "来源：lib/features/home/home_page.dart:272；原文：'音乐会'"
+  },
+  "homePage_273": "儿童亲子",
+  "@homePage_273": {
+    "description": "来源：lib/features/home/home_page.dart:273；原文：'儿童亲子'"
+  },
+  "homePage_274": "企划",
+  "@homePage_274": {
+    "description": "来源：lib/features/home/home_page.dart:274；原文：'演出'"
+  },
+  "homePage_323": "正在加载 {city} 的企划…",
+  "@homePage_323": {
+    "description": "来源：lib/features/home/home_page.dart:323；原文：'正在加载 $city 的演出…'",
+    "placeholders": {
+      "city": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePage_363": "加载失败",
+  "@homePage_363": {
+    "description": "来源：lib/features/home/home_page.dart:363；原文：'加载失败'"
+  },
+  "homePage_364": "无法获取 {city} 的企划数据\n{toString}",
+  "@homePage_364": {
+    "description": "来源：lib/features/home/home_page.dart:364；原文：'无法获取 $city 的演出数据\\n${error.toString()}'",
+    "placeholders": {
+      "city": {
+        "type": "Object"
+      },
+      "toString": {
+        "type": "Object"
+      }
+    }
+  },
+  "cityPickerSheet_70": "选择城市",
+  "@cityPickerSheet_70": {
+    "description": "来源：lib/features/home/widgets/city_picker_sheet.dart:70；原文：'选择城市'"
+  },
+  "cityPickerSheet_90": "当前定位：上海",
+  "@cityPickerSheet_90": {
+    "description": "来源：lib/features/home/widgets/city_picker_sheet.dart:90；原文：'当前定位：上海'"
+  },
+  "cityPickerSheet_97": "热门城市",
+  "@cityPickerSheet_97": {
+    "description": "来源：lib/features/home/widgets/city_picker_sheet.dart:97；原文：'热门城市'"
+  },
+  "cityPickerSheet_127": "查看全部城市",
+  "@cityPickerSheet_127": {
+    "description": "来源：lib/features/home/widgets/city_picker_sheet.dart:127；原文：'查看全部城市'"
+  },
+  "homeBannerFloor_47": "新企划首发：星海拾荒者",
+  "@homeBannerFloor_47": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:47；原文：'新企划首发：星海拾荒者'"
+  },
+  "homeBannerFloor_48": "上线 24 小时 · 支持者抢先看",
+  "@homeBannerFloor_48": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:48；原文：'上线 24 小时 · 支持者抢先看'"
+  },
+  "homeBannerFloor_49": "首发",
+  "@homeBannerFloor_49": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:49；原文：'首发'"
+  },
+  "homeBannerFloor_53": "达成目标，解锁回报",
+  "@homeBannerFloor_53": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:53；原文：'达成目标，解锁回报'"
+  },
+  "homeBannerFloor_54": "每一档回报都写明交付时间",
+  "@homeBannerFloor_54": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:54；原文：'每一档回报都写明交付时间'"
+  },
+  "homeBannerFloor_55": "达成",
+  "@homeBannerFloor_55": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:55；原文：'达成'"
+  },
+  "homeBannerFloor_59": "支持者可获进度更新",
+  "@homeBannerFloor_59": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:59；原文：'支持者可获进度更新'"
+  },
+  "homeBannerFloor_60": "创作者认证 · 每步进展都可查",
+  "@homeBannerFloor_60": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:60；原文：'创作者认证 · 每步进展都可查'"
+  },
+  "homeBannerFloor_61": "更新",
+  "@homeBannerFloor_61": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:61；原文：'更新'"
+  },
+  "homeBannerFloor_66": "资金托管 · 未达成全额退",
+  "@homeBannerFloor_66": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:66；原文：'资金托管 · 未达成全额退'"
+  },
+  "homeBannerFloor_67": "支持款平台托管 · 原路退回",
+  "@homeBannerFloor_67": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:67；原文：'支持款平台托管 · 原路退回'"
+  },
+  "homeBannerFloor_68": "保障",
+  "@homeBannerFloor_68": {
+    "description": "来源：lib/features/home/widgets/home_banner_floor.dart:68；原文：'保障'"
+  },
+  "homeChoicenessFloor_83": "精选推荐",
+  "@homeChoicenessFloor_83": {
+    "description": "来源：lib/features/home/widgets/home_choiceness_floor.dart:83；原文：'精选推荐'"
+  },
+  "homeGuaranteeFloor_13": "100%履约",
+  "@homeGuaranteeFloor_13": {
+    "description": "来源：lib/features/home/widgets/home_guarantee_floor.dart:13；原文：'100%真票'"
+  },
+  "homeGuaranteeFloor_13_2": "未达成退款",
+  "@homeGuaranteeFloor_13_2": {
+    "description": "来源：lib/features/home/widgets/home_guarantee_floor.dart:13；原文：'无票赔付'"
+  },
+  "homeGuaranteeFloor_13_3": "交付保障",
+  "@homeGuaranteeFloor_13_3": {
+    "description": "来源：lib/features/home/widgets/home_guarantee_floor.dart:13；原文：'出票保真'"
+  },
+  "homeGuaranteeFloor_13_4": "配送保障",
+  "@homeGuaranteeFloor_13_4": {
+    "description": "来源：lib/features/home/widgets/home_guarantee_floor.dart:13；原文：'配送保障'"
+  },
+  "homeHeader_108": "100%履约 · 未达成退款",
+  "@homeHeader_108": {
+    "description": "来源：lib/features/home/widgets/home_header.dart:108；原文：'100%真票 · 无票赔付'"
+  },
+  "homeVenuesFloor_48": "热门活动场地",
+  "@homeVenuesFloor_48": {
+    "description": "来源：lib/features/home/widgets/home_venues_floor.dart:48；原文：'热门场馆'"
+  },
+  "homeProjectPicked": "精选企划",
+  "homeProjectBannerSubtitle": "企划星 × 认真做内容的人",
+  "homeHotProjectTitle": "正在支持的企划",
+  "homeHotProjectDesc": "按支持人数与达成率排序",
+  "homeFloorGame": "游戏企划",
+  "homeFloorNovel": "小说企划",
+  "homeFloorDoujin": "同人企划",
+  "homeFloorInterview": "面经企划",
+  "homeFloorOther": "更多企划",
+  "homeFloorGameDesc": "把喜欢的游戏做出来",
+  "homeFloorNovelDesc": "让故事被印成书",
+  "homeFloorDoujinDesc": "同人创作，一起完成",
+  "homeFloorInterviewDesc": "把经验变成可交付的手册",
+  "homeRankingTitle": "企划榜单",
+  "homeRankingHot": "热度榜",
+  "homeRankingAchievement": "达成榜",
+  "homeRankingEnding": "冲刺榜",
+  "homeRankingMetricSupporters": "{count} 人支持",
+  "@homeRankingMetricSupporters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeRankingMetricAchievement": "达成 {percent}%",
+  "@homeRankingMetricAchievement": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "homeRankingMetricRemaining": "剩 {days} 天",
+  "@homeRankingMetricRemaining": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  }
+}

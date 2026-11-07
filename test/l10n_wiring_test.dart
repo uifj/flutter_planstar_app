@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:planstar/app/app.dart';
-import 'package:planstar/l10n/auth_localizations.dart';
-import 'package:planstar/l10n/catalog_localizations.dart';
-import 'package:planstar/l10n/discover_localizations.dart';
-import 'package:planstar/l10n/goods_localizations.dart';
-import 'package:planstar/l10n/group_buy_localizations.dart';
-import 'package:planstar/l10n/home_localizations.dart';
-import 'package:planstar/l10n/marketing_localizations.dart';
-import 'package:planstar/l10n/message_localizations.dart';
-import 'package:planstar/l10n/order_localizations.dart';
-import 'package:planstar/l10n/proxy_buy_localizations.dart';
-import 'package:planstar/l10n/search_localizations.dart';
-import 'package:planstar/l10n/user_localizations.dart';
-import 'package:planstar/l10n/app_localizations.dart';
+import 'package:planstar/l10n/generated/auth_localizations.dart';
+import 'package:planstar/l10n/generated/catalog_localizations.dart';
+import 'package:planstar/l10n/generated/discover_localizations.dart';
+import 'package:planstar/l10n/generated/goods_localizations.dart';
+import 'package:planstar/l10n/generated/group_buy_localizations.dart';
+import 'package:planstar/l10n/generated/home_localizations.dart';
+import 'package:planstar/l10n/generated/marketing_localizations.dart';
+import 'package:planstar/l10n/generated/message_localizations.dart';
+import 'package:planstar/l10n/generated/order_localizations.dart';
+import 'package:planstar/l10n/generated/proxy_buy_localizations.dart';
+import 'package:planstar/l10n/generated/search_localizations.dart';
+import 'package:planstar/l10n/generated/user_localizations.dart';
+import 'package:planstar/l10n/generated/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// 每套 l10n 的「探针」：取一个一定存在的文案，用来证明该类真的被加载了。

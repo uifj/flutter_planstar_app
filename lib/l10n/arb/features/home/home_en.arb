@@ -1,0 +1,104 @@
+{
+  "@@locale": "en",
+  "homeTitle": "Planstar · Home",
+  "homeEntryShowDetail": "Project details",
+  "homeEntryShowDetailSubtitle": "Deep link planstar://activity_detail?showId=888 → /show/888",
+  "homeEntryOrderConfirm": "Confirm order (sign-in required)",
+  "homeEntryOrderConfirmSubtitle": "planstar://order_confirm → /order/confirm, triggers the sign-in gate",
+  "cityListPage_46": "No project data for {city} (demo data covers only some cities)",
+  "cityListPage_53": "选择城市",
+  "cityListPage_57": "上海",
+  "cityListPage_59": "热门城市",
+  "cityListPage_65": "全部城市",
+  "cityListPage_73": "演示数据只覆盖上海、北京、杭州、广州、深圳；其余城市会显示空态。",
+  "cityListPage_115": "当前定位：上海",
+  "cityListPage_120": "演示环境没有接入定位，这里固定为上海",
+  "cityListPage_126": "上海",
+  "cityListPage_140": "使用",
+  "homePage_51": "Music projects · Live projects · Tour projects",
+  "homePage_52": "Theatre · Musicals · Immersive",
+  "homePage_53": "Symphony · Solo · Chamber",
+  "homePage_54": "Kids · Family",
+  "homePage_132": "No project data for {next} (demo data covers only some cities)",
+  "homePage_163": "{title} · Campaign page (demo)",
+  "homePage_175": "No projects in {city}",
+  "homePage_176": "Demo data covers Shanghai, Beijing, Hangzhou, Guangzhou and Shenzhen only",
+  "homePage_178": "Switch to Shanghai",
+  "homePage_180": "Shanghai",
+  "homePage_193": "Popular projects",
+  "homePage_194": "Most wishlisted this week",
+  "homePage_241": "Planstar · Helping good projects get seen",
+  "homePage_251": "Every project worth looking forward to",
+  "homePage_270": "Music projects",
+  "homePage_271": "Theatre & opera",
+  "homePage_272": "Concerts",
+  "homePage_273": "Kids & family",
+  "homePage_274": "Projects",
+  "homePage_323": "Loading projects in {city}…",
+  "homePage_363": "Failed to load",
+  "homePage_364": "Unable to load projects in {city}\n{toString}",
+  "cityPickerSheet_70": "选择城市",
+  "cityPickerSheet_90": "当前定位：上海",
+  "cityPickerSheet_97": "热门城市",
+  "cityPickerSheet_127": "查看全部城市",
+  "homeBannerFloor_47": "New project launch: Starfall Scavenger",
+  "homeBannerFloor_48": "Live for 24 hours · supporters see it first",
+  "homeBannerFloor_49": "New",
+  "homeBannerFloor_53": "Reach the goal, unlock rewards",
+  "homeBannerFloor_54": "Every reward tier lists its delivery date",
+  "homeBannerFloor_55": "Funded",
+  "homeBannerFloor_59": "Supporters get progress updates",
+  "homeBannerFloor_60": "Verified creators · every milestone tracked",
+  "homeBannerFloor_61": "Updates",
+  "homeBannerFloor_66": "Funds held in escrow",
+  "homeBannerFloor_67": "Full refund if the goal isn't reached",
+  "homeBannerFloor_68": "Protected",
+  "homeChoicenessFloor_83": "精选推荐",
+  "homeGuaranteeFloor_13": "100% fulfillment",
+  "homeGuaranteeFloor_13_2": "Refund if unmet",
+  "homeGuaranteeFloor_13_3": "Delivery guarantee",
+  "homeGuaranteeFloor_13_4": "Delivery covered",
+  "homeHeader_108": "100% fulfillment · Refund if unmet",
+  "homeVenuesFloor_48": "Popular venues",
+  "homeProjectPicked": "精选企划",
+  "homeProjectBannerSubtitle": "企划星 × 认真做内容的人",
+  "homeHotProjectTitle": "正在支持的企划",
+  "homeHotProjectDesc": "按支持人数与达成率排序",
+  "homeFloorGame": "游戏企划",
+  "homeFloorNovel": "小说企划",
+  "homeFloorDoujin": "同人企划",
+  "homeFloorInterview": "面经企划",
+  "homeFloorOther": "更多企划",
+  "homeFloorGameDesc": "把喜欢的游戏做出来",
+  "homeFloorNovelDesc": "让故事被印成书",
+  "homeFloorDoujinDesc": "同人创作，一起完成",
+  "homeFloorInterviewDesc": "把经验变成可交付的手册",
+  "homeRankingTitle": "Project Rankings",
+  "homeRankingHot": "Popular",
+  "homeRankingAchievement": "Funded",
+  "homeRankingEnding": "Ending Soon",
+  "homeRankingMetricSupporters": "{count} supporters",
+  "@homeRankingMetricSupporters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeRankingMetricAchievement": "{percent}% funded",
+  "@homeRankingMetricAchievement": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "homeRankingMetricRemaining": "{days} days left",
+  "@homeRankingMetricRemaining": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  }
+}

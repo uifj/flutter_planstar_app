@@ -1,0 +1,176 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'catalog_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
+class CatalogLocalizationsEn extends CatalogLocalizations {
+  CatalogLocalizationsEn([String locale = 'en']) : super(locale);
+
+  @override
+  String get catalogProviders_74 => '上海';
+
+  @override
+  String showCategory_95(Object address, Object showCount) {
+    return '$address · $showCount projects';
+  }
+
+  @override
+  String showSummary_165(Object text) {
+    return '$text折';
+  }
+
+  @override
+  String get showSummary_178 => '暂时售罄';
+
+  @override
+  String get showSummary_178_2 => 'Supporting';
+
+  @override
+  String get showSummary_263 => '周一';
+
+  @override
+  String get showSummary_263_2 => '周二';
+
+  @override
+  String get showSummary_263_3 => '周三';
+
+  @override
+  String get showSummary_263_4 => '周四';
+
+  @override
+  String get showSummary_263_5 => '周五';
+
+  @override
+  String get showSummary_263_6 => '周六';
+
+  @override
+  String get showSummary_263_7 => '周日';
+
+  @override
+  String showSummary_266(Object month, Object day, Object weekday, Object hour, Object minute) {
+    return '$month月$day日 $weekday $hour:$minute';
+  }
+
+  @override
+  String get showSummary_280 => '刚刚';
+
+  @override
+  String showSummary_281(Object inMinutes) {
+    return '$inMinutes分钟前';
+  }
+
+  @override
+  String get showSummary_285 => '昨天';
+
+  @override
+  String showSummary_286(Object inDays) {
+    return '$inDays天前';
+  }
+
+  @override
+  String showSummary_287(Object month, Object day) {
+    return '$month月$day日';
+  }
+
+  @override
+  String categoryHomePage_116(Object city, Object name) {
+    return 'No $name projects in $city';
+  }
+
+  @override
+  String get categoryHomePage_unknownCategory => '该分类';
+
+  @override
+  String get categoryHomePage_117 => '试试切换城市或查看其他分类';
+
+  @override
+  String get categoryHomePage_119 => '去首页';
+
+  @override
+  String get categoryHomePage_403 => '起';
+
+  @override
+  String categoryHomePage_406(Object wishCount) {
+    return '$wishCount 人想看';
+  }
+
+  @override
+  String get showCards_72 => '暂时售罄';
+
+  @override
+  String get showCards_75 => '起';
+
+  @override
+  String get showCards_156 => '暂时售罄';
+
+  @override
+  String showCards_175(Object discountLabel) {
+    return '$discountLabel起';
+  }
+
+  @override
+  String get showCards_270 => '暂时售罄';
+
+  @override
+  String get showCards_277 => '起';
+
+  @override
+  String get showListPage_78 => 'No projects in this category';
+
+  @override
+  String get showListPage_79 => '换个分类或城市看看';
+
+  @override
+  String get showListPage_81 => 'See all projects';
+
+  @override
+  String get showListPage_112 => 'All projects';
+
+  @override
+  String get showListPage_140 => '推荐';
+
+  @override
+  String get showListPage_141 => '最近开演';
+
+  @override
+  String get showListPage_142 => '价格最低';
+
+  @override
+  String get showListPage_172 => '全部';
+
+  @override
+  String showListPage_249(Object total) {
+    return '共 $total 场';
+  }
+
+  @override
+  String projectCardAchievement(int rate) {
+    return '$rate%';
+  }
+
+  @override
+  String get projectCardAchieved => '已达成';
+
+  @override
+  String projectCardGoal(String amount) {
+    return '目标 $amount';
+  }
+
+  @override
+  String projectCardSupporters(int count) {
+    return '$count 人支持';
+  }
+
+  @override
+  String projectCardDays(int days) {
+    return '剩 $days 天';
+  }
+
+  @override
+  String get projectCardEnded => '已结束';
+
+  @override
+  String get projectCardSupportFrom => '起支持';
+}

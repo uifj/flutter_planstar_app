@@ -17,11 +17,13 @@
 // "某个人的机器上知道要先改个文件名" 的口头知识。
 //
 // 用法：
-//   dart tool/gen_l10n.dart
+//   dart tool/gen_l10n.dart           生成到 `lib/l10n/generated/`（默认）
+//   dart tool/gen_l10n.dart --check   生成到临时目录并与已入库产物逐文件比对
 //
 // 失败条件（exit code 1）：
 //   - 某套 ARB 生成失败；
-//   - 某套 ARB 有未翻译的 key（缺 en 或 zh）。
+//   - 某套 ARB 有未翻译的 key（缺 en 或 zh）；
+//   - `--check` 下临时产物与已入库的 `lib/l10n/generated/` 不一致。
 //
 // 注意：`flutter build` / `flutter run` 在 `generate: true` 下会自动重新生成
 // **应用级** l10n（读 l10n.yaml），但不会管 feature 级。feature 级必须跑本脚本，
@@ -38,7 +40,6 @@ final class L10nTarget {
     required this.template,
     required this.outputFile,
     required this.className,
-    this.outputDir = 'lib/l10n',
   });
 
   /// 人类可读名称（日志用）。
@@ -55,9 +56,6 @@ final class L10nTarget {
 
   /// 生成的类名。
   final String className;
-
-  /// 生成 Dart 文件的目录（默认 lib/l10n，保持所有 l10n 产物集中）。
-  final String outputDir;
 
   /// 门面内部字段名：`OrderLocalizations` → `order`。
   String get field {
@@ -91,95 +89,104 @@ final class _Message {
   final L10nTarget owner;
 }
 
+/// ARB 源文件根目录：应用级在根，feature 级在 `features/` 下。
+const String arbRoot = 'lib/l10n/arb';
+
+/// feature 级 ARB 根目录。
+const String featureArbRoot = '$arbRoot/features';
+
+/// 生成 Dart 文件的目录（统一一处，源与产物分开）。
+const String generatedDir = 'lib/l10n/generated';
+
 /// 全部目标。新增 feature 时在这里加一行即可。
 const List<L10nTarget> targets = <L10nTarget>[
   L10nTarget(
     label: 'app（跨 feature 共用）',
-    arbDir: 'lib/l10n',
+    arbDir: arbRoot,
     template: 'app_zh.arb',
     outputFile: 'app_localizations.dart',
     className: 'AppLocalizations',
   ),
   L10nTarget(
     label: 'features/auth',
-    arbDir: 'lib/l10n/features/auth',
+    arbDir: '$featureArbRoot/auth',
     template: 'auth_zh.arb',
     outputFile: 'auth_localizations.dart',
     className: 'AuthLocalizations',
   ),
   L10nTarget(
     label: 'features/catalog',
-    arbDir: 'lib/l10n/features/catalog',
+    arbDir: '$featureArbRoot/catalog',
     template: 'catalog_zh.arb',
     outputFile: 'catalog_localizations.dart',
     className: 'CatalogLocalizations',
   ),
   L10nTarget(
     label: 'features/discover',
-    arbDir: 'lib/l10n/features/discover',
+    arbDir: '$featureArbRoot/discover',
     template: 'discover_zh.arb',
     outputFile: 'discover_localizations.dart',
     className: 'DiscoverLocalizations',
   ),
   L10nTarget(
     label: 'features/goods',
-    arbDir: 'lib/l10n/features/goods',
+    arbDir: '$featureArbRoot/goods',
     template: 'goods_zh.arb',
     outputFile: 'goods_localizations.dart',
     className: 'GoodsLocalizations',
   ),
   L10nTarget(
     label: 'features/group_buy',
-    arbDir: 'lib/l10n/features/group_buy',
+    arbDir: '$featureArbRoot/group_buy',
     template: 'group_buy_zh.arb',
     outputFile: 'group_buy_localizations.dart',
     className: 'GroupBuyLocalizations',
   ),
   L10nTarget(
     label: 'features/home',
-    arbDir: 'lib/l10n/features/home',
+    arbDir: '$featureArbRoot/home',
     template: 'home_zh.arb',
     outputFile: 'home_localizations.dart',
     className: 'HomeLocalizations',
   ),
   L10nTarget(
     label: 'features/marketing',
-    arbDir: 'lib/l10n/features/marketing',
+    arbDir: '$featureArbRoot/marketing',
     template: 'marketing_zh.arb',
     outputFile: 'marketing_localizations.dart',
     className: 'MarketingLocalizations',
   ),
   L10nTarget(
     label: 'features/message',
-    arbDir: 'lib/l10n/features/message',
+    arbDir: '$featureArbRoot/message',
     template: 'message_zh.arb',
     outputFile: 'message_localizations.dart',
     className: 'MessageLocalizations',
   ),
   L10nTarget(
     label: 'features/order',
-    arbDir: 'lib/l10n/features/order',
+    arbDir: '$featureArbRoot/order',
     template: 'order_zh.arb',
     outputFile: 'order_localizations.dart',
     className: 'OrderLocalizations',
   ),
   L10nTarget(
     label: 'features/proxy_buy',
-    arbDir: 'lib/l10n/features/proxy_buy',
+    arbDir: '$featureArbRoot/proxy_buy',
     template: 'proxy_buy_zh.arb',
     outputFile: 'proxy_buy_localizations.dart',
     className: 'ProxyBuyLocalizations',
   ),
   L10nTarget(
     label: 'features/search',
-    arbDir: 'lib/l10n/features/search',
+    arbDir: '$featureArbRoot/search',
     template: 'search_zh.arb',
     outputFile: 'search_localizations.dart',
     className: 'SearchLocalizations',
   ),
   L10nTarget(
     label: 'features/user',
-    arbDir: 'lib/l10n/features/user',
+    arbDir: '$featureArbRoot/user',
     template: 'user_zh.arb',
     outputFile: 'user_localizations.dart',
     className: 'UserLocalizations',
@@ -190,10 +197,29 @@ const String _l10nYaml = 'l10n.yaml';
 const String _l10nYamlBackup = 'l10n.yaml.gen-bak';
 const String _untranslatedDir = 'build/untranslated';
 
+/// `--check` 的临时输出目录（位于 build/ 下，不参与入库）。
+const String _checkDir = 'build/l10n_check/generated';
+
 Future<void> main(List<String> args) async {
-  // `--facade-only` 只重建 lib/l10n/app_l10n.dart：改注释/门面逻辑时不必等
+  final bool check = args.contains('--check');
+  // `--facade-only` 只重建 AppL10n 门面：改注释/门面逻辑时不必等
   // 13 套 gen-l10n 全部重跑。
   final bool facadeOnly = args.contains('--facade-only');
+
+  if (check && facadeOnly) {
+    stderr.writeln('✗ --check 与 --facade-only 不能同时使用');
+    exit(1);
+  }
+
+  final String outputRoot = check ? _checkDir : generatedDir;
+  if (check) {
+    final stale = Directory(_checkDir);
+    if (stale.existsSync()) {
+      stale.deleteSync(recursive: true);
+    }
+  }
+  Directory(outputRoot).createSync(recursive: true);
+
   var failed = 0;
   final problems = <String>[];
 
@@ -220,7 +246,7 @@ Future<void> main(List<String> args) async {
           <String>[
             'gen-l10n',
             '--arb-dir=${target.arbDir}',
-            '--output-dir=${target.outputDir}',
+            '--output-dir=$outputRoot',
             '--template-arb-file=${target.template}',
             '--output-localization-file=${target.outputFile}',
             '--output-class=${target.className}',
@@ -265,20 +291,88 @@ Future<void> main(List<String> args) async {
   }
 
   try {
-    _writeFacade(_collectMessages());
+    _writeFacade(_collectMessages(outputRoot), outputRoot);
   } on StateError catch (error) {
     stderr.writeln('✗ 构建 AppL10n 门面失败：${error.message}');
     exit(1);
   }
 
+  if (check) {
+    final diffs = _diffGenerated(outputRoot, generatedDir);
+    if (diffs.isNotEmpty) {
+      stderr.writeln(
+        '\n✗ 生成产物与已入库的 $generatedDir 不一致（${diffs.length} 处）：',
+      );
+      for (final diff in diffs) {
+        stderr.writeln('  - $diff');
+      }
+      stderr.writeln('\n请运行 dart tool/gen_l10n.dart 并提交 $generatedDir');
+      exit(1);
+    }
+    stdout.writeln('✓ 生成产物与 $generatedDir 完全一致');
+    return;
+  }
+
   stdout.writeln('\n✓ ${targets.length} 套 l10n 全部生成完成，无未翻译 key');
 }
 
+/// 逐文件比较临时产物与已入库产物，返回差异描述（空表示一致）。
+List<String> _diffGenerated(String actualDir, String expectedDir) {
+  final Set<String> actual = _relativeFiles(actualDir);
+  final Set<String> expected = _relativeFiles(expectedDir);
+  final List<String> diffs = <String>[];
+
+  for (final name in actual.difference(expected).toList()..sort()) {
+    diffs.add('未入库：$name');
+  }
+  for (final name in expected.difference(actual).toList()..sort()) {
+    diffs.add('缺失：$name');
+  }
+  for (final name in actual.intersection(expected).toList()..sort()) {
+    if (!_sameBytes(
+      File('$actualDir/$name').readAsBytesSync(),
+      File('$expectedDir/$name').readAsBytesSync(),
+    )) {
+      diffs.add('内容不一致：$name');
+    }
+  }
+  return diffs;
+}
+
+/// 列出目录下全部文件的相对路径（统一用 `/` 分隔）。
+Set<String> _relativeFiles(String dir) {
+  final root = Directory(dir);
+  if (!root.existsSync()) {
+    return <String>{};
+  }
+  return root
+      .listSync(recursive: true)
+      .whereType<File>()
+      .map(
+        (file) => file.path
+            .substring(root.path.length + 1)
+            .replaceAll(Platform.pathSeparator, '/'),
+      )
+      .toSet();
+}
+
+bool _sameBytes(List<int> a, List<int> b) {
+  if (a.length != b.length) {
+    return false;
+  }
+  for (var index = 0; index < a.length; index++) {
+    if (a[index] != b[index]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /// 从各生成类里收集全部文案成员，并保证 key 全局唯一。
-List<_Message> _collectMessages() {
+List<_Message> _collectMessages(String outputRoot) {
   final Map<String, _Message> byKey = <String, _Message>{};
   for (final target in targets) {
-    final file = File('${target.outputDir}/${target.outputFile}');
+    final file = File('$outputRoot/${target.outputFile}');
     if (!file.existsSync()) {
       throw StateError('找不到 ${file.path}，请先运行 dart tool/gen_l10n.dart');
     }
@@ -363,8 +457,8 @@ Iterable<_Message> _parseMessages(File file, L10nTarget target) sync* {
   }
 }
 
-/// 生成 `lib/l10n/app_l10n.dart`：把全部 feature 的文案拍平到同一命名空间。
-void _writeFacade(List<_Message> messages) {
+/// 生成 `<outputRoot>/app_l10n.dart`：把全部 feature 的文案拍平到同一命名空间。
+void _writeFacade(List<_Message> messages, String outputRoot) {
   final buffer = StringBuffer()
     ..writeln('// GENERATED CODE - DO NOT MODIFY BY HAND.')
     ..writeln('// 生成入口：dart tool/gen_l10n.dart（--facade-only 可只重建本文件）。')
@@ -432,37 +526,7 @@ void _writeFacade(List<_Message> messages) {
     ..writeln('  AppL10n get l10n => AppL10n(this);')
     ..writeln('}');
 
-  File('lib/l10n/app_l10n.dart').writeAsStringSync(buffer.toString());
-  stdout.writeln('✓ lib/l10n/app_l10n.dart（${messages.length} 条文案）');
-
-  // 同一个脚本再写 barrel：新增 feature 时只改 `targets`，不用再手工补 import。
-  final barrel = StringBuffer()
-    ..writeln('// GENERATED CODE - DO NOT MODIFY BY HAND.')
-    ..writeln('// 生成入口：dart tool/gen_l10n.dart。')
-    ..writeln('//')
-    ..writeln('/// 应用 l10n 的唯一 import 入口。')
-    ..writeln('///')
-    ..writeln('/// 页面里只需：')
-    ..writeln('///')
-    ..writeln('/// ```dart')
-    ..writeln("/// import '../../l10n/l10n.dart';")
-    ..writeln('///')
-    ..writeln('/// Text(context.l10n.appTitle);')
-    ..writeln('/// ```')
-    ..writeln('///')
-    ..writeln('/// - `context.l10n` 由 [AppL10nBuildContext] 提供，返回扁平门面')
-    ..writeln('///   [AppL10n]，不需要再写 `OrderLocalizations.of(context)` 这类长前缀；')
-    ..writeln('/// - [AppL10n] 按 feature 的生成类懒取文案，key 全局唯一由脚本校验；')
-    ..writeln('/// - 同时 re-export 各生成类，`AppLocalizations.delegate` /')
-    ..writeln('///   `supportedLocales` 等静态成员照常可用。')
-    ..writeln('library;')
-    ..writeln()
-    ..writeln("export 'app_l10n.dart';");
-
-  for (final target in targets) {
-    barrel.writeln("export '${target.outputFile}';");
-  }
-
-  File('lib/l10n/l10n.dart').writeAsStringSync(barrel.toString());
-  stdout.writeln('✓ lib/l10n/l10n.dart（${targets.length} 个生成类）');
+  final facadePath = '$outputRoot/app_l10n.dart';
+  File(facadePath).writeAsStringSync(buffer.toString());
+  stdout.writeln('✓ $facadePath（${messages.length} 条文案）');
 }

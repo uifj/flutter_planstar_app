@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "proxyBuy_142": "Awaiting purchase",
+  "proxyBuy_144": "Purchasing",
+  "proxyBuy_146": "Purchase succeeded",
+  "proxyBuy_148": "Purchase failed",
+  "proxyBuy_150": "Cancelled",
+  "proxyBuyPage_30": "Purchase service",
+  "proxyBuyPage_36": "My purchase orders",
+  "proxyBuyPage_39": "No purchase orders yet",
+  "proxyBuyPage_40": "Orders will appear here after you join a purchase service",
+  "proxyBuyPage_81": "Purchase service rules",
+  "proxyBuyPage_98": "Refund covered",
+  "proxyBuyPage_118": "Service fee: ",
+  "proxyBuyPage_122": "{format}/unit",
+  "proxyBuyPage_165": "Select deadline",
+  "proxyBuyPage_303": "Venue",
+  "proxyBuyPage_305": "Event time",
+  "proxyBuyPage_307": "Deadline",
+  "proxyBuyPage_314": "{quantity} × {format}",
+  "proxyBuyPage_322": "Service fee {format}/unit",
+  "proxyBuyPage_334": "Total "
+}

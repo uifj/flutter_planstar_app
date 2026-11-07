@@ -1,0 +1,226 @@
+{
+  "@@locale": "zh",
+  "discoverTitle": "发现",
+  "feedProviders_18": "我",
+  "@feedProviders_18": {
+    "description": "来源：lib/features/discover/application/feed_providers.dart:18；原文：'我'"
+  },
+  "feedProviders_25": "刚刚发布",
+  "@feedProviders_25": {
+    "description": "来源：lib/features/discover/application/feed_providers.dart:25；原文：'刚刚发布'"
+  },
+  "discoverPage_39": "热门",
+  "@discoverPage_39": {
+    "description": "来源：lib/features/discover/discover_page.dart:39；原文：'热门'"
+  },
+  "discoverPage_39_2": "关注",
+  "@discoverPage_39_2": {
+    "description": "来源：lib/features/discover/discover_page.dart:39；原文：'关注'"
+  },
+  "discoverPage_72": "关注的人还没有新动态",
+  "@discoverPage_72": {
+    "description": "来源：lib/features/discover/discover_page.dart:72；原文：'关注的人还没有新动态'"
+  },
+  "discoverPage_73": "去热门看看大家在聊什么",
+  "@discoverPage_73": {
+    "description": "来源：lib/features/discover/discover_page.dart:73；原文：'去热门看看大家在聊什么'"
+  },
+  "discoverPage_75": "查看热门",
+  "@discoverPage_75": {
+    "description": "来源：lib/features/discover/discover_page.dart:75；原文：'查看热门'"
+  },
+  "feedPost_65": "{toStringAsFixed}万",
+  "@feedPost_65": {
+    "description": "来源：lib/features/discover/domain/feed_post.dart:65；原文：'${wan.toStringAsFixed(1)}万'",
+    "placeholders": {
+      "toStringAsFixed": {
+        "type": "Object"
+      }
+    }
+  },
+  "feedPost_73": "{toStringAsFixed}万",
+  "@feedPost_73": {
+    "description": "来源：lib/features/discover/domain/feed_post.dart:73；原文：'${(likeCount / 10000).toStringAsFixed(1)}万'",
+    "placeholders": {
+      "toStringAsFixed": {
+        "type": "Object"
+      }
+    }
+  },
+  "feedPost_115": "刚刚",
+  "@feedPost_115": {
+    "description": "来源：lib/features/discover/domain/feed_post.dart:115；原文：'刚刚'"
+  },
+  "feedPost_116": "{inMinutes}分钟前",
+  "@feedPost_116": {
+    "description": "来源：lib/features/discover/domain/feed_post.dart:116；原文：'${delta.inMinutes}分钟前'",
+    "placeholders": {
+      "inMinutes": {
+        "type": "Object"
+      }
+    }
+  },
+  "feedPost_117": "{inHours}小时前",
+  "@feedPost_117": {
+    "description": "来源：lib/features/discover/domain/feed_post.dart:117；原文：'${delta.inHours}小时前'",
+    "placeholders": {
+      "inHours": {
+        "type": "Object"
+      }
+    }
+  },
+  "feedPost_118": "昨天",
+  "@feedPost_118": {
+    "description": "来源：lib/features/discover/domain/feed_post.dart:118；原文：'昨天'"
+  },
+  "feedPost_119": "{inDays}天前",
+  "@feedPost_119": {
+    "description": "来源：lib/features/discover/domain/feed_post.dart:119；原文：'${delta.inDays}天前'",
+    "placeholders": {
+      "inDays": {
+        "type": "Object"
+      }
+    }
+  },
+  "feedPost_120": "{month}月{day}日",
+  "@feedPost_120": {
+    "description": "来源：lib/features/discover/domain/feed_post.dart:120；原文：'${publishedAt.month}月${publishedAt.day}日'",
+    "placeholders": {
+      "month": {
+        "type": "Object"
+      },
+      "day": {
+        "type": "Object"
+      }
+    }
+  },
+  "feedDetailPage_45": "动态详情",
+  "@feedDetailPage_45": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:45；原文：'动态详情'"
+  },
+  "feedDetailPage_48": "动态不存在",
+  "@feedDetailPage_48": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:48；原文：'动态不存在'"
+  },
+  "feedDetailPage_49": "它可能已被作者删除",
+  "@feedDetailPage_49": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:49；原文：'它可能已被作者删除'"
+  },
+  "feedDetailPage_51": "返回发现",
+  "@feedDetailPage_51": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:51；原文：'返回发现'"
+  },
+  "feedDetailPage_125": "相关企划",
+  "@feedDetailPage_125": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:125；原文：'相关演出'"
+  },
+  "feedDetailPage_151": "评论 {length}",
+  "@feedDetailPage_151": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:151；原文：'评论 ${comments.length}'",
+    "placeholders": {
+      "length": {
+        "type": "Object"
+      }
+    }
+  },
+  "feedDetailPage_161": "还没有评论",
+  "@feedDetailPage_161": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:161；原文：'还没有评论'"
+  },
+  "feedDetailPage_162": "来说两句吧",
+  "@feedDetailPage_162": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:162；原文：'来说两句吧'"
+  },
+  "feedDetailPage_216": "{publishedAt} · {viewCountLabel} 阅读",
+  "@feedDetailPage_216": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:216；原文：'${formatRelativeTime(post.publishedAt)} · ${post.viewCountLabel} 阅读'",
+    "placeholders": {
+      "publishedAt": {
+        "type": "Object"
+      },
+      "viewCountLabel": {
+        "type": "Object"
+      }
+    }
+  },
+  "feedDetailPage_252": "这条动态带视频，播放器尚未接入（需要 CDN 与 videoplayer 等价实现）",
+  "@feedDetailPage_252": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:252；原文：'这条动态带视频，播放器尚未接入（需要 CDN 与 videoplayer 等价实现）'"
+  },
+  "feedDetailPage_276": "点赞接口待接入",
+  "@feedDetailPage_276": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:276；原文：'点赞接口待接入'"
+  },
+  "feedDetailPage_281": "评论",
+  "@feedDetailPage_281": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:281；原文：'评论'"
+  },
+  "feedDetailPage_282": "评论发布待接入",
+  "@feedDetailPage_282": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:282；原文：'评论发布待接入'"
+  },
+  "feedDetailPage_287": "分享",
+  "@feedDetailPage_287": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:287；原文：'分享'"
+  },
+  "feedDetailPage_288": "分享面板待接入 fluwx",
+  "@feedDetailPage_288": {
+    "description": "来源：lib/features/discover/feed_detail_page.dart:288；原文：'分享面板待接入 fluwx'"
+  },
+  "publishSheet_69": "发布动态",
+  "@publishSheet_69": {
+    "description": "来源：lib/features/discover/widgets/publish_sheet.dart:69；原文：'发布动态'"
+  },
+  "publishSheet_98": "聊聊你支持过的企划…",
+  "@publishSheet_98": {
+    "description": "来源：lib/features/discover/widgets/publish_sheet.dart:98；原文：'聊聊你看过的演出…'"
+  },
+  "publishSheet_122": "发布",
+  "@publishSheet_122": {
+    "description": "来源：lib/features/discover/widgets/publish_sheet.dart:122；原文：'发布'"
+  },
+  "bilibiliOpenSheet_32": "播放视频",
+  "@bilibiliOpenSheet_32": {
+    "description": "来源：lib/features/discover/widgets/bilibili_open_sheet.dart:37；原文：'播放视频'"
+  },
+  "bilibiliOpenSheet_41": "应用内播放",
+  "@bilibiliOpenSheet_41": {
+    "description": "来源：lib/features/discover/widgets/bilibili_open_sheet.dart:47；原文：'应用内播放'"
+  },
+  "bilibiliOpenSheet_46": "打开哔哩哔哩",
+  "@bilibiliOpenSheet_46": {
+    "description": "来源：lib/features/discover/widgets/bilibili_open_sheet.dart:53；原文：'打开哔哩哔哩'"
+  },
+  "bilibiliOpenSheet_72": "哔哩哔哩未安装，已用浏览器打开",
+  "@bilibiliOpenSheet_72": {
+    "description": "来源：lib/features/discover/widgets/bilibili_open_sheet.dart:85；原文：'哔哩哔哩未安装，已用浏览器打开'"
+  },
+  "bilibiliOpenSheet_80": "无法打开视频，请稍后再试",
+  "@bilibiliOpenSheet_80": {
+    "description": "来源：lib/features/discover/widgets/bilibili_open_sheet.dart:94；原文：'无法打开视频，请稍后再试'"
+  },
+  "bilibiliPlayerPage_79": "无法打开浏览器，请稍后再试",
+  "@bilibiliPlayerPage_79": {
+    "description": "来源：lib/features/discover/ui/bilibili_player_page.dart:78；原文：'无法打开浏览器，请稍后再试'"
+  },
+  "bilibiliPlayerPage_89": "哔哩哔哩",
+  "@bilibiliPlayerPage_89": {
+    "description": "来源：lib/features/discover/ui/bilibili_player_page.dart:89；原文：'哔哩哔哩'"
+  },
+  "bilibiliPlayerPage_93": "刷新",
+  "@bilibiliPlayerPage_93": {
+    "description": "来源：lib/features/discover/ui/bilibili_player_page.dart:93；原文：'刷新'"
+  },
+  "bilibiliPlayerPage_98": "在浏览器打开",
+  "@bilibiliPlayerPage_98": {
+    "description": "来源：lib/features/discover/ui/bilibili_player_page.dart:98；原文：'在浏览器打开'"
+  },
+  "bilibiliPlayerPage_112": "视频加载失败",
+  "@bilibiliPlayerPage_112": {
+    "description": "来源：lib/features/discover/ui/bilibili_player_page.dart:111；原文：'视频加载失败'"
+  },
+  "bilibiliPlayerPage_113": "请检查网络后重试",
+  "@bilibiliPlayerPage_113": {
+    "description": "来源：lib/features/discover/ui/bilibili_player_page.dart:112；原文：'请检查网络后重试'"
+  }
+}
