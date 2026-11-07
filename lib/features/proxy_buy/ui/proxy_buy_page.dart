@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../shared/ui/ps_empty_state.dart';
-import 'proxy_buy.dart';
+import '../../../l10n/l10n.dart';
+import '../application/proxy_buy_controller.dart';
+import '../domain/proxy_buy.dart';
 import 'proxy_buy_l10n.dart';
-import 'proxy_buy_providers.dart';
-import '../../l10n/l10n.dart';
 
 /// 代抢页面。
 ///
@@ -20,33 +20,53 @@ import '../../l10n/l10n.dart';
 /// - 规则页面（Android 用 WebView 加载 `daiqiangRuleWeb.html`）
 ///   这里用原生展开文本。
 /// - 提交流程遵循"假功能不做"：表单是真实的，提交后 toast 说明"模拟提交"。
+///
+/// 页面只渲染 `ProxyBuyController` 暴露的视图状态，不取数、不算价。
 class ProxyBuyPage extends ConsumerWidget {
   const ProxyBuyPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final info = ref.watch(proxyBuyInfoProvider);
-    final orders = ref.watch(proxyBuyOrdersProvider);
+    final AsyncValue<ProxyBuyPageState> state = ref.watch(
+      proxyBuyControllerProvider,
+    );
 
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(title: context.l10n.proxyBuyPage_30),
-      body: ListView(
-        children: <Widget>[
-          _RuleBanner(info: info),
-          _DeadlineSelector(deadlines: info.deadlines),
-          const SizedBox(height: 12),
-          _SectionTitle(title: context.l10n.proxyBuyPage_36),
-          if (orders.isEmpty)
-            PsEmptyState(
-              title: context.l10n.proxyBuyPage_39,
-              description: context.l10n.proxyBuyPage_40,
-              icon: LucideIcons.clipboardList,
-            )
-          else
-            for (final order in orders) _OrderItem(order: order),
-          const SizedBox(height: 24),
-        ],
+      body: state.when(
+        data: (ProxyBuyPageState page) => _content(context, page),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (Object error, StackTrace stackTrace) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              '$error',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 13),
+            ),
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _content(BuildContext context, ProxyBuyPageState page) {
+    return ListView(
+      children: <Widget>[
+        _RuleBanner(info: page.info),
+        _DeadlineSelector(deadlines: page.info.deadlines),
+        const SizedBox(height: 12),
+        _SectionTitle(title: context.l10n.proxyBuyPage_36),
+        if (page.orders.isEmpty)
+          PsEmptyState(
+            title: context.l10n.proxyBuyPage_39,
+            description: context.l10n.proxyBuyPage_40,
+            icon: LucideIcons.clipboardList,
+          )
+        else
+          for (final order in page.orders) _OrderItem(order: order),
+        const SizedBox(height: 24),
+      ],
     );
   }
 }

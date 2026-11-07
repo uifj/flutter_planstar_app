@@ -31,12 +31,8 @@ final class ProxyBuyTurn {
 ///
 /// 对齐 Android `ProxyBuyInfo`（内嵌于 `ActivityBean`）。
 ///
-/// ## 与 Android 的差异
-///
-/// - Android 的 `ProxyBuyInfo` 是 Kotlin data class，
-///   费用用裸 `double`，时间列表用 `List<ProxyBuyTimeInfo>`。
-/// - 这里用 `Money` 表示费用，`DateTime` 表示时间，
-///   `List<ProxyBuyDeadline>` 表示截止选项。
+/// 这里只保留数据；总价计算见
+/// `domain/services/proxy_buy_pricing.dart` 的 `ProxyBuyPricing`。
 final class ProxyBuyInfo {
   const ProxyBuyInfo({
     required this.proxyBuyFee,
@@ -60,12 +56,6 @@ final class ProxyBuyInfo {
 
   /// 是否开启赔付（Android `proxyBuyCompensationInfo.open`）。
   final bool compensationEnabled;
-
-  /// 计算总费用。
-  /// 对齐 Android `ProxyBuyHelper.calculateTotalPrice`：
-  /// `(salePrice * count) + (proxyBuyFee * count)`
-  Money calculateTotal(Money salePrice, int count) =>
-      (salePrice * count) + (proxyBuyFee * count);
 }
 
 /// 代抢订单状态。

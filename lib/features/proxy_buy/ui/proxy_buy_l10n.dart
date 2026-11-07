@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import '../../l10n/l10n.dart';
-import 'proxy_buy.dart';
+import '../../../l10n/l10n.dart';
+import '../domain/proxy_buy.dart';
 
 /// 代抢展示文案的本地化映射。
 extension ProxyBuyOrderL10n on ProxyBuyOrder {
