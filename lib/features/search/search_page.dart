@@ -17,7 +17,7 @@ import '../../l10n/l10n.dart';
 /// ## 三个状态
 ///
 /// 1. **输入为空** → 搜索历史 + 热搜榜（原页的两块）；
-/// 2. **正在输入** → 联想列表（演出标题/艺人）+ 顶部「搜索『xx』」；
+/// 2. **正在输入** → 联想列表（企划标题/创作者）+ 顶部「搜索『xx』」；
 /// 3. **提交** → 把词记进历史并跳到结果页。
 ///
 /// ## 与 Android 的差异
@@ -319,7 +319,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${show.artist} · ${show.venueLabel}',
+                          show.venueLabel.isEmpty
+                              ? show.artist
+                              : '${show.artist} · ${show.venueLabel}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

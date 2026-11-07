@@ -26,7 +26,7 @@ import '../../l10n/l10n.dart';
 ///
 /// ## 分域
 ///
-/// 「全部 / 演出 / 动态」三栏。原项目还有「商品」栏，本项目没有商品数据源，
+/// 「全部 / 企划 / 动态」三栏。原项目还有「商品」栏，本项目没有商品数据源，
 /// 所以**不声明**它——见 `SearchScope` 的注释。
 ///
 /// ## 「全部」栏只给预览
@@ -225,7 +225,7 @@ class _ScopeTabs extends StatelessWidget {
   }
 }
 
-/// 分区标题（演出 12 / 动态 4）。
+/// 分区标题（企划 12 / 动态 4）。
 class _SectionHeader extends StatelessWidget {
   const _SectionHeader({
     required this.title,

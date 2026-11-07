@@ -1,43 +1,129 @@
+import 'dart:convert';
+
+import 'package:core/storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/network/network_providers.dart';
 import '../../catalog/application/catalog_providers.dart';
 import '../../catalog/domain/show_summary.dart';
 import '../../discover/application/feed_providers.dart';
 import '../../discover/domain/feed_post.dart';
 import '../domain/search_models.dart';
+import '../domain/search_text_normalizer.dart';
+
+/// 搜索历史在普通偏好里的键。
+const String searchHistoryStorageKey = 'search_history';
+
+/// 搜索历史的存储编解码。
+///
+/// 只依赖 `KeyValueStore` 端口，测试可以把 `AppStore.preferences`
+/// 换成内存实现或 SharedPreferences mock。
+final class SearchHistoryStorage {
+  const SearchHistoryStorage(this._preferences);
+
+  final KeyValueStore _preferences;
+
+  /// 读取历史。`null` 表示**没有记录**（用默认词），空列表表示用户清空过。
+  Future<List<String>?> read() async {
+    try {
+      final String? raw = await _preferences.read(searchHistoryStorageKey);
+      if (raw == null) return null;
+      final Object? decoded = jsonDecode(raw);
+      if (decoded is! List) return null;
+      return decoded
+          .whereType<String>()
+          .take(SearchHistoryController.maxEntries)
+          .toList(growable: false);
+    } catch (_) {
+      // 数据损坏按"没有记录"处理，不让搜索页因一条脏数据打不开。
+      return null;
+    }
+  }
+
+  Future<void> write(List<String> words) async {
+    try {
+      await _preferences.write(searchHistoryStorageKey, jsonEncode(words));
+    } catch (_) {
+      // 落盘失败不影响当前会话的使用。
+    }
+  }
+}
+
+/// 搜索历史存储。
+final searchHistoryStorageProvider = Provider<SearchHistoryStorage>(
+  (ref) => SearchHistoryStorage(ref.watch(appStoreProvider).preferences),
+);
+
+/// 启动时异步读取一次历史。
+///
+/// `Notifier.build()` 是同步的，而存储是异步的；用这个 provider 把异步读取
+/// 收敛到一处，[SearchHistoryController] 只同步消费它的值。页面读的仍然是
+/// 同步的 `List<String>`，无需感知加载态。
+final searchHistoryCacheProvider =
+    AsyncNotifierProvider<SearchHistoryCache, List<String>?>(
+      SearchHistoryCache.new,
+    );
+
+/// 历史缓存加载器。
+class SearchHistoryCache extends AsyncNotifier<List<String>?> {
+  @override
+  Future<List<String>?> build() =>
+      ref.watch(searchHistoryStorageProvider).read();
+}
 
 /// 搜索历史（企划星的 `sp_search_history`）。
 ///
-/// ## 为什么是内存态
-///
-/// 企划星把历史存在 `SharedPreferences` 里。这里没有落盘，原因和 `themeMode`
-/// 一样：`package:core/storage.dart` 的 `AppStore` 是异步初始化的，而 `Notifier.build()`
-/// 是同步的。接真实持久化时把 [build] 换成读 `appStore.preferences`，
-/// 并在 [add] / [remove] / [clear] 里写回即可——**页面读的接口不变**。
+/// 历史落盘到 `AppStore.preferences`。初始化时序：`build()` 先给默认词，
+/// 异步缓存 [searchHistoryCacheProvider] 完成后 provider 重建，再用读到的
+/// 历史替换；用户已经编辑过（[_userEdited]）时不覆盖，避免加载慢吞掉刚搜的词。
 class SearchHistoryController extends Notifier<List<String>> {
   /// 最多保留条数（企划星是 10）。
   static const int maxEntries = 10;
 
+  /// 没有落盘记录时的默认词。
+  static const List<String> defaultWords = <String>['游戏企划', '同人画集', '面经企划'];
+
+  List<String> _current = defaultWords;
+  bool _userEdited = false;
+
   @override
-  List<String> build() => const <String>['剧院魅影', '周杰伦', '上海大剧院'];
+  List<String> build() {
+    final List<String>? cached = ref
+        .watch(searchHistoryCacheProvider)
+        .valueOrNull;
+    if (!_userEdited && cached != null) {
+      _current = cached;
+    }
+    return _current;
+  }
 
   /// 记一条搜索词：去重后置顶，超出上限的从尾部丢弃。
-  void add(String word) {
+  Future<void> add(String word) {
     final String trimmed = word.trim();
-    if (trimmed.isEmpty) return;
-    state = <String>[
-      trimmed,
-      ...state.where((String item) => item != trimmed),
-    ].take(maxEntries).toList(growable: false);
+    if (trimmed.isEmpty) return Future<void>.value();
+    return _commit(
+      <String>[
+        trimmed,
+        ..._current.where((String item) => item != trimmed),
+      ].take(maxEntries).toList(growable: false),
+    );
   }
 
   /// 删单条。
-  void remove(String word) {
-    state = state.where((String item) => item != word).toList(growable: false);
-  }
+  Future<void> remove(String word) => _commit(
+    _current.where((String item) => item != word).toList(growable: false),
+  );
 
   /// 清空。
-  void clear() => state = const <String>[];
+  Future<void> clear() => _commit(const <String>[]);
+
+  /// 先更新内存状态，再 fire-and-forget 落盘。
+  Future<void> _commit(List<String> next) {
+    _userEdited = true;
+    _current = next;
+    state = next;
+    return ref.read(searchHistoryStorageProvider).write(next);
+  }
 }
 
 /// 搜索历史。
@@ -48,18 +134,18 @@ final searchHistoryProvider =
 
 /// 热搜榜。
 ///
-/// 企划星来自 `v1/search/hot`。这里写死一份，且**词与演示演出库对得上**
-/// （搜「剧院魅影」能出结果）——热搜点了是空页，比没有热搜更糟。
+/// 企划星来自 `v1/search/hot`。这里写死一份，且**词与演示企划库对得上**
+/// （搜「游戏企划」能出结果）——热搜点了是空页，比没有热搜更糟。
 final hotKeywordsProvider = Provider<List<HotKeyword>>(
   (ref) => const <HotKeyword>[
-    HotKeyword(word: '剧院魅影', hitCount: 32800, hot: true),
-    HotKeyword(word: '周杰伦', hitCount: 26400, hot: true),
-    HotKeyword(word: '演唱会', hitCount: 18700, hot: true),
-    HotKeyword(word: '上海大剧院', hitCount: 9600),
-    HotKeyword(word: '话剧', hitCount: 8200),
-    HotKeyword(word: '音乐节', hitCount: 6100),
-    HotKeyword(word: '亲子', hitCount: 4300),
-    HotKeyword(word: '交响', hitCount: 2900),
+    HotKeyword(word: '游戏企划', hitCount: 32800, hot: true),
+    HotKeyword(word: '同人企划', hitCount: 26400, hot: true),
+    HotKeyword(word: '画集设定集', hitCount: 18700, hot: true),
+    HotKeyword(word: '面经企划', hitCount: 9600),
+    HotKeyword(word: '桌游', hitCount: 8200),
+    HotKeyword(word: '音乐影像', hitCount: 6100),
+    HotKeyword(word: '小说企划', hitCount: 4300),
+    HotKeyword(word: '秋招', hitCount: 2900),
   ],
 );
 
@@ -95,23 +181,35 @@ final class SearchResults {
 ///
 /// ## 匹配规则
 ///
-/// 对演出匹配 标题 / 艺人 / 场馆 / 城市 / 分类名 / 角标；对动态匹配
-/// 标题 / 作者 / 角标。**不做拼音与分词**——企划星那套是服务端的
-/// Elasticsearch，客户端复刻不出等价结果，假装能搜只会让"搜不到"变成 bug。
+/// 查询先按空白/标点切成多个词，词与词之间是 **AND**（每个词都要命中）。
+/// 对企划匹配 标题 / 创作者 / 场地 / 城市 / 分类名 / 标签；对动态匹配
+/// 标题 / 作者 / 角标。每个词在**原文、拼音全拼、拼音首字母**三个通道里
+/// 任一命中即可（`游戏企划` 可被 `youxi` / `yx` 搜到）。原文匹配仍是
+/// 大小写不敏感的 `contains`，不改变原有行为。
 final searchResultsProvider = Provider.family<SearchResults, String>((
   ref,
   String rawQuery,
 ) {
-  final String query = rawQuery.trim().toLowerCase();
-  if (query.isEmpty) {
+  final List<String> tokens = tokenizeSearchQuery(rawQuery);
+  if (tokens.isEmpty) {
     return const SearchResults(shows: <ShowSummary>[], feeds: <FeedPost>[]);
   }
+
+  final Map<String, SearchTextIndex> showIndexes = ref.watch(
+    _showSearchIndexProvider,
+  );
+  final Map<String, SearchTextIndex> feedIndexes = ref.watch(
+    _feedSearchIndexProvider,
+  );
 
   final List<ShowSummary> shows =
       ref
           .watch(cityShowsProvider)
           .valueOrNull
-          ?.where((ShowSummary show) => _matchesShow(show, query))
+          ?.where(
+            (ShowSummary show) =>
+                showIndexes[show.id]?.matchesAll(tokens) ?? false,
+          )
           .toList(growable: false) ??
       const <ShowSummary>[];
 
@@ -119,24 +217,43 @@ final searchResultsProvider = Provider.family<SearchResults, String>((
       ref
           .watch(feedControllerProvider)
           .valueOrNull
-          ?.where((FeedPost post) => _matchesFeed(post, query))
+          ?.where(
+            (FeedPost post) =>
+                feedIndexes[post.id]?.matchesAll(tokens) ?? false,
+          )
           .toList(growable: false) ??
       const <FeedPost>[];
 
   return SearchResults(shows: shows, feeds: feeds);
 });
 
-bool _matchesShow(ShowSummary show, String query) {
-  return show.title.toLowerCase().contains(query) ||
-      show.artist.toLowerCase().contains(query) ||
-      show.venue.toLowerCase().contains(query) ||
-      show.city.toLowerCase().contains(query) ||
-      show.categoryName.toLowerCase().contains(query) ||
-      show.tags.any((String tag) => tag.toLowerCase().contains(query));
-}
+/// 企划的检索索引。按 id 缓存，查询词变化时只做 `contains`，不重复转拼音。
+final _showSearchIndexProvider = Provider<Map<String, SearchTextIndex>>((ref) {
+  final List<ShowSummary> shows =
+      ref.watch(cityShowsProvider).valueOrNull ?? const <ShowSummary>[];
+  return <String, SearchTextIndex>{
+    for (final ShowSummary show in shows)
+      show.id: SearchTextIndex.fromFields(<String>[
+        show.title,
+        show.artist,
+        show.venue,
+        show.city,
+        show.categoryName,
+        ...show.tags,
+      ]),
+  };
+});
 
-bool _matchesFeed(FeedPost post, String query) {
-  return post.title.toLowerCase().contains(query) ||
-      post.author.toLowerCase().contains(query) ||
-      (post.tag?.toLowerCase().contains(query) ?? false);
-}
+/// 动态的检索索引（标题 / 作者 / 角标）。
+final _feedSearchIndexProvider = Provider<Map<String, SearchTextIndex>>((ref) {
+  final List<FeedPost> feeds =
+      ref.watch(feedControllerProvider).valueOrNull ?? const <FeedPost>[];
+  return <String, SearchTextIndex>{
+    for (final FeedPost post in feeds)
+      post.id: SearchTextIndex.fromFields(<String>[
+        post.title,
+        post.author,
+        if (post.tag != null) post.tag!,
+      ]),
+  };
+});
