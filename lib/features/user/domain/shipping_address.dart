@@ -1,34 +1,28 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'shipping_address.freezed.dart';
+part 'shipping_address.g.dart';
+
 /// 收货地址（企划星 `AddressListActivity` + `item_address.xml`）。
 ///
-/// 只建模"寄纸质票"需要的字段。企划星侧还有 `isDefault` / `tag`（家/公司）/
+/// 只建模"寄送线下回报"需要的字段。企划星侧还有 `isDefault` / `tag`（家/公司）/
 /// `longitude` / `latitude`——经纬度是给地图选点用的，本项目没有地图选点，
 /// 所以不收；`tag` 没有 UI 入口，也不收。
-final class ShippingAddress {
-  const ShippingAddress({
-    required this.id,
-    required this.name,
-    required this.mobile,
-    required this.region,
-    required this.detail,
-    this.isDefault = false,
-  });
+@freezed
+abstract class ShippingAddress with _$ShippingAddress {
+  const ShippingAddress._();
 
-  final String id;
+  const factory ShippingAddress({
+    @JsonKey(readValue: _readId) required String id,
+    @JsonKey(readValue: _readName) required String name,
+    @JsonKey(readValue: _readMobile) required String mobile,
+    @JsonKey(readValue: _readRegion) required String region,
+    @JsonKey(readValue: _readDetail) required String detail,
+    @JsonKey(readValue: _readIsDefault) @Default(false) bool isDefault,
+  }) = _ShippingAddress;
 
-  /// 收件人。
-  final String name;
-
-  /// 手机号（存完整值，展示时脱敏）。
-  final String mobile;
-
-  /// 省市区（`上海市 浦东新区`）。
-  final String region;
-
-  /// 详细地址。
-  final String detail;
-
-  /// 是否默认地址。**全列表最多一个为真**，由控制器保证。
-  final bool isDefault;
+  factory ShippingAddress.fromJson(Map<String, dynamic> json) =>
+      _$ShippingAddressFromJson(json);
 
   /// 完整地址。
   String get fullAddress => '$region $detail';
@@ -38,15 +32,28 @@ final class ShippingAddress {
     if (mobile.length < 7) return mobile;
     return '${mobile.substring(0, 3)}****${mobile.substring(mobile.length - 4)}';
   }
-
-  ShippingAddress copyWith({bool? isDefault}) {
-    return ShippingAddress(
-      id: id,
-      name: name,
-      mobile: mobile,
-      region: region,
-      detail: detail,
-      isDefault: isDefault ?? this.isDefault,
-    );
-  }
 }
+
+// ── JSON 兼容读取 ───────────────────────────────────────────────────────
+
+Object? _readId(Map<dynamic, dynamic> json, String key) =>
+    json['id']?.toString() ?? '';
+
+Object? _readName(Map<dynamic, dynamic> json, String key) =>
+    json['name']?.toString() ?? json['consignee']?.toString() ?? '';
+
+Object? _readMobile(Map<dynamic, dynamic> json, String key) =>
+    json['mobile']?.toString() ?? json['phone']?.toString() ?? '';
+
+Object? _readRegion(Map<dynamic, dynamic> json, String key) =>
+    json['region']?.toString() ??
+    '${json['province']?.toString() ?? ''} '
+            '${json['city']?.toString() ?? ''} '
+            '${json['district']?.toString() ?? ''}'
+        .trim();
+
+Object? _readDetail(Map<dynamic, dynamic> json, String key) =>
+    json['detail']?.toString() ?? json['address']?.toString() ?? '';
+
+Object? _readIsDefault(Map<dynamic, dynamic> json, String key) =>
+    json['isDefault'] == true || json['default'] == true;

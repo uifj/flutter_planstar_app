@@ -8,7 +8,7 @@ import 'package:planstar/features/auth/domain/auth_repository.dart';
 import 'package:planstar/features/auth/domain/auth_session.dart';
 import 'package:planstar/features/auth/domain/auth_user.dart';
 import 'package:planstar/features/user/user_page.dart';
-import 'package:planstar/l10n/app_localizations.dart';
+import 'package:planstar/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -101,7 +101,7 @@ void main() {
 
     expect(find.text('票友小张'), findsOneWidget);
     // 等级来自 `user.level`，不是硬编的 V3。
-    expect(find.text('V3 资深票友'), findsOneWidget);
+    expect(find.text('V3 资深支持人'), findsOneWidget);
     expect(find.text('7'), findsOneWidget);
     expect(find.text('38'), findsOneWidget);
     expect(find.text('退出登录'), findsOneWidget);

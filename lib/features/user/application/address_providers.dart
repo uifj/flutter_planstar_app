@@ -14,11 +14,11 @@ import 'user_api_providers.dart';
 class AddressListController extends AsyncNotifier<List<ShippingAddress>> {
   PlanstarUserApi get _api => ref.read(planstarUserApiProvider);
 
-  bool get _demo => ref.read(useDemoProvider);
+  bool get _demo => ref.read(dataSourcePolicyProvider).isDemo;
 
   @override
   Future<List<ShippingAddress>> build() async {
-    if (ref.watch(useDemoProvider)) return buildDemoAddresses();
+    if (ref.watch(dataSourcePolicyProvider).isDemo) return buildDemoAddresses();
     return _load();
   }
 

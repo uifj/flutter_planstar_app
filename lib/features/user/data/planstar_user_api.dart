@@ -1,8 +1,12 @@
 import 'package:core/network.dart';
 import 'package:core/result.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../app/network/api_paths.dart';
 import '../domain/shipping_address.dart';
+
+part 'planstar_user_api.freezed.dart';
+part 'planstar_user_api.g.dart';
 
 /// 用户 API。
 ///
@@ -46,7 +50,7 @@ final class PlanstarUserApi {
         final list = data as List<dynamic>? ?? <dynamic>[];
         return list
             .whereType<Map<String, dynamic>>()
-            .map(_parseAddress)
+            .map(ShippingAddress.fromJson)
             .toList(growable: false);
       },
     );
@@ -60,7 +64,7 @@ final class PlanstarUserApi {
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {
         if (data is! Map<String, dynamic>) throw FormatException('地址响应不是对象');
-        return _parseAddress(data);
+        return ShippingAddress.fromJson(data);
       },
     );
   }
@@ -83,20 +87,6 @@ final class PlanstarUserApi {
     );
   }
 
-  static ShippingAddress _parseAddress(Map<String, dynamic> json) {
-    return ShippingAddress(
-      id: json['id']?.toString() ?? '',
-      name: json['name']?.toString() ?? json['consignee']?.toString() ?? '',
-      mobile: json['mobile']?.toString() ?? json['phone']?.toString() ?? '',
-      region:
-          json['region']?.toString() ??
-          '${json['province']?.toString() ?? ''} ${json['city']?.toString() ?? ''} ${json['district']?.toString() ?? ''}'
-              .trim(),
-      detail: json['detail']?.toString() ?? json['address']?.toString() ?? '',
-      isDefault: json['isDefault'] == true || json['default'] == true,
-    );
-  }
-
   static Map<String, dynamic> _addressToJson(ShippingAddress address) {
     return <String, dynamic>{
       'name': address.name,
@@ -111,44 +101,55 @@ final class PlanstarUserApi {
 /// 用户资料 DTO。
 ///
 /// 企划星 `v1/user/` 返回的字段非常多，这里只提取 UI 需要的。
-final class UserProfileDto {
-  const UserProfileDto({
-    required this.userId,
-    required this.nickname,
-    this.avatarUrl,
-    this.mobile,
-    this.level = 0,
-    this.levelLabel = '',
-    this.wannaSeeCount = 0,
-    this.followCount = 0,
-    this.couponCount = 0,
-    this.walletBalance = 0,
-  });
+@freezed
+abstract class UserProfileDto with _$UserProfileDto {
+  const factory UserProfileDto({
+    @JsonKey(readValue: _readUserId) required String userId,
+    @JsonKey(readValue: _readNickname) required String nickname,
+    @JsonKey(readValue: _readAvatarUrl) String? avatarUrl,
+    @JsonKey(readValue: _readMobile) String? mobile,
+    @JsonKey(readValue: _readLevel) @Default(0) int level,
+    @JsonKey(readValue: _readLevelLabel) @Default('') String levelLabel,
+    @JsonKey(readValue: _readWannaSeeCount) @Default(0) int wannaSeeCount,
+    @JsonKey(readValue: _readFollowCount) @Default(0) int followCount,
+    @JsonKey(readValue: _readCouponCount) @Default(0) int couponCount,
 
-  final String userId;
-  final String nickname;
-  final String? avatarUrl;
-  final String? mobile;
-  final int level;
-  final String levelLabel;
-  final int wannaSeeCount;
-  final int followCount;
-  final int couponCount;
-  final int walletBalance; // 单位：分
+    /// 单位：分
+    @JsonKey(readValue: _readWalletBalance) @Default(0) int walletBalance,
+  }) = _UserProfileDto;
 
-  factory UserProfileDto.fromJson(Map<String, dynamic> json) {
-    return UserProfileDto(
-      userId: json['userId']?.toString() ?? json['id']?.toString() ?? '',
-      nickname:
-          json['nickname']?.toString() ?? json['userName']?.toString() ?? '',
-      avatarUrl: json['avatar']?.toString() ?? json['headImg']?.toString(),
-      mobile: json['mobile']?.toString() ?? json['phone']?.toString(),
-      level: json['level'] ?? json['userLevel'] ?? 0,
-      levelLabel: json['levelLabel']?.toString() ?? '',
-      wannaSeeCount: json['wannaSeeCount'] ?? json['followActivityCount'] ?? 0,
-      followCount: json['followCount'] ?? json['followUserCount'] ?? 0,
-      couponCount: json['couponCount'] ?? 0,
-      walletBalance: json['walletBalance'] ?? json['balance'] ?? 0,
-    );
-  }
+  factory UserProfileDto.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileDtoFromJson(json);
 }
+
+// ── JSON 兼容读取 ───────────────────────────────────────────────────────
+
+Object? _readUserId(Map<dynamic, dynamic> json, String key) =>
+    json['userId']?.toString() ?? json['id']?.toString() ?? '';
+
+Object? _readNickname(Map<dynamic, dynamic> json, String key) =>
+    json['nickname']?.toString() ?? json['userName']?.toString() ?? '';
+
+Object? _readAvatarUrl(Map<dynamic, dynamic> json, String key) =>
+    json['avatar']?.toString() ?? json['headImg']?.toString();
+
+Object? _readMobile(Map<dynamic, dynamic> json, String key) =>
+    json['mobile']?.toString() ?? json['phone']?.toString();
+
+Object? _readLevel(Map<dynamic, dynamic> json, String key) =>
+    json['level'] ?? json['userLevel'] ?? 0;
+
+Object? _readLevelLabel(Map<dynamic, dynamic> json, String key) =>
+    json['levelLabel']?.toString() ?? '';
+
+Object? _readWannaSeeCount(Map<dynamic, dynamic> json, String key) =>
+    json['wannaSeeCount'] ?? json['followActivityCount'] ?? 0;
+
+Object? _readFollowCount(Map<dynamic, dynamic> json, String key) =>
+    json['followCount'] ?? json['followUserCount'] ?? 0;
+
+Object? _readCouponCount(Map<dynamic, dynamic> json, String key) =>
+    json['couponCount'] ?? 0;
+
+Object? _readWalletBalance(Map<dynamic, dynamic> json, String key) =>
+    json['walletBalance'] ?? json['balance'] ?? 0;

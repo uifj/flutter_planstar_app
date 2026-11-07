@@ -76,7 +76,7 @@ final class UserProfile {
 /// 失败返回 `null`，由 [userProfileProvider] 回退到登录接口返回的 `user`，
 /// 这样"我的"页不会因为资料接口抖动而变空。
 final remoteProfileProvider = FutureProvider<UserProfileDto?>((ref) async {
-  if (ref.watch(useDemoProvider)) return null;
+  if (ref.watch(dataSourcePolicyProvider).isDemo) return null;
   final AuthState auth = ref.watch(authControllerProvider);
   if (!auth.isLoggedIn || auth.user == null) return null;
 

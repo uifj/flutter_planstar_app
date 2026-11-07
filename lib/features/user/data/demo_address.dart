@@ -11,7 +11,7 @@ List<ShippingAddress> buildDemoAddresses() {
       name: '张伟',
       mobile: '13800138000',
       region: '上海市 浦东新区',
-      detail: '世博大道 1200 号 梅赛德斯-奔驰文化中心 东门取票处',
+      detail: '世博大道 1200 号 梅赛德斯-奔驰文化中心 东门回报领取处',
       isDefault: true,
     ),
     ShippingAddress(
@@ -19,7 +19,7 @@ List<ShippingAddress> buildDemoAddresses() {
       name: '李静',
       mobile: '13900139000',
       region: '上海市 黄浦区',
-      detail: '人民大道 300 号 上海大剧院 1 号门',
+      detail: '人民大道 300 号 上海文化中心 1 号门',
     ),
   ];
 }
