@@ -8,7 +8,7 @@ import 'wallet.dart';
 
 /// 营销模块展示文案的本地化映射。
 extension CouponL10n on Coupon {
-  /// 抵扣金额文案：固定金额 `¥30`；折扣率 `8.5折`。
+  /// 抵扣金额文案：固定金额 `星币 30`；折扣率 `8.5折`。
   String discountLabelOf(BuildContext context) {
     if (discountType == CouponDiscountType.amount) {
       return discountAmount.format();
@@ -18,7 +18,7 @@ extension CouponL10n on Coupon {
     return context.l10n.coupon_115(text);
   }
 
-  /// 门槛文案：`满¥100可用` 或 `无门槛`。
+  /// 门槛文案：`满星币 100 可用` 或 `无门槛`。
   String thresholdLabelOf(BuildContext context) => requireAmount.minorUnits > 0
       ? context.l10n.coupon_120(requireAmount.format())
       : context.l10n.coupon_120_2;
