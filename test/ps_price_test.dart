@@ -57,7 +57,7 @@ void main() {
         PsPrice(
           amount: Money.fromYuan(1880),
           size: 16,
-          prefix: '代抢费：',
+          prefix: '代购费：',
           suffix: '起',
           strikeThroughAmount: Money.fromYuan(2280),
         ),

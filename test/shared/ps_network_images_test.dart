@@ -13,8 +13,8 @@ void main() {
     expect(PsImages.poster('a'), isNot(PsImages.poster('b')));
   });
 
-  test('分类常量：8 个上架一级分类且都带二级标签', () {
-    expect(demoCategories.length, 8);
+  test('分类常量：9 个上架一级分类且都带二级标签', () {
+    expect(demoCategories.length, 9);
     expect(demoCategories.every((c) => c.isActive), isTrue);
     expect(demoCategories.every((c) => c.subTags.isNotEmpty), isTrue);
   });

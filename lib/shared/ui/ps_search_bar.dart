@@ -67,11 +67,12 @@ class PsSearchBar extends StatelessWidget {
                       color: colors.textPrimary,
                     ),
                   ),
-                  Icon(
-                    LucideIcons.chevronDown,
-                    size: 16,
-                    color: colors.textPrimary,
-                  ),
+                  if (onTapCity != null)
+                    Icon(
+                      LucideIcons.chevronDown,
+                      size: 16,
+                      color: colors.textPrimary,
+                    ),
                 ],
               ),
             ),

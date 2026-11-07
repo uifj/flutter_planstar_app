@@ -39,7 +39,7 @@ class PsPrice extends StatelessWidget {
   /// 主数字后的后缀（`起` / `/张`）。10sp、`text_3`。
   final String? suffix;
 
-  /// 主数字前的说明（`代抢费：`）。
+  /// 主数字前的说明（`代购费：`）。
   final String? prefix;
 
   final bool showSymbol;

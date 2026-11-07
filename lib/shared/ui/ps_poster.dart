@@ -44,7 +44,7 @@ class PsPoster extends StatelessWidget {
   /// 真实海报地址。非空且加载成功时覆盖占位。
   final String? imageUrl;
 
-  /// 叠在海报之上的角标（折扣、城市、代抢）。
+  /// 叠在海报之上的角标（折扣、城市、代购）。
   final Widget? overlay;
 
   /// 售罄/下架时压暗。
