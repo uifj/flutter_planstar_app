@@ -38,26 +38,12 @@ abstract class PayInfo with _$PayInfo {
       payAmount: payAmount,
       leftSeconds: 900, // 15 分钟
       showTitle: showTitle,
-      channels: <PayChannelOption>[
-        const PayChannelOption(
-          channel: PaymentChannel.wechat,
-          tip: PayChannelTip.recommended,
-          available: true,
-        ),
-        const PayChannelOption(
-          channel: PaymentChannel.alipay,
-          tip: PayChannelTip.none,
-          available: true,
-        ),
-        const PayChannelOption(
-          channel: PaymentChannel.unionPay,
-          tip: PayChannelTip.none,
-          available: true,
-        ),
-        const PayChannelOption(
+      // 只保留星币余额支付；微信 / 支付宝 / 云闪付渠道暂时隐藏。
+      channels: const <PayChannelOption>[
+        PayChannelOption(
           channel: PaymentChannel.balance,
           tip: PayChannelTip.balance,
-          available: false,
+          available: true,
         ),
       ],
       detailLines: <PayDetailLine>[

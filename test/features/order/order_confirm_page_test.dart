@@ -28,7 +28,16 @@ void main() {
 
     expect(find.text('《星海回声》企划'), findsOneWidget);
     expect(find.text('内场 A 区'), findsOneWidget);
-    expect(find.text('¥680.00'), findsWidgets);
+    expect(find.text('星币 680'), findsWidgets);
+  });
+
+  testWidgets('不再展示优惠 / 其他抵扣 / 实名支持人模块', (WidgetTester tester) async {
+    await pumpPage(tester);
+
+    expect(find.text('优惠'), findsNothing);
+    expect(find.text('礼品卡'), findsNothing);
+    expect(find.text('加急服务'), findsNothing);
+    expect(find.text('实名支持人'), findsNothing);
   });
 
   testWidgets('勾选协议后提交按钮才可用（默认不勾）', (WidgetTester tester) async {
@@ -63,6 +72,6 @@ void main() {
     await tester.tap(find.byIcon(LucideIcons.circlePlus).first);
     await tester.pumpAndSettle();
 
-    expect(find.text('¥1,360.00'), findsWidgets);
+    expect(find.text('星币 1,360'), findsWidgets);
   });
 }

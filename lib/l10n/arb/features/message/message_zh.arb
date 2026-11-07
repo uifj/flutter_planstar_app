@@ -57,9 +57,9 @@
   "@messageProviders_93": {
     "description": "来源：lib/features/message/application/message_providers.dart:93；原文：'企划星福利官'"
   },
-  "messageProviders_94": "您有一张 50 元无门槛券即将过期",
+  "messageProviders_94": "您有一张 50 星币无门槛券即将过期",
   "@messageProviders_94": {
-    "description": "来源：lib/features/message/application/message_providers.dart:94；原文：'您有一张 50 元无门槛券即将过期'"
+    "description": "来源：lib/features/message/application/message_providers.dart:94；原文：'您有一张 50 星币无门槛券即将过期'"
   },
   "chatPage_75": "会话",
   "@chatPage_75": {

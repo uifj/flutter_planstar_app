@@ -25,7 +25,7 @@ import 'palette.dart';
 /// 取用：
 /// ```dart
 /// final colors = Theme.of(context).extension<AppColors>()!;
-/// Text('¥880', style: TextStyle(color: colors.price));
+/// Text('星币 880', style: TextStyle(color: colors.price));
 /// ```
 @immutable
 final class AppColors extends ThemeExtension<AppColors> {

@@ -653,7 +653,7 @@ class OrderLocalizationsZh extends OrderLocalizations {
   String get payInfo_40 => '推荐';
 
   @override
-  String get payInfo_55 => '余额 ¥0.00';
+  String get payInfo_55 => '星币余额支付';
 
   @override
   String get payInfo_60 => '企划';

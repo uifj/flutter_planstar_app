@@ -54,7 +54,7 @@ class MessageLocalizationsEn extends MessageLocalizations {
   String get messageProviders_93 => '企划星福利官';
 
   @override
-  String get messageProviders_94 => '您有一张 50 元无门槛券即将过期';
+  String get messageProviders_94 => '您有一张 50 星币无门槛券即将过期';
 
   @override
   String get chatPage_75 => '会话';

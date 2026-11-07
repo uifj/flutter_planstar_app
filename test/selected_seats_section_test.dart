@@ -54,7 +54,7 @@ void main() {
     expect(find.text('VIP区 A排2座'), findsOneWidget);
     expect(find.text('A区 B排3座'), findsOneWidget);
     expect(find.text('座席小计'), findsOneWidget);
-    expect(find.text('¥2,160.00'), findsOneWidget);
+    expect(find.text('星币 2,160'), findsOneWidget);
   });
 
   testWidgets('未选座时不渲染任何内容', (tester) async {

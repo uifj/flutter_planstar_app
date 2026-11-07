@@ -574,6 +574,22 @@ final class AppL10n {
   String get walletProviders_37 => _marketingL10n.walletProviders_37;
   String get walletProviders_45 => _marketingL10n.walletProviders_45;
   String get walletProviders_53 => _marketingL10n.walletProviders_53;
+  String get mallPage_1 => _marketingL10n.mallPage_1;
+  String get mallPage_2 => _marketingL10n.mallPage_2;
+  String mallPage_3(Object price) => _marketingL10n.mallPage_3(price);
+  String mallPage_4(Object count) => _marketingL10n.mallPage_4(count);
+  String mallPage_5(Object stock) => _marketingL10n.mallPage_5(stock);
+  String get mallPage_6 => _marketingL10n.mallPage_6;
+  String get mallPage_7 => _marketingL10n.mallPage_7;
+  String get mallPage_8 => _marketingL10n.mallPage_8;
+  String get mallPage_9 => _marketingL10n.mallPage_9;
+  String mallPage_10(Object name, Object price) => _marketingL10n.mallPage_10(name, price);
+  String get mallPage_11 => _marketingL10n.mallPage_11;
+  String get mallPage_12 => _marketingL10n.mallPage_12;
+  String get mallPage_13 => _marketingL10n.mallPage_13;
+  String get mallPage_14 => _marketingL10n.mallPage_14;
+  String get mallPage_15 => _marketingL10n.mallPage_15;
+  String get mallPage_16 => _marketingL10n.mallPage_16;
   String get messageTitle => _messageL10n.messageTitle;
   String get messageProviders_48 => _messageL10n.messageProviders_48;
   String get messageProviders_49 => _messageL10n.messageProviders_49;
@@ -1011,6 +1027,11 @@ final class AppL10n {
   String get userPage_654 => _userL10n.userPage_654;
   String get userPage_655 => _userL10n.userPage_655;
   String get userPage_656 => _userL10n.userPage_656;
+  String get userMenuMall => _userL10n.userMenuMall;
+  String signInReward(Object amount) => _userL10n.signInReward(amount);
+  String get signInDone => _userL10n.signInDone;
+  String signInSuccess(Object amount) => _userL10n.signInSuccess(amount);
+  String get signInFailed => _userL10n.signInFailed;
 }
 
 /// `context.l10n` 入口。

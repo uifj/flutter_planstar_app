@@ -46,7 +46,7 @@ abstract final class AppTypography {
   /// 数字展示样式（系统字体 + 粗体 + 紧行高）。
   ///
   /// 价格用 `fontFeatures: tabularFigures` 让数字等宽，
-  /// 避免"¥88"与"¥188"在列表中左右跳动。
+  /// 避免"星币 88"与"星币 188"在列表中左右跳动。
   static TextStyle numeric({
     required double size,
     required Color color,

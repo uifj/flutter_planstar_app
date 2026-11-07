@@ -69,7 +69,7 @@ extension DeliveryMethodL10n on DeliveryMethod {
 }
 
 extension DeliveryInfoL10n on DeliveryInfo {
-  /// 展示文案：`快递配送（¥12.00）`。
+  /// 展示文案：`快递配送（星币 12）`。
   String describeOf(BuildContext context) => postage.isZero
       ? method.labelOf(context)
       : context.l10n.delivery_136(method.labelOf(context), postage.format());
@@ -86,7 +86,7 @@ extension PaymentChannelL10n on PaymentChannel {
 }
 
 extension DiscountL10n on Discount {
-  /// 抵扣文案：`-¥30` / `-15%` / `-15%（封顶 ¥50）`。
+  /// 抵扣文案：`-星币 30` / `-15%` / `-15%（封顶 星币 50）`。
   String describeOf(BuildContext context) => switch (this) {
     AmountDiscount(:final amount) => '-${amount.format()}',
     RateDiscount(:final basisPoints, :final cap) => () {

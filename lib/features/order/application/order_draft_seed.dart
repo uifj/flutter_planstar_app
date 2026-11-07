@@ -150,24 +150,15 @@ OrderDraftSeed _demoSeed(String showId) {
         price: Money.fromYuan(380),
       ),
     ],
-    requiredVisitorCount: 1,
+    requiredVisitorCount: 0,
     purchaseLimit: PurchaseLimit(
       maxPerOrder: Quantity(6),
       maxPerUser: Quantity(4),
     ),
-    availableCoupon: CouponSelection(
-      const CouponId('CP-2026-50'),
-      AmountDiscount(Money.fromYuan(50)),
-    ),
-    availableCampaign: CampaignSelection(
-      const CampaignId('CM-9ZHE'),
-      RateDiscount(1000, cap: Money.fromYuan(100)),
-    ),
-    giftCard: GiftCardTender(
-      id: const GiftCardId('GC-8888'),
-      balance: Money.fromYuan(200),
-    ),
-    speedPackUnitPrice: Money.fromYuan(30),
-    speedPackBalance: Money.fromYuan(30),
+    availableCoupon: null,
+    availableCampaign: null,
+    giftCard: null,
+    speedPackUnitPrice: null,
+    speedPackBalance: Money.zero(),
   );
 }

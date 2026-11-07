@@ -18,6 +18,9 @@ void main() {
 
     test('解析带符号/千分位/空格的金额', () {
       expect(Money.tryParse('¥1,234.56')?.minorUnits, 123456);
+      expect(Money.tryParse('￥1,234.56')?.minorUnits, 123456);
+      expect(Money.tryParse('星币 1,234.56')?.minorUnits, 123456);
+      expect(Money.tryParse('星币1,000')?.minorUnits, 100000);
       expect(Money.tryParse(' 88 '), Money.fromYuan(88));
       expect(Money.tryParse('-12'), Money.fromYuan(-12));
       expect(Money.tryParse('abc'), isNull);
@@ -30,7 +33,7 @@ void main() {
       // 0.1 + 0.2 == 0.30000000000000004 的那个经典问题，在这里不存在
       final sum = Money.fromYuan(0.1) + Money.fromYuan(0.2);
       expect(sum.minorUnits, 30);
-      expect(sum.format(), '¥0.30');
+      expect(sum.format(), '星币 0.30');
     });
 
     test('乘法只接受整数件数', () {
@@ -65,11 +68,14 @@ void main() {
   });
 
   group('Money 展示', () {
-    test('千分位与两位小数', () {
-      expect(Money.fromYuan(1372).format(), '¥1,372.00');
-      expect(Money.fromYuan(1234567.891).format(), '¥1,234,567.89');
+    test('千分位与整额省略小数', () {
+      expect(Money.fromYuan(1000).format(), '星币 1,000');
+      expect(Money.fromYuan(1000).format(withSymbol: false), '1,000');
+      expect(Money.fromYuan(1234.56).format(), '星币 1,234.56');
+      expect(Money.fromYuan(1372).format(), '星币 1,372');
+      expect(Money.fromYuan(1234567.891).format(), '星币 1,234,567.89');
       expect(Money.fromYuan(0.5).format(withSymbol: false), '0.50');
-      expect(Money.fromYuan(-12).format(), '-¥12.00');
+      expect(Money.fromYuan(-12).format(), '-星币 12');
     });
   });
 }

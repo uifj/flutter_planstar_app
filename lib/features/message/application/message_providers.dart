@@ -253,7 +253,7 @@ class MessageCenterController extends AsyncNotifier<MessageCenterState> {
         MessageThread(
           id: 't6',
           title: '企划星福利官',
-          preview: '您有一张 50 元无门槛券即将过期',
+          preview: '您有一张 50 星币无门槛券即将过期',
           updatedAt: now.subtract(const Duration(days: 9)),
           unreadCount: 0,
         ),

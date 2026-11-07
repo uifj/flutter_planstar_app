@@ -166,7 +166,7 @@ class MarketingLocalizationsEn extends MarketingLocalizations {
   String get giftCardProviders_54 => '请输入礼品卡卡号';
 
   @override
-  String get giftCardProviders_65 => '礼品卡绑定成功，已添加 ¥200 余额';
+  String get giftCardProviders_65 => '礼品卡绑定成功，已添加 200 星币余额';
 
   @override
   String wallet_56(Object format) {
@@ -189,7 +189,7 @@ class MarketingLocalizationsEn extends MarketingLocalizations {
   String get walletPage_40 => '充值或消费后会有记录显示在这里';
 
   @override
-  String get walletPage_94 => '当前余额（元）';
+  String get walletPage_94 => '当前余额（星币）';
 
   @override
   String get walletPage_143 => '充值';
@@ -211,4 +211,60 @@ class MarketingLocalizationsEn extends MarketingLocalizations {
 
   @override
   String get walletProviders_53 => 'Support “Talk Show Live Project”';
+
+  @override
+  String get mallPage_1 => 'Star Coin Mall';
+
+  @override
+  String get mallPage_2 => 'Star Coin Balance';
+
+  @override
+  String mallPage_3(Object price) {
+    return 'Price $price';
+  }
+
+  @override
+  String mallPage_4(Object count) {
+    return 'Limited to $count';
+  }
+
+  @override
+  String mallPage_5(Object stock) {
+    return '$stock left';
+  }
+
+  @override
+  String get mallPage_6 => 'Redeem';
+
+  @override
+  String get mallPage_7 => 'Sold out';
+
+  @override
+  String get mallPage_8 => 'Not enough star coins';
+
+  @override
+  String get mallPage_9 => 'Confirm redemption';
+
+  @override
+  String mallPage_10(Object name, Object price) {
+    return 'Redeem “$name” for $price';
+  }
+
+  @override
+  String get mallPage_11 => 'Cancel';
+
+  @override
+  String get mallPage_12 => 'Confirm';
+
+  @override
+  String get mallPage_13 => 'Redeemed successfully';
+
+  @override
+  String get mallPage_14 => 'No items available';
+
+  @override
+  String get mallPage_15 => 'Items will appear here once listed';
+
+  @override
+  String get mallPage_16 => 'Reload';
 }

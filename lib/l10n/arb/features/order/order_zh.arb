@@ -963,9 +963,9 @@
   "@payInfo_40": {
     "description": "来源：lib/features/order/payment/pay_info.dart:40；原文：'推荐'"
   },
-  "payInfo_55": "余额 ¥0.00",
+  "payInfo_55": "星币余额支付",
   "@payInfo_55": {
-    "description": "来源：lib/features/order/payment/pay_info.dart:55；原文：'余额 ¥0.00'"
+    "description": "来源：lib/features/order/payment/pay_info.dart:55；原文：'星币余额支付'"
   },
   "payInfo_60": "企划",
   "@payInfo_60": {

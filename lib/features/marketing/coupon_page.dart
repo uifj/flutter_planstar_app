@@ -249,7 +249,7 @@ class _AmountSection extends StatelessWidget {
               textBaseline: TextBaseline.alphabetic,
               children: <Widget>[
                 Text(
-                  '¥',
+                  '星币',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,

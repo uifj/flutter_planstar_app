@@ -240,9 +240,9 @@
   "@giftCardProviders_54": {
     "description": "来源：lib/features/marketing/giftcard/gift_card_providers.dart:54；原文：'请输入礼品卡卡号'"
   },
-  "giftCardProviders_65": "礼品卡绑定成功，已添加 ¥200 余额",
+  "giftCardProviders_65": "礼品卡绑定成功，已添加 200 星币余额",
   "@giftCardProviders_65": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_providers.dart:65；原文：'礼品卡绑定成功，已添加 ¥200 余额'"
+    "description": "来源：lib/features/marketing/giftcard/gift_card_providers.dart:65；原文：'礼品卡绑定成功，已添加 200 星币余额'"
   },
   "wallet_56": "余额 {format}",
   "@wallet_56": {
@@ -273,9 +273,9 @@
   "@walletPage_40": {
     "description": "来源：lib/features/marketing/wallet_page.dart:40；原文：'充值或消费后会有记录显示在这里'"
   },
-  "walletPage_94": "当前余额（元）",
+  "walletPage_94": "当前余额（星币）",
   "@walletPage_94": {
-    "description": "来源：lib/features/marketing/wallet_page.dart:94；原文：'当前余额（元）'"
+    "description": "来源：lib/features/marketing/wallet_page.dart:94；原文：'当前余额（星币）'"
   },
   "walletPage_143": "充值",
   "@walletPage_143": {
@@ -304,5 +304,92 @@
   "walletProviders_53": "支持「脱口秀大会现场企划」",
   "@walletProviders_53": {
     "description": "来源：lib/features/marketing/wallet_providers.dart:53；原文：'购买「脱口秀大会」门票'"
+  },
+  "mallPage_1": "星币商城",
+  "@mallPage_1": {
+    "description": "来源：lib/features/mall/mall_page.dart；星币商城页标题"
+  },
+  "mallPage_2": "当前星币余额",
+  "@mallPage_2": {
+    "description": "来源：lib/features/mall/mall_page.dart；余额区标题"
+  },
+  "mallPage_3": "价格 {price}",
+  "@mallPage_3": {
+    "description": "来源：lib/features/mall/mall_page.dart；规格价格",
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "mallPage_4": "限量 {count} 份",
+  "@mallPage_4": {
+    "description": "来源：lib/features/mall/mall_page.dart；规格限量",
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "mallPage_5": "剩余 {stock} 份",
+  "@mallPage_5": {
+    "description": "来源：lib/features/mall/mall_page.dart；规格剩余库存",
+    "placeholders": {
+      "stock": {
+        "type": "Object"
+      }
+    }
+  },
+  "mallPage_6": "兑换",
+  "@mallPage_6": {
+    "description": "来源：lib/features/mall/mall_page.dart；兑换按钮"
+  },
+  "mallPage_7": "已售罄",
+  "@mallPage_7": {
+    "description": "来源：lib/features/mall/mall_page.dart；售罄按钮"
+  },
+  "mallPage_8": "星币余额不足",
+  "@mallPage_8": {
+    "description": "来源：lib/features/mall/mall_page.dart；余额不足提示"
+  },
+  "mallPage_9": "确认兑换",
+  "@mallPage_9": {
+    "description": "来源：lib/features/mall/mall_page.dart；二次确认标题"
+  },
+  "mallPage_10": "兑换「{name}」将消耗 {price}",
+  "@mallPage_10": {
+    "description": "来源：lib/features/mall/mall_page.dart；二次确认内容",
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      },
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "mallPage_11": "取消",
+  "@mallPage_11": {
+    "description": "来源：lib/features/mall/mall_page.dart；取消按钮"
+  },
+  "mallPage_12": "确认",
+  "@mallPage_12": {
+    "description": "来源：lib/features/mall/mall_page.dart；确认按钮"
+  },
+  "mallPage_13": "兑换成功",
+  "@mallPage_13": {
+    "description": "来源：lib/features/mall/mall_page.dart；兑换成功提示"
+  },
+  "mallPage_14": "暂无可兑换商品",
+  "@mallPage_14": {
+    "description": "来源：lib/features/mall/mall_page.dart；空态标题"
+  },
+  "mallPage_15": "商品上架后会显示在这里",
+  "@mallPage_15": {
+    "description": "来源：lib/features/mall/mall_page.dart；空态说明"
+  },
+  "mallPage_16": "重新加载",
+  "@mallPage_16": {
+    "description": "来源：lib/features/mall/mall_page.dart；错误态重试"
   }
 }

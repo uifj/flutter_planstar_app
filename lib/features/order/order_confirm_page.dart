@@ -85,109 +85,6 @@ class OrderConfirmPage extends ConsumerWidget {
                   ),
                 ),
                 _Section(
-                  title: context.l10n.orderConfirmPage_73,
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: <Widget>[
-                      _ChoiceChip(
-                        label: context.l10n.orderConfirmPage_79,
-                        selected: state.order.discount is NoDiscount,
-                        onSelected: controller.clearDiscount,
-                      ),
-                      if (seed.availableCampaign != null)
-                        _ChoiceChip(
-                          label: seed.availableCampaign!.describeOf(context),
-                          selected: state.order.discount is CampaignSelection,
-                          onSelected: controller.selectCampaign,
-                        ),
-                      if (seed.availableCoupon != null)
-                        _ChoiceChip(
-                          label: seed.availableCoupon!.describeOf(context),
-                          selected: state.order.discount is CouponSelection,
-                          onSelected: controller.selectCoupon,
-                        ),
-                    ],
-                  ),
-                ),
-                _Section(
-                  title: context.l10n.orderConfirmPage_99,
-                  child: Column(
-                    children: <Widget>[
-                      SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          seed.giftCard == null
-                              ? context.l10n.orderConfirmPage_107
-                              : context.l10n.orderConfirmPage_109(
-                                  seed.giftCard!.balance.format(),
-                                ),
-                        ),
-                        value: state.order.giftCard != null,
-                        onChanged: seed.giftCard == null
-                            ? null
-                            : (enabled) => enabled
-                                  ? controller.useGiftCard()
-                                  : controller.clearGiftCard(),
-                      ),
-                      SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        title: Text(
-                          seed.speedPackUnitPrice == null
-                              ? context.l10n.orderConfirmPage_123
-                              : context.l10n.orderConfirmPage_125(
-                                  seed.speedPackUnitPrice!.format(),
-                                ),
-                        ),
-                        value: state.order.speedPack != null,
-                        onChanged: seed.speedPackUnitPrice == null
-                            ? null
-                            : (enabled) => enabled
-                                  ? controller.buySpeedPack()
-                                  : controller.clearSpeedPack(),
-                      ),
-                    ],
-                  ),
-                ),
-                _Section(
-                  title: context.l10n.orderConfirmPage_138,
-                  trailing: TextButton(
-                    onPressed: controller.assignDemoVisitor,
-                    child: Text(
-                      state.order.visitors.isEmpty
-                          ? context.l10n.orderConfirmPage_143(
-                              state.order.requiredVisitorCount,
-                            )
-                          : context.l10n.orderConfirmPage_145(
-                              state.order.visitors.length,
-                            ),
-                    ),
-                  ),
-                  child: state.order.visitors.isEmpty
-                      ? Text(
-                          context.l10n.orderConfirmPage_150,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.error,
-                          ),
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            for (final visitor in state.order.visitors)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 2,
-                                ),
-                                child: Text(
-                                  '${visitor.name} · ${visitor.idCard}',
-                                ),
-                              ),
-                          ],
-                        ),
-                ),
-                _Section(
                   title: context.l10n.orderConfirmPage_167,
                   child: Column(
                     children: <Widget>[
@@ -289,11 +186,10 @@ class _ShowHeader extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({required this.title, required this.child, this.trailing});
+  const _Section({required this.title, required this.child});
 
   final String title;
   final Widget child;
-  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -303,13 +199,7 @@ class _Section extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(title, style: theme.textTheme.titleSmall),
-              ?trailing,
-            ],
-          ),
+          Text(title, style: theme.textTheme.titleSmall),
           const SizedBox(height: 8),
           child,
         ],
@@ -361,27 +251,6 @@ class _TierRow extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _ChoiceChip extends StatelessWidget {
-  const _ChoiceChip({
-    required this.label,
-    required this.selected,
-    required this.onSelected,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onSelected(),
     );
   }
 }

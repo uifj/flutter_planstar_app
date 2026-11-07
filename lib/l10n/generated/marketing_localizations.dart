@@ -380,10 +380,10 @@ abstract class MarketingLocalizations {
   /// **'请输入礼品卡卡号'**
   String get giftCardProviders_54;
 
-  /// 来源：lib/features/marketing/giftcard/gift_card_providers.dart:65；原文：'礼品卡绑定成功，已添加 ¥200 余额'
+  /// 来源：lib/features/marketing/giftcard/gift_card_providers.dart:65；原文：'礼品卡绑定成功，已添加 200 星币余额'
   ///
   /// In zh, this message translates to:
-  /// **'礼品卡绑定成功，已添加 ¥200 余额'**
+  /// **'礼品卡绑定成功，已添加 200 星币余额'**
   String get giftCardProviders_65;
 
   /// 来源：lib/features/marketing/wallet.dart:56；原文：'余额 ${balanceAfter.format()}'
@@ -422,10 +422,10 @@ abstract class MarketingLocalizations {
   /// **'充值或消费后会有记录显示在这里'**
   String get walletPage_40;
 
-  /// 来源：lib/features/marketing/wallet_page.dart:94；原文：'当前余额（元）'
+  /// 来源：lib/features/marketing/wallet_page.dart:94；原文：'当前余额（星币）'
   ///
   /// In zh, this message translates to:
-  /// **'当前余额（元）'**
+  /// **'当前余额（星币）'**
   String get walletPage_94;
 
   /// 来源：lib/features/marketing/wallet_page.dart:143；原文：'充值'
@@ -469,6 +469,102 @@ abstract class MarketingLocalizations {
   /// In zh, this message translates to:
   /// **'支持「脱口秀大会现场企划」'**
   String get walletProviders_53;
+
+  /// 来源：lib/features/mall/mall_page.dart；星币商城页标题
+  ///
+  /// In zh, this message translates to:
+  /// **'星币商城'**
+  String get mallPage_1;
+
+  /// 来源：lib/features/mall/mall_page.dart；余额区标题
+  ///
+  /// In zh, this message translates to:
+  /// **'当前星币余额'**
+  String get mallPage_2;
+
+  /// 来源：lib/features/mall/mall_page.dart；规格价格
+  ///
+  /// In zh, this message translates to:
+  /// **'价格 {price}'**
+  String mallPage_3(Object price);
+
+  /// 来源：lib/features/mall/mall_page.dart；规格限量
+  ///
+  /// In zh, this message translates to:
+  /// **'限量 {count} 份'**
+  String mallPage_4(Object count);
+
+  /// 来源：lib/features/mall/mall_page.dart；规格剩余库存
+  ///
+  /// In zh, this message translates to:
+  /// **'剩余 {stock} 份'**
+  String mallPage_5(Object stock);
+
+  /// 来源：lib/features/mall/mall_page.dart；兑换按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'兑换'**
+  String get mallPage_6;
+
+  /// 来源：lib/features/mall/mall_page.dart；售罄按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'已售罄'**
+  String get mallPage_7;
+
+  /// 来源：lib/features/mall/mall_page.dart；余额不足提示
+  ///
+  /// In zh, this message translates to:
+  /// **'星币余额不足'**
+  String get mallPage_8;
+
+  /// 来源：lib/features/mall/mall_page.dart；二次确认标题
+  ///
+  /// In zh, this message translates to:
+  /// **'确认兑换'**
+  String get mallPage_9;
+
+  /// 来源：lib/features/mall/mall_page.dart；二次确认内容
+  ///
+  /// In zh, this message translates to:
+  /// **'兑换「{name}」将消耗 {price}'**
+  String mallPage_10(Object name, Object price);
+
+  /// 来源：lib/features/mall/mall_page.dart；取消按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'取消'**
+  String get mallPage_11;
+
+  /// 来源：lib/features/mall/mall_page.dart；确认按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'确认'**
+  String get mallPage_12;
+
+  /// 来源：lib/features/mall/mall_page.dart；兑换成功提示
+  ///
+  /// In zh, this message translates to:
+  /// **'兑换成功'**
+  String get mallPage_13;
+
+  /// 来源：lib/features/mall/mall_page.dart；空态标题
+  ///
+  /// In zh, this message translates to:
+  /// **'暂无可兑换商品'**
+  String get mallPage_14;
+
+  /// 来源：lib/features/mall/mall_page.dart；空态说明
+  ///
+  /// In zh, this message translates to:
+  /// **'商品上架后会显示在这里'**
+  String get mallPage_15;
+
+  /// 来源：lib/features/mall/mall_page.dart；错误态重试
+  ///
+  /// In zh, this message translates to:
+  /// **'重新加载'**
+  String get mallPage_16;
 }
 
 class _MarketingLocalizationsDelegate extends LocalizationsDelegate<MarketingLocalizations> {

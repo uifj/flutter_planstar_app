@@ -28,7 +28,7 @@ void main() {
       container.read(orderConfirmControllerProvider('10086'));
 
   group('确认页控制器', () {
-    test('初始状态：1 张内场 A 区，应付 ¥680.00，协议未勾', () {
+    test('初始状态：1 张内场 A 区，应付星币 680，协议未勾', () {
       final current = state();
 
       expect(current.order.lines, hasLength(1));
@@ -36,43 +36,23 @@ void main() {
       expect(current.quote.paymentAmount, Money.fromYuan(680));
       expect(current.order.agreementAccepted, isFalse);
       expect(current.canSubmit, isFalse, reason: '没勾协议不能提交');
-      expect(current.order.requiredVisitorCount, 1);
+      expect(current.order.requiredVisitorCount, 0);
     });
 
-    test('选优惠券：应付 −50', () {
+    test('演示种子不再提供优惠券/活动/礼品卡/加速包', () {
       controller().selectCoupon();
-      expect(state().order.discount, isA<CouponSelection>());
-      expect(state().quote.paymentAmount, Money.fromYuan(630));
-    });
-
-    test('选营销活动：9 折封顶 100 → 减 68', () {
-      controller().selectCampaign();
-      expect(state().quote.discountApplied, Money.fromYuan(68));
-      expect(state().quote.paymentAmount, Money.fromYuan(612));
-    });
-
-    test('券与活动互斥：后选的覆盖前一个', () {
-      controller()
-        ..selectCampaign()
-        ..selectCoupon();
-      expect(state().order.discount, isA<CouponSelection>());
+      expect(state().notice!.code, OrderNoticeCode.noCoupon);
+      expect(state().quote.paymentAmount, Money.fromYuan(680));
 
       controller().selectCampaign();
-      expect(state().order.discount, isA<CampaignSelection>());
-    });
+      expect(state().notice!.code, OrderNoticeCode.noCampaign);
 
-    test('礼品卡：余额 200 全部抵扣', () {
       controller().useGiftCard();
-      expect(state().quote.giftCardApplied, Money.fromYuan(200));
-      expect(state().quote.paymentAmount, Money.fromYuan(480));
-    });
+      expect(state().notice!.code, OrderNoticeCode.noGiftCard);
 
-    test('加速包：余额 30 抵扣掉，现金部分 0', () {
       controller().buySpeedPack();
-      final quote = state().quote;
-      expect(quote.speedPackCash, Money.zero());
-      expect(quote.speedPackBalance, Money.fromYuan(30));
-      expect(quote.paymentAmount, Money.fromYuan(680));
+      expect(state().notice!.code, OrderNoticeCode.noSpeedPack);
+      expect(state().quote.paymentAmount, Money.fromYuan(680));
     });
 
     test('加数量到 7 张被限购拒绝，并给出可读原因', () {
@@ -91,24 +71,8 @@ void main() {
       expect(state().canSubmit, isFalse);
     });
 
-    test('未选观演人时提交被聚合拒绝', () async {
-      controller()
-        ..toggleAgreement()
-        ..selectCoupon();
-
-      await controller().submit();
-
-      expect(state().submitted, isFalse);
-      expect(state().notice!.code, OrderNoticeCode.failure);
-      expect(state().notice!.detail, contains('请选择 1 位支持人'));
-      expect(state().order.status, OrderStatus.draft, reason: '失败不应改状态');
-    });
-
     test('完整提交：状态迁移 + 落库 + 领域事件分发', () async {
-      controller()
-        ..selectCoupon()
-        ..toggleAgreement()
-        ..assignDemoVisitor();
+      controller().toggleAgreement();
 
       expect(state().canSubmit, isTrue);
 
@@ -135,9 +99,7 @@ void main() {
     });
 
     test('提交后页面进入只读态', () async {
-      controller()
-        ..toggleAgreement()
-        ..assignDemoVisitor();
+      controller().toggleAgreement();
       await controller().submit();
 
       expect(state().order.isEditable, isFalse);

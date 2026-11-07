@@ -79,7 +79,7 @@ List<ShowSummary> buildDemoCatalog({DateTime? now}) {
         ),
         ProjectUpdate(
           title: '首个可玩关卡公开',
-          content: '试玩版已提供给 199 元及以上档位的支持者，欢迎在评论区反馈手感。',
+          content: '试玩版已提供给 199 星币及以上档位的支持者，欢迎在评论区反馈手感。',
           publishTime: at(-10),
         ),
       ],

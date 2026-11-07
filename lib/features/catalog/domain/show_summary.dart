@@ -267,7 +267,7 @@ abstract class ShowSummary with _$ShowSummary {
     return soldOut ? 'failed' : 'ongoing';
   }
 
-  /// 起价文案（`¥680`），详情页与卡片都用它。
+  /// 起价文案（`星币 680`），详情页与卡片都用它。
   String get priceFromText => priceFrom.format();
 
   /// 城市 + 场馆：`上海 · 上海大剧院`。

@@ -166,7 +166,7 @@ class MarketingLocalizationsZh extends MarketingLocalizations {
   String get giftCardProviders_54 => '请输入礼品卡卡号';
 
   @override
-  String get giftCardProviders_65 => '礼品卡绑定成功，已添加 ¥200 余额';
+  String get giftCardProviders_65 => '礼品卡绑定成功，已添加 200 星币余额';
 
   @override
   String wallet_56(Object format) {
@@ -189,7 +189,7 @@ class MarketingLocalizationsZh extends MarketingLocalizations {
   String get walletPage_40 => '充值或消费后会有记录显示在这里';
 
   @override
-  String get walletPage_94 => '当前余额（元）';
+  String get walletPage_94 => '当前余额（星币）';
 
   @override
   String get walletPage_143 => '充值';
@@ -211,4 +211,60 @@ class MarketingLocalizationsZh extends MarketingLocalizations {
 
   @override
   String get walletProviders_53 => '支持「脱口秀大会现场企划」';
+
+  @override
+  String get mallPage_1 => '星币商城';
+
+  @override
+  String get mallPage_2 => '当前星币余额';
+
+  @override
+  String mallPage_3(Object price) {
+    return '价格 $price';
+  }
+
+  @override
+  String mallPage_4(Object count) {
+    return '限量 $count 份';
+  }
+
+  @override
+  String mallPage_5(Object stock) {
+    return '剩余 $stock 份';
+  }
+
+  @override
+  String get mallPage_6 => '兑换';
+
+  @override
+  String get mallPage_7 => '已售罄';
+
+  @override
+  String get mallPage_8 => '星币余额不足';
+
+  @override
+  String get mallPage_9 => '确认兑换';
+
+  @override
+  String mallPage_10(Object name, Object price) {
+    return '兑换「$name」将消耗 $price';
+  }
+
+  @override
+  String get mallPage_11 => '取消';
+
+  @override
+  String get mallPage_12 => '确认';
+
+  @override
+  String get mallPage_13 => '兑换成功';
+
+  @override
+  String get mallPage_14 => '暂无可兑换商品';
+
+  @override
+  String get mallPage_15 => '商品上架后会显示在这里';
+
+  @override
+  String get mallPage_16 => '重新加载';
 }

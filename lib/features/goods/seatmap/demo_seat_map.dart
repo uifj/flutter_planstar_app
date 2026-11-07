@@ -31,7 +31,7 @@ class DemoSeatMap {
         rowCount: 5,
         seatsPerRow: 12,
         startY: 0,
-        pricePerSeat: unitPrice ?? Money.fromMinorUnits(128000), // ¥1280
+        pricePerSeat: unitPrice ?? Money.fromMinorUnits(128000), // 星币 1,280
         areaColor: 0xFFFFD700,
       ),
       _buildArea(
@@ -40,7 +40,7 @@ class DemoSeatMap {
         rowCount: 6,
         seatsPerRow: 14,
         startY: 6, // 5 行 + 1 行间距
-        pricePerSeat: unitPrice ?? Money.fromMinorUnits(88000), // ¥880
+        pricePerSeat: unitPrice ?? Money.fromMinorUnits(88000), // 星币 880
         areaColor: 0xFFFF2261,
       ),
       _buildArea(
@@ -49,7 +49,7 @@ class DemoSeatMap {
         rowCount: 8,
         seatsPerRow: 16,
         startY: 13, // 5 + 1 + 6 + 1 行
-        pricePerSeat: unitPrice ?? Money.fromMinorUnits(48000), // ¥480
+        pricePerSeat: unitPrice ?? Money.fromMinorUnits(48000), // 星币 480
         areaColor: 0xFF4A90D9,
       ),
     ];

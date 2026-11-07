@@ -185,10 +185,10 @@ abstract class MessageLocalizations {
   /// **'企划星福利官'**
   String get messageProviders_93;
 
-  /// 来源：lib/features/message/application/message_providers.dart:94；原文：'您有一张 50 元无门槛券即将过期'
+  /// 来源：lib/features/message/application/message_providers.dart:94；原文：'您有一张 50 星币无门槛券即将过期'
   ///
   /// In zh, this message translates to:
-  /// **'您有一张 50 元无门槛券即将过期'**
+  /// **'您有一张 50 星币无门槛券即将过期'**
   String get messageProviders_94;
 
   /// 来源：lib/features/message/chat_page.dart:75；原文：'会话'

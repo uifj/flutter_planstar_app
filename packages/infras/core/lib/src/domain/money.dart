@@ -29,9 +29,9 @@ final class CurrencyMismatchException implements Exception {
 /// 金额。不可变、值相等、按分存储。
 ///
 /// ```dart
-/// final unit = Money.fromYuan(680);           // ¥680.00 → 68000 分
+/// final unit = Money.fromYuan(680);           // 星币 680 → 68000 分
 /// final total = unit * 2 + Money.fromYuan(12); // 乘法只接受整数件数
-/// expect(total.format(), '¥1,372.00');
+/// expect(total.format(), '星币 1,372');
 /// ```
 final class Money extends ValueObject implements Comparable<Money> {
   const Money._(this.minorUnits, this.currency);
@@ -57,12 +57,14 @@ final class Money extends ValueObject implements Comparable<Money> {
   factory Money.fromYuan(num yuan, {String currency = cny}) =>
       Money.fromMinorUnits(_roundHalfAwayFromZero(yuan * 100), currency: currency);
 
-  /// 解析 `"1234.56"` / `"¥1,234.56"` / `"-12"`。
+  /// 解析 `"1234.56"` / `"星币 1,234.56"` / `"¥1,234.56"` / `"-12"`。
   ///
   /// 解析失败返回 `null` 而不是抛异常——它用在反序列化边界上，
   /// 调用方需要把"字段脏了"翻译成 `Failure`。
   static Money? tryParse(String raw, {String currency = cny}) {
-    final cleaned = raw.replaceAll(RegExp(r'[¥,\s]'), '');
+    final cleaned = raw
+        .replaceAll('星币', '')
+        .replaceAll(RegExp(r'[¥￥,\s]'), '');
     if (cleaned.isEmpty) return null;
     final parsed = num.tryParse(cleaned);
     if (parsed == null) return null;
@@ -137,15 +139,18 @@ final class Money extends ValueObject implements Comparable<Money> {
     return total;
   }
 
-  /// 展示用：`¥1,234.56`。企划星的价格串是 `"¥ " + 金额`（`getPriceSpanString`），
-  /// 这里的空格交给 UI 决定，值对象只负责数字与符号。
+  /// 展示用：`星币 1,234.56`。整额省略小数（`星币 1,000`），负数前缀带符号
+  /// （`-星币 12`）。符号与数字之间的空格由这里的固定格式决定，UI 只负责排版。
   String format({bool withSymbol = true}) {
     final sign = isNegative ? '-' : '';
     final absolute = minorUnits.abs();
     final yuanPart = absolute ~/ 100;
-    final centPart = (absolute % 100).toString().padLeft(2, '0');
+    final centPart = absolute % 100;
     final grouped = _groupThousands(yuanPart.toString());
-    return withSymbol ? '$sign¥$grouped.$centPart' : '$sign$grouped.$centPart';
+    final number = centPart == 0
+        ? grouped
+        : '$grouped.${centPart.toString().padLeft(2, '0')}';
+    return withSymbol ? '$sign星币 $number' : '$sign$number';
   }
 
   @override

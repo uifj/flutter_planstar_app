@@ -23,7 +23,7 @@ Widget _host(Widget child, {double width = _squeezedWidth}) {
 
 void main() {
   // 回归缺陷：`PsPrice` 的根是一个 `mainAxisSize: min` 且无 flex 子节点的
-  // Row，被塞进紧约束时子节点无法收缩，`¥880起` 需要约 71dp → 溢出 19px。
+  // Row，被塞进紧约束时子节点无法收缩，`星币 880起` 需要约 71dp → 溢出 19px。
   // 症状是每个带角标的精选卡片在真机上也溢出（卡片宽度写死 105dp，
   // 与屏幕宽度无关），不只是测试环境。
   testWidgets('被挤到 52.5dp 时不溢出（回归）', (WidgetTester tester) async {
@@ -73,6 +73,6 @@ void main() {
     );
 
     expect(tester.takeException(), isNull);
-    expect(find.text('-¥'), findsOneWidget);
+    expect(find.text('-星币'), findsOneWidget);
   });
 }

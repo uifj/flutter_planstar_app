@@ -1235,10 +1235,10 @@ abstract class OrderLocalizations {
   /// **'推荐'**
   String get payInfo_40;
 
-  /// 来源：lib/features/order/payment/pay_info.dart:55；原文：'余额 ¥0.00'
+  /// 来源：lib/features/order/payment/pay_info.dart:55；原文：'星币余额支付'
   ///
   /// In zh, this message translates to:
-  /// **'余额 ¥0.00'**
+  /// **'星币余额支付'**
   String get payInfo_55;
 
   /// 来源：lib/features/order/payment/pay_info.dart:60；原文：'企划'
