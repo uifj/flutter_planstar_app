@@ -3,6 +3,7 @@ import 'package:core/result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/network/network_providers.dart';
+import '../../goods/seatmap/seat_selection_providers.dart';
 import '../data/planstar_order_api.dart';
 import '../domain/domain.dart';
 import 'order_api_providers.dart';
@@ -146,15 +147,17 @@ final class OrderConfirmController
       purchaseLimit: seed.purchaseLimit,
     ).requireData;
 
-    // 默认选中第一个票档 1 张（企划星确认页的入口默认值）。
+    // 默认选中第一个票档；数量与已选座位数保持一致（1 座 = 1 票），
+    // 这样本地/服务端报价与确认页的「座位小计」口径一致。
     if (seed.tiers.isNotEmpty) {
+      final seatCount = ref.watch(seatSelectionProvider(showId)).count;
       final first = seed.tiers.first;
       order.addLine(
         OrderLine(
           id: first.id,
           tierName: first.name,
           unitPrice: first.price,
-          quantity: Quantity(1),
+          quantity: Quantity(seatCount > 0 ? seatCount : 1),
         ),
       );
     }

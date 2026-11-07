@@ -17,7 +17,13 @@ class DemoSeatMap {
   DemoSeatMap._();
 
   /// 生成演示座位图。
-  static SeatMapData generate({String venueName = '上海文化广场'}) {
+  ///
+  /// [unitPrice] 非空时所有区域统一按该价（真实环境取自后端权威单价：
+  /// 服务端报价按「在售票档最低价 × 数量」结算，客户端不再自造区域差价）。
+  static SeatMapData generate({
+    String venueName = '上海文化广场',
+    Money? unitPrice,
+  }) {
     final areas = <SeatArea>[
       _buildArea(
         id: 1,
@@ -25,7 +31,7 @@ class DemoSeatMap {
         rowCount: 5,
         seatsPerRow: 12,
         startY: 0,
-        pricePerSeat: Money.fromMinorUnits(128000), // ¥1280
+        pricePerSeat: unitPrice ?? Money.fromMinorUnits(128000), // ¥1280
         areaColor: 0xFFFFD700,
       ),
       _buildArea(
@@ -34,7 +40,7 @@ class DemoSeatMap {
         rowCount: 6,
         seatsPerRow: 14,
         startY: 6, // 5 行 + 1 行间距
-        pricePerSeat: Money.fromMinorUnits(88000), // ¥880
+        pricePerSeat: unitPrice ?? Money.fromMinorUnits(88000), // ¥880
         areaColor: 0xFFFF2261,
       ),
       _buildArea(
@@ -43,7 +49,7 @@ class DemoSeatMap {
         rowCount: 8,
         seatsPerRow: 16,
         startY: 13, // 5 + 1 + 6 + 1 行
-        pricePerSeat: Money.fromMinorUnits(48000), // ¥480
+        pricePerSeat: unitPrice ?? Money.fromMinorUnits(48000), // ¥480
         areaColor: 0xFF4A90D9,
       ),
     ];

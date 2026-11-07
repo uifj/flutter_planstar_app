@@ -33,12 +33,6 @@ class OrderConfirmPage extends ConsumerWidget {
     final selectedSeats = ref
         .watch(seatSelectionProvider(showId))
         .selectedSeats;
-    // 选座走本地 mock 定价（后端暂无座位 SKU），应付金额以座位小计为准，
-    // 避免出现"座位小计 ¥6,880 / 应付 ¥680"的割裂展示。
-    var seatTotalMinor = 0;
-    for (final seat in selectedSeats) {
-      seatTotalMinor += seat.price?.minorUnits ?? 0;
-    }
     final controller = ref.read(
       orderConfirmControllerProvider(showId).notifier,
     );
@@ -243,9 +237,7 @@ class OrderConfirmPage extends ConsumerWidget {
             ),
           ),
           _SubmitBar(
-            payable: selectedSeats.isEmpty || seatTotalMinor == 0
-                ? state.displayQuote.paymentAmount
-                : Money.fromMinorUnits(seatTotalMinor),
+            payable: state.displayQuote.paymentAmount,
             enabled: state.canSubmit,
             submitting: state.submitting,
             submitted: state.submitted,

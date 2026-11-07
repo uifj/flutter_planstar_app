@@ -1,15 +1,24 @@
 import 'package:core/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/network/network_providers.dart';
+import '../../catalog/application/catalog_providers.dart';
 import 'demo_seat_map.dart';
 import 'seat_map.dart';
 
 /// 座位图数据 Provider（按演出 id 分族）。
 ///
 /// 企划星的 `SelectTicketSeatMapActivity` 调 `GET v5/ticketCategories` 拿座位图。
-/// 本演示模式用 [DemoSeatMap.generate] 生成。
+/// 本演示模式用 [DemoSeatMap.generate] 生成座位布局；
+/// 真实模式下座位价格统一取后端权威单价（`priceFrom`），
+/// 与服务端「在售票档最低价 × 数量」的结算口径保持一致。
 final seatMapDataProvider = Provider.family<SeatMapData, String>((ref, showId) {
-  return DemoSeatMap.generate();
+  final useDemo = ref.watch(useDemoProvider);
+  final show = ref.watch(showFullProvider(showId));
+  final unitPrice = useDemo || show == null ? null : show.priceFrom;
+  return DemoSeatMap.generate(
+    unitPrice: unitPrice != null && unitPrice.minorUnits > 0 ? unitPrice : null,
+  );
 });
 
 /// 选座状态。
