@@ -208,14 +208,18 @@ class ShowCardFloor extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            Text(
-              show.title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 13,
-                height: 1.35,
-                color: colors.textPrimary,
+            SizedBox(
+              // 固定两行标题高度，单行标题顶部对齐，下方信息不会上下跳动。
+              height: MediaQuery.textScalerOf(context).scale(13) * 1.35 * 2,
+              child: Text(
+                show.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.35,
+                  color: colors.textPrimary,
+                ),
               ),
             ),
             const SizedBox(height: 4),

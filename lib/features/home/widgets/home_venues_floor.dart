@@ -188,14 +188,21 @@ class _VenueCard extends StatelessWidget {
                               radius: 4,
                             ),
                             const SizedBox(height: 4),
-                            Text(
-                              shows[i].title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12,
-                                height: 1.25,
-                                color: colors.textPrimary,
+                            SizedBox(
+                              // 固定两行标题高度，单行标题顶部对齐，价格不会上下跳动。
+                              height:
+                                  MediaQuery.textScalerOf(context).scale(12) *
+                                  1.25 *
+                                  2,
+                              child: Text(
+                                shows[i].title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  height: 1.25,
+                                  color: colors.textPrimary,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 2),
