@@ -1,6 +1,7 @@
 import 'package:core/network.dart';
 import 'package:core/result.dart';
 
+import '../../../app/network/api_paths.dart';
 import '../domain/feed_post.dart';
 
 /// 动态/发现 API。
@@ -12,10 +13,10 @@ import '../domain/feed_post.dart';
 /// | 动态列表（热门） | GET | `v4/feed/hot` |
 /// | 动态列表（关注） | GET | `v1/feed` |
 /// | 动态详情 | GET | `v1/tweets/{id}` |
-/// | 点赞 | POST | `v1/userLike` |
-/// | 取消赞 | DELETE | `v1/userLike` |
 /// | 评论列表 | GET | `v1/userReply` |
-/// | 发评论 | POST | `v1/userReply` |
+///
+/// 点赞/发评论等写操作后端未提供端点（`userLike`、`POST userReply` 只在
+/// 来源 Android 工程里存在），这里不封装，避免造出打不通的接口。
 final class PlanstarFeedApi {
   PlanstarFeedApi({required ApiClient client}) : _client = client;
 
@@ -28,7 +29,7 @@ final class PlanstarFeedApi {
     String? nextPageKey,
   }) {
     return _client.get<List<FeedPost>>(
-      'v4/feed/hot',
+      ApiPaths.feedHot,
       queryParameters: <String, dynamic>{
         'page': page,
         'pageSize': pageSize,
@@ -46,7 +47,7 @@ final class PlanstarFeedApi {
     String? nextPageKey,
   }) {
     return _client.get<List<FeedPost>>(
-      'v1/feed',
+      ApiPaths.feed,
       queryParameters: <String, dynamic>{
         'page': page,
         'pageSize': pageSize,
@@ -60,7 +61,7 @@ final class PlanstarFeedApi {
   /// 动态详情。
   Future<Result<FeedPost?>> fetchFeedDetail(String id) {
     return _client.get<FeedPost?>(
-      'v1/tweets/$id',
+      ApiPaths.tweetDetail(id),
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {
         if (data is! Map<String, dynamic>) return null;
@@ -72,7 +73,7 @@ final class PlanstarFeedApi {
   /// 评论列表。
   Future<Result<List<FeedComment>>> fetchComments(String postId) {
     return _client.get<List<FeedComment>>(
-      'v1/userReply',
+      ApiPaths.feedComments,
       queryParameters: <String, dynamic>{'tweetId': postId},
       envelope: const PassthroughEnvelope(),
       parser: (Object? data) {

@@ -40,20 +40,27 @@ class FeedDetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final FeedPost? post = ref.watch(feedPostByIdProvider(postId));
+    final AsyncValue<FeedPost?> postAsync = ref.watch(
+      feedPostByIdProvider(postId),
+    );
+
+    Widget notFound() => PsEmptyState(
+      title: context.l10n.feedDetailPage_48,
+      description: context.l10n.feedDetailPage_49,
+      icon: LucideIcons.fileText,
+      actionLabel: context.l10n.feedDetailPage_51,
+      onAction: () => context.go('/discover'),
+    );
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
       appBar: AdaptiveAppBar(title: context.l10n.feedDetailPage_45),
-      body: post == null
-          ? PsEmptyState(
-              title: context.l10n.feedDetailPage_48,
-              description: context.l10n.feedDetailPage_49,
-              icon: LucideIcons.fileText,
-              actionLabel: context.l10n.feedDetailPage_51,
-              onAction: () => context.go('/discover'),
-            )
-          : _FeedDetailBody(post: post),
+      body: postAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, _) => notFound(),
+        data: (FeedPost? post) =>
+            post == null ? notFound() : _FeedDetailBody(post: post),
+      ),
     );
   }
 }
@@ -66,7 +73,10 @@ class _FeedDetailBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final List<FeedComment> comments = ref.watch(feedCommentsProvider(post.id));
+    // 评论是辅助内容：加载/失败时按"暂无评论"渲染，不阻断正文。
+    final List<FeedComment> comments =
+        ref.watch(feedCommentsProvider(post.id)).valueOrNull ??
+        const <FeedComment>[];
     final ShowSummary? show = post.showId == null
         ? null
         : ref.watch(showByIdProvider(post.showId!));

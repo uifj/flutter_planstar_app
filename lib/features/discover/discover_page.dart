@@ -46,9 +46,11 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final hot = ref.watch(feedControllerProvider);
-    final following = ref.watch(followingFeedProvider);
-    final posts = _tab == 0 ? hot : following;
+    final AsyncValue<List<FeedPost>> hot = ref.watch(feedControllerProvider);
+    final AsyncValue<List<FeedPost>> following = ref.watch(
+      followingFeedProvider,
+    );
+    final AsyncValue<List<FeedPost>> posts = _tab == 0 ? hot : following;
 
     // 动态详情页（`/feed/:id`）。以前这里只有一条 toast——`showId` 非空时
     // 跳演出、为空时什么也不做。现在每条动态都有详情页，关联演出的那条
@@ -71,15 +73,28 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                 onTapSearch: () => context.push('/search'),
               ),
               Expanded(
-                child: posts.isEmpty
-                    ? PsEmptyState(
-                        title: context.l10n.discoverPage_72,
-                        description: context.l10n.discoverPage_73,
-                        icon: LucideIcons.users,
-                        actionLabel: context.l10n.discoverPage_75,
-                        onAction: () => setState(() => _tab = 0),
-                      )
-                    : _MasonryFeed(posts: posts, onTapPost: openPost),
+                child: posts.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (_, _) => PsEmptyState(
+                    title: context.l10n.discoverPage_72,
+                    description: context.l10n.discoverPage_73,
+                    icon: LucideIcons.users,
+                    actionLabel: context.l10n.discoverPage_75,
+                    onAction: () => _tab == 0
+                        ? ref.invalidate(feedControllerProvider)
+                        : ref.invalidate(followingFeedProvider),
+                  ),
+                  data: (List<FeedPost> list) => list.isEmpty
+                      ? PsEmptyState(
+                          title: context.l10n.discoverPage_72,
+                          description: context.l10n.discoverPage_73,
+                          icon: LucideIcons.users,
+                          actionLabel: context.l10n.discoverPage_75,
+                          onAction: () => setState(() => _tab = 0),
+                        )
+                      : _MasonryFeed(posts: list, onTapPost: openPost),
+                ),
               ),
             ],
           ),

@@ -1,20 +1,32 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/network/network_providers.dart';
 import '../data/demo_feed.dart';
+import '../data/planstar_feed_api.dart';
 import '../domain/feed_post.dart';
+import 'feed_api_providers.dart';
 
 /// 发现页动态流。
 ///
+/// 真实模式走 `GET v4/feed/hot`，`PS_USE_DEMO=true` 时读 `buildDemoFeed()`。
 /// 用 `Notifier` 而不是 `Provider`：发布动态要**就地插入**到列表头部，
 /// 不能靠重建整个列表（那会把用户滚动位置和已加载状态一起丢掉）。
-class FeedController extends Notifier<List<FeedPost>> {
+class FeedController extends AsyncNotifier<List<FeedPost>> {
   @override
-  List<FeedPost> build() => buildDemoFeed();
+  Future<List<FeedPost>> build() async {
+    if (ref.watch(useDemoProvider)) return buildDemoFeed();
+    final PlanstarFeedApi api = ref.read(planstarFeedApiProvider);
+    final result = await api.fetchHotFeeds(page: 1, pageSize: 20);
+    return result.fold(
+      onSuccess: (List<FeedPost> feeds) => feeds,
+      onFailure: (failure) => throw failure,
+    );
+  }
 
   /// 发布一条动态（本地插入，不落库）。
   ///
-  /// 真实实现应该是 `POST v1/feed/publish` → 用返回的实体替换临时项；
-  /// 这里插入一条 `p-<timestamp>` 的临时项，行为上等价于"发布成功"。
+  /// 服务端暂无发布接口，这里插入一条 `p-<timestamp>` 的临时项；
+  /// 刷新后消失，所以 UI 上仍按"本地演示"的语义处理。
   FeedPost publish(
     String title, {
     required String author,
@@ -28,40 +40,68 @@ class FeedController extends Notifier<List<FeedPost>> {
       publishedAt: DateTime.now(),
       tag: tag,
     );
-    state = <FeedPost>[post, ...state];
+    state = AsyncData(<FeedPost>[
+      post,
+      ...state.valueOrNull ?? const <FeedPost>[],
+    ]);
     return post;
   }
 }
 
 /// 动态流。
-final feedControllerProvider = NotifierProvider<FeedController, List<FeedPost>>(
-  FeedController.new,
-);
+final feedControllerProvider =
+    AsyncNotifierProvider<FeedController, List<FeedPost>>(FeedController.new);
 
-/// 按 id 取动态（详情页用）。查不到返回 `null`——深链带脏 id 是正常情况。
-final feedPostByIdProvider = Provider.family<FeedPost?, String>((ref, id) {
-  for (final FeedPost post in ref.watch(feedControllerProvider)) {
+/// 按 id 取动态（详情页用）。
+///
+/// 先查已加载的热门流；真实模式下查不到再打 `GET v1/tweets/{id}`，
+/// 这样深链进来不必等首页翻到那一条。查不到返回 `null`——
+/// 深链带脏 id 是正常情况。
+final feedPostByIdProvider = FutureProvider.family<FeedPost?, String>((
+  ref,
+  id,
+) async {
+  final List<FeedPost> loaded =
+      ref.watch(feedControllerProvider).valueOrNull ?? const <FeedPost>[];
+  for (final FeedPost post in loaded) {
     if (post.id == id) return post;
   }
-  return null;
+  if (ref.watch(useDemoProvider)) return null;
+
+  final result = await ref.read(planstarFeedApiProvider).fetchFeedDetail(id);
+  return result.fold(
+    onSuccess: (FeedPost? post) => post,
+    onFailure: (_) => null,
+  );
 });
 
 /// 某条动态的评论。
 ///
-/// 演示数据只给前几条动态造了评论，其余返回空（见 `buildDemoComments`）。
-/// 接真实接口时换成 `AsyncValue` + 分页即可，页面结构不用动。
-final feedCommentsProvider = Provider.family<List<FeedComment>, String>((
+/// 真实模式走 `GET v1/userReply?tweetId=`；评论失败不阻断详情正文，
+/// 静默按"暂无评论"展示，避免整页挂在一段辅助内容上。
+final feedCommentsProvider = FutureProvider.family<List<FeedComment>, String>((
   ref,
   postId,
-) {
-  return buildDemoComments(postId);
+) async {
+  if (ref.watch(useDemoProvider)) return buildDemoComments(postId);
+  final result = await ref.read(planstarFeedApiProvider).fetchComments(postId);
+  return result.fold(
+    onSuccess: (List<FeedComment> comments) => comments,
+    onFailure: (_) => const <FeedComment>[],
+  );
 });
 
 /// 「关注」流。
 ///
-/// 企划星的关注流是"我关注的人发的动态"。本项目没有社交关系数据
-/// （没有登录用户、没有关注列表、没有 authorId 关联），所以这里**诚实地返回空**，
-/// 由页面渲染空态并引导用户去看热门——而不是拿热门流冒充关注流。
-final followingFeedProvider = Provider<List<FeedPost>>(
-  (ref) => const <FeedPost>[],
-);
+/// 真实模式走 `GET v1/feed`；演示模式**诚实地返回空**——没有社交关系数据，
+/// 拿热门流冒充关注流会让用户以为关注了别人。页面会渲染空态并引导去看热门。
+final followingFeedProvider = FutureProvider<List<FeedPost>>((ref) async {
+  if (ref.watch(useDemoProvider)) return const <FeedPost>[];
+  final result = await ref
+      .read(planstarFeedApiProvider)
+      .fetchFollowingFeeds(page: 1, pageSize: 20);
+  return result.fold(
+    onSuccess: (List<FeedPost> feeds) => feeds,
+    onFailure: (_) => const <FeedPost>[],
+  );
+});
