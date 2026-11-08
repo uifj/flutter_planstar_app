@@ -9,7 +9,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # followed by an optional build number separated by a +.
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
-version: 9.9.39+90939
+version: 1.0.1+1001
 
 environment:
   sdk: ^3.11.5

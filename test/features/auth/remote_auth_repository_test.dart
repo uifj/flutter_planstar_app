@@ -64,7 +64,7 @@ void main() {
         PsNetworkInterceptor(
           context: context,
           userAgent:
-              'PlanstarApi (com.planstar.app/9.9.39 Xiaomi '
+              'PlanstarApi (com.planstar.app/1.0.1 Xiaomi '
               'developer-default Android/14)',
         ),
       ],

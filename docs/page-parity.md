@@ -1,6 +1,6 @@
-# features/ 各页面对照 Android 原项目的完成情况
+﻿# features/ 各页面对照 Android 原项目的完成情况
 
-> 适用版本：planstar Flutter 9.9.39 · 最后核对：2026-11-07 · 维护：客户端组
+> 适用版本：planstar Flutter 1.0.1 · 最后核对：2026-11-07 · 维护：客户端组
 
 > 口径：逐个页面拿 Android 原项目的 `res/layout/*.xml` 与
 > `drawable/*`、`values/*` 当唯一依据核对，尺寸/字号/颜色**不靠感觉**，
@@ -279,3 +279,4 @@ CI 在 l10n 校验之后运行 `dart tool/check_forbidden_terms.dart`。
 订单卡片、订单详情与选档页才展示场次 / 座席与选座入口；其余企划一律改为展示
 「预计交付时间」（档位 `estimatedDeliveryTime` 优先，其次企划 `deliveryPlan`）、
 回报档位、支持人、支持编号，不再出现票务字段。
+

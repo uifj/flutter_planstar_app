@@ -1,6 +1,6 @@
-# 前端接口契约副本（仅前端差异）
+﻿# 前端接口契约副本（仅前端差异）
 
-> 适用版本：planstar Flutter 9.9.39 · 最后核对：2026-11-07 · 维护：客户端组
+> 适用版本：planstar Flutter 1.0.1 · 最后核对：2026-11-07 · 维护：客户端组
 
 > **正本不在这里**。后端接口的唯一事实源是：
 > `planstar_kratos_server/docs/api/API_CONTRACT.md`（方法、路径、鉴权、请求/响应字段、
@@ -68,3 +68,4 @@ Base URL **必须以 `/` 结尾**；路径不带前导 `/`。
   `planstar_kratos_server/docs/api/API_CONTRACT.md`
 - 页面完成度：[`../page-parity.md`](../page-parity.md)
 - 未实现清单：[`../unimplemented-modules.md`](../unimplemented-modules.md)
+

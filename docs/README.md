@@ -1,6 +1,6 @@
-# planstar Flutter 文档索引
+﻿# planstar Flutter 文档索引
 
-> 适用版本：planstar Flutter 9.9.39 · 最后核对：2026-11-07 · 维护：客户端组
+> 适用版本：planstar Flutter 1.0.1 · 最后核对：2026-11-07 · 维护：客户端组
 
 本文件是 `flutter_piaoniu_app/docs/` 的唯一入口。先看这里，再按需跳转。
 
@@ -56,3 +56,4 @@
 - 修改页面行为、路由、演示开关或接口路径时，同步更新本索引指向的对应文档；不要新增平行文档。
 - 新增文档必须登记到 §2，并说明它解决什么问题、以什么为事实源。
 - **改 l10n 文案必须重新生成**：ARB 源在 `lib/l10n/arb/`（feature 级在 `arb/features/<name>/`），生成物在 `lib/l10n/generated/`（入库、勿手改）。改完 ARB 跑 `dart tool/gen_l10n.dart` 并提交产物；CI 会执行 `dart tool/gen_l10n.dart --check`，产物与 ARB 不同步会直接失败。
+

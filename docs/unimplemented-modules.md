@@ -1,6 +1,6 @@
-# 未实现模块清单
+﻿# 未实现模块清单
 
-> 适用版本：planstar Flutter 9.9.39 · 最后核对：2026-11-07 · 维护：客户端组
+> 适用版本：planstar Flutter 1.0.1 · 最后核对：2026-11-07 · 维护：客户端组
 
 > **时点**：2026-11-07 全流程回归复测  
 > **项目快照**：36 个路由页 / 268 个 lib dart 文件 / 54,977 行（lib 51,488 + core 3,489）  
@@ -602,3 +602,4 @@
 - [api-contract.md](api-contract.md) — 后端接口契约（登录域已接通）
 - [ddd-order-domain.md](ddd-order-domain.md) — 订单领域模型设计
 - `wiki_zh/31-flutter-parity-gap.md` — 18 路由时点的完整差距分析（历史快照）
+

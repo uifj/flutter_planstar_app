@@ -12,11 +12,15 @@ void main() {
     expect(config.baseUrl, ApiConfig.prodBaseUrl);
     // Dio 直接拼字符串：少这个斜杠会把 path 粘到域名上。
     expect(config.baseUrl.endsWith('/'), isTrue);
+    // 默认地址必须是后端实际部署的域名，而不是旧的占位域名。
+    final Uri base = Uri.parse(config.baseUrl);
+    expect(base.host, 'api.planstar.top');
+    expect(base.scheme, 'https');
     expect(config.clientType, 11);
     expect(config.environment, ApiEnvironment.prod);
     expect(
       config.userAgent,
-      'PlanstarApi (com.planstar.app/9.9.39 Xiaomi developer-default Android/14)',
+      'PlanstarApi (com.planstar.app/1.0.1 Xiaomi developer-default Android/14)',
     );
   });
 

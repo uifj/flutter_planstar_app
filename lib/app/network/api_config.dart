@@ -6,7 +6,8 @@
 /// 2. 本文件里的编译期默认值。
 ///
 /// 本地 `assets/` 已整体移除，不再从 `api_config.json` 运行时读配置。
-/// 后端域名统一为 `api.planstar.com` 占位（原线上域名已弃用）。
+/// 默认生产域名是后端实际部署的 `https://api.planstar.top/`；需要指向别的
+/// 环境时用 `--dart-define=PS_API_BASE=https://<host>/` 覆盖，结尾斜杠必须有。
 /// `⚠` beta 是**明文 HTTP**，只在调试环境用。
 library;
 
@@ -39,11 +40,15 @@ final class ApiConfig {
     this.useDemo = false,
   });
 
-  /// 生产 API base（`planstar` 占位域名）。
-  static const String prodBaseUrl = 'https://api.planstar.com/';
+  /// 生产 API base（后端 Traefik 实际暴露的域名）。
+  ///
+  /// 可用 `--dart-define=PS_API_BASE=...` 覆盖（优先级更高）。
+  static const String prodBaseUrl = 'https://api.planstar.top/';
 
-  /// Beta API base（`planstar` 占位域名）。
-  static const String betaBaseUrl = 'http://apibeta.planstar.com/';
+  /// Beta API base（后端 Traefik 实际暴露的域名，**明文 HTTP**）。
+  ///
+  /// 可用 `--dart-define=PS_API_BASE=...` 覆盖（优先级更高）。
+  static const String betaBaseUrl = 'http://apibeta.planstar.top/';
 
   /// Android 客户端类型（原 `PlanstarConstants.CLIENT_TYPE = 11`）。
   ///
@@ -52,7 +57,7 @@ final class ApiConfig {
   static const int androidClientType = 11;
 
   /// 默认版本号，与 `pubspec.yaml` 的 `version:` 保持一致。
-  static const String defaultAppVersion = '9.9.39';
+  static const String defaultAppVersion = '1.0.1';
 
   /// 默认渠道（来源 Walle 渠道信息；调试包无渠道时 Android 侧拼 `null`）。
   static const String defaultChannel = 'developer-default';
@@ -64,7 +69,8 @@ final class ApiConfig {
   static const String defaultOsVersion = '14';
 
   /// base URL，**必须以 `/` 结尾**：Dio 直接做字符串拼接，
-  /// `https://api.planstar.com` + `v1/user/login` 会少一个斜杠。
+  /// `https://api.planstar.top` + `v1/user/login` 会少一个斜杠。
+  /// 可用 `--dart-define=PS_API_BASE=...` 覆盖。
   final String baseUrl;
 
   /// 当前环境。
@@ -165,7 +171,7 @@ final class ApiConfig {
   /// 格式照抄来源 `HttpUtil.getAPIUserAgent()`：
   ///
   /// ```text
-  /// PlanstarApi (com.planstar.app/9.9.39 Xiaomi developer-default Android/14)
+  /// PlanstarApi (com.planstar.app/1.0.1 Xiaomi developer-default Android/14)
   /// ```
   ///
   /// UA 里的包名同步改为 `com.planstar.app` 占位；`ct: 11` 仍声明

@@ -1,6 +1,6 @@
-# 前端接口契约（客户端视角）
+﻿# 前端接口契约（客户端视角）
 
-> 适用版本：planstar Flutter 9.9.39 · 最后核对：2026-11-07 · 维护：客户端组
+> 适用版本：planstar Flutter 1.0.1 · 最后核对：2026-11-07 · 维护：客户端组
 
 > **事实源**：后端接口的唯一事实源是
 > `planstar_kratos_server/docs/api/API_CONTRACT.md`（路由、字段、表映射以它为准）。
@@ -29,7 +29,7 @@
 
 | 头 | 是否必带 | 说明 |
 | --- | --- | --- |
-| `User-Agent` | 是 | `PlanstarApi (com.planstar.app/9.9.39 Xiaomi developer-default Android/14)` |
+| `User-Agent` | 是 | `PlanstarApi (com.planstar.app/1.0.1 Xiaomi developer-default Android/14)` |
 | `dvid` | 有则带 | 设备标识，首次由服务端下发并持久化 |
 | `Cookie: psSession=…` | 登录后必带 | 会话令牌，**不是** `Authorization: Bearer` |
 | `X-Longitude` / `X-Latitude` | 已定位才带 | 经纬度均 `> 0` 时才发送 |
@@ -242,3 +242,4 @@ dart run tool/verify_catalog_api.dart --base=http://127.0.0.1:8098/
 4. **图形验证码做成按需弹框**：来源是默认 `gone` 的内联行，低频事件不长期占位。
 5. **默认信封是 `PassthroughEnvelope`**：后端多数接口返回裸模型 + HTTP 状态码；
    若后端切换为 `{code,message,data}` 信封，需要同步改为 `RestCodeEnvelope`。
+
