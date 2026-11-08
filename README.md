@@ -1,6 +1,6 @@
-# planstar
+﻿# planstar
 
-> 适用版本：planstar Flutter 9.9.39 · 最后核对：2026-11-07 · 维护：客户端组
+> 适用版本：planstar Flutter 1.0.1 · 最后核对：2026-11-07 · 维护：客户端组
 
 企划星 Flutter 重构工程。monorepo（pub workspace）+ Clean DDD + Riverpod + GoRouter。
 
@@ -47,8 +47,9 @@ flutter pub get
 flutter run
 ```
 
-默认 base 是 `https://api.planstar.com/`，这是**占位域名，当前不可用**。
-不覆盖的话真实请求会失败；加 `--dart-define=PS_USE_DEMO=true` 可离线跑演示数据。
+默认 base 是 `https://api.planstar.top/`（后端 Traefik 实际暴露的生产地址）。
+需要指向其他环境时用 `--dart-define=PS_API_BASE=https://<host>/` 覆盖；不覆盖时
+真实请求会直接打生产接口，加 `--dart-define=PS_USE_DEMO=true` 可离线跑演示数据。
 
 ### 3. 连本地后端
 
@@ -86,6 +87,10 @@ flutter run --dart-define=PS_API_BASE=http://127.0.0.1:8098/
 
 > `PS_API_BASE` **必须以 `/` 结尾**。Android manifest 已允许明文 HTTP，
 > 本地联调不需要额外改网络配置。
+>
+> 图形验证码 `GET v1/user/captcha` 下发的 `psCaptcha` Cookie 由
+> `PsNetworkInterceptor` 自动捕获并回填到后续登录 / 发码请求（一次性，内存态、
+> 不落盘），业务层不需要手动处理。
 
 ### 4. 当前接入范围
 
@@ -93,6 +98,18 @@ flutter run --dart-define=PS_API_BASE=http://127.0.0.1:8098/
 动态（热门/关注/详情/评论）、消息（列表/未读/标记已读）、订单（列表/详情/报价/下单）、
 用户资料与收货地址。默认真实接口；要离线跑页面或测试时加
 `--dart-define=PS_USE_DEMO=true`。逐条对照见 `docs/api-contract.md` §5。
+
+### 企划（创意）Tab
+
+底栏「企划」对应 `lib/features/project_idea/`：
+
+- `/project-idea`：叠卡流，左滑 / 「不支持」、右滑 / 「支持」打开弹窗，上滑跳过；
+  首次进入与翻卡会拉取 `GET v1/projectIdeas/feed`（游标分页，剩余 ≤3 张预取）。
+- `/project-idea/:ideaId`：创意详情，含支持率、意愿档位分布与理由计数聚合。
+
+这里只是**立项前**的创意态度征集，支持档位仅表达意愿、不扣星币，详情页会明确标注
+「尚未立项」。本地联调按上节指定 `PS_API_BASE` 后即可直接调用
+`v1/projectIdeas/*` 三个接口。
 
 ## 本地化（一 feature 一套 ARB）
 
@@ -154,3 +171,4 @@ env -u HTTP_PROXY -u HTTPS_PROXY -u http_proxy -u https_proxy flutter test
 保留其各自的原始许可证，不受本项目许可证影响。
 
 Copyright (C) 2026 uifj
+

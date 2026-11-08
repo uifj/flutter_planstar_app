@@ -22,6 +22,12 @@ abstract final class ApiPaths {
 
   static String tweetDetail(String id) => 'v1/tweets/$id';
 
+  // ── project idea ─────────────────────────────────────────────────────
+  static const String projectIdeasFeed = 'v1/projectIdeas/feed';
+
+  static String projectIdeaDetail(int id) => 'v1/projectIdeas/$id';
+  static String projectIdeaVote(int id) => 'v1/projectIdeas/$id/vote';
+
   // ── message ──────────────────────────────────────────────────────────
   static const String messages = 'v1/messages';
   static const String messagesUnreadCount = 'v1/messages/unreadCount';
@@ -92,6 +98,9 @@ abstract final class ApiPaths {
     feed,
     feedComments,
     tweetDetail('1'),
+    projectIdeasFeed,
+    projectIdeaDetail(1),
+    projectIdeaVote(1),
     messages,
     messagesUnreadCount,
     messagesRead,

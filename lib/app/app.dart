@@ -29,6 +29,7 @@ const List<LocalizationsDelegate<Object>> appLocalizationsDelegates =
       MarketingLocalizations.delegate,
       MessageLocalizations.delegate,
       OrderLocalizations.delegate,
+      ProjectIdeaLocalizations.delegate,
       ProxyBuyLocalizations.delegate,
       SearchLocalizations.delegate,
       UserLocalizations.delegate,
