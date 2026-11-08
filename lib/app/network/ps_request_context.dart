@@ -36,6 +36,15 @@ final class PsRequestContext {
   /// 来源把它同时存进 SharedPreferences 与 WebView 的 CookieManager。
   String? psSession;
 
+  /// 图形验证码会话标识（Cookie `psCaptcha`）。
+  ///
+  /// 服务端 `GET v1/user/captcha` 通过 `Set-Cookie: psCaptcha=<id>` 下发，
+  /// `POST v1/user/login` / `POST v3/user/sendLoginCode` 会从请求 Cookie 读取它。
+  ///
+  /// **一次性、仅内存、不落盘**：这两个接口会消费它，无论成功失败都要清空，
+  /// 下次需要时重新拉图形验证码即可。
+  String? psCaptcha;
+
   /// 经度。`null` 表示未定位，此时不发 `X-Longitude`。
   double? longitude;
 
@@ -58,4 +67,7 @@ final class PsRequestContext {
 
   /// 清空会话（登出）。
   void clearSession() => psSession = null;
+
+  /// 清空一次性图形验证码标识（已消费或已失效）。
+  void clearCaptcha() => psCaptcha = null;
 }

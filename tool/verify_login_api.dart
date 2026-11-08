@@ -5,8 +5,8 @@
 // **生产代码里同一份** `PlanstarAuthApi`（不是另抄的 curl）去打接口，
 // 所以它验证的是"我们实际会发出去的请求"，而不是"我以为会发出去的请求"。
 //
-// ⚠ 品牌重构后 `ApiConfig` 里的 host 是 `planstar` 占位域名，不指向真实线上服务。
-// 要联调真接口，请显式传 `--base=<真实 host>` 或设 `PS_API_BASE`；
+// ⚠ 默认地址是后端实际部署的 `https://api.planstar.top/`。
+// 要联调别的环境，请显式传 `--base=<host>` 或设 `PS_API_BASE`；
 // 否则脚本只能验证请求形状，无法拿到真实响应。
 //
 // 用法：
@@ -18,8 +18,8 @@
 // # 2) 跑完整成功路径：把手机上收到的验证码填进去
 // dart run tool/verify_login_api.dart --phone=13800001234 --code=123456
 //
-// # 3) 指定真实 base（占位域名不可用时）
-// dart run tool/verify_login_api.dart --base=https://<real-host>/
+// # 3) 指定真实 base（默认即生产地址，显式写出便于确认）
+// dart run tool/verify_login_api.dart --base=https://api.planstar.top/
 // ```
 //
 // 退出码：全部符合预期 → 0；有任何一条不符合 → 1（可直接进 CI 的 smoke）。
@@ -81,6 +81,7 @@ Future<void> main(List<String> args) async {
   final String? code = options['code'];
 
   final context = PsRequestContext(dvid: generateDvid());
+  final probe = _CookieProbe();
   final dio = buildDio(
     baseUrl: baseUrl.endsWith('/') ? baseUrl : '$baseUrl/',
     connectTimeout: const Duration(seconds: 15),
@@ -88,6 +89,8 @@ Future<void> main(List<String> args) async {
     sendTimeout: const Duration(seconds: 15),
     interceptors: <Interceptor>[
       PsNetworkInterceptor(context: context, userAgent: config.userAgent),
+      // 放在拦截器之后：记录拼接完成的 Cookie 头。
+      probe,
     ],
   );
   final api = PlanstarAuthApi(
@@ -105,7 +108,7 @@ Future<void> main(List<String> args) async {
   });
 
   final results = <CheckResult>[];
-  results.add(await _checkCaptcha(api));
+  results.add(await _checkCaptcha(api, context));
   final sendCode = await _checkSendCode(api, phone);
   results.add(sendCode.result);
   if (sendCode.needCaptcha) {
@@ -117,6 +120,8 @@ Future<void> main(List<String> args) async {
   if (code != null) {
     results.add(await _checkRealLogin(api, context, phone, code));
   }
+  // 放最后：会再拉一次图形码并用错误验证码登录，避免干扰上面的成功路径。
+  results.add(await _checkCaptchaCookie(api, context, probe, phone));
 
   _summary(results, context);
   exit(results.any((CheckResult r) => r.failed) ? 1 : 0);
@@ -126,8 +131,12 @@ Future<void> main(List<String> args) async {
 // 检查项
 // ---------------------------------------------------------------------------
 
-/// `GET v1/user/captcha` 必须返回真 PNG（不是 JSON、不是 HTML）。
-Future<CheckResult> _checkCaptcha(PlanstarAuthApi api) async {
+/// `GET v1/user/captcha` 必须返回真 PNG（不是 JSON、不是 HTML），
+/// 且服务端通过 `Set-Cookie` 下发的 `psCaptcha` 必须被拦截器捕获。
+Future<CheckResult> _checkCaptcha(
+  PlanstarAuthApi api,
+  PsRequestContext context,
+) async {
   const String name = '图形验证码 GET v1/user/captcha';
   final Result<List<int>> result = await api.fetchCaptchaImage();
   return result.fold(
@@ -143,15 +152,58 @@ Future<CheckResult> _checkCaptcha(PlanstarAuthApi api) async {
           bytes[1] == 0x50 &&
           bytes[2] == 0x4E &&
           bytes[3] == 0x47;
+      final String? captcha = context.psCaptcha;
+      final bool hasCaptcha = captcha != null && captcha.isNotEmpty;
+      final bool ok = isPng && hasCaptcha;
       return CheckResult(
         name: name,
-        passed: isPng,
+        passed: ok,
         detail: isPng
-            ? '${bytes.length} 字节，PNG 魔数正确'
+            ? '${bytes.length} 字节，PNG 魔数正确；'
+                  'psCaptcha=${hasCaptcha ? '已捕获' : '（缺失！Set-Cookie 未解析）'}'
             : '返回了 ${bytes.length} 字节，但不是 PNG（头 4 字节：'
                   '${bytes.take(4).map((int b) => b.toRadixString(16)).join(' ')}）',
       );
     },
+  );
+}
+
+/// 图形验证码到登录请求的 Cookie 透传（拦截器核心链路）。
+///
+/// 先 `GET v1/user/captcha` 拿 `psCaptcha`，再用**错误验证码**登录：
+/// 只断言请求头里带上了 `Cookie: psCaptcha=<id>`，不关心登录结果。
+Future<CheckResult> _checkCaptchaCookie(
+  PlanstarAuthApi api,
+  PsRequestContext context,
+  _CookieProbe probe,
+  String phone,
+) async {
+  const String name = 'psCaptcha Cookie 透传 GET captcha → POST login';
+  final Result<List<int>> captcha = await api.fetchCaptchaImage();
+  if (captcha.isFailure) {
+    return CheckResult(
+      name: name,
+      passed: false,
+      detail: '拉图形验证码失败：${captcha.failure!.message}',
+    );
+  }
+  final String? id = context.psCaptcha;
+  if (id == null || id.isEmpty) {
+    return const CheckResult(
+      name: name,
+      passed: false,
+      detail: 'GET v1/user/captcha 未下发 psCaptcha Cookie',
+    );
+  }
+  await api.login(phone: phone, code: '000000');
+  final String? cookie = probe.cookieFor(PlanstarAuthApi.loginPath);
+  final bool ok = cookie != null && cookie.contains('psCaptcha=$id');
+  return CheckResult(
+    name: name,
+    passed: ok,
+    detail: ok
+        ? '登录请求 Cookie 含 psCaptcha=$id'
+        : '登录请求 Cookie=${cookie ?? '（缺失）'} ← 期望含 psCaptcha=$id',
   );
 }
 
@@ -385,6 +437,25 @@ void _summary(List<CheckResult> results, PsRequestContext context) {
     stdout.writeln('✗ $failures 条断言未通过');
   }
   stdout.writeln('');
+}
+
+/// 记录每个路径最后一次请求实际发出的 `Cookie` 头。
+///
+/// 必须挂在 [PsNetworkInterceptor] 之后，才能看到它拼接的 `psSession` /
+/// `psCaptcha`。
+final class _CookieProbe extends Interceptor {
+  final Map<String, String> _cookies = <String, String>{};
+
+  String? cookieFor(String path) => _cookies[path];
+
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    final Object? cookie = options.headers['Cookie'];
+    if (cookie is String && cookie.isNotEmpty) {
+      _cookies[options.path] = cookie;
+    }
+    handler.next(options);
+  }
 }
 
 Map<String, String> _parseArgs(List<String> args) {
