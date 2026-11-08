@@ -2,6 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../app/theme.dart';
 import '../../shared/ui/ps_cell.dart';
@@ -37,7 +38,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   /// 与 `pubspec.yaml` 的 `version:` 保持一致。
   /// 正式实现应改用 `PackageInfo.fromPlatform()`——这里避免为一个字符串
   /// 引入新依赖。
-  static const String _appVersion = '9.9.39';
+  static const String _appVersion = '1.0.1';
 
   /// 消息通知开关（本地状态，未落盘）。
   bool _pushEnabled = true;
@@ -53,11 +54,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       backgroundColor: colors.bgPage,
       appBar: AdaptiveAppBar(title: context.l10n.settingsPage_53),
       body: ListView(
-        padding: const EdgeInsets.only(top: 8, bottom: 32),
+        padding: const EdgeInsets.only(top: 16, bottom: 32),
         children: <Widget>[
           _Group(
+            title: context.l10n.settingsPageGroupAccount,
             children: <Widget>[
               PsCell(
+                leading: Icon(
+                  LucideIcons.user,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
                 label: context.l10n.settingsPage_60,
                 value: profile.nickname.isEmpty
                     ? (loggedIn
@@ -67,27 +74,52 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 onTap: loggedIn
                     ? () => context.push('/me/edit-profile')
                     : () => _toast(context.l10n.settingsPage_64),
+                horizontalPadding: AppSpacing.md,
               ),
               PsCell(
+                leading: Icon(
+                  LucideIcons.smartphone,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
                 label: context.l10n.settingsPage_67,
                 value: profile.mobileLabel ?? context.l10n.settingsPage_68,
                 onTap: () => _toast(context.l10n.settingsPage_69),
+                horizontalPadding: AppSpacing.md,
               ),
               PsCell(
+                leading: Icon(
+                  LucideIcons.messageCircle,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
                 label: context.l10n.settingsPage_72,
                 onTap: () => context.push('/feedback'),
+                horizontalPadding: AppSpacing.md,
               ),
               PsCell(
+                leading: Icon(
+                  LucideIcons.idCard,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
                 label: context.l10n.settingsPage_76,
                 value: context.l10n.settingsPage_77,
                 showDivider: false,
                 onTap: () => _toast(context.l10n.settingsPage_79),
+                horizontalPadding: AppSpacing.md,
               ),
             ],
           ),
           _Group(
+            title: context.l10n.settingsPageGroupGeneral,
             children: <Widget>[
               PsCell(
+                leading: Icon(
+                  LucideIcons.bell,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
                 label: context.l10n.settingsPage_86,
                 trailing: Switch.adaptive(
                   value: _pushEnabled,
@@ -95,8 +127,14 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   onChanged: (bool value) =>
                       setState(() => _pushEnabled = value),
                 ),
+                horizontalPadding: AppSpacing.md,
               ),
               PsCell(
+                leading: Icon(
+                  LucideIcons.moon,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
                 label: context.l10n.settingsPage_95,
                 value: _themeModeLabel(themeMode),
                 // 三态循环：跟随系统 → 亮 → 暗 → 跟随系统。
@@ -107,36 +145,62 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     ThemeMode.dark => ThemeMode.system,
                   },
                 ),
+                horizontalPadding: AppSpacing.md,
               ),
               PsCell(
+                leading: Icon(
+                  LucideIcons.trash2,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
                 label: context.l10n.settingsPage_107,
                 value: context.l10n.settingsPage_108,
                 showDivider: false,
                 onTap: () => _toast(context.l10n.settingsPage_110),
+                horizontalPadding: AppSpacing.md,
               ),
             ],
           ),
           _Group(
+            title: context.l10n.settingsPageGroupAbout,
             children: <Widget>[
               PsCell(
+                leading: Icon(
+                  LucideIcons.info,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
                 label: context.l10n.settingsPage_117,
                 value: _appVersion,
                 onTap: () => _toast(context.l10n.settingsPage_119),
+                horizontalPadding: AppSpacing.md,
               ),
               PsCell(
+                leading: Icon(
+                  LucideIcons.fileText,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
                 label: context.l10n.settingsPage_122,
                 onTap: () => _toast(context.l10n.settingsPage_123),
+                horizontalPadding: AppSpacing.md,
               ),
               PsCell(
+                leading: Icon(
+                  LucideIcons.shield,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
                 label: context.l10n.settingsPage_126,
                 showDivider: false,
                 onTap: () => _toast(context.l10n.settingsPage_128),
+                horizontalPadding: AppSpacing.md,
               ),
             ],
           ),
           if (loggedIn)
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: _confirmLogout,
@@ -145,12 +209,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: colors.bgCard,
-                    borderRadius: BorderRadius.circular(AppRadius.lg),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
                   child: Text(
                     context.l10n.userLogout,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: colors.error,
                     ),
@@ -201,19 +265,43 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   }
 }
 
-/// 白底分组（上下留 8dp 间距）。
+/// 白底分组卡片（左右 16 边距、圆角 12），可选分组标题（caption + 三级文字色）。
 class _Group extends StatelessWidget {
-  const _Group({required this.children});
+  const _Group({required this.children, this.title});
 
+  final String? title;
   final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    return Container(
-      color: colors.bgCard,
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Column(children: children),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Text(
+                title!,
+                style: TextStyle(
+                  fontSize: AppTypography.caption,
+                  color: colors.textTertiary,
+                ),
+              ),
+            ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            decoration: BoxDecoration(
+              color: colors.bgCard,
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(children: children),
+          ),
+        ],
+      ),
     );
   }
 }
