@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../shared/ui/ps_empty_state.dart';
-import '../../shared/ui/ps_floating_tab_bar.dart';
 import '../catalog/application/catalog_providers.dart';
 import '../catalog/domain/show_summary.dart';
 import 'application/order_list_controller.dart';
@@ -15,7 +14,8 @@ import 'domain/domain.dart';
 import 'widgets/order_list_card.dart';
 import '../../l10n/l10n.dart';
 
-/// 我的支持（`activity_my_order.xml` + `fragment_my_activity_order.xml`）。
+/// 我的支持（`activity_my_order.xml` + `fragment_my_activity_order.xml`），
+/// 「我的 → 订单」的二级页。
 ///
 /// ## 两层 tab
 ///
@@ -24,6 +24,11 @@ import '../../l10n/l10n.dart';
 ///
 /// 商品列表**没有数据源**（本项目只做了企划支持链路），所以那一栏渲染空态
 /// 而不是假装有数据。
+///
+/// ## 层级
+///
+/// 原为底部 tab 的一级页；现在收敛为个人中心的二级页，顶栏恢复返回箭头
+/// （`context.maybePop`），返回回到个人中心。
 ///
 /// ## 筛选在应用层做
 ///
@@ -125,7 +130,8 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
                     return ListView.builder(
                       padding: EdgeInsets.only(
                         top: 10,
-                        bottom: PsFloatingTabBar.bottomClearance(context),
+                        // 二级页全屏显示，底部只留系统安全区，不再为悬浮 tab 栏让位。
+                        bottom: MediaQuery.viewPaddingOf(context).bottom + 16,
                       ),
                       itemCount: orders.length,
                       itemBuilder: (context, index) {
@@ -258,6 +264,23 @@ class _PrimaryTabs extends StatelessWidget {
         height: 40,
         child: Row(
           children: <Widget>[
+            // 二级页返回箭头，回到个人中心。
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                if (context.canPop()) context.pop();
+              },
+              child: SizedBox(
+                width: 44,
+                child: Center(
+                  child: Icon(
+                    LucideIcons.chevronLeft,
+                    size: 20,
+                    color: colors.textPrimary,
+                  ),
+                ),
+              ),
+            ),
             for (final (index, label) in <String>[
               context.l10n.orderListPage_229,
               context.l10n.orderListPage_229_2,

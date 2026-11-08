@@ -33,6 +33,8 @@ import '../features/order/pay_success_page.dart';
 import '../features/order/payment/pay_page.dart';
 import '../features/order/refund/refund_page.dart';
 import '../features/proxy_buy/ui/proxy_buy_page.dart';
+import '../features/project_idea/project_idea_detail_page.dart';
+import '../features/project_idea/project_idea_page.dart';
 import '../features/search/search_page.dart';
 import '../features/search/search_result_page.dart';
 import '../features/user/address_page.dart';
@@ -136,21 +138,25 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          // 「企划」：立项前的创意态度征集（叠卡流）。详情挂在同一 branch 下，
+          // 保持底栏可见——用户看完详情可以继续切 tab，返回时叠卡位置不变。
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/message',
-                name: 'message',
-                builder: (context, state) => const MessagePage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/order',
-                name: 'order',
-                builder: (context, state) => const OrderListPage(),
+                path: '/project-idea',
+                name: 'projectIdea',
+                builder: (context, state) => const ProjectIdeaPage(),
+                routes: [
+                  GoRoute(
+                    path: ':ideaId',
+                    name: 'projectIdeaDetail',
+                    builder: (context, state) => ProjectIdeaDetailPage(
+                      ideaId:
+                          int.tryParse(state.pathParameters['ideaId'] ?? '') ??
+                          0,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -164,6 +170,20 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
         ],
+      ),
+      // 消息列表。原为底部 tab 一级页，现收敛为「我的 → 消息」二级页：
+      // 放在 shell 之外，全屏显示 + 顶栏返回箭头，返回回到个人中心。
+      GoRoute(
+        path: '/message',
+        name: 'message',
+        builder: (context, state) => const MessagePage(),
+      ),
+      // 支持列表（订单）。同样收敛为「我的 → 订单」二级页；`/order` 前缀
+      // 仍命中 `_authGatedPrefixes` 登录门禁，游客访问先登录再回来。
+      GoRoute(
+        path: '/order',
+        name: 'order',
+        builder: (context, state) => const OrderListPage(),
       ),
       GoRoute(
         path: '/login',
@@ -251,8 +271,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             BilibiliPlayerPage(bvid: state.pathParameters['bvid'] ?? ''),
       ),
-      // 会话详情。同样在 shell 之外：聊天页需要全屏（输入栏贴底、
-      // 底栏会让它悬空）。`/message` 本身仍在 shell 里。
+      // 会话详情。同样在 shell 之外：聊天页需要全屏（输入栏贴底）。
+      // `/message` 列表页本身也是 shell 之外的二级页了。
       GoRoute(
         path: '/message/thread/:id',
         name: 'chat',

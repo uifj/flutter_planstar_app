@@ -34,7 +34,7 @@ class PsFloatingTabBar extends StatelessWidget {
   });
 
   /// 与 `AdaptiveBottomNavigationBar.items` 同一份列表：iOS 原生路径和这里
-  /// 共用数据，避免两处各写五个 tab 而漏改一边。
+  /// 共用数据，避免两处各写一份 tab 而漏改一边。
   final List<AdaptiveNavigationDestination> items;
 
   final int selectedIndex;
@@ -55,7 +55,7 @@ class PsFloatingTabBar extends StatelessWidget {
   ///
   /// `RootShell` 开了 `extendBody`，body 会铺到胶囊底下（内容从玻璃底下滚过去，
   /// 和 iOS 一致）。代价是页面得把最后一屏内容抬到胶囊之上，否则底部内容会被
-  /// 永久盖住——五个 tab 页滚动容器的底部 padding 统一取这个值。
+  /// 永久盖住——各 tab 页滚动容器的底部 padding 统一取这个值。
   static double bottomClearance(BuildContext context) =>
       contentClearance + MediaQuery.viewPaddingOf(context).bottom;
 

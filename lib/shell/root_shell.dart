@@ -15,7 +15,7 @@ import '../shared/ui/ps_floating_tab_bar.dart';
 ///
 /// ## 图标：全量 Lucide
 ///
-/// 五个 tab 统一用 Lucide 线性图标，选中/未选中只差颜色和 iOS 那条高亮
+/// 四个 tab 统一用 Lucide 线性图标，选中/未选中只差颜色和 iOS 那条高亮
 /// 胶囊（见 [PsFloatingTabBar]）。本地 Lottie 动画资源已随 assets/ 一并移除。
 ///
 /// ## 底栏形态
@@ -29,13 +29,15 @@ class RootShell extends ConsumerWidget {
 
   final StatefulNavigationShell navigationShell;
 
-  /// (图标, l10n key)。图标用 Lucide：`house`/`compass`/`messageCircle`/
-  /// `receiptText`/`user`，与 iOS tab bar 的 SF Symbols 同为线性风格。
+  /// (图标, l10n key)。图标用 Lucide：`house`/`compass`/`lightbulb`/`user`，
+  /// 与 iOS tab bar 的 SF Symbols 同为线性风格。
+  ///
+  /// 消息与订单已收敛为「我的」的二级页（见 `router.dart` 的 `/message` /
+  /// `/order` 顶层路由），不再占用底栏位置。
   static const List<(IconData, String)> _tabs = <(IconData, String)>[
     (LucideIcons.house, 'tabHome'),
     (LucideIcons.compass, 'tabDiscover'),
-    (LucideIcons.messageCircle, 'tabMessage'),
-    (LucideIcons.receiptText, 'tabOrder'),
+    (LucideIcons.lightbulb, 'tabProject'),
     (LucideIcons.user, 'tabProfile'),
   ];
 
@@ -79,8 +81,7 @@ class RootShell extends ConsumerWidget {
   String _resolveLabel(AppL10n l10n, String key) => switch (key) {
     'tabHome' => l10n.tabHome,
     'tabDiscover' => l10n.tabDiscover,
-    'tabMessage' => l10n.tabMessage,
-    'tabOrder' => l10n.tabOrder,
+    'tabProject' => l10n.tabProject,
     'tabProfile' => l10n.tabProfile,
     _ => key,
   };

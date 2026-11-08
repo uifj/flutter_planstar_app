@@ -7,26 +7,25 @@ import 'package:go_router/go_router.dart';
 
 import '../../shared/ui/ps_badge.dart';
 import '../../shared/ui/ps_empty_state.dart';
-import '../../shared/ui/ps_floating_tab_bar.dart';
 import 'application/message_providers.dart';
 import 'domain/message_thread.dart';
 import '../../l10n/l10n.dart';
 
-/// 消息 Tab（`layout_user_message.xml`）。
+/// 消息中心（`layout_user_message.xml`），「我的 → 消息」的二级页。
 ///
 /// ## 结构
 ///
-/// - 50dp 顶栏：标题 16dp 居中、右侧「清空」按钮 50×50；
+/// - 50dp 顶栏：左侧返回箭头、标题 16dp 居中、右侧「清空」按钮 50×50；
 /// - 1dp 分隔线；
 /// - 灰色背景上依次是：113dp 的三角色卡（活动通知 / 回复我的 / 赞和关注，
 ///   56dp 图标 + 13dp 文案 + 右上 18dp 未读角标）→ 15dp 间隔 →
 ///   白色圆角 20dp（仅上圆角）的会话列表（80dp 行、48dp 方头像、
 ///   16dp 标题、11dp 右侧时间、14dp `text_3` 单行摘要、1dp 分隔线）。
 ///
-/// ## 与 Android 的差异
+/// ## 层级
 ///
-/// 原页是独立 Activity，顶栏有返回箭头。这里是底部 tab 的一级页面，
-/// 返回箭头没有去处，所以去掉了——保留它会是"点了没反应"的死按钮。
+/// 原为底部 tab 的一级页，顶栏没有返回箭头；现在收敛为个人中心的二级页，
+/// 顶栏恢复返回箭头（`context.maybePop`），返回回到个人中心。
 class MessagePage extends ConsumerWidget {
   const MessagePage({super.key});
 
@@ -64,7 +63,8 @@ class MessagePage extends ConsumerWidget {
               data: (MessageCenterState state) => ListView(
                 padding: EdgeInsets.only(
                   top: 15,
-                  bottom: PsFloatingTabBar.bottomClearance(context),
+                  // 二级页全屏显示，底部只留系统安全区，不再为悬浮 tab 栏让位。
+                  bottom: MediaQuery.viewPaddingOf(context).bottom + 16,
                 ),
                 children: <Widget>[
                   Padding(
@@ -175,6 +175,28 @@ class _MessageTopBar extends StatelessWidget {
             height: 50,
             child: Stack(
               children: <Widget>[
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    // 二级页返回个人中心；深链直达时无上一页则静默不跳。
+                    onTap: () {
+                      if (context.canPop()) context.pop();
+                    },
+                    child: SizedBox(
+                      width: 50,
+                      child: Center(
+                        child: Icon(
+                          LucideIcons.chevronLeft,
+                          size: 20,
+                          color: colors.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 Center(
                   child: Text(
                     context.l10n.messagePage_160,
