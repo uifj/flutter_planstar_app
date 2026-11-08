@@ -122,28 +122,28 @@ class AuthLocalizationsEn extends AuthLocalizations {
   String get authUnknownError => 'Sign-in failed, please retry';
 
   @override
-  String get loginResponseDto_50 => '登录响应的 user 字段';
+  String get loginResponseDto_50 => 'User field in the login response';
 
   @override
-  String get planstarAuthApi_101 => '发验证码响应';
+  String get planstarAuthApi_101 => 'Send code response';
 
   @override
-  String get planstarAuthApi_123 => '登录响应';
+  String get planstarAuthApi_123 => 'Login response';
 
   @override
-  String get remoteAuthRepository_55 => '需要图形验证码';
+  String get remoteAuthRepository_55 => 'Graphic captcha required';
 
   @override
-  String get remoteAuthRepository_63 => '验证码发送失败';
+  String get remoteAuthRepository_63 => 'Failed to send the verification code';
 
   @override
-  String get remoteAuthRepository_118 => '需要图形验证码';
+  String get remoteAuthRepository_118 => 'Graphic captcha required';
 
   @override
-  String get remoteAuthRepository_128 => '登录成功，但服务端没有返回有效的用户信息';
+  String get remoteAuthRepository_128 => 'Login succeeded, but the server returned no valid user info';
 
   @override
-  String get remoteAuthRepository_163 => '锁定';
+  String get remoteAuthRepository_163 => 'Locked';
 
   @override
   String authSession_31(Object userId, Object tokenState) {

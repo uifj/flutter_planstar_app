@@ -12,16 +12,16 @@ class MessageLocalizationsEn extends MessageLocalizations {
   String get messageTitle => 'Messages';
 
   @override
-  String get messageProviders_48 => '活动通知';
+  String get messageProviders_48 => 'Event notifications';
 
   @override
-  String get messageProviders_49 => '回复我的';
+  String get messageProviders_49 => 'Replies to me';
 
   @override
-  String get messageProviders_50 => '赞和关注';
+  String get messageProviders_50 => 'Likes & follows';
 
   @override
-  String get messageProviders_55 => '企划星官方客服';
+  String get messageProviders_55 => 'Planstar official support';
 
   @override
   String get messageProviders_56 => 'Hello, we have logged your refund request for the Starry Echo project…';
@@ -33,7 +33,7 @@ class MessageLocalizationsEn extends MessageLocalizations {
   String get messageProviders_65 => 'Summer Echo project opens for support soon. Set a reminder!';
 
   @override
-  String get messageProviders_71 => '订单助手';
+  String get messageProviders_71 => 'Order assistant';
 
   @override
   String get messageProviders_72 => 'Order PN20261108000001 has a support voucher ready. View it in My Orders';
@@ -42,7 +42,7 @@ class MessageLocalizationsEn extends MessageLocalizations {
   String get messageProviders_79 => 'Project regular';
 
   @override
-  String get messageProviders_80 => '你发的动态收到了 12 个赞';
+  String get messageProviders_80 => 'Your post got 12 likes';
 
   @override
   String get messageProviders_86 => 'Support squad';
@@ -51,64 +51,64 @@ class MessageLocalizationsEn extends MessageLocalizations {
   String get messageProviders_87 => 'New reward tiers are live tomorrow at 10:00';
 
   @override
-  String get messageProviders_93 => '企划星福利官';
+  String get messageProviders_93 => 'Planstar Perks';
 
   @override
-  String get messageProviders_94 => '您有一张 50 星币无门槛券即将过期';
+  String get messageProviders_94 => 'Your 50-star-coin no-minimum voucher is expiring soon';
 
   @override
-  String get chatPage_75 => '会话';
+  String get chatPage_75 => 'Chats';
 
   @override
-  String get chatPage_76 => '官方账号';
+  String get chatPage_76 => 'Official accounts';
 
   @override
-  String get chatPage_80 => '会话不存在';
+  String get chatPage_80 => 'Conversation not found';
 
   @override
-  String get chatPage_81 => '它可能已被清空';
+  String get chatPage_81 => 'It may have been cleared';
 
   @override
-  String get chatPage_83 => '返回消息';
+  String get chatPage_83 => 'Back to messages';
 
   @override
-  String get chatPage_91 => '还没有消息';
+  String get chatPage_91 => 'No messages yet';
 
   @override
-  String get chatPage_92 => '打个招呼吧';
+  String get chatPage_92 => 'Say hello!';
 
   @override
-  String get chatPage_288 => '演示环境：消息只保存在本地，不会真的发送';
+  String get chatPage_288 => 'Demo mode: messages are only stored locally and are not actually sent';
 
   @override
-  String get chatPage_310 => '输入消息…';
+  String get chatPage_310 => 'Type a message…';
 
   @override
-  String get chatPage_334 => '发送';
+  String get chatPage_334 => 'Send';
 
   @override
   String messagePage_62(Object title) {
-    return '$title列表（演示）';
+    return '$title list (demo)';
   }
 
   @override
-  String get messagePage_72 => '暂无消息';
+  String get messagePage_72 => 'No messages';
 
   @override
   String get messagePage_73 => 'Order progress and support reminders appear here';
 
   @override
-  String get messagePage_122 => '清空消息';
+  String get messagePage_122 => 'Clear messages';
 
   @override
-  String get messagePage_123 => '清空后会话记录将不再显示，确定继续吗？';
+  String get messagePage_123 => 'Conversation history will no longer be shown after clearing. Continue?';
 
   @override
-  String get messagePage_131 => '清空';
+  String get messagePage_131 => 'Clear';
 
   @override
-  String get messagePage_160 => '消息中心';
+  String get messagePage_160 => 'Message center';
 
   @override
-  String get messagePage_358 => '官方';
+  String get messagePage_358 => 'Official';
 }

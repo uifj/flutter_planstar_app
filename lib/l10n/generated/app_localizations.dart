@@ -113,17 +113,11 @@ abstract class AppLocalizations {
   /// **'发现'**
   String get tabDiscover;
 
-  /// No description provided for @tabMessage.
+  /// No description provided for @tabProject.
   ///
   /// In zh, this message translates to:
-  /// **'消息'**
-  String get tabMessage;
-
-  /// No description provided for @tabOrder.
-  ///
-  /// In zh, this message translates to:
-  /// **'订单'**
-  String get tabOrder;
+  /// **'企划'**
+  String get tabProject;
 
   /// No description provided for @tabProfile.
   ///
@@ -197,10 +191,10 @@ abstract class AppLocalizations {
   /// **'让好企划被看见'**
   String get splashPage_129;
 
-  /// 来源：lib/features/app/splash_page.dart:146；原文：'企划星科技 © 2015–2026'
+  /// 来源：lib/features/app/splash_page.dart:146；原文：'企划星科技 © 2026–2027'
   ///
   /// In zh, this message translates to:
-  /// **'企划星科技 © 2015–2026'**
+  /// **'企划星科技 © 2026–2027'**
   String get splashPage_146;
 
   /// 来源：lib/features/app/splash_page.dart:180；原文：'隐私政策与用户协议'

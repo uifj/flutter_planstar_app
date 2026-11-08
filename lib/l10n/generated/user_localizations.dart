@@ -605,11 +605,23 @@ abstract class UserLocalizations {
   /// **'已退出登录'**
   String get settingsPage_188;
 
-  /// 来源：lib/features/user/user_page.dart:67；原文：'个人主页不在本次范围内'
+  /// 来源：lib/features/user/settings_page.dart；设置页分组标题（账号）
   ///
   /// In zh, this message translates to:
-  /// **'个人主页不在本次范围内'**
-  String get userPage_67;
+  /// **'账号'**
+  String get settingsPageGroupAccount;
+
+  /// 来源：lib/features/user/settings_page.dart；设置页分组标题（通用）
+  ///
+  /// In zh, this message translates to:
+  /// **'通用'**
+  String get settingsPageGroupGeneral;
+
+  /// 来源：lib/features/user/settings_page.dart；设置页分组标题（关于）
+  ///
+  /// In zh, this message translates to:
+  /// **'关于'**
+  String get settingsPageGroupAbout;
 
   /// 来源：lib/features/user/user_page.dart:81；原文：'支持人管理待接入，敬请期待'
   ///
@@ -638,14 +650,8 @@ abstract class UserLocalizations {
   /// 来源：lib/features/user/user_page.dart:254；原文：'点击登录，查看订单与优惠券'
   ///
   /// In zh, this message translates to:
-  /// **'点击登录，查看订单与优惠券'**
+  /// **'点击登录，查看订单与更多服务'**
   String get userPage_254;
-
-  /// 来源：lib/features/user/user_page.dart:308；原文：'个人主页'
-  ///
-  /// In zh, this message translates to:
-  /// **'个人主页'**
-  String get userPage_308;
 
   /// 来源：lib/features/user/user_page.dart:333；原文：'支持过'
   ///
@@ -683,18 +689,6 @@ abstract class UserLocalizations {
   /// **'礼品卡'**
   String get userPage_650;
 
-  /// 来源：lib/features/user/user_page.dart:651；原文：'代抢服务'
-  ///
-  /// In zh, this message translates to:
-  /// **'代购服务'**
-  String get userPage_651;
-
-  /// 来源：lib/features/user/user_page.dart:652；原文：'超低价拼团'
-  ///
-  /// In zh, this message translates to:
-  /// **'超低价拼团'**
-  String get userPage_652;
-
   /// 来源：lib/features/user/user_page.dart:653；原文：'地址管理'
   ///
   /// In zh, this message translates to:
@@ -724,6 +718,24 @@ abstract class UserLocalizations {
   /// In zh, this message translates to:
   /// **'星币商城'**
   String get userMenuMall;
+
+  /// 来源：lib/features/user/user_page.dart；个人中心二级页入口
+  ///
+  /// In zh, this message translates to:
+  /// **'消息'**
+  String get userMenuMessage;
+
+  /// 来源：lib/features/user/user_page.dart；个人中心二级页入口
+  ///
+  /// In zh, this message translates to:
+  /// **'订单'**
+  String get userMenuOrder;
+
+  /// 来源：lib/features/user/user_page.dart；分组菜单标题（低频设置）
+  ///
+  /// In zh, this message translates to:
+  /// **'更多服务'**
+  String get userMenuGroupMore;
 
   /// 来源：lib/features/user/user_page.dart；未签到按钮
   ///

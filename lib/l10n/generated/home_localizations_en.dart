@@ -29,31 +29,31 @@ class HomeLocalizationsEn extends HomeLocalizations {
   }
 
   @override
-  String get cityListPage_53 => '选择城市';
+  String get cityListPage_53 => 'Select city';
 
   @override
-  String get cityListPage_57 => '上海';
+  String get cityListPage_57 => 'Shanghai';
 
   @override
-  String get cityListPage_59 => '热门城市';
+  String get cityListPage_59 => 'Popular cities';
 
   @override
-  String get cityListPage_65 => '全部城市';
+  String get cityListPage_65 => 'All cities';
 
   @override
-  String get cityListPage_73 => '演示数据只覆盖上海、北京、杭州、广州、深圳；其余城市会显示空态。';
+  String get cityListPage_73 => 'Demo data only covers Shanghai, Beijing, Hangzhou, Guangzhou and Shenzhen; other cities show an empty state.';
 
   @override
-  String get cityListPage_115 => '当前定位：上海';
+  String get cityListPage_115 => 'Current location: Shanghai';
 
   @override
-  String get cityListPage_120 => '演示环境没有接入定位，这里固定为上海';
+  String get cityListPage_120 => 'Location services aren\'t integrated in the demo; it\'s fixed to Shanghai';
 
   @override
-  String get cityListPage_126 => '上海';
+  String get cityListPage_126 => 'Shanghai';
 
   @override
-  String get cityListPage_140 => '使用';
+  String get cityListPage_140 => 'Use';
 
   @override
   String get homePage_51 => 'Music projects · Live projects · Tour projects';
@@ -132,16 +132,16 @@ class HomeLocalizationsEn extends HomeLocalizations {
   }
 
   @override
-  String get cityPickerSheet_70 => '选择城市';
+  String get cityPickerSheet_70 => 'Select city';
 
   @override
-  String get cityPickerSheet_90 => '当前定位：上海';
+  String get cityPickerSheet_90 => 'Current location: Shanghai';
 
   @override
-  String get cityPickerSheet_97 => '热门城市';
+  String get cityPickerSheet_97 => 'Popular cities';
 
   @override
-  String get cityPickerSheet_127 => '查看全部城市';
+  String get cityPickerSheet_127 => 'View all cities';
 
   @override
   String get homeBannerFloor_47 => 'New project launch: Starfall Scavenger';
@@ -180,7 +180,7 @@ class HomeLocalizationsEn extends HomeLocalizations {
   String get homeBannerFloor_68 => 'Protected';
 
   @override
-  String get homeChoicenessFloor_83 => '精选推荐';
+  String get homeChoicenessFloor_83 => 'Featured picks';
 
   @override
   String get homeGuaranteeFloor_13 => '100% fulfillment';
@@ -201,43 +201,43 @@ class HomeLocalizationsEn extends HomeLocalizations {
   String get homeVenuesFloor_48 => 'Popular venues';
 
   @override
-  String get homeProjectPicked => '精选企划';
+  String get homeProjectPicked => 'Featured projects';
 
   @override
-  String get homeProjectBannerSubtitle => '企划星 × 认真做内容的人';
+  String get homeProjectBannerSubtitle => 'Planstar × creators who take content seriously';
 
   @override
-  String get homeHotProjectTitle => '正在支持的企划';
+  String get homeHotProjectTitle => 'Projects being supported right now';
 
   @override
-  String get homeHotProjectDesc => '按支持人数与达成率排序';
+  String get homeHotProjectDesc => 'Sorted by supporter count and funding rate';
 
   @override
-  String get homeFloorGame => '游戏企划';
+  String get homeFloorGame => 'Game projects';
 
   @override
-  String get homeFloorNovel => '小说企划';
+  String get homeFloorNovel => 'Novel projects';
 
   @override
-  String get homeFloorDoujin => '同人企划';
+  String get homeFloorDoujin => 'Fan projects';
 
   @override
-  String get homeFloorInterview => '面经企划';
+  String get homeFloorInterview => 'Interview projects';
 
   @override
-  String get homeFloorOther => '更多企划';
+  String get homeFloorOther => 'More projects';
 
   @override
-  String get homeFloorGameDesc => '把喜欢的游戏做出来';
+  String get homeFloorGameDesc => 'Bring the games you love to life';
 
   @override
-  String get homeFloorNovelDesc => '让故事被印成书';
+  String get homeFloorNovelDesc => 'Turn stories into printed books';
 
   @override
-  String get homeFloorDoujinDesc => '同人创作，一起完成';
+  String get homeFloorDoujinDesc => 'Create fan works together';
 
   @override
-  String get homeFloorInterviewDesc => '把经验变成可交付的手册';
+  String get homeFloorInterviewDesc => 'Turn experience into deliverable handbooks';
 
   @override
   String get homeRankingTitle => 'Project Rankings';

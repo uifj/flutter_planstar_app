@@ -12,119 +12,119 @@ class DiscoverLocalizationsEn extends DiscoverLocalizations {
   String get discoverTitle => 'Discover';
 
   @override
-  String get feedProviders_18 => '我';
+  String get feedProviders_18 => 'Me';
 
   @override
-  String get feedProviders_25 => '刚刚发布';
+  String get feedProviders_25 => 'Just posted';
 
   @override
-  String get discoverPage_39 => '热门';
+  String get discoverPage_39 => 'Popular';
 
   @override
-  String get discoverPage_39_2 => '关注';
+  String get discoverPage_39_2 => 'Following';
 
   @override
-  String get discoverPage_72 => '关注的人还没有新动态';
+  String get discoverPage_72 => 'People you follow haven\'t posted anything new yet';
 
   @override
-  String get discoverPage_73 => '去热门看看大家在聊什么';
+  String get discoverPage_73 => 'Head to Popular to see what everyone is talking about';
 
   @override
-  String get discoverPage_75 => '查看热门';
+  String get discoverPage_75 => 'View popular';
 
   @override
   String feedPost_65(Object toStringAsFixed) {
-    return '$toStringAsFixed万';
+    return '${toStringAsFixed}k';
   }
 
   @override
   String feedPost_73(Object toStringAsFixed) {
-    return '$toStringAsFixed万';
+    return '${toStringAsFixed}k';
   }
 
   @override
-  String get feedPost_115 => '刚刚';
+  String get feedPost_115 => 'Just now';
 
   @override
   String feedPost_116(Object inMinutes) {
-    return '$inMinutes分钟前';
+    return '${inMinutes}m ago';
   }
 
   @override
   String feedPost_117(Object inHours) {
-    return '$inHours小时前';
+    return '${inHours}h ago';
   }
 
   @override
-  String get feedPost_118 => '昨天';
+  String get feedPost_118 => 'Yesterday';
 
   @override
   String feedPost_119(Object inDays) {
-    return '$inDays天前';
+    return '${inDays}d ago';
   }
 
   @override
   String feedPost_120(Object month, Object day) {
-    return '$month月$day日';
+    return '$month/$day';
   }
 
   @override
-  String get feedDetailPage_45 => '动态详情';
+  String get feedDetailPage_45 => 'Post details';
 
   @override
-  String get feedDetailPage_48 => '动态不存在';
+  String get feedDetailPage_48 => 'Post not found';
 
   @override
-  String get feedDetailPage_49 => '它可能已被作者删除';
+  String get feedDetailPage_49 => 'It may have been deleted by the author';
 
   @override
-  String get feedDetailPage_51 => '返回发现';
+  String get feedDetailPage_51 => 'Back to Discover';
 
   @override
   String get feedDetailPage_125 => 'Related projects';
 
   @override
   String feedDetailPage_151(Object length) {
-    return '评论 $length';
+    return '$length comments';
   }
 
   @override
-  String get feedDetailPage_161 => '还没有评论';
+  String get feedDetailPage_161 => 'No comments yet';
 
   @override
-  String get feedDetailPage_162 => '来说两句吧';
+  String get feedDetailPage_162 => 'Say something';
 
   @override
   String feedDetailPage_216(Object publishedAt, Object viewCountLabel) {
-    return '$publishedAt · $viewCountLabel 阅读';
+    return '$publishedAt · $viewCountLabel views';
   }
 
   @override
-  String get feedDetailPage_252 => '这条动态带视频，播放器尚未接入（需要 CDN 与 videoplayer 等价实现）';
+  String get feedDetailPage_252 => 'This post contains a video, but the player isn\'t integrated yet (needs a CDN and an equivalent videoplayer implementation)';
 
   @override
-  String get feedDetailPage_276 => '点赞接口待接入';
+  String get feedDetailPage_276 => 'Like API not integrated yet';
 
   @override
-  String get feedDetailPage_281 => '评论';
+  String get feedDetailPage_281 => 'Comment';
 
   @override
-  String get feedDetailPage_282 => '评论发布待接入';
+  String get feedDetailPage_282 => 'Comment posting not integrated yet';
 
   @override
-  String get feedDetailPage_287 => '分享';
+  String get feedDetailPage_287 => 'Share';
 
   @override
-  String get feedDetailPage_288 => '分享面板待接入 fluwx';
+  String get feedDetailPage_288 => 'Share panel not integrated yet — fluwx';
 
   @override
-  String get publishSheet_69 => '发布动态';
+  String get publishSheet_69 => 'New post';
 
   @override
   String get publishSheet_98 => 'Share a project you have supported…';
 
   @override
-  String get publishSheet_122 => '发布';
+  String get publishSheet_122 => 'Post';
 
   @override
   String get bilibiliOpenSheet_32 => 'Play video';

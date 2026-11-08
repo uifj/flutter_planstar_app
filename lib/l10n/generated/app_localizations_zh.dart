@@ -18,10 +18,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tabDiscover => '发现';
 
   @override
-  String get tabMessage => '消息';
-
-  @override
-  String get tabOrder => '订单';
+  String get tabProject => '企划';
 
   @override
   String get tabProfile => '我的';
@@ -60,7 +57,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get splashPage_129 => '让好企划被看见';
 
   @override
-  String get splashPage_146 => '企划星科技 © 2015–2026';
+  String get splashPage_146 => '企划星科技 © 2026–2027';
 
   @override
   String get splashPage_180 => '隐私政策与用户协议';

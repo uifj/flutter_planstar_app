@@ -6,8 +6,7 @@
   },
   "tabHome": "首页",
   "tabDiscover": "发现",
-  "tabMessage": "消息",
-  "tabOrder": "订单",
+  "tabProject": "企划",
   "tabProfile": "我的",
   "actionRetry": "重试",
   "actionCancel": "取消",
@@ -23,9 +22,9 @@
   "@splashPage_129": {
     "description": "来源：lib/features/app/splash_page.dart:129；原文：'让看演出更简单'"
   },
-  "splashPage_146": "企划星科技 © 2015–2026",
+  "splashPage_146": "企划星科技 © 2026–2027",
   "@splashPage_146": {
-    "description": "来源：lib/features/app/splash_page.dart:146；原文：'企划星科技 © 2015–2026'"
+    "description": "来源：lib/features/app/splash_page.dart:146；原文：'企划星科技 © 2026–2027'"
   },
   "splashPage_180": "隐私政策与用户协议",
   "@splashPage_180": {

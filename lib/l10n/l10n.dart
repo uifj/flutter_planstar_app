@@ -32,6 +32,7 @@ export 'generated/home_localizations.dart';
 export 'generated/marketing_localizations.dart';
 export 'generated/message_localizations.dart';
 export 'generated/order_localizations.dart';
+export 'generated/project_idea_localizations.dart';
 export 'generated/proxy_buy_localizations.dart';
 export 'generated/search_localizations.dart';
 export 'generated/user_localizations.dart';

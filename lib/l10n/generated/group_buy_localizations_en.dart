@@ -9,105 +9,105 @@ class GroupBuyLocalizationsEn extends GroupBuyLocalizations {
   GroupBuyLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get groupBuy_72 => '超低价拼团';
+  String get groupBuy_72 => 'Ultra-low Price Group Buying';
 
   @override
   String groupBuy_144(Object rate) {
-    return '$rate折';
+    return '$rate% off';
   }
 
   @override
   String groupBuy_145(Object rate) {
-    return '$rate折';
+    return '$rate% off';
   }
 
   @override
-  String get groupBuy_155 => '拼团中';
+  String get groupBuy_155 => 'In Progress';
 
   @override
-  String get groupBuy_157 => '拼团成功';
+  String get groupBuy_157 => 'Succeeded';
 
   @override
-  String get groupBuy_159 => '拼团失败';
+  String get groupBuy_159 => 'Failed';
 
   @override
-  String get groupBuy_161 => '已取消';
+  String get groupBuy_161 => 'Cancelled';
 
   @override
-  String get groupBuyDetailPage_46 => '拼团详情';
+  String get groupBuyDetailPage_46 => 'Group Buying Details';
 
   @override
-  String get groupBuyDetailPage_49 => '拼团活动不存在';
+  String get groupBuyDetailPage_49 => 'Group buying event not found';
 
   @override
-  String get groupBuyDetailPage_60 => '拼团详情';
+  String get groupBuyDetailPage_60 => 'Group Buying Details';
 
   @override
-  String get groupBuyDetailPage_172 => '拼团价 ';
+  String get groupBuyDetailPage_172 => 'Group price ';
 
   @override
   String groupBuyDetailPage_208(Object savedAmount) {
-    return '省$savedAmount';
+    return 'Save $savedAmount';
   }
 
   @override
   String groupBuyDetailPage_249(Object succeedNum) {
-    return '$succeedNum人成团';
+    return '$succeedNum people needed to form a group';
   }
 
   @override
-  String get groupBuyDetailPage_259 => '已满团';
+  String get groupBuyDetailPage_259 => 'Group Full';
 
   @override
   String groupBuyDetailPage_259_2(Object remaining) {
-    return '还差$remaining人';
+    return '$remaining more people needed';
   }
 
   @override
   String groupBuyDetailPage_283(Object remainingHours) {
-    return '剩余 $remainingHours 小时';
+    return '$remainingHours hours left';
   }
 
   @override
   String groupBuyDetailPage_316(Object currentMembers, Object succeedNum) {
-    return '参团成员 ($currentMembers/$succeedNum)';
+    return 'Group Members ($currentMembers/$succeedNum)';
   }
 
   @override
-  String get groupBuyDetailPage_394 => '团长';
+  String get groupBuyDetailPage_394 => 'Leader';
 
   @override
-  String get groupBuyDetailPage_444 => '待邀请';
+  String get groupBuyDetailPage_444 => 'Pending';
 
   @override
-  String get groupBuyDetailPage_472 => '拼团规则';
+  String get groupBuyDetailPage_472 => 'Group Buying Rules';
 
   @override
   String get groupBuyDetailPage_481 => '1. Invite friends to join before the deadline; the group forms when the required number is reached\n2. A support voucher is generated automatically once the group succeeds\n3. If the group is not filled before the deadline, the payment is refunded automatically\n4. Each person can join only one group per campaign\n5. Group-buy prices cannot be combined with other offers';
 
   @override
-  String get groupBuyDetailPage_533 => '拼团价';
+  String get groupBuyDetailPage_533 => 'Group Price';
 
   @override
-  String get groupBuyDetailPage_573 => '立即参团';
+  String get groupBuyDetailPage_573 => 'Join Now';
 
   @override
-  String get groupBuyPage_28 => '超低价拼团';
+  String get groupBuyPage_28 => 'Ultra-low Price Group Buying';
 
   @override
-  String get groupBuyPage_31 => '暂无拼团活动';
+  String get groupBuyPage_31 => 'No group buying events yet';
 
   @override
-  String get groupBuyPage_32 => '拼团活动上线后会显示在这里';
+  String get groupBuyPage_32 => 'Group buying events will appear here once available';
 
   @override
-  String get groupBuyPage_150 => '拼团价 ';
+  String get groupBuyPage_150 => 'Group price ';
 
   @override
   String groupBuyPage_210(Object currentMembers, Object succeedNum) {
-    return '$currentMembers/$succeedNum人';
+    return '$currentMembers/$succeedNum people';
   }
 
   @override
-  String get groupBuyProviders_59 => '参团成功！等待拼团完成';
+  String get groupBuyProviders_59 => 'Joined successfully! Waiting for the group to complete';
 }

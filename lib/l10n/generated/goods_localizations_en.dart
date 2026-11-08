@@ -31,18 +31,18 @@ class GoodsLocalizationsEn extends GoodsLocalizations {
   String get seatSelectionTimeout => 'Seat selection timed out. Please select again';
 
   @override
-  String get chooseTicketPage_71 => '选择档位';
+  String get chooseTicketPage_71 => 'Select ticket tier';
 
   @override
-  String get chooseTicketPage_73 => '企划不存在或已下架';
+  String get chooseTicketPage_73 => 'This project does not exist or has been removed';
 
   @override
   String chooseTicketPage_74(Object showId) {
-    return '企划编号：$showId';
+    return 'Project ID: $showId';
   }
 
   @override
-  String get chooseTicketPage_76 => '返回';
+  String get chooseTicketPage_76 => 'Back';
 
   @override
   String get chooseTicketPage_100 => 'Select offline reward session';
@@ -51,126 +51,126 @@ class GoodsLocalizationsEn extends GoodsLocalizations {
   String get chooseTicketPage_109 => 'Select offline reward session';
 
   @override
-  String get chooseTicketPage_122 => '选择回报档位';
+  String get chooseTicketPage_122 => 'Select a reward tier';
 
   @override
-  String get chooseTicketPage_127 => '暂无回报档位信息';
+  String get chooseTicketPage_127 => 'No reward tier information yet';
 
   @override
-  String get chooseTicketPage_142 => '支持数量';
+  String get chooseTicketPage_142 => 'Support quantity';
 
   @override
-  String get chooseTicketPage_171 => '请先选择回报档位';
+  String get chooseTicketPage_171 => 'Please select a reward tier first';
 
   @override
-  String get chooseTicketPage_175 => '本企划暂时满额';
+  String get chooseTicketPage_175 => 'This project is fully subscribed for now';
 
   @override
-  String get chooseTicketPage_355 => '已满额';
+  String get chooseTicketPage_355 => 'Fully subscribed';
 
   @override
   String chooseTicketPage_439(Object remaining) {
-    return '仅剩 $remaining 份';
+    return 'Only $remaining left';
   }
 
   @override
-  String get chooseTicketPage_451 => '已满额';
+  String get chooseTicketPage_451 => 'Fully subscribed';
 
   @override
-  String get chooseTicketPage_458 => ' · 已选';
+  String get chooseTicketPage_458 => ' · Selected';
 
   @override
   String chooseTicketPage_520(Object max) {
-    return '最多支持 $max 份';
+    return 'Support up to $max units';
   }
 
   @override
-  String get chooseTicketPage_569 => '支持一经确认，除企划取消外不支持退换。';
+  String get chooseTicketPage_569 => 'Once confirmed, support cannot be refunded or exchanged unless the project is cancelled.';
 
   @override
-  String get chooseTicketPage_570 => '线下参与类回报需配合现场核销，请按创作者通知的时间到场。';
+  String get chooseTicketPage_570 => 'Offline participation rewards require on-site check-in. Please arrive at the time notified by the creator.';
 
   @override
-  String get chooseTicketPage_571 => '同一订单最多支持 6 份（部分档位可能更少）。';
+  String get chooseTicketPage_571 => 'Each order supports up to 6 units (some tiers may allow fewer).';
 
   @override
-  String get chooseTicketPage_588 => '支持须知';
+  String get chooseTicketPage_588 => 'Support notes';
 
   @override
-  String get chooseTicketPage_669 => '选择座席';
+  String get chooseTicketPage_669 => 'Select seats';
 
   @override
-  String get chooseTicketPage_697 => '请选择回报档位';
+  String get chooseTicketPage_697 => 'Please select a reward tier';
 
   @override
-  String get chooseTicketPage_707 => '合计：';
+  String get chooseTicketPage_707 => 'Total:';
 
   @override
-  String get chooseTicketPage_731 => '确认支持';
+  String get chooseTicketPage_731 => 'Confirm support';
 
   @override
   String seatMapView_212(Object name, Object availableCount) {
-    return '$name ($availableCount席可选)';
+    return '$name ($availableCount seats available)';
   }
 
   @override
-  String get seatSelectionPage_45 => '选座';
+  String get seatSelectionPage_45 => 'Seat selection';
 
   @override
   String seatSelectionPage_91(Object count, Object format) {
-    return '已选 $count 个座席，总价 $format';
+    return '$count seats selected, total $format';
   }
 
   @override
-  String get seatSelectionPage_116 => '可选';
+  String get seatSelectionPage_116 => 'Available';
 
   @override
-  String get seatSelectionPage_118 => '已选';
+  String get seatSelectionPage_118 => 'Selected';
 
   @override
-  String get seatSelectionPage_120 => '已售';
+  String get seatSelectionPage_120 => 'Sold';
 
   @override
-  String get seatSelectionPage_122 => '锁定';
+  String get seatSelectionPage_122 => 'Locked';
 
   @override
   String seatSelectionPage_191(Object length, Object maxSeats) {
-    return '已选 $length/$maxSeats 座';
+    return '$length/$maxSeats seats selected';
   }
 
   @override
-  String get seatSelectionPage_202 => '清空';
+  String get seatSelectionPage_202 => 'Clear';
 
   @override
   String seatSelectionPage_226(Object areaName, Object row, Object col) {
-    return '$areaName $row排$col座';
+    return '$areaName Row $row Seat $col';
   }
 
   @override
   String seatSelectionPage_273(Object count) {
-    return '已选 $count 座';
+    return '$count seats selected';
   }
 
   @override
-  String get seatSelectionPage_280 => '合计 ';
+  String get seatSelectionPage_280 => 'Total ';
 
   @override
-  String get seatSelectionPage_288 => '请选择座席';
+  String get seatSelectionPage_288 => 'Please select seats';
 
   @override
-  String get seatSelectionPage_306 => '确认选座';
+  String get seatSelectionPage_306 => 'Confirm seat selection';
 
   @override
-  String get seatSelectionPage_306_2 => '请先选座';
+  String get seatSelectionPage_306_2 => 'Please select seats first';
 
   @override
-  String get showDetailPage_44 => '简介';
+  String get showDetailPage_44 => 'About';
 
   @override
   String get showDetailPage_44_2 => 'Reward tiers';
 
   @override
-  String get showDetailPage_44_3 => '须知';
+  String get showDetailPage_44_3 => 'Notes';
 
   @override
   String get showDetailPage_84 => 'This project does not exist or has been removed';
@@ -181,36 +181,36 @@ class GoodsLocalizationsEn extends GoodsLocalizations {
   }
 
   @override
-  String get showDetailPage_87 => '返回首页';
+  String get showDetailPage_87 => 'Back to home';
 
   @override
-  String get showDetailPage_110 => '分享面板（演示）';
+  String get showDetailPage_110 => 'Share panel (demo)';
 
   @override
-  String get showDetailPage_125 => '企划星支持保障（演示）';
+  String get showDetailPage_125 => 'Planstar support guarantee (demo)';
 
   @override
-  String get showDetailPage_143 => '客服会话（演示）';
+  String get showDetailPage_143 => 'Customer service chat (demo)';
 
   @override
-  String get showDetailPage_144 => '已关注';
+  String get showDetailPage_144 => 'Followed';
 
   @override
-  String get showDetailPage_154 => '本场暂时售罄';
+  String get showDetailPage_154 => 'This show is temporarily sold out';
 
   @override
-  String get showDetailPage_228 => '暂无评分';
+  String get showDetailPage_228 => 'No ratings yet';
 
   @override
   String showDetailPage_238(Object ratingCount) {
-    return '$ratingCount 条评价';
+    return '$ratingCount reviews';
   }
 
   @override
-  String get showDetailPage_264 => '起';
+  String get showDetailPage_264 => 'From';
 
   @override
-  String get showDetailPage_473 => '企划星支持保障';
+  String get showDetailPage_473 => 'Planstar support guarantee';
 
   @override
   String get showDetailPage_488 => 'Refund if the goal is missed, up to 2x';
@@ -219,7 +219,7 @@ class GoodsLocalizationsEn extends GoodsLocalizations {
   String get showDetailPage_519 => 'Select a reward tier';
 
   @override
-  String get showDetailPage_560 => '售罄';
+  String get showDetailPage_560 => 'Sold out';
 
   @override
   String get showDetailPage_590 => 'Creator lineup';
@@ -243,19 +243,19 @@ class GoodsLocalizationsEn extends GoodsLocalizations {
   String get showDetailPage_728 => 'Delivery guarantee';
 
   @override
-  String get showDetailPage_729 => '配送保障';
+  String get showDetailPage_729 => 'Shipping guarantee';
 
   @override
-  String get showDetailPage_748 => '企划星服务保障';
+  String get showDetailPage_748 => 'Planstar service guarantee';
 
   @override
-  String get showDetailPage_820 => '客服';
+  String get showDetailPage_820 => 'Customer service';
 
   @override
-  String get showDetailPage_823 => '关注';
+  String get showDetailPage_823 => 'Follow';
 
   @override
-  String get showDetailPage_840 => '暂时售罄';
+  String get showDetailPage_840 => 'Temporarily sold out';
 
   @override
   String get showDetailPage_840_2 => 'Support now';
@@ -294,136 +294,136 @@ class GoodsLocalizationsEn extends GoodsLocalizations {
   String get venuePage_148 => 'Open for support';
 
   @override
-  String get projectDetailTitle => '企划详情';
+  String get projectDetailTitle => 'Project details';
 
   @override
-  String get projectTabProgress => '目标进度';
+  String get projectTabProgress => 'Goal progress';
 
   @override
-  String get projectTabRewards => '回报档位';
+  String get projectTabRewards => 'Reward tiers';
 
   @override
-  String get projectTabUpdates => '进度更新';
+  String get projectTabUpdates => 'Updates';
 
   @override
-  String get projectTabRisk => '风险说明';
+  String get projectTabRisk => 'Risks';
 
   @override
-  String get projectGoalAmount => '目标金额';
+  String get projectGoalAmount => 'Goal amount';
 
   @override
-  String get projectRaisedAmount => '已筹金额';
+  String get projectRaisedAmount => 'Raised amount';
 
   @override
-  String get projectAchievement => '达成率';
+  String get projectAchievement => 'Achievement rate';
 
   @override
-  String get projectSupporters => '支持人数';
+  String get projectSupporters => 'Supporters';
 
   @override
-  String get projectDeadline => '截止时间';
+  String get projectDeadline => 'Deadline';
 
   @override
   String projectDaysLeft(int days) {
-    return '剩 $days 天';
+    return '$days days left';
   }
 
   @override
-  String get projectStatusPreheating => '预热中';
+  String get projectStatusPreheating => 'Preheating';
 
   @override
-  String get projectStatusOngoing => '支持中';
+  String get projectStatusOngoing => 'Ongoing';
 
   @override
-  String get projectStatusAchieved => '已达成';
+  String get projectStatusAchieved => 'Achieved';
 
   @override
-  String get projectStatusDelivered => '已交付';
+  String get projectStatusDelivered => 'Delivered';
 
   @override
-  String get projectStatusFailed => '未达成';
+  String get projectStatusFailed => 'Not achieved';
 
   @override
-  String get projectProgressTitle => '目标进度';
+  String get projectProgressTitle => 'Goal progress';
 
   @override
-  String get projectRewardsTitle => '回报档位';
+  String get projectRewardsTitle => 'Reward tiers';
 
   @override
-  String get projectRewardsEmpty => '暂未开放回报档位';
+  String get projectRewardsEmpty => 'No reward tiers available yet';
 
   @override
   String projectRewardDelivery(String time) {
-    return '预计 $time 交付';
+    return 'Estimated delivery $time';
   }
 
   @override
-  String get projectUpdatesTitle => '进度更新';
+  String get projectUpdatesTitle => 'Progress updates';
 
   @override
-  String get projectUpdatesEmpty => '创作者还没有发布进度，支持后可第一时间收到更新。';
+  String get projectUpdatesEmpty => 'The creator hasn\'t posted progress yet. Supporters will receive updates as soon as they\'re published.';
 
   @override
-  String get projectRiskTitle => '风险说明';
+  String get projectRiskTitle => 'Risk notice';
 
   @override
-  String get projectRiskNote => '风险说明';
+  String get projectRiskNote => 'Risk notice';
 
   @override
-  String get projectDeliveryPlan => '交付计划';
+  String get projectDeliveryPlan => 'Delivery plan';
 
   @override
-  String get projectFundUsage => '资金用途';
+  String get projectFundUsage => 'Use of funds';
 
   @override
-  String get projectRiskEmpty => '企划方暂未补充风险说明，请在支持前与创作者沟通确认。';
+  String get projectRiskEmpty => 'The organizer hasn\'t added a risk notice yet. Please confirm with the creator before supporting.';
 
   @override
-  String get projectCreatorTitle => '创作者信息';
+  String get projectCreatorTitle => 'About the creator';
 
   @override
-  String get projectCreatorVerified => '已认证创作者';
+  String get projectCreatorVerified => 'Verified creator';
 
   @override
-  String get projectCreatorUnverified => '未认证创作者';
+  String get projectCreatorUnverified => 'Unverified creator';
 
   @override
   String projectCreatorStats(int projects, int success, int rate) {
-    return '$projects 个企划 · 成功 $success 个 · 履约率 $rate%';
+    return '$projects projects · $success succeeded · $rate% fulfillment rate';
   }
 
   @override
-  String get projectCreatorBioEmpty => '这位创作者还没有填写简介。';
+  String get projectCreatorBioEmpty => 'This creator hasn\'t written a bio yet.';
 
   @override
-  String get projectSupportButton => '支持此企划';
+  String get projectSupportButton => 'Support this project';
 
   @override
-  String get projectSupportClosed => '企划已结束';
+  String get projectSupportClosed => 'This project has ended';
 
   @override
-  String get projectSupportFrom => '起支持';
+  String get projectSupportFrom => 'Support from';
 
   @override
-  String get projectStoryTitle => '企划故事';
+  String get projectStoryTitle => 'Project story';
 
   @override
-  String get projectNoticeTitle => '支持须知';
+  String get projectNoticeTitle => 'Support notes';
 
   @override
-  String get projectGuaranteeTitle => '支持保障';
+  String get projectGuaranteeTitle => 'Support guarantee';
 
   @override
-  String get projectGuaranteeFund => '资金托管';
+  String get projectGuaranteeFund => 'Fund escrow';
 
   @override
-  String get projectGuaranteeRefund => '未达成退款';
+  String get projectGuaranteeRefund => 'Refund if not achieved';
 
   @override
-  String get projectGuaranteeProgress => '进度透明';
+  String get projectGuaranteeProgress => 'Transparent progress';
 
   @override
-  String get projectGuaranteeDelivery => '按档交付';
+  String get projectGuaranteeDelivery => 'Delivery by tier';
 
   @override
   String get projectRefundRule => 'Refund policy';

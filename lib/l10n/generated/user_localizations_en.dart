@@ -29,305 +29,311 @@ class UserLocalizationsEn extends UserLocalizations {
   String get userViewOrders => 'View orders (gated)';
 
   @override
-  String get addressPage_49 => '收货地址';
+  String get addressPage_49 => 'Shipping address';
 
   @override
-  String get addressPage_55 => '还没有收货地址';
+  String get addressPage_55 => 'No shipping address yet';
 
   @override
-  String get addressPage_56 => '寄送线下回报时需要地址，先添加一个吧';
+  String get addressPage_56 => 'Offline rewards need a shipping address — add one to get started';
 
   @override
-  String get addressPage_58 => '新增地址';
+  String get addressPage_58 => 'Add address';
 
   @override
-  String get addressPage_131 => '删除地址';
+  String get addressPage_131 => 'Delete address';
 
   @override
   String addressPage_132(Object name, Object maskedMobile) {
-    return '确定删除「$name $maskedMobile」这个地址吗？';
+    return 'Delete this address ($name $maskedMobile)?';
   }
 
   @override
-  String get addressPage_140 => '删除';
+  String get addressPage_140 => 'Delete';
 
   @override
-  String get addressPage_150 => '已删除';
+  String get addressPage_150 => 'Deleted';
 
   @override
-  String get addressPage_211 => '默认';
+  String get addressPage_211 => 'Default';
 
   @override
-  String get addressPage_263 => '默认地址';
+  String get addressPage_263 => 'Default address';
 
   @override
-  String get addressPage_263_2 => '设为默认';
+  String get addressPage_263_2 => 'Set as default';
 
   @override
-  String get addressPage_276 => '编辑';
+  String get addressPage_276 => 'Edit';
 
   @override
-  String get addressPage_278 => '删除';
+  String get addressPage_278 => 'Delete';
 
   @override
-  String get addressPage_349 => '新增地址';
+  String get addressPage_349 => 'Add address';
 
   @override
-  String get addressPage_472 => '编辑地址';
+  String get addressPage_472 => 'Edit address';
 
   @override
-  String get addressPage_472_2 => '新增地址';
+  String get addressPage_472_2 => 'Add address';
 
   @override
-  String get addressPage_493 => '收件人';
+  String get addressPage_493 => 'Recipient';
 
   @override
-  String get addressPage_494 => '真实姓名';
+  String get addressPage_494 => 'Full name';
 
   @override
-  String get addressPage_500 => '手机号';
+  String get addressPage_500 => 'Mobile number';
 
   @override
-  String get addressPage_501 => '11 位手机号';
+  String get addressPage_501 => '11-digit mobile number';
 
   @override
-  String get addressPage_511 => '所在地区';
+  String get addressPage_511 => 'Region';
 
   @override
-  String get addressPage_512 => '省 市 区（如：上海市 浦东新区）';
+  String get addressPage_512 => 'Province / city / district (e.g. Pudong New Area, Shanghai)';
 
   @override
-  String get addressPage_517 => '详细地址';
+  String get addressPage_517 => 'Street address';
 
   @override
-  String get addressPage_518 => '街道、门牌号、回报领取点';
+  String get addressPage_518 => 'Street, house number, reward pickup point';
 
   @override
-  String get profileProviders_58 => '登录更精彩';
+  String get profileProviders_58 => 'Sign in for a richer experience';
 
   @override
   String profileProviders_86(Object level) {
-    return 'V$level 资深支持人';
+    return 'V$level Senior Supporter';
   }
 
   @override
-  String get editProfilePage_65 => '编辑资料';
+  String get editProfilePage_65 => 'Edit profile';
 
   @override
-  String get editProfilePage_75 => '头像上传待接入';
+  String get editProfilePage_75 => 'Avatar upload not integrated yet';
 
   @override
-  String get editProfilePage_107 => '点击更换头像';
+  String get editProfilePage_107 => 'Tap to change avatar';
 
   @override
-  String get editProfilePage_116 => '昵称';
+  String get editProfilePage_116 => 'Nickname';
 
   @override
-  String get editProfilePage_140 => '性别';
+  String get editProfilePage_140 => 'Gender';
 
   @override
-  String get editProfilePage_145 => '保密';
+  String get editProfilePage_145 => 'Prefer not to say';
 
   @override
-  String get editProfilePage_151 => '男';
+  String get editProfilePage_151 => 'Male';
 
   @override
-  String get editProfilePage_157 => '女';
+  String get editProfilePage_157 => 'Female';
 
   @override
-  String get editProfilePage_165 => '个性签名';
+  String get editProfilePage_165 => 'Bio';
 
   @override
-  String get editProfilePage_180 => '写点什么介绍自己吧…';
+  String get editProfilePage_180 => 'Write something about yourself…';
 
   @override
-  String get editProfilePage_229 => '资料已记录（演示模式，未实际提交到服务器）';
+  String get editProfilePage_229 => 'Profile saved (demo mode — not actually submitted to the server)';
 
   @override
-  String get feedbackPage_32 => '功能建议';
+  String get feedbackPage_32 => 'Feature request';
 
   @override
-  String get feedbackPage_33 => '企划问题';
+  String get feedbackPage_33 => 'Project issue';
 
   @override
-  String get feedbackPage_34 => '支付问题';
+  String get feedbackPage_34 => 'Payment issue';
 
   @override
-  String get feedbackPage_35 => '支持体验';
+  String get feedbackPage_35 => 'Support experience';
 
   @override
-  String get feedbackPage_36 => '其他';
+  String get feedbackPage_36 => 'Other';
 
   @override
-  String get feedbackPage_58 => '意见反馈';
+  String get feedbackPage_58 => 'Feedback';
 
   @override
-  String get feedbackPage_66 => '反馈类型';
+  String get feedbackPage_66 => 'Feedback type';
 
   @override
-  String get feedbackPage_114 => '反馈内容';
+  String get feedbackPage_114 => 'Feedback content';
 
   @override
-  String get feedbackPage_123 => '请至少填写 10 个字，以便我们更好地理解您的问题';
+  String get feedbackPage_123 => 'Please enter at least 10 characters so we can better understand your issue';
 
   @override
-  String get feedbackPage_140 => '请描述您遇到的问题或建议…';
+  String get feedbackPage_140 => 'Describe the issue you ran into or your suggestion…';
 
   @override
-  String get feedbackPage_160 => '联系方式（选填）';
+  String get feedbackPage_160 => 'Contact info (optional)';
 
   @override
-  String get feedbackPage_169 => '留下手机号或邮箱，方便我们与您联系';
+  String get feedbackPage_169 => 'Leave your mobile number or email so we can reach you';
 
   @override
-  String get feedbackPage_184 => '手机号 / 邮箱';
+  String get feedbackPage_184 => 'Mobile number / email';
 
   @override
-  String get feedbackPage_211 => '提交反馈';
+  String get feedbackPage_211 => 'Submit feedback';
 
   @override
-  String get feedbackPage_230 => '反馈已记录（演示模式，未实际提交到服务器）';
+  String get feedbackPage_230 => 'Feedback recorded (demo mode — not actually submitted to the server)';
 
   @override
-  String get settingsPage_53 => '设置';
+  String get settingsPage_53 => 'Settings';
 
   @override
-  String get settingsPage_60 => '昵称';
+  String get settingsPage_60 => 'Nickname';
 
   @override
-  String get settingsPage_64 => '请先登录';
+  String get settingsPage_64 => 'Please sign in first';
 
   @override
-  String get settingsPage_67 => '手机号';
+  String get settingsPage_67 => 'Mobile number';
 
   @override
-  String get settingsPage_68 => '未绑定';
+  String get settingsPage_68 => 'Not linked';
 
   @override
-  String get settingsPage_69 => '换绑手机号需要先验证原手机号';
+  String get settingsPage_69 => 'Verify your current mobile number before changing it';
 
   @override
-  String get settingsPage_72 => '意见反馈';
+  String get settingsPage_72 => 'Feedback';
 
   @override
-  String get settingsPage_76 => '实名认证';
+  String get settingsPage_76 => 'Real-name verification';
 
   @override
-  String get settingsPage_77 => '未认证';
+  String get settingsPage_77 => 'Not verified';
 
   @override
-  String get settingsPage_79 => '实名认证属于独立的 id 聚合，本示例未实现';
+  String get settingsPage_79 => 'Real-name verification is a separate ID service, not implemented in this demo';
 
   @override
-  String get settingsPage_86 => '消息通知';
+  String get settingsPage_86 => 'Notifications';
 
   @override
-  String get settingsPage_95 => '深色模式';
+  String get settingsPage_95 => 'Dark mode';
 
   @override
-  String get settingsPage_107 => '清除缓存';
+  String get settingsPage_107 => 'Clear cache';
 
   @override
-  String get settingsPage_108 => '图片与接口缓存';
+  String get settingsPage_108 => 'Image and API cache';
 
   @override
-  String get settingsPage_110 => '缓存清理待接入 package:core/cache.dart 的 HttpCacheStore';
+  String get settingsPage_110 => 'Cache clearing not integrated yet — HttpCacheStore from package:core/cache.dart';
 
   @override
-  String get settingsPage_117 => '版本号';
+  String get settingsPage_117 => 'Version';
 
   @override
-  String get settingsPage_119 => '已是最新版本';
+  String get settingsPage_119 => 'Up to date';
 
   @override
-  String get settingsPage_122 => '用户协议';
+  String get settingsPage_122 => 'User agreement';
 
   @override
-  String get settingsPage_123 => '协议页待接入 WebView（`web` 包 64 个类的等价物）';
+  String get settingsPage_123 => 'Agreement page not integrated yet — WebView (the 64-class `web` package equivalent)';
 
   @override
-  String get settingsPage_126 => '隐私政策';
+  String get settingsPage_126 => 'Privacy policy';
 
   @override
-  String get settingsPage_128 => '隐私政策页待接入 WebView';
+  String get settingsPage_128 => 'Privacy policy page not integrated yet — WebView';
 
   @override
-  String get settingsPage_162 => '跟随系统';
+  String get settingsPage_162 => 'Follow system';
 
   @override
-  String get settingsPage_164 => '开启';
+  String get settingsPage_164 => 'On';
 
   @override
-  String get settingsPageDarkModeOff => '关闭';
+  String get settingsPageDarkModeOff => 'Off';
 
   @override
-  String get settingsPage_172 => '退出后需要重新登录才能查看订单，确定继续吗？';
+  String get settingsPage_172 => 'You\'ll need to sign in again to view your orders after signing out. Continue?';
 
   @override
-  String get settingsPage_180 => '退出';
+  String get settingsPage_180 => 'Sign out';
 
   @override
-  String get settingsPage_188 => '已退出登录';
+  String get settingsPage_188 => 'Signed out';
 
   @override
-  String get userPage_67 => '个人主页不在本次范围内';
+  String get settingsPageGroupAccount => 'Account';
 
   @override
-  String get userPage_81 => '支持人管理待接入，敬请期待';
+  String get settingsPageGroupGeneral => 'General';
 
   @override
-  String get userPage_82 => '客服会话（演示）';
+  String get settingsPageGroupAbout => 'About';
 
   @override
-  String get userPage_83 => '卖家招募不在本次范围内';
+  String get userPage_81 => 'Supporter management coming soon';
 
   @override
-  String get userPage_98 => '已退出登录';
+  String get userPage_82 => 'Customer service chat (demo)';
 
   @override
-  String get userPage_254 => '点击登录，查看订单与优惠券';
+  String get userPage_83 => 'Seller recruitment is out of scope this time';
 
   @override
-  String get userPage_308 => '个人主页';
+  String get userPage_98 => 'Signed out';
 
   @override
-  String get userPage_333 => '支持过';
+  String get userPage_254 => 'Sign in to view your orders and more';
 
   @override
-  String get userPage_340 => '关注';
+  String get userPage_333 => 'Supported';
 
   @override
-  String get userPage_483 => '全部支持';
+  String get userPage_340 => 'Following';
 
   @override
-  String get userPage_569 => '优惠券';
+  String get userPage_483 => 'All pledges';
 
   @override
-  String get userPage_580 => '我的钱包';
+  String get userPage_569 => 'Coupons';
 
   @override
-  String get userPage_650 => '礼品卡';
+  String get userPage_580 => 'My wallet';
 
   @override
-  String get userPage_651 => '代购服务';
+  String get userPage_650 => 'Gift cards';
 
   @override
-  String get userPage_652 => '超低价拼团';
+  String get userPage_653 => 'Address management';
 
   @override
-  String get userPage_653 => '地址管理';
+  String get userPage_654 => 'Supporters';
 
   @override
-  String get userPage_654 => '支持人';
+  String get userPage_655 => 'Contact customer service';
 
   @override
-  String get userPage_655 => '联系客服';
-
-  @override
-  String get userPage_656 => '卖家招募';
+  String get userPage_656 => 'Seller recruitment';
 
   @override
   String get userMenuMall => 'Star Coin Mall';
+
+  @override
+  String get userMenuMessage => 'Messages';
+
+  @override
+  String get userMenuOrder => 'Orders';
+
+  @override
+  String get userMenuGroupMore => 'More Services';
 
   @override
   String signInReward(Object amount) {

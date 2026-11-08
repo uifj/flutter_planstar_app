@@ -270,7 +270,13 @@ class UserLocalizationsZh extends UserLocalizations {
   String get settingsPage_188 => '已退出登录';
 
   @override
-  String get userPage_67 => '个人主页不在本次范围内';
+  String get settingsPageGroupAccount => '账号';
+
+  @override
+  String get settingsPageGroupGeneral => '通用';
+
+  @override
+  String get settingsPageGroupAbout => '关于';
 
   @override
   String get userPage_81 => '支持人管理待接入，敬请期待';
@@ -285,10 +291,7 @@ class UserLocalizationsZh extends UserLocalizations {
   String get userPage_98 => '已退出登录';
 
   @override
-  String get userPage_254 => '点击登录，查看订单与优惠券';
-
-  @override
-  String get userPage_308 => '个人主页';
+  String get userPage_254 => '点击登录，查看订单与更多服务';
 
   @override
   String get userPage_333 => '支持过';
@@ -309,12 +312,6 @@ class UserLocalizationsZh extends UserLocalizations {
   String get userPage_650 => '礼品卡';
 
   @override
-  String get userPage_651 => '代购服务';
-
-  @override
-  String get userPage_652 => '超低价拼团';
-
-  @override
   String get userPage_653 => '地址管理';
 
   @override
@@ -328,6 +325,15 @@ class UserLocalizationsZh extends UserLocalizations {
 
   @override
   String get userMenuMall => '星币商城';
+
+  @override
+  String get userMenuMessage => '消息';
+
+  @override
+  String get userMenuOrder => '订单';
+
+  @override
+  String get userMenuGroupMore => '更多服务';
 
   @override
   String signInReward(Object amount) {

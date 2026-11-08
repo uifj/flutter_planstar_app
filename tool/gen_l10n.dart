@@ -171,6 +171,13 @@ const List<L10nTarget> targets = <L10nTarget>[
     className: 'OrderLocalizations',
   ),
   L10nTarget(
+    label: 'features/project_idea',
+    arbDir: '$featureArbRoot/project_idea',
+    template: 'project_idea_zh.arb',
+    outputFile: 'project_idea_localizations.dart',
+    className: 'ProjectIdeaLocalizations',
+  ),
+  L10nTarget(
     label: 'features/proxy_buy',
     arbDir: '$featureArbRoot/proxy_buy',
     template: 'proxy_buy_zh.arb',
@@ -300,9 +307,7 @@ Future<void> main(List<String> args) async {
   if (check) {
     final diffs = _diffGenerated(outputRoot, generatedDir);
     if (diffs.isNotEmpty) {
-      stderr.writeln(
-        '\n✗ 生成产物与已入库的 $generatedDir 不一致（${diffs.length} 处）：',
-      );
+      stderr.writeln('\n✗ 生成产物与已入库的 $generatedDir 不一致（${diffs.length} 处）：');
       for (final diff in diffs) {
         stderr.writeln('  - $diff');
       }

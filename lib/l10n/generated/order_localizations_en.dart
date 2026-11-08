@@ -33,126 +33,126 @@ class OrderLocalizationsEn extends OrderLocalizations {
   String get orderStatusRefund => 'Refunded';
 
   @override
-  String get orderConfirmController_117 => '回报档位不存在';
+  String get orderConfirmController_117 => 'Reward tier does not exist';
 
   @override
-  String get orderConfirmController_145 => '本单没有可用营销活动';
+  String get orderConfirmController_145 => 'No promotions available for this order';
 
   @override
-  String get orderConfirmController_156 => '本单没有可用优惠券';
+  String get orderConfirmController_156 => 'No coupons available for this order';
 
   @override
-  String get orderConfirmController_169 => '本单没有可用礼品卡';
+  String get orderConfirmController_169 => 'No gift cards available for this order';
 
   @override
-  String get orderConfirmController_183 => '本企划不提供加急服务';
+  String get orderConfirmController_183 => 'This project does not offer express service';
 
   @override
-  String get orderConfirmController_220 => '张支持人';
+  String get orderConfirmController_220 => 'supporter(s)';
 
   @override
   String orderConfirmController_246(Object message) {
-    return '提交失败：$message';
+    return 'Submission failed: $message';
   }
 
   @override
   String orderConfirmController_257(Object value) {
-    return '支持已提交：$value';
+    return 'Support submitted: $value';
   }
 
   @override
-  String get orderListController_27 => '全部';
+  String get orderListController_27 => 'All';
 
   @override
-  String get orderListController_31 => '待评价';
+  String get orderListController_31 => 'To review';
 
   @override
-  String get ticketOrder_81 => '实名支持人数量不能为负';
+  String get ticketOrder_81 => 'The number of real-name supporters cannot be negative';
 
   @override
-  String get ticketOrder_84 => '支付时限必须为正';
+  String get ticketOrder_84 => 'The payment deadline must be positive';
 
   @override
-  String get ticketOrder_222 => '回报档位价格已变化，请重新确认支持';
+  String get ticketOrder_222 => 'The reward tier price has changed. Please re-confirm your support';
 
   @override
   String ticketOrder_238(Object value) {
-    return '回报档位不存在：$value';
+    return 'Reward tier does not exist: $value';
   }
 
   @override
   String ticketOrder_263(Object value) {
-    return '回报档位不存在：$value';
+    return 'Reward tier does not exist: $value';
   }
 
   @override
   String ticketOrder_296(Object units, Object value) {
-    return '加急服务份数（$units）不能超过支持份数（$value）';
+    return 'Express service units ($units) cannot exceed support units ($value)';
   }
 
   @override
-  String get ticketOrder_329 => '同一支持人不能重复选择';
+  String get ticketOrder_329 => 'The same supporter cannot be selected more than once';
 
   @override
-  String get ticketOrder_332 => '本企划无需实名支持人';
+  String get ticketOrder_332 => 'This project does not require real-name supporters';
 
   @override
   String ticketOrder_337(Object requiredVisitorCount, Object length) {
-    return '本单需选择 $requiredVisitorCount 位支持人，已选 $length 位';
+    return 'This order requires $requiredVisitorCount supporters, $length selected';
   }
 
   @override
-  String get ticketOrder_373 => '请先选择回报档位';
+  String get ticketOrder_373 => 'Please select a reward tier first';
 
   @override
-  String get ticketOrder_376 => '报价与当前支持内容不一致，请重新计算';
+  String get ticketOrder_376 => 'The quote does not match the current support details. Please recalculate';
 
   @override
-  String get ticketOrder_391 => '请先选择回报档位';
+  String get ticketOrder_391 => 'Please select a reward tier first';
 
   @override
   String ticketOrder_396(Object agreementTitle) {
-    return '请阅读并勾选$agreementTitle';
+    return 'Please read and check $agreementTitle';
   }
 
   @override
-  String get ticketOrder_402 => '支持金额尚未计算';
+  String get ticketOrder_402 => 'The support amount has not been calculated yet';
 
   @override
-  String get ticketOrder_405 => '支持内容已变化，请重新确认金额';
+  String get ticketOrder_405 => 'Support details have changed. Please re-confirm the amount';
 
   @override
   String ticketOrder_410(Object requiredVisitorCount) {
-    return '请选择 $requiredVisitorCount 位支持人';
+    return 'Please select $requiredVisitorCount supporter(s)';
   }
 
   @override
   String ticketOrder_440(Object label) {
-    return '当前状态（$label）不可支付';
+    return 'Cannot pay in the current status ($label)';
   }
 
   @override
-  String get ticketOrder_444 => '支持金额缺失，无法确认支付结果';
+  String get ticketOrder_444 => 'Support amount is missing; cannot confirm the payment result';
 
   @override
-  String get ticketOrder_486 => '关闭原因不能为空';
+  String get ticketOrder_486 => 'Close reason cannot be empty';
 
   @override
-  String get ticketOrder_510 => '未支付的支持不能退款';
+  String get ticketOrder_510 => 'Unpaid support cannot be refunded';
 
   @override
-  String get ticketOrder_534 => '支付超时，支持已取消';
+  String get ticketOrder_534 => 'Payment timed out; support has been cancelled';
 
   @override
-  String get ticketOrder_553 => '支持已提交，不能再修改';
+  String get ticketOrder_553 => 'Support has been submitted and cannot be modified';
 
   @override
   String ticketOrder_559(Object label, Object label2) {
-    return '支持状态不允许从「$label」变为「$label2」';
+    return 'Support status cannot change from $label to $label2';
   }
 
   @override
-  String get orderLifecycleEvents_22 => '超时';
+  String get orderLifecycleEvents_22 => 'Timeout';
 
   @override
   String orderLifecycleEvents_48(Object value, Object trackingNumber) {
@@ -161,627 +161,627 @@ class OrderLocalizationsEn extends OrderLocalizations {
 
   @override
   String orderPlaced_42(Object value, Object format) {
-    return 'order.placed($value, 支持金额 $format)';
+    return 'order.placed($value, support amount $format)';
   }
 
   @override
-  String get purchaseLimitPolicy_30 => '不限支持';
+  String get purchaseLimitPolicy_30 => 'Unlimited support';
 
   @override
   String purchaseLimitPolicy_32(Object value) {
-    return '每单限 $value 份';
+    return 'Limit of $value per order';
   }
 
   @override
   String purchaseLimitPolicy_33(Object value) {
-    return '每人限 $value 份';
+    return 'Limit of $value per person';
   }
 
   @override
   String purchaseLimitPolicy_57(Object value) {
-    return '每单最多支持 $value 份';
+    return 'Up to $value per order';
   }
 
   @override
   String purchaseLimitPolicy_81(Object value, Object value2) {
-    return '每人限支持 $value 份，您已支持 $value2 份';
+    return 'Limit of $value per person; you have supported $value2';
   }
 
   @override
   String purchaseLimitPolicy_83(Object value, Object remaining) {
-    return '每人限支持 $value 份，您还可支持 $remaining 份';
+    return 'Limit of $value per person; you can still support $remaining';
   }
 
   @override
-  String get orderQuote_107 => '支持总额';
+  String get orderQuote_107 => 'Support total';
 
   @override
-  String get orderQuote_108 => '运费';
+  String get orderQuote_108 => 'Shipping fee';
 
   @override
-  String get orderQuote_109 => '拆单费';
+  String get orderQuote_109 => 'Split fee';
 
   @override
-  String get orderQuote_111 => '优惠';
+  String get orderQuote_111 => 'Discount';
 
   @override
-  String get orderQuote_113 => '礼品卡';
+  String get orderQuote_113 => 'Gift card';
 
   @override
-  String get orderQuote_114 => '加急服务';
+  String get orderQuote_114 => 'Express service';
 
   @override
-  String get delivery_78 => '电子回报凭证';
+  String get delivery_78 => 'Electronic reward voucher';
 
   @override
-  String get delivery_81 => '快递配送';
+  String get delivery_81 => 'Express delivery';
 
   @override
-  String get delivery_84 => '现场自取';
+  String get delivery_84 => 'On-site pickup';
 
   @override
   String delivery_136(Object method, Object postage) {
-    return '$method（$postage）';
+    return '$method ($postage)';
   }
 
   @override
   String discount_71(Object percent, Object format) {
-    return '-$percent%（封顶 $format）';
+    return '-$percent% (capped at $format)';
   }
 
   @override
-  String get discount_122 => '不使用优惠';
+  String get discount_122 => 'No discount';
 
   @override
   String discount_139(Object describe) {
-    return '营销活动 $describe';
+    return 'Promotion $describe';
   }
 
   @override
   String discount_156(Object describe) {
-    return '优惠券 $describe';
+    return 'Coupon $describe';
   }
 
   @override
-  String get orderStatus_24 => '待提交';
+  String get orderStatus_24 => 'Pending submission';
 
   @override
-  String get orderStatus_40 => '已取消';
+  String get orderStatus_40 => 'Cancelled';
 
   @override
-  String get orderStatus_43 => '已退款';
+  String get orderStatus_43 => 'Refunded';
 
   @override
   String orderStatus_85(Object code) {
-    return '未知支持状态编码：$code';
+    return 'Unknown support status code: $code';
   }
 
   @override
-  String get orderType_10 => '普通支持';
+  String get orderType_10 => 'Regular support';
 
   @override
-  String get orderType_13 => '拼团';
+  String get orderType_13 => 'Group purchase';
 
   @override
-  String get orderType_16 => '限时支持';
+  String get orderType_16 => 'Limited-time support';
 
   @override
-  String get orderType_19 => '会员充值';
+  String get orderType_19 => 'Membership recharge';
 
   @override
-  String get orderType_22 => '加急服务';
+  String get orderType_22 => 'Express service';
 
   @override
   String orderType_36(Object code) {
-    return '未知支持类型：$code';
+    return 'Unknown support type: $code';
   }
 
   @override
-  String get orderType_49 => '普通支持';
+  String get orderType_49 => 'Regular support';
 
   @override
-  String get orderType_49_2 => '《支持服务协议》';
+  String get orderType_49_2 => 'Support Service Agreement';
 
   @override
-  String get orderType_52 => '代支持';
+  String get orderType_52 => 'Proxy support';
 
   @override
-  String get orderType_52_2 => '《代支持服务协议》';
+  String get orderType_52_2 => 'Proxy Support Service Agreement';
 
   @override
   String orderType_69(Object code) {
-    return '未知支持方式：$code';
+    return 'Unknown support method: $code';
   }
 
   @override
-  String get paymentChannel_10 => '微信支付';
+  String get paymentChannel_10 => 'WeChat Pay';
 
   @override
-  String get paymentChannel_13 => '支付宝';
+  String get paymentChannel_13 => 'Alipay';
 
   @override
-  String get paymentChannel_16 => '银行卡';
+  String get paymentChannel_16 => 'Bank card';
 
   @override
-  String get paymentChannel_19 => '信用付';
+  String get paymentChannel_19 => 'Credit pay';
 
   @override
-  String get paymentChannel_22 => '余额支付';
+  String get paymentChannel_22 => 'Balance payment';
 
   @override
   String paymentChannel_36(Object code) {
-    return '未知支付渠道：$code';
+    return 'Unknown payment channel: $code';
   }
 
   @override
   String speedPack_61(Object units, Object format, Object format2) {
-    return '加急服务 $units 份（现金 $format / 余额 $format2）';
+    return 'Express service $units units ($format cash / $format2 balance)';
   }
 
   @override
   String speedPack_85(Object value, Object format) {
-    return '礼品卡 $value（余额 $format）';
+    return 'Gift card $value (balance $format)';
   }
 
   @override
-  String get visitor_7 => '身份证';
+  String get visitor_7 => 'ID card';
 
   @override
-  String get visitor_8 => '护照';
+  String get visitor_8 => 'Passport';
 
   @override
-  String get visitor_9 => '港澳通行证';
+  String get visitor_9 => 'HK/Macau Travel Permit';
 
   @override
-  String get visitor_10 => '台湾通行证';
+  String get visitor_10 => 'Taiwan Travel Permit';
 
   @override
-  String get visitor_11 => '港澳台居住证';
+  String get visitor_11 => 'HK/Macau/Taiwan Residence Permit';
 
   @override
-  String get orderConfirmPage_48 => '确认支持';
+  String get orderConfirmPage_48 => 'Confirm support';
 
   @override
-  String get orderConfirmPage_59 => '选择回报档位';
+  String get orderConfirmPage_59 => 'Select a reward tier';
 
   @override
-  String get orderConfirmPage_73 => '优惠';
+  String get orderConfirmPage_73 => 'Discount';
 
   @override
-  String get orderConfirmPage_79 => '不使用优惠';
+  String get orderConfirmPage_79 => 'No discount';
 
   @override
-  String get orderConfirmPage_99 => '其他抵扣';
+  String get orderConfirmPage_99 => 'Other deductions';
 
   @override
-  String get orderConfirmPage_107 => '礼品卡（本单不可用）';
+  String get orderConfirmPage_107 => 'Gift card (not available for this order)';
 
   @override
   String orderConfirmPage_109(Object format) {
-    return '礼品卡（余额 $format）';
+    return 'Gift card (balance $format)';
   }
 
   @override
-  String get orderConfirmPage_123 => '加急服务（本企划不提供）';
+  String get orderConfirmPage_123 => 'Express service (not provided by this project)';
 
   @override
   String orderConfirmPage_125(Object format) {
-    return '加急服务（$format/份）';
+    return 'Express service ($format/unit)';
   }
 
   @override
-  String get orderConfirmPage_138 => '实名支持人';
+  String get orderConfirmPage_138 => 'Real-name supporter';
 
   @override
   String orderConfirmPage_143(Object requiredVisitorCount) {
-    return '选择支持人（需 $requiredVisitorCount 位）';
+    return 'Select supporters ($requiredVisitorCount required)';
   }
 
   @override
   String orderConfirmPage_145(Object length) {
-    return '已选 $length 位';
+    return '$length selected';
   }
 
   @override
-  String get orderConfirmPage_150 => '本企划需实名支持人，未选择将无法提交';
+  String get orderConfirmPage_150 => 'This project requires real-name supporters. You cannot submit without selecting them';
 
   @override
-  String get orderConfirmPage_167 => '费用明细';
+  String get orderConfirmPage_167 => 'Cost details';
 
   @override
-  String get orderConfirmPage_173 => '支持原价';
+  String get orderConfirmPage_173 => 'Original support price';
 
   @override
-  String get orderConfirmPage_175 => '应付金额';
+  String get orderConfirmPage_175 => 'Amount payable';
 
   @override
   String orderConfirmPage_190(Object agreementTitle) {
-    return '我已阅读并同意$agreementTitle';
+    return 'I have read and agree to $agreementTitle';
   }
 
   @override
   String orderConfirmPage_196(Object join) {
-    return '领域事件：$join';
+    return 'Domain events: $join';
   }
 
   @override
   String orderConfirmPage_243(Object sessionLabel, Object value) {
-    return '$sessionLabel · 企划 $value';
+    return '$sessionLabel · Project $value';
   }
 
   @override
-  String get orderConfirmPage_444 => '应付';
+  String get orderConfirmPage_444 => 'Payable';
 
   @override
-  String get orderConfirmPage_457 => '已确认';
+  String get orderConfirmPage_457 => 'Confirmed';
 
   @override
-  String get orderConfirmPage_460 => '确认中…';
+  String get orderConfirmPage_460 => 'Confirming…';
 
   @override
-  String get orderConfirmPage_462 => '确认支持';
+  String get orderConfirmPage_462 => 'Confirm support';
 
   @override
-  String get orderDetailPage_52 => '支持详情';
+  String get orderDetailPage_52 => 'Support details';
 
   @override
-  String get orderDetailPage_56 => '支持记录加载失败';
+  String get orderDetailPage_56 => 'Failed to load support record';
 
   @override
-  String get orderDetailPage_65 => '支持记录不存在';
+  String get orderDetailPage_65 => 'Support record not found';
 
   @override
-  String get orderDetailPage_66 => '支持记录可能已被删除，或链接已过期';
+  String get orderDetailPage_66 => 'The support record may have been deleted, or the link has expired';
 
   @override
-  String get orderDetailPage_68 => '返回支持列表';
+  String get orderDetailPage_68 => 'Back to support list';
 
   @override
-  String get orderDetailPage_101 => '回报档位';
+  String get orderDetailPage_101 => 'Reward tier';
 
   @override
   String orderDetailPage_105(Object value, Object format) {
-    return '$value 份 · $format';
+    return '$value units · $format';
   }
 
   @override
-  String get orderDetailPage_108 => '交付方式';
+  String get orderDetailPage_108 => 'Delivery method';
 
   @override
-  String get orderDetailPage_113 => '支持人';
+  String get orderDetailPage_113 => 'Supporter';
 
   @override
-  String get orderDetailPage_125 => '金额明细';
+  String get orderDetailPage_125 => 'Amount details';
 
   @override
-  String get orderDetailPage_133 => '支持金额';
+  String get orderDetailPage_133 => 'Support amount';
 
   @override
-  String get orderDetailPage_139 => '支持信息';
+  String get orderDetailPage_139 => 'Support information';
 
   @override
-  String get orderDetailPage_141 => '支持编号';
+  String get orderDetailPage_141 => 'Support number';
 
   @override
-  String get orderDetailPage_150 => '支持编号已复制';
+  String get orderDetailPage_150 => 'Support number copied';
 
   @override
-  String get orderDetailPage_163 => '支持时间';
+  String get orderDetailPage_163 => 'Support time';
 
   @override
-  String get orderDetailPage_165 => '支付时间';
+  String get orderDetailPage_165 => 'Payment time';
 
   @override
-  String get orderDetailPage_167 => '关闭原因';
+  String get orderDetailPage_167 => 'Close reason';
 
   @override
-  String get orderDetailPage_199 => '支持尚未提交';
+  String get orderDetailPage_199 => 'Support has not been submitted yet';
 
   @override
   String orderDetailPage_201(Object _deadline) {
-    return '请在 $_deadline 前完成支付，超时支持将自动取消';
+    return 'Please complete payment before $_deadline. Support will be cancelled automatically on timeout';
   }
 
   @override
-  String get orderDetailPage_204 => '已支付，正在为你确认回报';
+  String get orderDetailPage_204 => 'Payment received. Confirming your reward';
 
   @override
-  String get orderDetailPage_205 => '回报已寄出，请注意查收';
+  String get orderDetailPage_205 => 'Your reward has been shipped. Please check your delivery';
 
   @override
-  String get orderDetailPage_206 => '支持已完成，欢迎发表支持评价';
+  String get orderDetailPage_206 => 'Support completed. Feel free to leave a review';
 
   @override
-  String get orderDetailPage_207 => '支持已取消，可重新选择企划';
+  String get orderDetailPage_207 => 'Support cancelled. You can choose a new project';
 
   @override
-  String get orderDetailPage_208 => '退款已原路退回';
+  String get orderDetailPage_208 => 'Refund returned to your original payment method';
 
   @override
-  String get orderDetailPage_325 => '取消支持';
+  String get orderDetailPage_325 => 'Cancel support';
 
   @override
-  String get orderDetailPage_329 => '立即支付';
+  String get orderDetailPage_329 => 'Pay now';
 
   @override
-  String get orderDetailPage_335 => '查看物流';
+  String get orderDetailPage_335 => 'Track delivery';
 
   @override
-  String get orderDetailPage_335_2 => '物流详情待接入快递查询接口';
+  String get orderDetailPage_335_2 => 'Delivery tracking details are not available yet';
 
   @override
-  String get orderDetailPage_337 => '确认收到回报';
+  String get orderDetailPage_337 => 'Confirm reward received';
 
   @override
-  String get orderDetailPage_342 => '申请退款';
+  String get orderDetailPage_342 => 'Request refund';
 
   @override
-  String get orderDetailPage_351 => '去评价';
+  String get orderDetailPage_351 => 'Leave a review';
 
   @override
-  String get orderDetailPage_351_2 => '评价属于独立的评价聚合，本示例未实现';
+  String get orderDetailPage_351_2 => 'Reviews belong to a separate review module, which is not implemented in this demo';
 
   @override
-  String get orderDetailPage_353 => '再次支持';
+  String get orderDetailPage_353 => 'Support again';
 
   @override
-  String get orderDetailPage_360 => '继续填写';
+  String get orderDetailPage_360 => 'Continue';
 
   @override
-  String get orderDetailPage_366 => '联系客服';
+  String get orderDetailPage_366 => 'Contact customer service';
 
   @override
-  String get orderDetailPage_366_2 => '客服会话（演示）';
+  String get orderDetailPage_366_2 => 'Customer service chat (demo)';
 
   @override
-  String get orderDetailPage_367 => '查看回报凭证';
+  String get orderDetailPage_367 => 'View reward voucher';
 
   @override
-  String get orderDetailPage_367_2 => '回报凭证待接入交付接口';
+  String get orderDetailPage_367_2 => 'Reward voucher details are not available yet';
 
   @override
-  String get orderDetailPage_369 => '申请退款';
+  String get orderDetailPage_369 => 'Request refund';
 
   @override
-  String get orderDetailPage_379 => '重新选择企划';
+  String get orderDetailPage_379 => 'Choose another project';
 
   @override
-  String get orderDetailPage_437 => '支付成功，等待交付';
+  String get orderDetailPage_437 => 'Payment successful. Awaiting delivery';
 
   @override
-  String get orderDetailPage_444 => '取消支持';
+  String get orderDetailPage_444 => 'Cancel support';
 
   @override
-  String get orderDetailPage_445 => '取消后需要重新支持，确定继续吗？';
+  String get orderDetailPage_445 => 'You\'ll need to support again after cancelling. Continue?';
 
   @override
-  String get orderDetailPage_449 => '再想想';
+  String get orderDetailPage_449 => 'Not now';
 
   @override
-  String get orderDetailPage_453 => '取消支持';
+  String get orderDetailPage_453 => 'Cancel support';
 
   @override
-  String get orderDetailPage_459 => '用户主动取消';
+  String get orderDetailPage_459 => 'Cancelled by user';
 
   @override
-  String get orderDetailPage_461 => '支持已取消';
+  String get orderDetailPage_461 => 'Support cancelled';
 
   @override
-  String get orderDetailPage_470 => '已确认收到回报';
+  String get orderDetailPage_470 => 'Reward confirmed as received';
 
   @override
-  String get orderListPage_71 => '支持记录加载失败';
+  String get orderListPage_71 => 'Failed to load support records';
 
   @override
-  String get orderListPage_85 => '还没有支持记录';
+  String get orderListPage_85 => 'No support records yet';
 
   @override
   String orderListPage_87(Object label) {
-    return '没有$label的支持记录';
+    return 'No $label support records';
   }
 
   @override
-  String get orderListPage_88 => '去首页挑一个企划吧';
+  String get orderListPage_88 => 'Browse the home page to find a project';
 
   @override
-  String get orderListPage_90 => '去逛逛';
+  String get orderListPage_90 => 'Browse';
 
   @override
-  String get orderListPage_115 => '评价属于独立的评价聚合，本示例未实现';
+  String get orderListPage_115 => 'Reviews belong to a separate review module, which is not implemented in this demo';
 
   @override
-  String get orderListPage_119 => '客服会话（演示）';
+  String get orderListPage_119 => 'Customer service chat (demo)';
 
   @override
-  String get orderListPage_130 => '暂无商品订单';
+  String get orderListPage_130 => 'No merchandise orders';
 
   @override
-  String get orderListPage_131 => '企划支持链路之外的周边商品暂未接入';
+  String get orderListPage_131 => 'Merchandise outside the project support flow is not available yet';
 
   @override
-  String get orderListPage_181 => '取消支持';
+  String get orderListPage_181 => 'Cancel support';
 
   @override
-  String get orderListPage_182 => '取消后需要重新支持，确定继续吗？';
+  String get orderListPage_182 => 'You\'ll need to support again after cancelling. Continue?';
 
   @override
-  String get orderListPage_186 => '再想想';
+  String get orderListPage_186 => 'Not now';
 
   @override
-  String get orderListPage_190 => '取消支持';
+  String get orderListPage_190 => 'Cancel support';
 
   @override
-  String get orderListPage_196 => '用户主动取消';
+  String get orderListPage_196 => 'Cancelled by user';
 
   @override
-  String get orderCancelTimeout => '支付超时，支持已取消';
+  String get orderCancelTimeout => 'Payment timed out; support has been cancelled';
 
   @override
-  String get orderListPage_198 => '支持已取消';
+  String get orderListPage_198 => 'Support cancelled';
 
   @override
-  String get orderListPage_208 => '已确认收到回报';
+  String get orderListPage_208 => 'Reward confirmed as received';
 
   @override
-  String get orderListPage_229 => '企划';
+  String get orderListPage_229 => 'Projects';
 
   @override
-  String get orderListPage_229_2 => '商品';
+  String get orderListPage_229_2 => 'Merchandise';
 
   @override
-  String get paySuccessPage_75 => '支付成功';
+  String get paySuccessPage_75 => 'Payment successful';
 
   @override
-  String get paySuccessPage_84 => '企划星正在为您确认回报，请耐心等待';
+  String get paySuccessPage_84 => 'Planstar is confirming your reward. Please wait';
 
   @override
-  String get paySuccessPage_115 => '查看支持记录';
+  String get paySuccessPage_115 => 'View support records';
 
   @override
-  String get paySuccessPage_138 => '继续逛逛';
+  String get paySuccessPage_138 => 'Keep browsing';
 
   @override
-  String get paySuccessPage_182 => '企划';
+  String get paySuccessPage_182 => 'Project';
 
   @override
-  String get paySuccessPage_189 => '支持编号';
+  String get paySuccessPage_189 => 'Support number';
 
   @override
-  String get paySuccessPage_198 => '支付金额';
+  String get paySuccessPage_198 => 'Payment amount';
 
   @override
-  String get payInfo_40 => '推荐';
+  String get payInfo_40 => 'Recommended';
 
   @override
-  String get payInfo_55 => '星币余额支付';
+  String get payInfo_55 => 'Star coin balance';
 
   @override
-  String get payInfo_60 => '企划';
+  String get payInfo_60 => 'Project';
 
   @override
-  String get payInfo_61 => '支持编号';
+  String get payInfo_61 => 'Support number';
 
   @override
-  String get payPage_77 => '收银台';
+  String get payPage_77 => 'Checkout';
 
   @override
-  String get payPage_133 => '演示环境：支付不会真实扣款，点击确认后模拟支付流程';
+  String get payPage_133 => 'Demo environment: no real payment is charged; confirming will simulate the payment flow';
 
   @override
-  String get payPage_166 => '支付已取消';
+  String get payPage_166 => 'Payment cancelled';
 
   @override
   String payPage_195(Object seconds) {
-    return '请在 $seconds 内完成支付';
+    return 'Please complete payment within $seconds';
   }
 
   @override
-  String get payPage_259 => '应付金额';
+  String get payPage_259 => 'Amount payable';
 
   @override
-  String get payPage_301 => '选择支付方式';
+  String get payPage_301 => 'Select payment method';
 
   @override
-  String get payPage_436 => '请求中…';
+  String get payPage_436 => 'Requesting…';
 
   @override
-  String get payPage_438 => '支付中…';
+  String get payPage_438 => 'Paying…';
 
   @override
   String payPage_440(Object format) {
-    return '确认支付 $format';
+    return 'Confirm payment $format';
   }
 
   @override
-  String get payProviders_115 => '当前状态不可支付';
+  String get payProviders_115 => 'Cannot pay in the current status';
 
   @override
-  String get payProviders_172 => '支付超时，支持已自动取消';
+  String get payProviders_172 => 'Payment timed out; support has been cancelled automatically';
 
   @override
-  String get refundPage_43 => '退款申请已提交，请等待审核';
+  String get refundPage_43 => 'Refund request submitted. Please wait for review';
 
   @override
-  String get refundPage_62 => '申请退款';
+  String get refundPage_62 => 'Request refund';
 
   @override
-  String get refundPage_97 => '提交中…';
+  String get refundPage_97 => 'Submitting…';
 
   @override
-  String get refundPage_98 => '已提交';
+  String get refundPage_98 => 'Submitted';
 
   @override
-  String get refundPage_99 => '提交退款申请';
+  String get refundPage_99 => 'Submit refund request';
 
   @override
-  String get refundPage_138 => '退款金额';
+  String get refundPage_138 => 'Refund amount';
 
   @override
-  String get refundPage_150 => '支持金额';
+  String get refundPage_150 => 'Support amount';
 
   @override
-  String get refundPage_164 => '预计退款';
+  String get refundPage_164 => 'Estimated refund';
 
   @override
-  String get refundPage_207 => '退款原因';
+  String get refundPage_207 => 'Refund reason';
 
   @override
-  String get refundPage_244 => '请输入退款原因（选填）';
+  String get refundPage_244 => 'Enter a refund reason (optional)';
 
   @override
-  String get refundPage_331 => '退款说明';
+  String get refundPage_331 => 'Refund notes';
 
   @override
-  String get refundPage_342 => '• 众筹中可全额退款\n• 交付中退还支持金额的 80%\n• 已完成支持不支持退款\n• 退款将原路退回至支付账户\n• 退款审核一般需要 1-3 个工作日';
+  String get refundPage_342 => '• Full refund during crowdfunding\n• 80% of the support amount refunded during delivery\n• No refund after support is completed\n• Refunds are returned to your original payment account\n• Refund review usually takes 1-3 business days';
 
   @override
-  String get refundPage_382 => '退款申请已提交';
+  String get refundPage_382 => 'Refund request submitted';
 
   @override
   String refundPage_391(Object format) {
-    return '退款金额 $format 将在审核通过后原路退回';
+    return 'The refund of $format will be returned to your original payment method after approval';
   }
 
   @override
-  String get refundPage_404 => '返回支持列表';
+  String get refundPage_404 => 'Back to support list';
 
   @override
-  String get refundState_8 => '不需要了';
+  String get refundState_8 => 'No longer needed';
 
   @override
-  String get refundState_8_2 => '计划变更，暂时不需要了';
+  String get refundState_8_2 => 'Plans changed; no longer needed';
 
   @override
-  String get refundState_11 => '买错了';
+  String get refundState_11 => 'Ordered by mistake';
 
   @override
   String get refundState_11_2 => 'Selected the wrong offline reward session or reward tier';
 
   @override
-  String get refundState_14 => '支持金额太高';
+  String get refundState_14 => 'Support amount too high';
 
   @override
-  String get refundState_14_2 => '价格超出预算';
+  String get refundState_14_2 => 'Price exceeds my budget';
 
   @override
-  String get refundState_17 => '找到更好的企划';
+  String get refundState_17 => 'Found a better project';
 
   @override
-  String get refundState_17_2 => '通过其他渠道支持了';
+  String get refundState_17_2 => 'Supported through another channel';
 
   @override
-  String get refundState_20 => '其他原因';
+  String get refundState_20 => 'Other reasons';
 
   @override
-  String get refundState_20_2 => '自定义说明';
+  String get refundState_20_2 => 'Custom note';
 
   @override
   String orderListCard_52(Object value) {
-    return '企划 $value';
+    return 'Project $value';
   }
 
   @override
-  String get orderListCard_53 => '回报信息待确认';
+  String get orderListCard_53 => 'Reward info pending confirmation';
 
   @override
   String orderListCard_delivery(Object value) {
@@ -789,67 +789,67 @@ class OrderLocalizationsEn extends OrderLocalizations {
   }
 
   @override
-  String get orderListCard_78 => '代支持';
+  String get orderListCard_78 => 'Proxy support';
 
   @override
   String orderListCard_130(Object join) {
-    return '支持人 $join';
+    return 'Supporters $join';
   }
 
   @override
   String orderListCard_141(Object value) {
-    return '支持编号 $value';
+    return 'Support number $value';
   }
 
   @override
   String orderListCard_184(Object value) {
-    return '共 $value 份  支持金额';
+    return '$value units  support amount';
   }
 
   @override
-  String get orderListCard_217 => '取消支持';
+  String get orderListCard_217 => 'Cancel support';
 
   @override
-  String get orderListCard_220 => '去支付';
+  String get orderListCard_220 => 'Go to pay';
 
   @override
-  String get orderListCard_225 => '联系客服';
+  String get orderListCard_225 => 'Contact customer service';
 
   @override
-  String get orderListCard_228 => '申请退款';
+  String get orderListCard_228 => 'Request refund';
 
   @override
-  String get orderListCard_233 => '查看物流';
+  String get orderListCard_233 => 'Track delivery';
 
   @override
-  String get orderListCard_236 => '确认收到回报';
+  String get orderListCard_236 => 'Confirm reward received';
 
   @override
-  String get orderListCard_241 => '再次支持';
+  String get orderListCard_241 => 'Support again';
 
   @override
-  String get orderListCard_244 => '去评价';
+  String get orderListCard_244 => 'Leave a review';
 
   @override
-  String get orderListCard_250 => '再次支持';
+  String get orderListCard_250 => 'Support again';
 
   @override
-  String get orderListCard_298 => '支付已超时，请重新支持';
+  String get orderListCard_298 => 'Payment timed out. Please support again';
 
   @override
   String orderListCard_305(Object minutes, Object seconds) {
-    return '剩余支付时间 $minutes:$seconds';
+    return 'Time left to pay $minutes:$seconds';
   }
 
   @override
-  String get paymentChannelSheet_52 => '选择支付方式';
+  String get paymentChannelSheet_52 => 'Select payment method';
 
   @override
   String get orderDetailPage_expectedDelivery => 'Estimated delivery';
 
   @override
-  String get orderConfirmPage_seatsTitle => '已选座席';
+  String get orderConfirmPage_seatsTitle => 'Selected seats';
 
   @override
-  String get orderConfirmPage_seatsSubtotal => '座席小计';
+  String get orderConfirmPage_seatsSubtotal => 'Seat subtotal';
 }

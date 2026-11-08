@@ -18,10 +18,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabDiscover => 'Discover';
 
   @override
-  String get tabMessage => 'Messages';
-
-  @override
-  String get tabOrder => 'Orders';
+  String get tabProject => 'Pitches';
 
   @override
   String get tabProfile => 'Me';
@@ -60,22 +57,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get splashPage_129 => 'Helping good projects get seen';
 
   @override
-  String get splashPage_146 => '企划星科技 © 2015–2026';
+  String get splashPage_146 => 'Planstar Technology © 2026–2027';
 
   @override
-  String get splashPage_180 => '隐私政策与用户协议';
+  String get splashPage_180 => 'Privacy Policy & User Agreement';
 
   @override
-  String get splashPage_187 => '欢迎使用企划星。为了保障您的合法权益，请在使用前阅读并同意以下协议：';
+  String get splashPage_187 => 'Welcome to Planstar. To protect your rights, please read and agree to the following agreements before using the app:';
 
   @override
-  String get splashPage_192 => '《用户协议》：规定了您与企划星之间的权利义务关系。';
+  String get splashPage_192 => 'User Agreement: defines the rights and obligations between you and Planstar.';
 
   @override
-  String get splashPage_195 => '《隐私政策》：说明了企划星如何收集、使用和保护您的个人信息。';
+  String get splashPage_195 => 'Privacy Policy: explains how Planstar collects, uses, and protects your personal information.';
 
   @override
-  String get splashPage_199 => '点击「同意并继续」表示您已阅读并同意以上协议。';
+  String get splashPage_199 => 'Tapping \"Agree and continue\" means you have read and agreed to the above agreements.';
 
   @override
   String get splashPage_208 => 'Decline';

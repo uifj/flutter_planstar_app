@@ -342,9 +342,17 @@
   "@settingsPage_188": {
     "description": "来源：lib/features/user/settings_page.dart:188；原文：'已退出登录'"
   },
-  "userPage_67": "个人主页不在本次范围内",
-  "@userPage_67": {
-    "description": "来源：lib/features/user/user_page.dart:67；原文：'个人主页不在本次范围内'"
+  "settingsPageGroupAccount": "账号",
+  "@settingsPageGroupAccount": {
+    "description": "来源：lib/features/user/settings_page.dart；设置页分组标题（账号）"
+  },
+  "settingsPageGroupGeneral": "通用",
+  "@settingsPageGroupGeneral": {
+    "description": "来源：lib/features/user/settings_page.dart；设置页分组标题（通用）"
+  },
+  "settingsPageGroupAbout": "关于",
+  "@settingsPageGroupAbout": {
+    "description": "来源：lib/features/user/settings_page.dart；设置页分组标题（关于）"
   },
   "userPage_81": "支持人管理待接入，敬请期待",
   "@userPage_81": {
@@ -362,13 +370,9 @@
   "@userPage_98": {
     "description": "来源：lib/features/user/user_page.dart:98；原文：'已退出登录'"
   },
-  "userPage_254": "点击登录，查看订单与优惠券",
+  "userPage_254": "点击登录，查看订单与更多服务",
   "@userPage_254": {
     "description": "来源：lib/features/user/user_page.dart:254；原文：'点击登录，查看订单与优惠券'"
-  },
-  "userPage_308": "个人主页",
-  "@userPage_308": {
-    "description": "来源：lib/features/user/user_page.dart:308；原文：'个人主页'"
   },
   "userPage_333": "支持过",
   "@userPage_333": {
@@ -394,14 +398,6 @@
   "@userPage_650": {
     "description": "来源：lib/features/user/user_page.dart:650；原文：'礼品卡'"
   },
-  "userPage_651": "代购服务",
-  "@userPage_651": {
-    "description": "来源：lib/features/user/user_page.dart:651；原文：'代抢服务'"
-  },
-  "userPage_652": "超低价拼团",
-  "@userPage_652": {
-    "description": "来源：lib/features/user/user_page.dart:652；原文：'超低价拼团'"
-  },
   "userPage_653": "地址管理",
   "@userPage_653": {
     "description": "来源：lib/features/user/user_page.dart:653；原文：'地址管理'"
@@ -421,6 +417,18 @@
   "userMenuMall": "星币商城",
   "@userMenuMall": {
     "description": "来源：lib/features/user/user_page.dart；菜单入口"
+  },
+  "userMenuMessage": "消息",
+  "@userMenuMessage": {
+    "description": "来源：lib/features/user/user_page.dart；个人中心二级页入口"
+  },
+  "userMenuOrder": "订单",
+  "@userMenuOrder": {
+    "description": "来源：lib/features/user/user_page.dart；个人中心二级页入口"
+  },
+  "userMenuGroupMore": "更多服务",
+  "@userMenuGroupMore": {
+    "description": "来源：lib/features/user/user_page.dart；分组菜单标题（低频设置）"
   },
   "signInReward": "每日签到 · +{amount} 星币",
   "@signInReward": {

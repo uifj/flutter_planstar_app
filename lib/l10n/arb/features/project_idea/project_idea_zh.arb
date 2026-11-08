@@ -1,0 +1,104 @@
+{
+  "@@locale": "zh",
+  "ideaViewedToday": "今日已看 {count} 张",
+  "@ideaViewedToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ideaRefresh": "刷新",
+  "ideaEmptyTitle": "今天的创意都看完啦",
+  "ideaEmptyDescription": "去发现看看，或刷新试试",
+  "ideaLoadFailed": "加载失败",
+  "ideaSkip": "跳过",
+  "ideaCategoryFallback": "未分类",
+  "ideaCreatorLabel": "发起人",
+  "ideaSupportCount": "{count} 支持",
+  "@ideaSupportCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ideaOpposeCount": "{count} 不支持",
+  "@ideaOpposeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ideaSupport": "支持",
+  "ideaOppose": "不支持",
+  "ideaNotLaunched": "尚未立项",
+  "ideaDetailTitle": "创意详情",
+  "ideaDetailLoadFailed": "详情加载失败",
+  "ideaDetailDescription": "企划介绍",
+  "ideaDetailGallery": "图集",
+  "ideaDetailPublishedAt": "发布于 {date}",
+  "@ideaDetailPublishedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "ideaDetailSupportRate": "支持率",
+  "ideaDetailTierDistribution": "意愿档位分布",
+  "ideaDetailReasons": "不支持理由",
+  "ideaDetailNoReasons": "还没有理由数据",
+  "ideaDetailVotedSupport": "已支持",
+  "ideaDetailVotedOppose": "已不支持",
+  "ideaDetailSupportPeople": "{count} 人支持",
+  "@ideaDetailSupportPeople": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ideaDetailOpposePeople": "{count} 人不支持",
+  "@ideaDetailOpposePeople": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ideaDetailNotLaunchedHint": "这是一个创意想法，尚未立项，不涉及购买或扣费",
+  "supportSheetTitle": "支持这个企划",
+  "supportSheetSubtitle": "你的支持会帮助它更快立项",
+  "ideaTierOption": "{tier} 星币",
+  "@ideaTierOption": {
+    "placeholders": {
+      "tier": {
+        "type": "int"
+      }
+    }
+  },
+  "supportDisclaimer": "仅表达支持意愿，不会扣除星币",
+  "supportReasonHint": "说说你的理由（选填）",
+  "supportReasonCreative": "看好创意",
+  "supportReasonJoin": "愿意参与",
+  "supportReasonLaunch": "希望尽快立项",
+  "supportSubmit": "提交支持",
+  "supportSuccess": "已支持，感谢你的态度",
+  "opposeSheetTitle": "为什么不支持？",
+  "opposeSheetSubtitle": "你的理由会帮助作者改进，并减少类似企划推荐",
+  "opposeReasonNotInterested": "不感兴趣",
+  "opposeReasonTooManySimilar": "同类企划太多",
+  "opposeReasonNotEnoughInfo": "信息太少，无法判断",
+  "opposeReasonNotExecutable": "不看好可执行性",
+  "opposeReasonUnreasonablePricing": "定价或回报不合理",
+  "opposeReasonOther": "其他",
+  "opposeReasonTextHint": "请补充你的理由",
+  "opposeSubmit": "提交",
+  "opposeSuccess": "已记录，将减少类似企划推荐",
+  "ideaAlreadyVoted": "已支持过",
+  "ideaErrorSelfVote": "不能给自己的企划投票",
+  "ideaErrorTooFrequent": "操作太频繁，请稍后再试",
+  "ideaErrorNetwork": "网络开小差了，请重试"
+}
