@@ -40,7 +40,9 @@
         android:label="企划星"
         android:name="${applicationName}"
         android:allowBackup="false"
-        android:usesCleartextTraffic="true"
+        <!-- release 全局禁止明文 HTTP；debug 由 src/debug/res/xml 的同名文件放开本地联调域名。 -->
+        android:usesCleartextTraffic="false"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
         <!-- ── SDK 声明式配置（取自原 com.planstar.app 清单）───────────── -->

@@ -1,0 +1,9 @@
+# 生产签名配置模板（复制为 android/key.properties 后填写；此文件与 key.properties 均禁止提交）
+# 生成 keystore：
+#   keytool -genkey -v -keystore <安全路径>/planstar-release.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias planstar
+# storeFile 可为相对 android/ 目录的路径或绝对路径；.jks 不要放进仓库。
+storeFile=<REPLACE_ME>/planstar-release.jks
+storePassword=<REPLACE_ME>
+keyAlias=planstar
+keyPassword=<REPLACE_ME>
