@@ -2,6 +2,7 @@ import 'package:core/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:planstar/app/network/network_providers.dart';
 import 'package:planstar/features/order/application/order_confirm_controller.dart';
+import 'package:planstar/features/order/application/order_confirm_selection.dart';
 import 'package:planstar/features/order/application/order_providers.dart';
 import 'package:planstar/features/order/data/in_memory_ticket_order_repository.dart';
 import 'package:planstar/features/order/domain/domain.dart';
@@ -21,11 +22,13 @@ void main() {
     addTearDown(container.dispose);
   });
 
+  const args = OrderConfirmArgs(showId: '10086');
+
   OrderConfirmController controller() =>
-      container.read(orderConfirmControllerProvider('10086').notifier);
+      container.read(orderConfirmControllerProvider(args).notifier);
 
   OrderConfirmState state() =>
-      container.read(orderConfirmControllerProvider('10086'));
+      container.read(orderConfirmControllerProvider(args));
 
   group('确认页控制器', () {
     test('初始状态：1 张内场 A 区，应付星币 680，协议未勾', () {

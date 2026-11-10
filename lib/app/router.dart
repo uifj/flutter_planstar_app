@@ -48,6 +48,18 @@ import 'session.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
+/// 深链 query 里的非负整数（票档/场次下标）。非法值一律忽略，避免参数注入。
+int? _queryIndex(String? raw) {
+  final value = int.tryParse(raw ?? '');
+  return value != null && value >= 0 && value < 1000 ? value : null;
+}
+
+/// 深链 query 里的正整数（购买张数）。上限由控制器按限购规则再收敛一次。
+int? _queryQuantity(String? raw) {
+  final value = int.tryParse(raw ?? '');
+  return value != null && value > 0 && value <= 99 ? value : null;
+}
+
 /// 需要登录才能进入的 location 前缀（登录门禁）。
 const List<String> _authGatedPrefixes = <String>[
   '/order',
@@ -284,9 +296,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'orderConfirm',
         // showId 走 query 而不是路径参数：企划星的确认页是靠 scheme 参数进来的
         // （`goodsId` / `count` / `orderType`），不是路径层级。
-        builder: (context, state) => OrderConfirmPage(
-          showId: state.uri.queryParameters['showId'] ?? '10086',
-        ),
+        // P0-08：选票页拼出的 tier / qty / session 必须透传，
+        // 否则确认页会用「首个票档 + 1 张」重建草稿，实付金额与用户选择不符。
+        builder: (context, state) {
+          final query = state.uri.queryParameters;
+          return OrderConfirmPage(
+            showId: query['showId'] ?? '10086',
+            tierIndex: _queryIndex(query['tier']),
+            quantity: _queryQuantity(query['qty']),
+            sessionIndex: _queryIndex(query['session']),
+          );
+        },
       ),
       // 订单详情。用订单号而不是自增 id 当参数：订单号是用户能看到的、
       // 客服能查的、深链能带的唯一稳定标识。

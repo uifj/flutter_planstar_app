@@ -426,6 +426,33 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     return const Success<void>(null);
   }
 
+  /// 回滚一次**尚未落库成功**的提交，让聚合回到可编辑草稿态。
+  ///
+  /// 这是工作单元（submit + 远端建单/保存）的补偿动作：服务端建单失败或超时
+  /// 时，如果聚合已经变成 `awaitingPayment` 且不可编辑，用户只能重建页面，
+  /// 而反复尝试还可能在「响应丢失但服务端已成功」时造成重复建单。
+  ///
+  /// 同时丢弃本次 submit 产生、尚未分发的 [OrderPlaced]，
+  /// 避免「订单没建成、通知已发出」的幽灵事件。其余待分发事件原样保留。
+  ///
+  /// 注意：这是**回滚**不是业务状态迁移，因此不走 [_transitionTo] 的白名单
+  /// （状态机不允许 awaitingPayment → draft）。仅允许在支付前调用。
+  Result<void> reopenForRetry() {
+    if (_status != OrderStatus.awaitingPayment) {
+      return _fail('ORDER_NOT_REOPENABLE', '订单状态不允许重试');
+    }
+    if (_paidAt != null) {
+      return _fail('ORDER_ALREADY_PAID', '订单已支付，不能回滚');
+    }
+    final pending = pullDomainEvents();
+    for (final event in pending) {
+      if (event is! OrderPlaced) raiseDomainEvent(event);
+    }
+    _status = OrderStatus.draft;
+    _submittedAt = null;
+    return const Success<void>(null);
+  }
+
   /// 支付成功：待支付 → 待发货，并发 [OrderPaid]。
   ///
   /// 真实链路的支付结果来自服务端回调 / SDK 回调，客户端只做"把结果记到聚合上"。

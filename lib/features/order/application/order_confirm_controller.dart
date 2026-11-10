@@ -7,6 +7,7 @@ import '../../goods/seatmap/seat_selection_providers.dart';
 import '../data/planstar_order_api.dart';
 import '../domain/domain.dart';
 import 'order_api_providers.dart';
+import 'order_confirm_selection.dart';
 import 'order_draft_seed.dart';
 import 'order_providers.dart';
 
@@ -120,7 +121,7 @@ const Object _sentinel = Object();
 /// 不写业务规则——规则都在 [TicketOrder] 和 [OrderPricingService] 里，
 /// 所以这段代码在单测里根本不需要 Widget 环境。
 final class OrderConfirmController
-    extends FamilyNotifier<OrderConfirmState, String> {
+    extends FamilyNotifier<OrderConfirmState, OrderConfirmArgs> {
   OrderPricingService get _pricing => ref.read(orderPricingServiceProvider);
   TicketOrderRepository get _repository =>
       ref.read(ticketOrderRepositoryProvider);
@@ -129,11 +130,18 @@ final class OrderConfirmController
   /// 真实模式下重试建单复用同一个幂等键。
   String? _idempotencyKey;
 
+  /// 报价请求代数：只让最新一次响应写 state，防止「进入页面预览」与
+  /// 「提交前刷新」并发时旧报价覆盖新报价。
+  int _quoteGeneration = 0;
+
   bool get _serverMode => ref.read(dataSourcePolicyProvider).isRemote;
 
   @override
-  OrderConfirmState build(String showId) {
-    final seed = ref.watch(orderDraftSeedProvider(showId));
+  OrderConfirmState build(OrderConfirmArgs args) {
+    // 选票页的选择快照（随 family 参数传入，不可变、可比较）。
+    final showId = args.showId;
+    final selection = args.selection;
+    final seed = ref.watch(orderDraftSeedProvider(arg));
     final now = DateTime.now();
 
     // 草稿 id 用时间戳生成；真实订单 id 由服务端下发。
@@ -147,21 +155,40 @@ final class OrderConfirmController
       purchaseLimit: seed.purchaseLimit,
     ).requireData;
 
-    // 默认选中第一个票档；数量与已选座位数保持一致（1 座 = 1 票），
-    // 这样本地/服务端报价与确认页的「座位小计」口径一致。
+    OrderNotice? buildNotice;
     if (seed.tiers.isNotEmpty) {
       final seatCount = ref.watch(
         seatSelectionProvider(showId).select((state) => state.count),
       );
-      final first = seed.tiers.first;
-      order.addLine(
+      // 票档：只在下标合法时采用选择，否则回退首个票档。
+      final tierIndex = selection.tierIndex;
+      final tier =
+          (tierIndex != null &&
+              tierIndex >= 0 &&
+              tierIndex < seed.tiers.length)
+          ? seed.tiers[tierIndex]
+          : seed.tiers.first;
+      // 数量：优先选票页的 qty，其次已选座位数，最后 1 张；
+      // 一律按限购上限收敛，避免深链/旧参数构造出非法订单。
+      final requested =
+          selection.quantity ?? (seatCount > 0 ? seatCount : 1);
+      final limit = seed.purchaseLimit.maxPerOrder?.value;
+      var quantity = requested < 1 ? 1 : requested;
+      if (limit != null && quantity > limit) quantity = limit;
+      final added = order.addLine(
         OrderLine(
-          id: first.id,
-          tierName: first.name,
-          unitPrice: first.price,
-          quantity: Quantity(seatCount > 0 ? seatCount : 1),
+          id: tier.id,
+          tierName: tier.name,
+          unitPrice: tier.price,
+          quantity: Quantity(quantity),
         ),
       );
+      if (added.isFailure) {
+        buildNotice = OrderNotice(
+          OrderNoticeCode.failure,
+          detail: added.failure!.message,
+        );
+      }
     }
 
     final quote = _quoteOf(order);
@@ -174,7 +201,7 @@ final class OrderConfirmController
       Future<void>.microtask(() => _refreshServerQuote());
     }
 
-    return OrderConfirmState(order: order, quote: quote);
+    return OrderConfirmState(order: order, quote: quote, notice: buildNotice);
   }
 
   /// 加一张某票档。
@@ -318,11 +345,14 @@ final class OrderConfirmController
 
     final order = state.order;
 
+    // 提升到函数作用域：建单请求体必须使用「本次提交刚刚校验过」的报价，
+    // 不能读 state.serverQuote（可能被并发的预览刷新覆盖）。
+    OrderServerQuote? latestServerQuote;
     if (_serverMode) {
       // 提交前再确认一次价格；最终金额以服务端报价为准。
       final beforeTotal = state.displayQuote.totalAmount;
-      final serverQuote = await _refreshServerQuote(showFailure: true);
-      if (serverQuote == null) {
+      final quote = await _refreshServerQuote(showFailure: true);
+      if (quote == null) {
         state = state.copyWith(
           submitting: false,
           notice:
@@ -334,13 +364,14 @@ final class OrderConfirmController
         );
         return;
       }
-      if (serverQuote.toDisplayQuote().totalAmount != beforeTotal) {
+      if (quote.toDisplayQuote().totalAmount != beforeTotal) {
         state = state.copyWith(
           submitting: false,
           notice: const OrderNotice(OrderNoticeCode.priceChanged),
         );
         return;
       }
+      latestServerQuote = quote;
     }
 
     final submitted = order.submit(DateTime.now());
@@ -356,14 +387,19 @@ final class OrderConfirmController
     }
 
     if (_serverMode) {
+      // 用本次提交刚刚拿到的报价构造请求体，不读 state.serverQuote：
+      // 避免并发刷新把 state 里的报价换掉，出现「校验一个价、发出另一个价」。
       final result = await ref
           .read(planstarOrderApiProvider)
           .makeOrder(
-            _makeOrderBody(state.serverQuote),
+            _makeOrderBody(latestServerQuote),
             idempotencyKey: _idempotencyKey ??=
                 PlanstarOrderApi.newIdempotencyKey(),
           );
       if (result.isFailure) {
+        // 工作单元回滚：聚合回到草稿态并丢弃未分发的 OrderPlaced，
+        // 用户可以在原页直接重试，不必重建页面（P0-09）。
+        order.reopenForRetry();
         state = state.copyWith(
           submitting: false,
           notice: OrderNotice(
@@ -388,8 +424,8 @@ final class OrderConfirmController
 
     final saved = await _repository.save(order);
     if (saved.isFailure) {
-      // ⚠ 内存实现不会走到这里。接真实网络实现时，这一步必须和上面的 submit
-      // 在同一个事务里（失败则回滚聚合状态），否则会出现"本地已提交、服务端没建单"。
+      // 保存失败 = 工作单元失败：回滚聚合，避免「本地已提交、服务端没建单」。
+      order.reopenForRetry();
       state = state.copyWith(
         submitting: false,
         notice: OrderNotice(
@@ -419,13 +455,14 @@ final class OrderConfirmController
   Future<OrderServerQuote?> _refreshServerQuote({
     bool showFailure = false,
   }) async {
+    final generation = ++_quoteGeneration;
     try {
       if (!_serverMode) return null;
       final result = await ref
           .read(planstarOrderApiProvider)
           .fetchConfirmQuote(_confirmBody());
       if (result.isFailure) {
-        if (showFailure) {
+        if (showFailure && generation == _quoteGeneration) {
           state = state.copyWith(
             notice: OrderNotice(
               OrderNoticeCode.saveFailed,
@@ -436,13 +473,14 @@ final class OrderConfirmController
         return null;
       }
       final quote = result.requireData;
-      if (quote != null) {
+      // 并发保护：过期响应不得写回 state（可以返回给本次提交的调用方使用）。
+      if (quote != null && generation == _quoteGeneration) {
         state = state.copyWith(serverQuote: quote);
       }
       return quote;
     } catch (_) {
       // 页面已销毁或响应异常：预览场景静默；提交场景保留可读提示。
-      if (showFailure) {
+      if (showFailure && generation == _quoteGeneration) {
         state = state.copyWith(
           notice: const OrderNotice(
             OrderNoticeCode.saveFailed,
@@ -463,8 +501,9 @@ final class OrderConfirmController
       'activityEventId': _asInt(seed.sessionId.value),
       'orderType': order.orderType.wireCode,
       'quantity': order.totalTickets.value,
-      'totalAmount': state.quote.totalAmount.minorUnits,
-      'payAmount': state.quote.paymentAmount.minorUnits,
+      // 与页面展示口径一致：服务端报价优先，本地预演兜底。
+      'totalAmount': state.displayQuote.totalAmount.minorUnits,
+      'payAmount': state.displayQuote.paymentAmount.minorUnits,
     };
   }
 
@@ -518,6 +557,11 @@ final class OrderConfirmController
   // ── 内部 ────────────────────────────────────────────────────────────────
 
   void _apply(Result<void> result) {
+    // 提交中/已提交：禁止任何编辑。否则在 _refreshServerQuote 的 await 期间
+    // 点 +/- 会改掉聚合，submit() 捕获的是同一个可变对象，
+    // 造成「页面显示一个价、请求发出另一个价」（P0-09 / 资金差错）。
+    if (state.submitting || state.submitted) return;
+
     if (result.isFailure) {
       state = state.copyWith(
         notice: OrderNotice(
@@ -533,8 +577,15 @@ final class OrderConfirmController
     if (order.lines.isNotEmpty) {
       order.attachQuote(quote);
     }
-    // 订单内容变化后旧的服务端报价立即失效。
-    state = OrderConfirmState(order: order, quote: quote);
+    // 用 copyWith 保留 submitting / submitted / recentEvents / placedOrderNumber；
+    // 历史实现整体 new State 会把 submitting 复位为 false，使第二次 submit()
+    // 得以进入，形成重复建单。订单内容变化后旧的服务端报价立即失效。
+    state = state.copyWith(
+      order: order,
+      quote: quote,
+      serverQuote: null,
+      notice: null,
+    );
     if (_serverMode) {
       Future<void>.microtask(() => _refreshServerQuote());
     }
@@ -568,8 +619,8 @@ final class OrderConfirmController
   }
 }
 
-/// 确认订单页控制器 Provider（按演出 id 分族）。
-final orderConfirmControllerProvider =
-    NotifierProvider.family<OrderConfirmController, OrderConfirmState, String>(
-      OrderConfirmController.new,
-    );
+/// 确认订单页控制器 Provider（按「演出 id + 选票选择」分族）。
+final orderConfirmControllerProvider = NotifierProvider.family<
+    OrderConfirmController, OrderConfirmState, OrderConfirmArgs>(
+  OrderConfirmController.new,
+);

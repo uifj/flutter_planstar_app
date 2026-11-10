@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'application/order_confirm_controller.dart';
+import 'application/order_confirm_selection.dart';
 import 'application/order_draft_seed.dart';
 import 'domain/domain.dart';
 import '../goods/seatmap/seat_selection_providers.dart';
@@ -20,27 +21,48 @@ import 'order_l10n.dart';
 /// 页面自己不做任何业务判断——
 /// 这与企划星 `OrderConfirmActivity`（2,633 行，金额/校验/埋点/跳转混在一起）相反。
 class OrderConfirmPage extends ConsumerWidget {
-  const OrderConfirmPage({super.key, this.showId = '10086'});
+  const OrderConfirmPage({
+    super.key,
+    this.showId = '10086',
+    this.tierIndex,
+    this.quantity,
+    this.sessionIndex,
+  });
 
   /// 企划 id（从路由 query 来；缺省时用演示值）。
   final String showId;
 
+  /// 选票页传入的选择（P0-08）：票档下标 / 张数 / 场次下标。
+  /// 三者都只是索引，金额一律由服务端票档数据重新计算，不接受 query 里的金额。
+  final int? tierIndex;
+  final int? quantity;
+  final int? sessionIndex;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(orderConfirmControllerProvider(showId));
-    final seed = ref.watch(orderDraftSeedProvider(showId));
+    // 把选择并入 family 参数：不可变、可比较，无需全局状态或作用域覆盖。
+    final args = OrderConfirmArgs(
+      showId: showId,
+      selection: OrderConfirmSelection(
+        tierIndex: tierIndex,
+        quantity: quantity,
+        sessionIndex: sessionIndex,
+      ),
+    );
+    final state = ref.watch(orderConfirmControllerProvider(args));
+    final seed = ref.watch(orderDraftSeedProvider(args));
     // 选座结果：与选座页共享同一个 provider family，座席对象完整传递。
     final selectedSeats = ref
         .watch(seatSelectionProvider(showId))
         .selectedSeats;
     final controller = ref.read(
-      orderConfirmControllerProvider(showId).notifier,
+      orderConfirmControllerProvider(args).notifier,
     );
     final theme = Theme.of(context);
 
     // 提交成功后跳转到支付页。
     // 用 ref.listen 而不是在 build 里直接 go：直接 go 会在 build 期间触发路由。
-    ref.listen<OrderConfirmState>(orderConfirmControllerProvider(showId), (
+    ref.listen<OrderConfirmState>(orderConfirmControllerProvider(args), (
       previous,
       next,
     ) {
@@ -78,6 +100,8 @@ class OrderConfirmPage extends ConsumerWidget {
                         _TierRow(
                           offer: offer,
                           quantity: _quantityOf(state.order, offer.id),
+                          // 提交中/已提交禁用票档编辑，避免展示价与请求价脱节。
+                          enabled: !state.submitting && !state.submitted,
                           onIncrease: () => controller.increase(offer.id),
                           onDecrease: () => controller.decrease(offer.id),
                         ),
@@ -214,12 +238,14 @@ class _TierRow extends StatelessWidget {
     required this.quantity,
     required this.onIncrease,
     required this.onDecrease,
+    this.enabled = true,
   });
 
   final TicketTierOffer offer;
   final int quantity;
   final VoidCallback onIncrease;
   final VoidCallback onDecrease;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +264,7 @@ class _TierRow extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: quantity > 0 ? onDecrease : null,
+            onPressed: enabled && quantity > 0 ? onDecrease : null,
             icon: const Icon(LucideIcons.circleMinus),
           ),
           SizedBox(
@@ -246,7 +272,7 @@ class _TierRow extends StatelessWidget {
             child: Text('$quantity', textAlign: TextAlign.center),
           ),
           IconButton(
-            onPressed: onIncrease,
+            onPressed: enabled ? onIncrease : null,
             icon: const Icon(LucideIcons.circlePlus),
           ),
         ],

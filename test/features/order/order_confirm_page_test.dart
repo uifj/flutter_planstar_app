@@ -8,7 +8,12 @@ import 'package:planstar/l10n/generated/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Future<void> pumpPage(WidgetTester tester) async {
+  Future<void> pumpPage(
+    WidgetTester tester, {
+    int? tierIndex,
+    int? quantity,
+    int? sessionIndex,
+  }) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: <Override>[useDemoProvider.overrideWithValue(true)],
@@ -16,7 +21,12 @@ void main() {
           locale: Locale('zh'),
           localizationsDelegates: appLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: OrderConfirmPage(showId: '10086'),
+          home: OrderConfirmPage(
+            showId: '10086',
+            tierIndex: tierIndex,
+            quantity: quantity,
+            sessionIndex: sessionIndex,
+          ),
         ),
       ),
     );
@@ -73,5 +83,15 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('星币 1,360'), findsWidgets);
+  });
+
+  testWidgets('P0-08 回归：选票页 tier=1 & qty=2 透传到确认页', (
+    WidgetTester tester,
+  ) async {
+    await pumpPage(tester, tierIndex: 1, quantity: 2);
+
+    // 内场 B 区 580 × 2 = 1160，而不是默认的「内场 A 区 680」。
+    expect(find.text('星币 1,160'), findsWidgets);
+    expect(find.text('内场 B 区'), findsOneWidget);
   });
 }

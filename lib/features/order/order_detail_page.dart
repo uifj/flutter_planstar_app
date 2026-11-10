@@ -428,7 +428,8 @@ class _ActionBar extends ConsumerWidget {
           onTap: () => context.push(
             '/order/refund'
             '?number=${Uri.encodeComponent(order.number.value)}'
-            '&amount=${order.goodsTotal.minorUnits}',
+            // P1-01：退款可退额按实付金额（paymentAmount）计算，而非票面子小计。
+            '&amount=${order.quote?.paymentAmount.minorUnits ?? order.goodsTotal.minorUnits}',
           ),
         ),
       ],
@@ -466,7 +467,8 @@ class _ActionBar extends ConsumerWidget {
           onTap: () => context.push(
             '/order/refund'
             '?number=${Uri.encodeComponent(order.number.value)}'
-            '&amount=${order.goodsTotal.minorUnits}',
+            // P1-01：退款可退额按实付金额（paymentAmount）计算，而非票面子小计。
+            '&amount=${order.quote?.paymentAmount.minorUnits ?? order.goodsTotal.minorUnits}',
           ),
         ),
       ],

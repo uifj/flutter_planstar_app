@@ -202,7 +202,9 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
     context.push(
       '/order/pay'
       '?number=${Uri.encodeComponent(order.number.value)}'
-      '&amount=${order.goodsTotal.minorUnits}'
+      // P1-01：应付金额取报价快照的 paymentAmount（含折扣/礼品卡/运费/加速包），
+      // goodsTotal 只是票面子小计，用它跳转支付页会多付或少付。
+      '&amount=${order.quote?.paymentAmount.minorUnits ?? order.goodsTotal.minorUnits}'
       '&title=${Uri.encodeComponent(show?.title ?? '')}',
     );
   }

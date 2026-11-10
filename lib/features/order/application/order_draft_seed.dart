@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/network/network_providers.dart';
 import '../../catalog/application/catalog_providers.dart';
 import '../domain/domain.dart';
+import 'order_confirm_selection.dart';
 
 /// 一个可选票档（展示 + 下单用）。
 final class TicketTierOffer {
@@ -72,10 +73,11 @@ final class OrderDraftSeed {
 ///
 /// demo 模式保留原演示场次；真实模式从已加载的演出映射票档和首个场次，
 /// 详情尚未返回时给一个空票档种子，由 UI 展示不可提交状态。
-final orderDraftSeedProvider = Provider.family<OrderDraftSeed, String>((
+final orderDraftSeedProvider = Provider.family<OrderDraftSeed, OrderConfirmArgs>((
   ref,
-  showId,
+  args,
 ) {
+  final showId = args.showId;
   if (ref.watch(dataSourcePolicyProvider).isDemo) return _demoSeed(showId);
 
   final show = ref.watch(showFullProvider(showId));
@@ -89,10 +91,20 @@ final orderDraftSeedProvider = Provider.family<OrderDraftSeed, String>((
         price: show.tiers[i].price,
       ),
   ];
-  final session = show.sessions.isEmpty ? null : show.sessions.first;
+  // 选票页指定的场次：只在下标合法时生效，避免深链参数注入导致越界。
+  final requestedSession = args.selection.sessionIndex;
+  final resolvedSessionIndex =
+      (requestedSession != null &&
+          requestedSession >= 0 &&
+          requestedSession < show.sessions.length)
+      ? requestedSession
+      : 0;
+  final session = show.sessions.isEmpty
+      ? null
+      : show.sessions[resolvedSessionIndex];
   return OrderDraftSeed(
     showId: ShowId(showId),
-    sessionId: SessionId('${show.id}-0'),
+    sessionId: SessionId('${show.id}-$resolvedSessionIndex'),
     showTitle: show.title,
     sessionLabel: session == null
         ? show.firstSessionAt.toString()
