@@ -1,5 +1,5 @@
 name: planstar
-description: "企划星 · Planstar — 演出票务 Flutter 应用（Clean DDD + Riverpod + GoRouter）。"
+description: "企划星 · Planstar — 做项目前由网友投票的投票决策类应用（Clean DDD + Riverpod + GoRouter）。"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

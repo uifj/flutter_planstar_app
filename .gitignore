@@ -74,5 +74,25 @@ local.properties
 /*.png
 /*.jpg
 
+# Signing / keystore / certificates — never commit (android/.gitignore 已覆盖 key.properties)
+*.jks
+*.keystore
+*.pem
+*.p12
+*.pkcs12
+
+# Local env files (only *.example committed; dart-define 是首选，这里仅防误提交)
+.env
+.env.local
+.env.prod
+.env*.bak
+.env*.old
+.env*.tmp
+
 # Local AI assistant working memory - keep on disk, never commit
 .workbuddy-ai/
+
+# Flutter version manager / IDE artifacts
+.fvm/
+.trae/
+.history/
