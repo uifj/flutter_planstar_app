@@ -95,169 +95,169 @@ abstract class SearchLocalizations {
     Locale('zh')
   ];
 
-  /// 来源：lib/features/search/application/search_providers.dart:22；原文：'游戏企划'
+  /// No description provided for @searchProviders_22.
   ///
   /// In zh, this message translates to:
   /// **'游戏企划'**
   String get searchProviders_22;
 
-  /// 来源：lib/features/search/application/search_providers.dart:22；原文：'同人画集'
+  /// No description provided for @searchProviders_22_2.
   ///
   /// In zh, this message translates to:
   /// **'同人画集'**
   String get searchProviders_22_2;
 
-  /// 来源：lib/features/search/application/search_providers.dart:22；原文：'面经企划'
+  /// No description provided for @searchProviders_22_3.
   ///
   /// In zh, this message translates to:
   /// **'面经企划'**
   String get searchProviders_22_3;
 
-  /// 来源：lib/features/search/application/search_providers.dart:55；原文：'游戏企划'
+  /// No description provided for @searchProviders_55.
   ///
   /// In zh, this message translates to:
   /// **'游戏企划'**
   String get searchProviders_55;
 
-  /// 来源：lib/features/search/application/search_providers.dart:56；原文：'同人企划'
+  /// No description provided for @searchProviders_56.
   ///
   /// In zh, this message translates to:
   /// **'同人企划'**
   String get searchProviders_56;
 
-  /// 来源：lib/features/search/application/search_providers.dart:57；原文：'画集设定集'
+  /// No description provided for @searchProviders_57.
   ///
   /// In zh, this message translates to:
   /// **'画集设定集'**
   String get searchProviders_57;
 
-  /// 来源：lib/features/search/application/search_providers.dart:58；原文：'面经企划'
+  /// No description provided for @searchProviders_58.
   ///
   /// In zh, this message translates to:
   /// **'面经企划'**
   String get searchProviders_58;
 
-  /// 来源：lib/features/search/application/search_providers.dart:59；原文：'桌游'
+  /// No description provided for @searchProviders_59.
   ///
   /// In zh, this message translates to:
   /// **'桌游'**
   String get searchProviders_59;
 
-  /// 来源：lib/features/search/application/search_providers.dart:60；原文：'音乐影像'
+  /// No description provided for @searchProviders_60.
   ///
   /// In zh, this message translates to:
   /// **'音乐影像'**
   String get searchProviders_60;
 
-  /// 来源：lib/features/search/application/search_providers.dart:61；原文：'小说企划'
+  /// No description provided for @searchProviders_61.
   ///
   /// In zh, this message translates to:
   /// **'小说企划'**
   String get searchProviders_61;
 
-  /// 来源：lib/features/search/application/search_providers.dart:62；原文：'秋招'
+  /// No description provided for @searchProviders_62.
   ///
   /// In zh, this message translates to:
   /// **'秋招'**
   String get searchProviders_62;
 
-  /// 来源：lib/features/search/domain/search_models.dart:14；原文：'全部'
+  /// No description provided for @searchModels_14.
   ///
   /// In zh, this message translates to:
   /// **'全部'**
   String get searchModels_14;
 
-  /// 来源：lib/features/search/domain/search_models.dart:15；原文：'企划'
+  /// No description provided for @searchModels_15.
   ///
   /// In zh, this message translates to:
   /// **'企划'**
   String get searchModels_15;
 
-  /// 来源：lib/features/search/domain/search_models.dart:16；原文：'动态'
+  /// No description provided for @searchModels_16.
   ///
   /// In zh, this message translates to:
   /// **'动态'**
   String get searchModels_16;
 
-  /// 来源：lib/features/search/domain/search_models.dart:43；原文：'${(hitCount / 10000).toStringAsFixed(1)}万'
+  /// No description provided for @searchModels_43.
   ///
   /// In zh, this message translates to:
   /// **'{toStringAsFixed}万'**
   String searchModels_43(Object toStringAsFixed);
 
-  /// 来源：lib/features/search/search_page.dart:98；原文：'搜索企划、创作者、品类'
+  /// No description provided for @searchPage_98.
   ///
   /// In zh, this message translates to:
   /// **'搜索企划、创作者、品类'**
   String get searchPage_98;
 
-  /// 来源：lib/features/search/search_page.dart:132；原文：'搜索历史'
+  /// No description provided for @searchPage_132.
   ///
   /// In zh, this message translates to:
   /// **'搜索历史'**
   String get searchPage_132;
 
-  /// 来源：lib/features/search/search_page.dart:133；原文：'清空'
+  /// No description provided for @searchPage_133.
   ///
   /// In zh, this message translates to:
   /// **'清空'**
   String get searchPage_133;
 
-  /// 来源：lib/features/search/search_page.dart:150；原文：'已删除「$word」'
+  /// No description provided for @searchPage_150.
   ///
   /// In zh, this message translates to:
   /// **'已删除「{word}」'**
   String searchPage_150(Object word);
 
-  /// 来源：lib/features/search/search_page.dart:171；原文：'长按可删除'
+  /// No description provided for @searchPage_171.
   ///
   /// In zh, this message translates to:
   /// **'长按可删除'**
   String get searchPage_171;
 
-  /// 来源：lib/features/search/search_page.dart:187；原文：'热搜榜'
+  /// No description provided for @searchPage_187.
   ///
   /// In zh, this message translates to:
   /// **'热搜榜'**
   String get searchPage_187;
 
-  /// 来源：lib/features/search/search_page.dart:219；原文：'热'
+  /// No description provided for @searchPage_219.
   ///
   /// In zh, this message translates to:
   /// **'热'**
   String get searchPage_219;
 
-  /// 来源：lib/features/search/search_page.dart:262；原文：'搜索 '
+  /// No description provided for @searchPage_262.
   ///
   /// In zh, this message translates to:
   /// **'搜索 '**
   String get searchPage_262;
 
-  /// 来源：lib/features/search/search_page.dart:325；原文：'没有匹配的企划，点上面「搜索」看全部结果'
+  /// No description provided for @searchPage_325.
   ///
   /// In zh, this message translates to:
   /// **'没有匹配的企划，点上面「搜索」看全部结果'**
   String get searchPage_325;
 
-  /// 来源：lib/features/search/search_result_page.dart:125；原文：'企划'
+  /// No description provided for @searchResultPage_125.
   ///
   /// In zh, this message translates to:
   /// **'企划'**
   String get searchResultPage_125;
 
-  /// 来源：lib/features/search/search_result_page.dart:129；原文：'查看全部'
+  /// No description provided for @searchResultPage_129.
   ///
   /// In zh, this message translates to:
   /// **'查看全部'**
   String get searchResultPage_129;
 
-  /// 来源：lib/features/search/search_result_page.dart:142；原文：'动态'
+  /// No description provided for @searchResultPage_142.
   ///
   /// In zh, this message translates to:
   /// **'动态'**
   String get searchResultPage_142;
 
-  /// 来源：lib/features/search/search_result_page.dart:146；原文：'查看全部'
+  /// No description provided for @searchResultPage_146.
   ///
   /// In zh, this message translates to:
   /// **'查看全部'**

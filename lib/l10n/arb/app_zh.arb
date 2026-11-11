@@ -19,67 +19,19 @@
   "stateUnauthorized": "登录已失效，请重新登录",
   "stateOfflineCache": "当前展示的是离线缓存内容",
   "splashPage_129": "让好企划被看见",
-  "@splashPage_129": {
-    "description": "来源：lib/features/app/splash_page.dart:129；原文：'让看演出更简单'"
-  },
   "splashPage_146": "企划星科技 © 2026–2027",
-  "@splashPage_146": {
-    "description": "来源：lib/features/app/splash_page.dart:146；原文：'企划星科技 © 2026–2027'"
-  },
   "splashPage_180": "隐私政策与用户协议",
-  "@splashPage_180": {
-    "description": "来源：lib/features/app/splash_page.dart:180；原文：'隐私政策与用户协议'"
-  },
   "splashPage_187": "欢迎使用企划星。为了保障您的合法权益，请在使用前阅读并同意以下协议：",
-  "@splashPage_187": {
-    "description": "来源：lib/features/app/splash_page.dart:187；原文：'欢迎使用企划星。为了保障您的合法权益，请在使用前阅读并同意以下协议：'"
-  },
   "splashPage_192": "《用户协议》：规定了您与企划星之间的权利义务关系。",
-  "@splashPage_192": {
-    "description": "来源：lib/features/app/splash_page.dart:192；原文：'《用户协议》：规定了您与企划星之间的权利义务关系。'"
-  },
   "splashPage_195": "《隐私政策》：说明了企划星如何收集、使用和保护您的个人信息。",
-  "@splashPage_195": {
-    "description": "来源：lib/features/app/splash_page.dart:195；原文：'《隐私政策》：说明了企划星如何收集、使用和保护您的个人信息。'"
-  },
   "splashPage_199": "点击「同意并继续」表示您已阅读并同意以上协议。",
-  "@splashPage_199": {
-    "description": "来源：lib/features/app/splash_page.dart:199；原文：'点击「同意并继续」表示您已阅读并同意以上协议。'"
-  },
   "splashPage_208": "不同意",
-  "@splashPage_208": {
-    "description": "来源：lib/features/app/splash_page.dart:208；原文：'不同意'"
-  },
   "splashPage_212": "同意并继续",
-  "@splashPage_212": {
-    "description": "来源：lib/features/app/splash_page.dart:212；原文：'同意并继续'"
-  },
   "psEmptyState_32": "没有找到相关企划",
-  "@psEmptyState_32": {
-    "description": "来源：lib/shared/ui/ps_empty_state.dart:32；原文：'没有找到相关企划'"
-  },
   "psEmptyState_33": "换个关键词或品类试试",
-  "@psEmptyState_33": {
-    "description": "来源：lib/shared/ui/ps_empty_state.dart:33；原文：'换个关键词或品类试试'"
-  },
   "psEmptyState_35": "重新搜索",
-  "@psEmptyState_35": {
-    "description": "来源：lib/shared/ui/ps_empty_state.dart:35；原文：'重新搜索'"
-  },
   "psPoster_136": "企",
-  "@psPoster_136": {
-    "description": "来源：lib/shared/ui/ps_poster.dart:136；原文：'企'"
-  },
   "psSearchBar_25": "搜索企划、创作者、品类",
-  "@psSearchBar_25": {
-    "description": "来源：lib/shared/ui/ps_search_bar.dart:25；原文：'搜索企划、创作者、品类'"
-  },
   "psSearchBar_104": "搜索",
-  "@psSearchBar_104": {
-    "description": "来源：lib/shared/ui/ps_search_bar.dart:104；原文：'搜索'"
-  },
-  "psSectionHeader_16": "全部",
-  "@psSectionHeader_16": {
-    "description": "来源：lib/shared/ui/ps_section_header.dart:16；原文：'全部'"
-  }
+  "psSectionHeader_16": "全部"
 }

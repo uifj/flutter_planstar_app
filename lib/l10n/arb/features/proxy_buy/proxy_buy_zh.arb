@@ -1,56 +1,19 @@
 {
   "@@locale": "zh",
   "proxyBuy_142": "待代购",
-  "@proxyBuy_142": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy.dart:142；原文：'待抢票'"
-  },
   "proxyBuy_144": "代购中",
-  "@proxyBuy_144": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy.dart:144；原文：'抢票中'"
-  },
   "proxyBuy_146": "代购成功",
-  "@proxyBuy_146": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy.dart:146；原文：'抢票成功'"
-  },
   "proxyBuy_148": "代购失败",
-  "@proxyBuy_148": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy.dart:148；原文：'抢票失败'"
-  },
   "proxyBuy_150": "已取消",
-  "@proxyBuy_150": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy.dart:150；原文：'已取消'"
-  },
   "proxyBuyPage_30": "代购服务",
-  "@proxyBuyPage_30": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:30；原文：'代抢服务'"
-  },
   "proxyBuyPage_36": "我的代购订单",
-  "@proxyBuyPage_36": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:36；原文：'我的代抢订单'"
-  },
   "proxyBuyPage_39": "暂无代购订单",
-  "@proxyBuyPage_39": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:39；原文：'暂无代抢订单'"
-  },
   "proxyBuyPage_40": "参与代购后订单会显示在这里",
-  "@proxyBuyPage_40": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:40；原文：'参与代抢后订单会显示在这里'"
-  },
   "proxyBuyPage_81": "代购规则",
-  "@proxyBuyPage_81": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:81；原文：'代抢规则'"
-  },
   "proxyBuyPage_98": "含赔付",
-  "@proxyBuyPage_98": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:98；原文：'含赔付'"
-  },
   "proxyBuyPage_118": "代购服务费：",
-  "@proxyBuyPage_118": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:118；原文：'代抢服务费：'"
-  },
   "proxyBuyPage_122": "{format}/份",
   "@proxyBuyPage_122": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:122；原文：'${info.proxyBuyFee.format()}/张'",
     "placeholders": {
       "format": {
         "type": "Object"
@@ -58,24 +21,11 @@
     }
   },
   "proxyBuyPage_165": "选择截止时间",
-  "@proxyBuyPage_165": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:165；原文：'选择截止时间'"
-  },
   "proxyBuyPage_303": "活动场地",
-  "@proxyBuyPage_303": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:303；原文：'场馆'"
-  },
   "proxyBuyPage_305": "活动时间",
-  "@proxyBuyPage_305": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:305；原文：'场次'"
-  },
   "proxyBuyPage_307": "截止",
-  "@proxyBuyPage_307": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:307；原文：'截止'"
-  },
   "proxyBuyPage_314": "{quantity}份 × {format}",
   "@proxyBuyPage_314": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:314；原文：'${order.quantity}张 × ${order.ticketPrice.format()}'",
     "placeholders": {
       "quantity": {
         "type": "Object"
@@ -87,15 +37,11 @@
   },
   "proxyBuyPage_322": "代购费 {format}/份",
   "@proxyBuyPage_322": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:322；原文：'代抢费 ${order.proxyBuyFee.format()}/张'",
     "placeholders": {
       "format": {
         "type": "Object"
       }
     }
   },
-  "proxyBuyPage_334": "合计 ",
-  "@proxyBuyPage_334": {
-    "description": "来源：lib/features/proxy_buy/proxy_buy_page.dart:334；原文：'合计 '"
-  }
+  "proxyBuyPage_334": "合计 "
 }

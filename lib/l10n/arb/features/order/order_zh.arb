@@ -9,32 +9,13 @@
   "orderStatusFinished": "已完成",
   "orderStatusRefund": "已退款",
   "orderConfirmController_117": "回报档位不存在",
-  "@orderConfirmController_117": {
-    "description": "来源：lib/features/order/application/order_confirm_controller.dart:117；原文：'回报档位不存在'"
-  },
   "orderConfirmController_145": "本单没有可用营销活动",
-  "@orderConfirmController_145": {
-    "description": "来源：lib/features/order/application/order_confirm_controller.dart:145；原文：'本单没有可用营销活动'"
-  },
   "orderConfirmController_156": "本单没有可用优惠券",
-  "@orderConfirmController_156": {
-    "description": "来源：lib/features/order/application/order_confirm_controller.dart:156；原文：'本单没有可用优惠券'"
-  },
   "orderConfirmController_169": "本单没有可用礼品卡",
-  "@orderConfirmController_169": {
-    "description": "来源：lib/features/order/application/order_confirm_controller.dart:169；原文：'本单没有可用礼品卡'"
-  },
   "orderConfirmController_183": "本企划不提供加急服务",
-  "@orderConfirmController_183": {
-    "description": "来源：lib/features/order/application/order_confirm_controller.dart:183；原文：'本企划不提供加急服务'"
-  },
   "orderConfirmController_220": "张支持人",
-  "@orderConfirmController_220": {
-    "description": "来源：lib/features/order/application/order_confirm_controller.dart:220；原文：'张支持人'"
-  },
   "orderConfirmController_246": "提交失败：{message}",
   "@orderConfirmController_246": {
-    "description": "来源：lib/features/order/application/order_confirm_controller.dart:246；原文：'提交失败：${saved.failure!.message}'",
     "placeholders": {
       "message": {
         "type": "Object"
@@ -43,7 +24,6 @@
   },
   "orderConfirmController_257": "支持已提交：{value}",
   "@orderConfirmController_257": {
-    "description": "来源：lib/features/order/application/order_confirm_controller.dart:257；原文：'支持已提交：${order.number.value}'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -51,28 +31,12 @@
     }
   },
   "orderListController_27": "全部",
-  "@orderListController_27": {
-    "description": "来源：lib/features/order/application/order_list_controller.dart:27；原文：'全部'"
-  },
   "orderListController_31": "待评价",
-  "@orderListController_31": {
-    "description": "来源：lib/features/order/application/order_list_controller.dart:31；原文：'待评价'"
-  },
   "ticketOrder_81": "实名支持人数量不能为负",
-  "@ticketOrder_81": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:81；原文：'实名支持人数量不能为负'"
-  },
   "ticketOrder_84": "支付时限必须为正",
-  "@ticketOrder_84": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:84；原文：'支付时限必须为正'"
-  },
   "ticketOrder_222": "回报档位价格已变化，请重新确认支持",
-  "@ticketOrder_222": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:222；原文：'回报档位价格已变化，请重新确认支持'"
-  },
   "ticketOrder_238": "回报档位不存在：{value}",
   "@ticketOrder_238": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:238；原文：'回报档位不存在：${tierId.value}'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -81,7 +45,6 @@
   },
   "ticketOrder_263": "回报档位不存在：{value}",
   "@ticketOrder_263": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:263；原文：'回报档位不存在：${tierId.value}'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -90,7 +53,6 @@
   },
   "ticketOrder_296": "加急服务份数（{units}）不能超过支持份数（{value}）",
   "@ticketOrder_296": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:296；原文：'加急服务份数（${pack.units}）不能超过支持份数（${totalTickets.value}）'",
     "placeholders": {
       "units": {
         "type": "Object"
@@ -101,16 +63,9 @@
     }
   },
   "ticketOrder_329": "同一支持人不能重复选择",
-  "@ticketOrder_329": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:329；原文：'同一支持人不能重复选择'"
-  },
   "ticketOrder_332": "本企划无需实名支持人",
-  "@ticketOrder_332": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:332；原文：'本企划无需实名支持人'"
-  },
   "ticketOrder_337": "本单需选择 {requiredVisitorCount} 位支持人，已选 {length} 位",
   "@ticketOrder_337": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:337；原文：'本单需选择 $requiredVisitorCount 位支持人，已选 ${unique.length} 位'",
     "placeholders": {
       "requiredVisitorCount": {
         "type": "Object"
@@ -121,20 +76,10 @@
     }
   },
   "ticketOrder_373": "请先选择回报档位",
-  "@ticketOrder_373": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:373；原文：'请先选择回报档位'"
-  },
   "ticketOrder_376": "报价与当前支持内容不一致，请重新计算",
-  "@ticketOrder_376": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:376；原文：'报价与当前支持内容不一致，请重新计算'"
-  },
   "ticketOrder_391": "请先选择回报档位",
-  "@ticketOrder_391": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:391；原文：'请先选择回报档位'"
-  },
   "ticketOrder_396": "请阅读并勾选{agreementTitle}",
   "@ticketOrder_396": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:396；原文：'请阅读并勾选${buyType.agreementTitle}'",
     "placeholders": {
       "agreementTitle": {
         "type": "Object"
@@ -142,16 +87,9 @@
     }
   },
   "ticketOrder_402": "支持金额尚未计算",
-  "@ticketOrder_402": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:402；原文：'支持金额尚未计算'"
-  },
   "ticketOrder_405": "支持内容已变化，请重新确认金额",
-  "@ticketOrder_405": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:405；原文：'支持内容已变化，请重新确认金额'"
-  },
   "ticketOrder_410": "请选择 {requiredVisitorCount} 位支持人",
   "@ticketOrder_410": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:410；原文：'请选择 $requiredVisitorCount 位支持人'",
     "placeholders": {
       "requiredVisitorCount": {
         "type": "Object"
@@ -160,7 +98,6 @@
   },
   "ticketOrder_440": "当前状态（{label}）不可支付",
   "@ticketOrder_440": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:440；原文：'当前状态（${_status.label}）不可支付'",
     "placeholders": {
       "label": {
         "type": "Object"
@@ -168,28 +105,12 @@
     }
   },
   "ticketOrder_444": "支持金额缺失，无法确认支付结果",
-  "@ticketOrder_444": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:444；原文：'支持金额缺失，无法确认支付结果'"
-  },
   "ticketOrder_486": "关闭原因不能为空",
-  "@ticketOrder_486": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:486；原文：'关闭原因不能为空'"
-  },
   "ticketOrder_510": "未支付的支持不能退款",
-  "@ticketOrder_510": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:510；原文：'未支付的支持不能退款'"
-  },
   "ticketOrder_534": "支付超时，支持已取消",
-  "@ticketOrder_534": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:534；原文：'支付超时，支持已取消'"
-  },
   "ticketOrder_553": "支持已提交，不能再修改",
-  "@ticketOrder_553": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:553；原文：'支持已提交，不能再修改'"
-  },
   "ticketOrder_559": "支持状态不允许从「{label}」变为「{label2}」",
   "@ticketOrder_559": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:559；原文：'支持状态不允许从「${_status.label}」变为「${next.label}」'",
     "placeholders": {
       "label": {
         "type": "Object"
@@ -200,12 +121,8 @@
     }
   },
   "orderLifecycleEvents_22": "超时",
-  "@orderLifecycleEvents_22": {
-    "description": "来源：lib/features/order/domain/events/order_lifecycle_events.dart:22；原文：'超时'"
-  },
   "orderLifecycleEvents_48": "order.shipped({value}, {trackingNumber})",
   "@orderLifecycleEvents_48": {
-    "description": "来源：lib/features/order/domain/events/order_lifecycle_events.dart:48；原文：'order.shipped(${orderId.value}, ${trackingNumber ?? '无单号'})'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -217,7 +134,6 @@
   },
   "orderPlaced_42": "order.placed({value}, 支持金额 {format})",
   "@orderPlaced_42": {
-    "description": "来源：lib/features/order/domain/events/order_placed.dart:42；原文：'order.placed(${orderNumber.value}, 支持金额 ${paymentAmount.format()})'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -228,12 +144,8 @@
     }
   },
   "purchaseLimitPolicy_30": "不限支持",
-  "@purchaseLimitPolicy_30": {
-    "description": "来源：lib/features/order/domain/policies/purchase_limit_policy.dart:30；原文：'不限支持'"
-  },
   "purchaseLimitPolicy_32": "每单限 {value} 份",
   "@purchaseLimitPolicy_32": {
-    "description": "来源：lib/features/order/domain/policies/purchase_limit_policy.dart:32；原文：'每单限 ${maxPerOrder!.value} 份'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -242,7 +154,6 @@
   },
   "purchaseLimitPolicy_33": "每人限 {value} 份",
   "@purchaseLimitPolicy_33": {
-    "description": "来源：lib/features/order/domain/policies/purchase_limit_policy.dart:33；原文：'每人限 ${maxPerUser!.value} 份'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -251,7 +162,6 @@
   },
   "purchaseLimitPolicy_57": "每单最多支持 {value} 份",
   "@purchaseLimitPolicy_57": {
-    "description": "来源：lib/features/order/domain/policies/purchase_limit_policy.dart:57；原文：'每单最多支持 ${max.value} 份'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -260,7 +170,6 @@
   },
   "purchaseLimitPolicy_81": "每人限购 {value} 份，您已支持 {value2} 份",
   "@purchaseLimitPolicy_81": {
-    "description": "来源：lib/features/order/domain/policies/purchase_limit_policy.dart:81；原文：'每人限购 ${max.value} 份，您已支持 ${alreadyPurchased.value} 份'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -272,7 +181,6 @@
   },
   "purchaseLimitPolicy_83": "每人限购 {value} 份，您还可支持 {remaining} 份",
   "@purchaseLimitPolicy_83": {
-    "description": "来源：lib/features/order/domain/policies/purchase_limit_policy.dart:83；原文：'每人限购 ${max.value} 份，您还可支持 $remaining 份'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -283,44 +191,16 @@
     }
   },
   "orderQuote_107": "支持总额",
-  "@orderQuote_107": {
-    "description": "来源：lib/features/order/domain/services/order_quote.dart:107；原文：'支持总额'"
-  },
   "orderQuote_108": "运费",
-  "@orderQuote_108": {
-    "description": "来源：lib/features/order/domain/services/order_quote.dart:108；原文：'运费'"
-  },
   "orderQuote_109": "拆单费",
-  "@orderQuote_109": {
-    "description": "来源：lib/features/order/domain/services/order_quote.dart:109；原文：'拆单费'"
-  },
   "orderQuote_111": "优惠",
-  "@orderQuote_111": {
-    "description": "来源：lib/features/order/domain/services/order_quote.dart:111；原文：'优惠'"
-  },
   "orderQuote_113": "礼品卡",
-  "@orderQuote_113": {
-    "description": "来源：lib/features/order/domain/services/order_quote.dart:113；原文：'礼品卡'"
-  },
   "orderQuote_114": "加急服务",
-  "@orderQuote_114": {
-    "description": "来源：lib/features/order/domain/services/order_quote.dart:114；原文：'加急服务'"
-  },
   "delivery_78": "电子回报凭证",
-  "@delivery_78": {
-    "description": "来源：lib/features/order/domain/value_objects/delivery.dart:78；原文：'电子回报凭证'"
-  },
   "delivery_81": "快递配送",
-  "@delivery_81": {
-    "description": "来源：lib/features/order/domain/value_objects/delivery.dart:81；原文：'快递配送'"
-  },
   "delivery_84": "现场自取",
-  "@delivery_84": {
-    "description": "来源：lib/features/order/domain/value_objects/delivery.dart:84；原文：'现场自取'"
-  },
   "delivery_136": "{method}（{postage}）",
   "@delivery_136": {
-    "description": "来源：lib/features/order/order_l10n.dart:68；原文：'${method.labelOf(context)}（${postage.format()}）'",
     "placeholders": {
       "method": {
         "type": "Object"
@@ -332,7 +212,6 @@
   },
   "discount_71": "-{percent}%（封顶 {format}）",
   "@discount_71": {
-    "description": "来源：lib/features/order/domain/value_objects/discount.dart:71；原文：'-$percent%（封顶 ${ceiling.format()}）'",
     "placeholders": {
       "percent": {
         "type": "Object"
@@ -343,12 +222,8 @@
     }
   },
   "discount_122": "不使用优惠",
-  "@discount_122": {
-    "description": "来源：lib/features/order/domain/value_objects/discount.dart:122；原文：'不使用优惠'"
-  },
   "discount_139": "营销活动 {describe}",
   "@discount_139": {
-    "description": "来源：lib/features/order/domain/value_objects/discount.dart:139；原文：'营销活动 ${discount.describe()}'",
     "placeholders": {
       "describe": {
         "type": "Object"
@@ -357,7 +232,6 @@
   },
   "discount_156": "优惠券 {describe}",
   "@discount_156": {
-    "description": "来源：lib/features/order/domain/value_objects/discount.dart:156；原文：'优惠券 ${discount.describe()}'",
     "placeholders": {
       "describe": {
         "type": "Object"
@@ -365,20 +239,10 @@
     }
   },
   "orderStatus_24": "待提交",
-  "@orderStatus_24": {
-    "description": "来源：lib/features/order/domain/value_objects/order_status.dart:24；原文：'待提交'"
-  },
   "orderStatus_40": "已取消",
-  "@orderStatus_40": {
-    "description": "来源：lib/features/order/domain/value_objects/order_status.dart:40；原文：'已取消'"
-  },
   "orderStatus_43": "已退款",
-  "@orderStatus_43": {
-    "description": "来源：lib/features/order/domain/value_objects/order_status.dart:43；原文：'已退款'"
-  },
   "orderStatus_85": "未知支持状态编码：{code}",
   "@orderStatus_85": {
-    "description": "来源：lib/features/order/domain/value_objects/order_status.dart:85；原文：'未知支持状态编码：$code'",
     "placeholders": {
       "code": {
         "type": "Object"
@@ -386,28 +250,12 @@
     }
   },
   "orderType_10": "普通支持",
-  "@orderType_10": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:10；原文：'普通支持'"
-  },
   "orderType_13": "拼团",
-  "@orderType_13": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:13；原文：'拼团'"
-  },
   "orderType_16": "限时支持",
-  "@orderType_16": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:16；原文：'限时支持'"
-  },
   "orderType_19": "会员充值",
-  "@orderType_19": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:19；原文：'会员充值'"
-  },
   "orderType_22": "加急服务",
-  "@orderType_22": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:22；原文：'加急服务'"
-  },
   "orderType_36": "未知支持类型：{code}",
   "@orderType_36": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:36；原文：'未知支持类型：$code'",
     "placeholders": {
       "code": {
         "type": "Object"
@@ -415,24 +263,11 @@
     }
   },
   "orderType_49": "普通支持",
-  "@orderType_49": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:49；原文：'普通支持'"
-  },
   "orderType_49_2": "《支持服务协议》",
-  "@orderType_49_2": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:49；原文：'《支持服务协议》'"
-  },
   "orderType_52": "代支持",
-  "@orderType_52": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:52；原文：'代支持'"
-  },
   "orderType_52_2": "《代支持服务协议》",
-  "@orderType_52_2": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:52；原文：'《代支持服务协议》'"
-  },
   "orderType_69": "未知支持方式：{code}",
   "@orderType_69": {
-    "description": "来源：lib/features/order/domain/value_objects/order_type.dart:69；原文：'未知支持方式：$code'",
     "placeholders": {
       "code": {
         "type": "Object"
@@ -440,28 +275,12 @@
     }
   },
   "paymentChannel_10": "微信支付",
-  "@paymentChannel_10": {
-    "description": "来源：lib/features/order/domain/value_objects/payment_channel.dart:10；原文：'微信支付'"
-  },
   "paymentChannel_13": "支付宝",
-  "@paymentChannel_13": {
-    "description": "来源：lib/features/order/domain/value_objects/payment_channel.dart:13；原文：'支付宝'"
-  },
   "paymentChannel_16": "银行卡",
-  "@paymentChannel_16": {
-    "description": "来源：lib/features/order/domain/value_objects/payment_channel.dart:16；原文：'银行卡'"
-  },
   "paymentChannel_19": "信用付",
-  "@paymentChannel_19": {
-    "description": "来源：lib/features/order/domain/value_objects/payment_channel.dart:19；原文：'信用付'"
-  },
   "paymentChannel_22": "余额支付",
-  "@paymentChannel_22": {
-    "description": "来源：lib/features/order/domain/value_objects/payment_channel.dart:22；原文：'余额支付'"
-  },
   "paymentChannel_36": "未知支付渠道：{code}",
   "@paymentChannel_36": {
-    "description": "来源：lib/features/order/domain/value_objects/payment_channel.dart:36；原文：'未知支付渠道：$code'",
     "placeholders": {
       "code": {
         "type": "Object"
@@ -470,7 +289,6 @@
   },
   "speedPack_61": "加急服务 {units} 份（现金 {format} / 余额 {format2}）",
   "@speedPack_61": {
-    "description": "来源：lib/features/order/domain/value_objects/speed_pack.dart:61；原文：'加急服务 $units 份（现金 ${cashPortion.format()} / 余额 ${balancePortion.format()}）'",
     "placeholders": {
       "units": {
         "type": "Object"
@@ -485,7 +303,6 @@
   },
   "speedPack_85": "礼品卡 {value}（余额 {format}）",
   "@speedPack_85": {
-    "description": "来源：lib/features/order/domain/value_objects/speed_pack.dart:85；原文：'礼品卡 ${id.value}（余额 ${balance.format()}）'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -496,52 +313,18 @@
     }
   },
   "visitor_7": "身份证",
-  "@visitor_7": {
-    "description": "来源：lib/features/order/domain/value_objects/visitor.dart:7；原文：'身份证'"
-  },
   "visitor_8": "护照",
-  "@visitor_8": {
-    "description": "来源：lib/features/order/domain/value_objects/visitor.dart:8；原文：'护照'"
-  },
   "visitor_9": "港澳通行证",
-  "@visitor_9": {
-    "description": "来源：lib/features/order/domain/value_objects/visitor.dart:9；原文：'港澳通行证'"
-  },
   "visitor_10": "台湾通行证",
-  "@visitor_10": {
-    "description": "来源：lib/features/order/domain/value_objects/visitor.dart:10；原文：'台湾通行证'"
-  },
   "visitor_11": "港澳台居住证",
-  "@visitor_11": {
-    "description": "来源：lib/features/order/domain/value_objects/visitor.dart:11；原文：'港澳台居住证'"
-  },
   "orderConfirmPage_48": "确认支持",
-  "@orderConfirmPage_48": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:48；原文：'确认支持'"
-  },
   "orderConfirmPage_59": "选择回报档位",
-  "@orderConfirmPage_59": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:59；原文：'选择档位'"
-  },
   "orderConfirmPage_73": "优惠",
-  "@orderConfirmPage_73": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:73；原文：'优惠'"
-  },
   "orderConfirmPage_79": "不使用优惠",
-  "@orderConfirmPage_79": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:79；原文：'不使用优惠'"
-  },
   "orderConfirmPage_99": "其他抵扣",
-  "@orderConfirmPage_99": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:99；原文：'其他抵扣'"
-  },
   "orderConfirmPage_107": "礼品卡（本单不可用）",
-  "@orderConfirmPage_107": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:107；原文：'礼品卡（本单不可用）'"
-  },
   "orderConfirmPage_109": "礼品卡（余额 {format}）",
   "@orderConfirmPage_109": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:109；原文：'礼品卡（余额 ${seed.giftCard!.balance.format()}）'",
     "placeholders": {
       "format": {
         "type": "Object"
@@ -549,12 +332,8 @@
     }
   },
   "orderConfirmPage_123": "加急服务（本企划不提供）",
-  "@orderConfirmPage_123": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:123；原文：'加急服务（本企划不提供）'"
-  },
   "orderConfirmPage_125": "加急服务（{format}/份）",
   "@orderConfirmPage_125": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:125；原文：'加急服务（${seed.speedPackUnitPrice!.format()}/份）'",
     "placeholders": {
       "format": {
         "type": "Object"
@@ -562,12 +341,8 @@
     }
   },
   "orderConfirmPage_138": "实名支持人",
-  "@orderConfirmPage_138": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:138；原文：'实名支持人'"
-  },
   "orderConfirmPage_143": "选择支持人（需 {requiredVisitorCount} 位）",
   "@orderConfirmPage_143": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:143；原文：'选择支持人（需 ${state.order.requiredVisitorCount} 位）'",
     "placeholders": {
       "requiredVisitorCount": {
         "type": "Object"
@@ -576,7 +351,6 @@
   },
   "orderConfirmPage_145": "已选 {length} 位",
   "@orderConfirmPage_145": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:145；原文：'已选 ${state.order.visitors.length} 位'",
     "placeholders": {
       "length": {
         "type": "Object"
@@ -584,24 +358,11 @@
     }
   },
   "orderConfirmPage_150": "本企划需实名支持人，未选择将无法提交",
-  "@orderConfirmPage_150": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:150；原文：'本企划需实名支持人，未选择将无法提交'"
-  },
   "orderConfirmPage_167": "费用明细",
-  "@orderConfirmPage_167": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:167；原文：'费用明细'"
-  },
   "orderConfirmPage_173": "支持原价",
-  "@orderConfirmPage_173": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:173；原文：'支持原价'"
-  },
   "orderConfirmPage_175": "应付金额",
-  "@orderConfirmPage_175": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:175；原文：'应付金额'"
-  },
   "orderConfirmPage_190": "我已阅读并同意{agreementTitle}",
   "@orderConfirmPage_190": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:190；原文：'我已阅读并同意${state.order.buyType.agreementTitle}'",
     "placeholders": {
       "agreementTitle": {
         "type": "Object"
@@ -610,7 +371,6 @@
   },
   "orderConfirmPage_196": "领域事件：{join}",
   "@orderConfirmPage_196": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:196；原文：'领域事件：${state.recentEvents.join(' → ')}'",
     "placeholders": {
       "join": {
         "type": "Object"
@@ -619,7 +379,6 @@
   },
   "orderConfirmPage_243": "{sessionLabel} · 企划 {value}",
   "@orderConfirmPage_243": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:243；原文：'${seed.sessionLabel} · 企划 ${seed.showId.value}'",
     "placeholders": {
       "sessionLabel": {
         "type": "Object"
@@ -630,48 +389,17 @@
     }
   },
   "orderConfirmPage_444": "应付",
-  "@orderConfirmPage_444": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:444；原文：'应付'"
-  },
   "orderConfirmPage_457": "已确认",
-  "@orderConfirmPage_457": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:457；原文：'已确认'"
-  },
   "orderConfirmPage_460": "确认中…",
-  "@orderConfirmPage_460": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:460；原文：'确认中…'"
-  },
   "orderConfirmPage_462": "确认支持",
-  "@orderConfirmPage_462": {
-    "description": "来源：lib/features/order/order_confirm_page.dart:462；原文：'确认支持'"
-  },
   "orderDetailPage_52": "支持详情",
-  "@orderDetailPage_52": {
-    "description": "来源：lib/features/order/order_detail_page.dart:52；原文：'支持详情'"
-  },
   "orderDetailPage_56": "支持记录加载失败",
-  "@orderDetailPage_56": {
-    "description": "来源：lib/features/order/order_detail_page.dart:56；原文：'订单加载失败'"
-  },
   "orderDetailPage_65": "支持记录不存在",
-  "@orderDetailPage_65": {
-    "description": "来源：lib/features/order/order_detail_page.dart:65；原文：'订单不存在'"
-  },
   "orderDetailPage_66": "支持记录可能已被删除，或链接已过期",
-  "@orderDetailPage_66": {
-    "description": "来源：lib/features/order/order_detail_page.dart:66；原文：'订单可能已被删除，或链接已过期'"
-  },
   "orderDetailPage_68": "返回支持列表",
-  "@orderDetailPage_68": {
-    "description": "来源：lib/features/order/order_detail_page.dart:68；原文：'返回支持列表'"
-  },
   "orderDetailPage_101": "回报档位",
-  "@orderDetailPage_101": {
-    "description": "来源：lib/features/order/order_detail_page.dart:101；原文：'回报档位'"
-  },
   "orderDetailPage_105": "{value} 份 · {format}",
   "@orderDetailPage_105": {
-    "description": "来源：lib/features/order/order_detail_page.dart:105；原文：'${line.quantity.value} 份 · ${line.subtotal.format()}'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -682,52 +410,18 @@
     }
   },
   "orderDetailPage_108": "交付方式",
-  "@orderDetailPage_108": {
-    "description": "来源：lib/features/order/order_detail_page.dart:108；原文：'交付方式'"
-  },
   "orderDetailPage_113": "支持人",
-  "@orderDetailPage_113": {
-    "description": "来源：lib/features/order/order_detail_page.dart:113；原文：'支持人'"
-  },
   "orderDetailPage_125": "金额明细",
-  "@orderDetailPage_125": {
-    "description": "来源：lib/features/order/order_detail_page.dart:125；原文：'金额明细'"
-  },
   "orderDetailPage_133": "支持金额",
-  "@orderDetailPage_133": {
-    "description": "来源：lib/features/order/order_detail_page.dart:133；原文：'支持金额'"
-  },
   "orderDetailPage_139": "支持信息",
-  "@orderDetailPage_139": {
-    "description": "来源：lib/features/order/order_detail_page.dart:139；原文：'支持信息'"
-  },
   "orderDetailPage_141": "支持编号",
-  "@orderDetailPage_141": {
-    "description": "来源：lib/features/order/order_detail_page.dart:141；原文：'支持编号'"
-  },
   "orderDetailPage_150": "支持编号已复制",
-  "@orderDetailPage_150": {
-    "description": "来源：lib/features/order/order_detail_page.dart:150；原文：'支持编号已复制'"
-  },
   "orderDetailPage_163": "支持时间",
-  "@orderDetailPage_163": {
-    "description": "来源：lib/features/order/order_detail_page.dart:163；原文：'支持时间'"
-  },
   "orderDetailPage_165": "支付时间",
-  "@orderDetailPage_165": {
-    "description": "来源：lib/features/order/order_detail_page.dart:165；原文：'支付时间'"
-  },
   "orderDetailPage_167": "关闭原因",
-  "@orderDetailPage_167": {
-    "description": "来源：lib/features/order/order_detail_page.dart:167；原文：'关闭原因'"
-  },
   "orderDetailPage_199": "支持尚未提交",
-  "@orderDetailPage_199": {
-    "description": "来源：lib/features/order/order_detail_page.dart:199；原文：'支持尚未提交'"
-  },
   "orderDetailPage_201": "请在 {_deadline} 前完成支付，超时支持将自动关闭",
   "@orderDetailPage_201": {
-    "description": "来源：lib/features/order/order_detail_page.dart:201；原文：'请在 $_deadline 前完成支付，超时支持将自动关闭'",
     "placeholders": {
       "_deadline": {
         "type": "Object"
@@ -735,132 +429,38 @@
     }
   },
   "orderDetailPage_204": "已支付，正在为你确认回报",
-  "@orderDetailPage_204": {
-    "description": "来源：lib/features/order/order_detail_page.dart:204；原文：'已支付，正在为你确认回报'"
-  },
   "orderDetailPage_205": "回报已寄出，请注意查收",
-  "@orderDetailPage_205": {
-    "description": "来源：lib/features/order/order_detail_page.dart:205；原文：'回报已寄出，请注意查收'"
-  },
   "orderDetailPage_206": "支持已完成，欢迎发表支持评价",
-  "@orderDetailPage_206": {
-    "description": "来源：lib/features/order/order_detail_page.dart:206；原文：'支持已完成，欢迎发表支持评价'"
-  },
   "orderDetailPage_207": "支持已取消，可重新选择企划",
-  "@orderDetailPage_207": {
-    "description": "来源：lib/features/order/order_detail_page.dart:207；原文：'支持已取消，可重新选择企划'"
-  },
   "orderDetailPage_208": "退款已原路退回",
-  "@orderDetailPage_208": {
-    "description": "来源：lib/features/order/order_detail_page.dart:208；原文：'退款已原路退回'"
-  },
   "orderDetailPage_325": "取消支持",
-  "@orderDetailPage_325": {
-    "description": "来源：lib/features/order/order_detail_page.dart:325；原文：'取消支持'"
-  },
   "orderDetailPage_329": "立即支付",
-  "@orderDetailPage_329": {
-    "description": "来源：lib/features/order/order_detail_page.dart:329；原文：'立即支付'"
-  },
   "orderDetailPage_335": "查看物流",
-  "@orderDetailPage_335": {
-    "description": "来源：lib/features/order/order_detail_page.dart:335；原文：'查看物流'"
-  },
   "orderDetailPage_335_2": "物流详情待接入快递查询接口",
-  "@orderDetailPage_335_2": {
-    "description": "来源：lib/features/order/order_detail_page.dart:335；原文：'物流详情待接入快递查询接口'"
-  },
   "orderDetailPage_337": "确认收到回报",
-  "@orderDetailPage_337": {
-    "description": "来源：lib/features/order/order_detail_page.dart:337；原文：'确认收到回报'"
-  },
   "orderDetailPage_342": "申请退款",
-  "@orderDetailPage_342": {
-    "description": "来源：lib/features/order/order_detail_page.dart:342；原文：'申请退款'"
-  },
   "orderDetailPage_351": "去评价",
-  "@orderDetailPage_351": {
-    "description": "来源：lib/features/order/order_detail_page.dart:351；原文：'去评价'"
-  },
   "orderDetailPage_351_2": "评价属于独立的评价聚合，本示例未实现",
-  "@orderDetailPage_351_2": {
-    "description": "来源：lib/features/order/order_detail_page.dart:351；原文：'评价属于独立的评价聚合，本示例未实现'"
-  },
   "orderDetailPage_353": "再次购买",
-  "@orderDetailPage_353": {
-    "description": "来源：lib/features/order/order_detail_page.dart:353；原文：'再次购买'"
-  },
   "orderDetailPage_360": "继续填写",
-  "@orderDetailPage_360": {
-    "description": "来源：lib/features/order/order_detail_page.dart:360；原文：'继续填写'"
-  },
   "orderDetailPage_366": "联系客服",
-  "@orderDetailPage_366": {
-    "description": "来源：lib/features/order/order_detail_page.dart:366；原文：'联系客服'"
-  },
   "orderDetailPage_366_2": "客服会话（演示）",
-  "@orderDetailPage_366_2": {
-    "description": "来源：lib/features/order/order_detail_page.dart:366；原文：'客服会话（演示）'"
-  },
   "orderDetailPage_367": "查看回报凭证",
-  "@orderDetailPage_367": {
-    "description": "来源：lib/features/order/order_detail_page.dart:367；原文：'查看回报凭证'"
-  },
   "orderDetailPage_367_2": "电子回报凭证面待接入交付接口",
-  "@orderDetailPage_367_2": {
-    "description": "来源：lib/features/order/order_detail_page.dart:367；原文：'电子回报凭证面待接入交付接口'"
-  },
   "orderDetailPage_369": "申请退款",
-  "@orderDetailPage_369": {
-    "description": "来源：lib/features/order/order_detail_page.dart:369；原文：'申请退款'"
-  },
   "orderDetailPage_379": "重新选择企划",
-  "@orderDetailPage_379": {
-    "description": "来源：lib/features/order/order_detail_page.dart:379；原文：'重新选择企划'"
-  },
   "orderDetailPage_437": "支付成功，等待交付",
-  "@orderDetailPage_437": {
-    "description": "来源：lib/features/order/order_detail_page.dart:437；原文：'支付成功，等待交付'"
-  },
   "orderDetailPage_444": "取消支持",
-  "@orderDetailPage_444": {
-    "description": "来源：lib/features/order/order_detail_page.dart:444；原文：'取消支持'"
-  },
   "orderDetailPage_445": "取消后需要重新支持，确定继续吗？",
-  "@orderDetailPage_445": {
-    "description": "来源：lib/features/order/order_detail_page.dart:445；原文：'取消后需要重新支持，确定继续吗？'"
-  },
   "orderDetailPage_449": "再想想",
-  "@orderDetailPage_449": {
-    "description": "来源：lib/features/order/order_detail_page.dart:449；原文：'再想想'"
-  },
   "orderDetailPage_453": "取消支持",
-  "@orderDetailPage_453": {
-    "description": "来源：lib/features/order/order_detail_page.dart:453；原文：'取消支持'"
-  },
   "orderDetailPage_459": "用户主动取消",
-  "@orderDetailPage_459": {
-    "description": "来源：lib/features/order/order_detail_page.dart:459；原文：'用户主动取消'"
-  },
   "orderDetailPage_461": "支持已取消",
-  "@orderDetailPage_461": {
-    "description": "来源：lib/features/order/order_detail_page.dart:461；原文：'支持已取消'"
-  },
   "orderDetailPage_470": "已确认收到回报",
-  "@orderDetailPage_470": {
-    "description": "来源：lib/features/order/order_detail_page.dart:470；原文：'已确认收到回报'"
-  },
   "orderListPage_71": "支持记录加载失败",
-  "@orderListPage_71": {
-    "description": "来源：lib/features/order/order_list_page.dart:71；原文：'订单加载失败'"
-  },
   "orderListPage_85": "还没有支持记录",
-  "@orderListPage_85": {
-    "description": "来源：lib/features/order/order_list_page.dart:85；原文：'还没有订单'"
-  },
   "orderListPage_87": "没有{label}的支持记录",
   "@orderListPage_87": {
-    "description": "来源：lib/features/order/order_list_page.dart:87；原文：'没有${filter.label}的订单'",
     "placeholders": {
       "label": {
         "type": "Object"
@@ -868,128 +468,37 @@
     }
   },
   "orderListPage_88": "去首页挑一个企划吧",
-  "@orderListPage_88": {
-    "description": "来源：lib/features/order/order_list_page.dart:88；原文：'去首页挑一个企划吧'"
-  },
   "orderListPage_90": "去逛逛",
-  "@orderListPage_90": {
-    "description": "来源：lib/features/order/order_list_page.dart:90；原文：'去逛逛'"
-  },
   "orderListPage_115": "评价属于独立的评价聚合，本示例未实现",
-  "@orderListPage_115": {
-    "description": "来源：lib/features/order/order_list_page.dart:115；原文：'评价属于独立的评价聚合，本示例未实现'"
-  },
   "orderListPage_119": "客服会话（演示）",
-  "@orderListPage_119": {
-    "description": "来源：lib/features/order/order_list_page.dart:119；原文：'客服会话（演示）'"
-  },
   "orderListPage_130": "暂无商品订单",
-  "@orderListPage_130": {
-    "description": "来源：lib/features/order/order_list_page.dart:130；原文：'暂无商品订单'"
-  },
   "orderListPage_131": "企划支持链路之外的周边商品暂未接入",
-  "@orderListPage_131": {
-    "description": "来源：lib/features/order/order_list_page.dart:131；原文：'企划支持链路之外的周边商品暂未接入'"
-  },
   "orderListPage_181": "取消支持",
-  "@orderListPage_181": {
-    "description": "来源：lib/features/order/order_list_page.dart:181；原文：'取消支持'"
-  },
   "orderListPage_182": "取消后需要重新支持，确定继续吗？",
-  "@orderListPage_182": {
-    "description": "来源：lib/features/order/order_list_page.dart:182；原文：'取消后需要重新支持，确定继续吗？'"
-  },
   "orderListPage_186": "再想想",
-  "@orderListPage_186": {
-    "description": "来源：lib/features/order/order_list_page.dart:186；原文：'再想想'"
-  },
   "orderListPage_190": "取消支持",
-  "@orderListPage_190": {
-    "description": "来源：lib/features/order/order_list_page.dart:190；原文：'取消支持'"
-  },
   "orderListPage_196": "用户主动取消",
-  "@orderListPage_196": {
-    "description": "来源：lib/features/order/order_list_page.dart:196；原文：'用户主动取消'"
-  },
   "orderCancelTimeout": "支付超时，支持已取消",
-  "@orderCancelTimeout": {
-    "description": "来源：lib/features/order/domain/aggregates/ticket_order.dart:534；原文：'支付超时，支持已取消'"
-  },
   "orderListPage_198": "支持已取消",
-  "@orderListPage_198": {
-    "description": "来源：lib/features/order/order_list_page.dart:198；原文：'支持已取消'"
-  },
   "orderListPage_208": "已确认收到回报",
-  "@orderListPage_208": {
-    "description": "来源：lib/features/order/order_list_page.dart:208；原文：'已确认收到回报'"
-  },
   "orderListPage_229": "企划",
-  "@orderListPage_229": {
-    "description": "来源：lib/features/order/order_list_page.dart:229；原文：'企划'"
-  },
   "orderListPage_229_2": "商品",
-  "@orderListPage_229_2": {
-    "description": "来源：lib/features/order/order_list_page.dart:229；原文：'商品'"
-  },
   "paySuccessPage_75": "支付成功",
-  "@paySuccessPage_75": {
-    "description": "来源：lib/features/order/pay_success_page.dart:75；原文：'支付成功'"
-  },
   "paySuccessPage_84": "企划星正在为您确认回报，请耐心等待",
-  "@paySuccessPage_84": {
-    "description": "来源：lib/features/order/pay_success_page.dart:84；原文：'企划星正在为您确认回报，请耐心等待'"
-  },
   "paySuccessPage_115": "查看支持记录",
-  "@paySuccessPage_115": {
-    "description": "来源：lib/features/order/pay_success_page.dart:115；原文：'查看订单'"
-  },
   "paySuccessPage_138": "继续逛逛",
-  "@paySuccessPage_138": {
-    "description": "来源：lib/features/order/pay_success_page.dart:138；原文：'继续逛逛'"
-  },
   "paySuccessPage_182": "企划",
-  "@paySuccessPage_182": {
-    "description": "来源：lib/features/order/pay_success_page.dart:182；原文：'企划'"
-  },
   "paySuccessPage_189": "支持编号",
-  "@paySuccessPage_189": {
-    "description": "来源：lib/features/order/pay_success_page.dart:189；原文：'支持编号'"
-  },
   "paySuccessPage_198": "支付金额",
-  "@paySuccessPage_198": {
-    "description": "来源：lib/features/order/pay_success_page.dart:198；原文：'支付金额'"
-  },
   "payInfo_40": "推荐",
-  "@payInfo_40": {
-    "description": "来源：lib/features/order/payment/pay_info.dart:40；原文：'推荐'"
-  },
   "payInfo_55": "星币余额支付",
-  "@payInfo_55": {
-    "description": "来源：lib/features/order/payment/pay_info.dart:55；原文：'星币余额支付'"
-  },
   "payInfo_60": "企划",
-  "@payInfo_60": {
-    "description": "来源：lib/features/order/payment/pay_info.dart:60；原文：'企划'"
-  },
   "payInfo_61": "支持编号",
-  "@payInfo_61": {
-    "description": "来源：lib/features/order/payment/pay_info.dart:61；原文：'支持编号'"
-  },
   "payPage_77": "收银台",
-  "@payPage_77": {
-    "description": "来源：lib/features/order/payment/pay_page.dart:77；原文：'收银台'"
-  },
   "payPage_133": "演示环境：支付不会真实扣款，点击确认后模拟支付流程",
-  "@payPage_133": {
-    "description": "来源：lib/features/order/payment/pay_page.dart:133；原文：'演示环境：支付不会真实扣款，点击确认后模拟支付流程'"
-  },
   "payPage_166": "支付已取消",
-  "@payPage_166": {
-    "description": "来源：lib/features/order/payment/pay_page.dart:166；原文：'支付已取消'"
-  },
   "payPage_195": "请在 {seconds} 内完成支付",
   "@payPage_195": {
-    "description": "来源：lib/features/order/payment/pay_page.dart:195；原文：'请在 ${PayController.formatCountdown(seconds)} 内完成支付'",
     "placeholders": {
       "seconds": {
         "type": "Object"
@@ -997,24 +506,11 @@
     }
   },
   "payPage_259": "应付金额",
-  "@payPage_259": {
-    "description": "来源：lib/features/order/payment/pay_page.dart:259；原文：'应付金额'"
-  },
   "payPage_301": "选择支付方式",
-  "@payPage_301": {
-    "description": "来源：lib/features/order/payment/pay_page.dart:301；原文：'选择支付方式'"
-  },
   "payPage_436": "请求中…",
-  "@payPage_436": {
-    "description": "来源：lib/features/order/payment/pay_page.dart:436；原文：'请求中…'"
-  },
   "payPage_438": "支付中…",
-  "@payPage_438": {
-    "description": "来源：lib/features/order/payment/pay_page.dart:438；原文：'支付中…'"
-  },
   "payPage_440": "确认支付 {format}",
   "@payPage_440": {
-    "description": "来源：lib/features/order/payment/pay_page.dart:440；原文：'确认支付 ${state.info.payAmount.format()}'",
     "placeholders": {
       "format": {
         "type": "Object"
@@ -1022,68 +518,22 @@
     }
   },
   "payProviders_115": "当前状态不可支付",
-  "@payProviders_115": {
-    "description": "来源：lib/features/order/payment/pay_providers.dart:115；原文：'当前状态不可支付'"
-  },
   "payProviders_172": "支付超时，支持已自动取消",
-  "@payProviders_172": {
-    "description": "来源：lib/features/order/payment/pay_providers.dart:172；原文：'支付超时，支持已自动取消'"
-  },
   "refundPage_43": "退款申请已提交，请等待审核",
-  "@refundPage_43": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:43；原文：'退款申请已提交，请等待审核'"
-  },
   "refundPage_62": "申请退款",
-  "@refundPage_62": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:62；原文：'申请退款'"
-  },
   "refundPage_97": "提交中…",
-  "@refundPage_97": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:97；原文：'提交中…'"
-  },
   "refundPage_98": "已提交",
-  "@refundPage_98": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:98；原文：'已提交'"
-  },
   "refundPage_99": "提交退款申请",
-  "@refundPage_99": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:99；原文：'提交退款申请'"
-  },
   "refundPage_138": "退款金额",
-  "@refundPage_138": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:138；原文：'退款金额'"
-  },
   "refundPage_150": "支持金额",
-  "@refundPage_150": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:150；原文：'支持金额'"
-  },
   "refundPage_164": "预计退款",
-  "@refundPage_164": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:164；原文：'预计退款'"
-  },
   "refundPage_207": "退款原因",
-  "@refundPage_207": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:207；原文：'退款原因'"
-  },
   "refundPage_244": "请输入退款原因（选填）",
-  "@refundPage_244": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:244；原文：'请输入退款原因（选填）'"
-  },
   "refundPage_331": "退款说明",
-  "@refundPage_331": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:331；原文：'退款说明'"
-  },
   "refundPage_342": "• 众筹中可全额退款\n• 交付中退还支持金额的 80%\n• 已完成支持不支持退款\n• 退款将原路退回至支付账户\n• 退款审核一般需要 1-3 个工作日",
-  "@refundPage_342": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:342；原文：'• 众筹中状态下可全额退款\\n'\n            '• 交付中状态下退还支持金额的 80%\\n'\n            '• 已完成支持不支持退款\\n'\n            '• 退款将原路退回至支付账户\\n'\n            '• 退款审核一般需要 1-3 个工作日'"
-  },
   "refundPage_382": "退款申请已提交",
-  "@refundPage_382": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:382；原文：'退款申请已提交'"
-  },
   "refundPage_391": "退款金额 {format} 将在审核通过后原路退回",
   "@refundPage_391": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:391；原文：'退款金额 ${amount.format()} 将在审核通过后原路退回'",
     "placeholders": {
       "format": {
         "type": "Object"
@@ -1091,52 +541,18 @@
     }
   },
   "refundPage_404": "返回支持列表",
-  "@refundPage_404": {
-    "description": "来源：lib/features/order/refund/refund_page.dart:404；原文：'返回支持列表'"
-  },
   "refundState_8": "不需要了",
-  "@refundState_8": {
-    "description": "来源：lib/features/order/refund/refund_state.dart:8；原文：'不需要了'"
-  },
   "refundState_8_2": "计划变更，暂时不需要了",
-  "@refundState_8_2": {
-    "description": "来源：lib/features/order/refund/refund_state.dart:8；原文：'计划变更，暂时不需要了'"
-  },
   "refundState_11": "买错了",
-  "@refundState_11": {
-    "description": "来源：lib/features/order/refund/refund_state.dart:11；原文：'买错了'"
-  },
   "refundState_11_2": "买错了线下回报场次或回报档位",
-  "@refundState_11_2": {
-    "description": "来源：lib/features/order/refund/refund_state.dart:11；原文：'买错了场次或回报档位'"
-  },
   "refundState_14": "支持金额太高",
-  "@refundState_14": {
-    "description": "来源：lib/features/order/refund/refund_state.dart:14；原文：'支持金额太高'"
-  },
   "refundState_14_2": "价格超出预算",
-  "@refundState_14_2": {
-    "description": "来源：lib/features/order/refund/refund_state.dart:14；原文：'价格超出预算'"
-  },
   "refundState_17": "找到更好的企划",
-  "@refundState_17": {
-    "description": "来源：lib/features/order/refund/refund_state.dart:17；原文：'找到更好的企划'"
-  },
   "refundState_17_2": "通过其他渠道购买了",
-  "@refundState_17_2": {
-    "description": "来源：lib/features/order/refund/refund_state.dart:17；原文：'通过其他渠道购买了'"
-  },
   "refundState_20": "其他原因",
-  "@refundState_20": {
-    "description": "来源：lib/features/order/refund/refund_state.dart:20；原文：'其他原因'"
-  },
   "refundState_20_2": "自定义说明",
-  "@refundState_20_2": {
-    "description": "来源：lib/features/order/refund/refund_state.dart:20；原文：'自定义说明'"
-  },
   "orderListCard_52": "企划 {value}",
   "@orderListCard_52": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:52；原文：'企划 ${order.showId.value}'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -1144,9 +560,6 @@
     }
   },
   "orderListCard_53": "回报信息待确认",
-  "@orderListCard_53": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:53；原文：'回报信息待确认'"
-  },
   "orderListCard_delivery": "交付：{value}",
   "@orderListCard_delivery": {
     "description": "订单卡片：企划回报预计交付时间",
@@ -1157,12 +570,8 @@
     }
   },
   "orderListCard_78": "代支持",
-  "@orderListCard_78": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:78；原文：'代支持'"
-  },
   "orderListCard_130": "支持人 {join}",
   "@orderListCard_130": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:130；原文：'支持人 ${order.visitors.map((v) => v.name).join('、')}'",
     "placeholders": {
       "join": {
         "type": "Object"
@@ -1171,7 +580,6 @@
   },
   "orderListCard_141": "支持编号 {value}",
   "@orderListCard_141": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:141；原文：'支持编号 ${order.number.value}'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -1180,7 +588,6 @@
   },
   "orderListCard_184": "共 {value} 份  支持金额",
   "@orderListCard_184": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:184；原文：'共 ${order.totalTickets.value} 份  支持金额'",
     "placeholders": {
       "value": {
         "type": "Object"
@@ -1188,48 +595,17 @@
     }
   },
   "orderListCard_217": "取消支持",
-  "@orderListCard_217": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:217；原文：'取消支持'"
-  },
   "orderListCard_220": "去支付",
-  "@orderListCard_220": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:220；原文：'去支付'"
-  },
   "orderListCard_225": "联系客服",
-  "@orderListCard_225": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:225；原文：'联系客服'"
-  },
   "orderListCard_228": "申请退款",
-  "@orderListCard_228": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:228；原文：'申请退款'"
-  },
   "orderListCard_233": "查看物流",
-  "@orderListCard_233": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:233；原文：'查看物流'"
-  },
   "orderListCard_236": "确认收到回报",
-  "@orderListCard_236": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:236；原文：'确认收到回报'"
-  },
   "orderListCard_241": "再次购买",
-  "@orderListCard_241": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:241；原文：'再次购买'"
-  },
   "orderListCard_244": "去评价",
-  "@orderListCard_244": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:244；原文：'去评价'"
-  },
   "orderListCard_250": "再次购买",
-  "@orderListCard_250": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:250；原文：'再次购买'"
-  },
   "orderListCard_298": "支付已超时，请重新支持",
-  "@orderListCard_298": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:298；原文：'支付已超时，请重新支持'"
-  },
   "orderListCard_305": "剩余支付时间 {minutes}:{seconds}",
   "@orderListCard_305": {
-    "description": "来源：lib/features/order/widgets/order_list_card.dart:305；原文：'剩余支付时间 $minutes:$seconds'",
     "placeholders": {
       "minutes": {
         "type": "Object"
@@ -1240,9 +616,6 @@
     }
   },
   "paymentChannelSheet_52": "选择支付方式",
-  "@paymentChannelSheet_52": {
-    "description": "来源：lib/features/order/widgets/payment_channel_sheet.dart:52；原文：'选择支付方式'"
-  },
   "orderDetailPage_expectedDelivery": "预计交付时间",
   "@orderDetailPage_expectedDelivery": {
     "description": "支持详情：企划回报预计交付时间"

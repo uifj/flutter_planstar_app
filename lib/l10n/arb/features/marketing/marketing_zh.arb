@@ -2,7 +2,6 @@
   "@@locale": "zh",
   "coupon_115": "{rate}折",
   "@coupon_115": {
-    "description": "来源：lib/features/marketing/coupon.dart:115；原文：'${rate.toStringAsFixed(rate * 10 % 10 == 0 ? 0 : 1)}折'",
     "placeholders": {
       "rate": {
         "type": "Object"
@@ -11,7 +10,6 @@
   },
   "coupon_120": "满{format}可用",
   "@coupon_120": {
-    "description": "来源：lib/features/marketing/coupon.dart:120；原文：'满${requireAmount.format()}可用'",
     "placeholders": {
       "format": {
         "type": "Object"
@@ -19,12 +17,8 @@
     }
   },
   "coupon_120_2": "无门槛",
-  "@coupon_120_2": {
-    "description": "来源：lib/features/marketing/coupon.dart:120；原文：'无门槛'"
-  },
   "coupon_125": "{year}-{month}-{day}到期",
   "@coupon_125": {
-    "description": "来源：lib/features/marketing/coupon.dart:125；原文：'${validTo.year}-${two(validTo.month)}-${two(validTo.day)}到期'",
     "placeholders": {
       "year": {
         "type": "Object"
@@ -38,44 +32,16 @@
     }
   },
   "couponPage_30": "我的优惠券",
-  "@couponPage_30": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:30；原文：'我的优惠券'"
-  },
   "couponPage_34": "兑换",
-  "@couponPage_34": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:34；原文：'兑换'"
-  },
   "couponPage_97": "暂无可用优惠券",
-  "@couponPage_97": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:97；原文：'暂无可用优惠券'"
-  },
   "couponPage_98": "暂无已使用记录",
-  "@couponPage_98": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:98；原文：'暂无已使用记录'"
-  },
   "couponPage_99": "暂无过期优惠券",
-  "@couponPage_99": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:99；原文：'暂无过期优惠券'"
-  },
   "couponPage_102": "去首页领取更多优惠",
-  "@couponPage_102": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:102；原文：'去首页领取更多优惠'"
-  },
   "couponPage_103": "已使用的券会显示在这里",
-  "@couponPage_103": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:103；原文：'已使用的券会显示在这里'"
-  },
   "couponPage_104": "过期的券会显示在这里",
-  "@couponPage_104": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:104；原文：'过期的券会显示在这里'"
-  },
   "couponPage_107": "去逛逛",
-  "@couponPage_107": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:107；原文：'去逛逛'"
-  },
   "couponPage_208": "仅剩{daysUntilExpiry}天",
   "@couponPage_208": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:208；原文：'仅剩${coupon.daysUntilExpiry}天'",
     "placeholders": {
       "daysUntilExpiry": {
         "type": "Object"
@@ -83,40 +49,15 @@
     }
   },
   "couponPage_290": "折",
-  "@couponPage_290": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:290；原文：'折'"
-  },
   "couponPage_302": "抵扣",
-  "@couponPage_302": {
-    "description": "来源：lib/features/marketing/coupon_page.dart:302；原文：'抵扣'"
-  },
   "couponProviders_10": "可使用",
-  "@couponProviders_10": {
-    "description": "来源：lib/features/marketing/coupon_providers.dart:10；原文：'可使用'"
-  },
   "couponProviders_13": "已使用",
-  "@couponProviders_13": {
-    "description": "来源：lib/features/marketing/coupon_providers.dart:13；原文：'已使用'"
-  },
   "couponProviders_16": "已过期",
-  "@couponProviders_16": {
-    "description": "来源：lib/features/marketing/coupon_providers.dart:16；原文：'已过期'"
-  },
   "couponProviders_110": "兑换码兑换券",
-  "@couponProviders_110": {
-    "description": "来源：lib/features/marketing/coupon_providers.dart:110；原文：'兑换码兑换券'"
-  },
   "couponProviders_111": "通过兑换码获得",
-  "@couponProviders_111": {
-    "description": "来源：lib/features/marketing/coupon_providers.dart:111；原文：'通过兑换码获得'"
-  },
   "couponProviders_124": "兑换码无效，请检查后重试",
-  "@couponProviders_124": {
-    "description": "来源：lib/features/marketing/coupon_providers.dart:124；原文：'兑换码无效，请检查后重试'"
-  },
   "exchangeCouponPage_32": "兑换成功：{title}",
   "@exchangeCouponPage_32": {
-    "description": "来源：lib/features/marketing/exchange_coupon_page.dart:32；原文：'兑换成功：${next.result!.title}'",
     "placeholders": {
       "title": {
         "type": "Object"
@@ -124,52 +65,18 @@
     }
   },
   "exchangeCouponPage_47": "兑换优惠券",
-  "@exchangeCouponPage_47": {
-    "description": "来源：lib/features/marketing/exchange_coupon_page.dart:47；原文：'兑换优惠券'"
-  },
   "exchangeCouponPage_71": "输入兑换码领取优惠券，兑换码由活动方发放",
-  "@exchangeCouponPage_71": {
-    "description": "来源：lib/features/marketing/exchange_coupon_page.dart:71；原文：'输入兑换码领取优惠券，兑换码由活动方发放'"
-  },
   "exchangeCouponPage_84": "兑换码",
-  "@exchangeCouponPage_84": {
-    "description": "来源：lib/features/marketing/exchange_coupon_page.dart:84；原文：'兑换码'"
-  },
   "exchangeCouponPage_95": "请输入兑换码",
-  "@exchangeCouponPage_95": {
-    "description": "来源：lib/features/marketing/exchange_coupon_page.dart:95；原文：'请输入兑换码'"
-  },
   "exchangeCouponPage_155": "立即兑换",
-  "@exchangeCouponPage_155": {
-    "description": "来源：lib/features/marketing/exchange_coupon_page.dart:155；原文：'立即兑换'"
-  },
   "addGiftCardPage_67": "绑定礼品卡",
-  "@addGiftCardPage_67": {
-    "description": "来源：lib/features/marketing/giftcard/add_gift_card_page.dart:67；原文：'绑定礼品卡'"
-  },
   "addGiftCardPage_74": "请输入礼品卡卡号",
-  "@addGiftCardPage_74": {
-    "description": "来源：lib/features/marketing/giftcard/add_gift_card_page.dart:74；原文：'请输入礼品卡卡号'"
-  },
   "addGiftCardPage_91": "输入礼品卡卡号 / 密码",
-  "@addGiftCardPage_91": {
-    "description": "来源：lib/features/marketing/giftcard/add_gift_card_page.dart:91；原文：'输入礼品卡卡号 / 密码'"
-  },
   "addGiftCardPage_135": "绑定",
-  "@addGiftCardPage_135": {
-    "description": "来源：lib/features/marketing/giftcard/add_gift_card_page.dart:135；原文：'绑定'"
-  },
   "addGiftCardPage_155": "使用说明",
-  "@addGiftCardPage_155": {
-    "description": "来源：lib/features/marketing/giftcard/add_gift_card_page.dart:155；原文：'使用说明'"
-  },
   "addGiftCardPage_164": "1. 礼品卡卡号在实体卡背面刮开涂层后获取\n2. 绑定成功后余额可在下单时抵扣\n3. 礼品卡不可叠加使用，不记名不挂失\n4. 有效期以礼品卡标注为准",
-  "@addGiftCardPage_164": {
-    "description": "来源：lib/features/marketing/giftcard/add_gift_card_page.dart:164；原文：'1. 礼品卡卡号在实体卡背面刮开涂层后获取\\n'\n                    '2. 绑定成功后余额可在下单时抵扣\\n'\n                    '3. 礼品卡不可叠加使用，不记名不挂失\\n'\n                    '4. 有效期以礼品卡标注为准'"
-  },
   "giftCard_96": "{year}-{month}-{day}到期",
   "@giftCard_96": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card.dart:96；原文：'${effectiveTo.year}-${two(effectiveTo.month)}-${two(effectiveTo.day)}到期'",
     "placeholders": {
       "year": {
         "type": "Object"
@@ -184,7 +91,6 @@
   },
   "giftCard_100": "面值 {format}",
   "@giftCard_100": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card.dart:100；原文：'面值 ${denomination.format()}'",
     "placeholders": {
       "format": {
         "type": "Object"
@@ -193,7 +99,6 @@
   },
   "giftCard_103": "余额 {format}",
   "@giftCard_103": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card.dart:103；原文：'余额 ${balance.format()}'",
     "placeholders": {
       "format": {
         "type": "Object"
@@ -201,52 +106,18 @@
     }
   },
   "giftCardPage_30": "礼品卡",
-  "@giftCardPage_30": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_page.dart:30；原文：'礼品卡'"
-  },
   "giftCardPage_34": "绑定",
-  "@giftCardPage_34": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_page.dart:34；原文：'绑定'"
-  },
   "giftCardPage_41": "暂无礼品卡",
-  "@giftCardPage_41": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_page.dart:41；原文：'暂无礼品卡'"
-  },
   "giftCardPage_42": "绑定礼品卡后可在此查看和使用",
-  "@giftCardPage_42": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_page.dart:42；原文：'绑定礼品卡后可在此查看和使用'"
-  },
   "giftCardPage_49": "可用礼品卡",
-  "@giftCardPage_49": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_page.dart:49；原文：'可用礼品卡'"
-  },
   "giftCardPage_57": "不可用礼品卡",
-  "@giftCardPage_57": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_page.dart:57；原文：'不可用礼品卡'"
-  },
   "giftCardPage_158": "面值",
-  "@giftCardPage_158": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_page.dart:158；原文：'面值'"
-  },
   "giftCardPage_196": "余额 ",
-  "@giftCardPage_196": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_page.dart:196；原文：'余额 '"
-  },
   "giftCardPage_224": "即将过期",
-  "@giftCardPage_224": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_page.dart:224；原文：'即将过期'"
-  },
   "giftCardProviders_54": "请输入礼品卡卡号",
-  "@giftCardProviders_54": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_providers.dart:54；原文：'请输入礼品卡卡号'"
-  },
   "giftCardProviders_65": "礼品卡绑定成功，已添加 200 星币余额",
-  "@giftCardProviders_65": {
-    "description": "来源：lib/features/marketing/giftcard/gift_card_providers.dart:65；原文：'礼品卡绑定成功，已添加 200 星币余额'"
-  },
   "wallet_56": "余额 {format}",
   "@wallet_56": {
-    "description": "来源：lib/features/marketing/wallet.dart:56；原文：'余额 ${balanceAfter.format()}'",
     "placeholders": {
       "format": {
         "type": "Object"
@@ -254,68 +125,22 @@
     }
   },
   "walletPage_31": "我的钱包",
-  "@walletPage_31": {
-    "description": "来源：lib/features/marketing/wallet_page.dart:31；原文：'我的钱包'"
-  },
   "walletPage_35": "充值流程待接入支付 SDK",
-  "@walletPage_35": {
-    "description": "来源：lib/features/marketing/wallet_page.dart:35；原文：'充值流程待接入支付 SDK'"
-  },
   "walletPage_35_2": "提现需要先绑定银行卡",
-  "@walletPage_35_2": {
-    "description": "来源：lib/features/marketing/wallet_page.dart:35；原文：'提现需要先绑定银行卡'"
-  },
   "walletPage_39": "暂无交易记录",
-  "@walletPage_39": {
-    "description": "来源：lib/features/marketing/wallet_page.dart:39；原文：'暂无交易记录'"
-  },
   "walletPage_40": "充值或消费后会有记录显示在这里",
-  "@walletPage_40": {
-    "description": "来源：lib/features/marketing/wallet_page.dart:40；原文：'充值或消费后会有记录显示在这里'"
-  },
   "walletPage_94": "当前余额（星币）",
-  "@walletPage_94": {
-    "description": "来源：lib/features/marketing/wallet_page.dart:94；原文：'当前余额（星币）'"
-  },
   "walletPage_143": "充值",
-  "@walletPage_143": {
-    "description": "来源：lib/features/marketing/wallet_page.dart:143；原文：'充值'"
-  },
   "walletPage_152": "提现",
-  "@walletPage_152": {
-    "description": "来源：lib/features/marketing/wallet_page.dart:152；原文：'提现'"
-  },
   "walletProviders_21": "充值",
-  "@walletProviders_21": {
-    "description": "来源：lib/features/marketing/wallet_providers.dart:21；原文：'充值'"
-  },
   "walletProviders_29": "支持「五月天音乐影像企划」",
-  "@walletProviders_29": {
-    "description": "来源：lib/features/marketing/wallet_providers.dart:29；原文：'购买「五月天演唱会」门票'"
-  },
   "walletProviders_37": "退款入账 - 订单 P20261101001",
-  "@walletProviders_37": {
-    "description": "来源：lib/features/marketing/wallet_providers.dart:37；原文：'退款入账 - 订单 P20261101001'"
-  },
   "walletProviders_45": "新人注册赠送",
-  "@walletProviders_45": {
-    "description": "来源：lib/features/marketing/wallet_providers.dart:45；原文：'新人注册赠送'"
-  },
   "walletProviders_53": "支持「脱口秀大会现场企划」",
-  "@walletProviders_53": {
-    "description": "来源：lib/features/marketing/wallet_providers.dart:53；原文：'购买「脱口秀大会」门票'"
-  },
   "mallPage_1": "星币商城",
-  "@mallPage_1": {
-    "description": "来源：lib/features/mall/mall_page.dart；星币商城页标题"
-  },
   "mallPage_2": "当前星币余额",
-  "@mallPage_2": {
-    "description": "来源：lib/features/mall/mall_page.dart；余额区标题"
-  },
   "mallPage_3": "价格 {price}",
   "@mallPage_3": {
-    "description": "来源：lib/features/mall/mall_page.dart；规格价格",
     "placeholders": {
       "price": {
         "type": "Object"
@@ -324,7 +149,6 @@
   },
   "mallPage_4": "限量 {count} 份",
   "@mallPage_4": {
-    "description": "来源：lib/features/mall/mall_page.dart；规格限量",
     "placeholders": {
       "count": {
         "type": "Object"
@@ -333,7 +157,6 @@
   },
   "mallPage_5": "剩余 {stock} 份",
   "@mallPage_5": {
-    "description": "来源：lib/features/mall/mall_page.dart；规格剩余库存",
     "placeholders": {
       "stock": {
         "type": "Object"
@@ -341,24 +164,11 @@
     }
   },
   "mallPage_6": "兑换",
-  "@mallPage_6": {
-    "description": "来源：lib/features/mall/mall_page.dart；兑换按钮"
-  },
   "mallPage_7": "已售罄",
-  "@mallPage_7": {
-    "description": "来源：lib/features/mall/mall_page.dart；售罄按钮"
-  },
   "mallPage_8": "星币余额不足",
-  "@mallPage_8": {
-    "description": "来源：lib/features/mall/mall_page.dart；余额不足提示"
-  },
   "mallPage_9": "确认兑换",
-  "@mallPage_9": {
-    "description": "来源：lib/features/mall/mall_page.dart；二次确认标题"
-  },
   "mallPage_10": "兑换「{name}」将消耗 {price}",
   "@mallPage_10": {
-    "description": "来源：lib/features/mall/mall_page.dart；二次确认内容",
     "placeholders": {
       "name": {
         "type": "Object"
@@ -369,27 +179,9 @@
     }
   },
   "mallPage_11": "取消",
-  "@mallPage_11": {
-    "description": "来源：lib/features/mall/mall_page.dart；取消按钮"
-  },
   "mallPage_12": "确认",
-  "@mallPage_12": {
-    "description": "来源：lib/features/mall/mall_page.dart；确认按钮"
-  },
   "mallPage_13": "兑换成功",
-  "@mallPage_13": {
-    "description": "来源：lib/features/mall/mall_page.dart；兑换成功提示"
-  },
   "mallPage_14": "暂无可兑换商品",
-  "@mallPage_14": {
-    "description": "来源：lib/features/mall/mall_page.dart；空态标题"
-  },
   "mallPage_15": "商品上架后会显示在这里",
-  "@mallPage_15": {
-    "description": "来源：lib/features/mall/mall_page.dart；空态说明"
-  },
-  "mallPage_16": "重新加载",
-  "@mallPage_16": {
-    "description": "来源：lib/features/mall/mall_page.dart；错误态重试"
-  }
+  "mallPage_16": "重新加载"
 }

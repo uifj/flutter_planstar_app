@@ -185,97 +185,97 @@ abstract class AppLocalizations {
   /// **'当前展示的是离线缓存内容'**
   String get stateOfflineCache;
 
-  /// 来源：lib/features/app/splash_page.dart:129；原文：'让看演出更简单'
+  /// No description provided for @splashPage_129.
   ///
   /// In zh, this message translates to:
   /// **'让好企划被看见'**
   String get splashPage_129;
 
-  /// 来源：lib/features/app/splash_page.dart:146；原文：'企划星科技 © 2026–2027'
+  /// No description provided for @splashPage_146.
   ///
   /// In zh, this message translates to:
   /// **'企划星科技 © 2026–2027'**
   String get splashPage_146;
 
-  /// 来源：lib/features/app/splash_page.dart:180；原文：'隐私政策与用户协议'
+  /// No description provided for @splashPage_180.
   ///
   /// In zh, this message translates to:
   /// **'隐私政策与用户协议'**
   String get splashPage_180;
 
-  /// 来源：lib/features/app/splash_page.dart:187；原文：'欢迎使用企划星。为了保障您的合法权益，请在使用前阅读并同意以下协议：'
+  /// No description provided for @splashPage_187.
   ///
   /// In zh, this message translates to:
   /// **'欢迎使用企划星。为了保障您的合法权益，请在使用前阅读并同意以下协议：'**
   String get splashPage_187;
 
-  /// 来源：lib/features/app/splash_page.dart:192；原文：'《用户协议》：规定了您与企划星之间的权利义务关系。'
+  /// No description provided for @splashPage_192.
   ///
   /// In zh, this message translates to:
   /// **'《用户协议》：规定了您与企划星之间的权利义务关系。'**
   String get splashPage_192;
 
-  /// 来源：lib/features/app/splash_page.dart:195；原文：'《隐私政策》：说明了企划星如何收集、使用和保护您的个人信息。'
+  /// No description provided for @splashPage_195.
   ///
   /// In zh, this message translates to:
   /// **'《隐私政策》：说明了企划星如何收集、使用和保护您的个人信息。'**
   String get splashPage_195;
 
-  /// 来源：lib/features/app/splash_page.dart:199；原文：'点击「同意并继续」表示您已阅读并同意以上协议。'
+  /// No description provided for @splashPage_199.
   ///
   /// In zh, this message translates to:
   /// **'点击「同意并继续」表示您已阅读并同意以上协议。'**
   String get splashPage_199;
 
-  /// 来源：lib/features/app/splash_page.dart:208；原文：'不同意'
+  /// No description provided for @splashPage_208.
   ///
   /// In zh, this message translates to:
   /// **'不同意'**
   String get splashPage_208;
 
-  /// 来源：lib/features/app/splash_page.dart:212；原文：'同意并继续'
+  /// No description provided for @splashPage_212.
   ///
   /// In zh, this message translates to:
   /// **'同意并继续'**
   String get splashPage_212;
 
-  /// 来源：lib/shared/ui/ps_empty_state.dart:32；原文：'没有找到相关企划'
+  /// No description provided for @psEmptyState_32.
   ///
   /// In zh, this message translates to:
   /// **'没有找到相关企划'**
   String get psEmptyState_32;
 
-  /// 来源：lib/shared/ui/ps_empty_state.dart:33；原文：'换个关键词或品类试试'
+  /// No description provided for @psEmptyState_33.
   ///
   /// In zh, this message translates to:
   /// **'换个关键词或品类试试'**
   String get psEmptyState_33;
 
-  /// 来源：lib/shared/ui/ps_empty_state.dart:35；原文：'重新搜索'
+  /// No description provided for @psEmptyState_35.
   ///
   /// In zh, this message translates to:
   /// **'重新搜索'**
   String get psEmptyState_35;
 
-  /// 来源：lib/shared/ui/ps_poster.dart:136；原文：'企'
+  /// No description provided for @psPoster_136.
   ///
   /// In zh, this message translates to:
   /// **'企'**
   String get psPoster_136;
 
-  /// 来源：lib/shared/ui/ps_search_bar.dart:25；原文：'搜索企划、创作者、品类'
+  /// No description provided for @psSearchBar_25.
   ///
   /// In zh, this message translates to:
   /// **'搜索企划、创作者、品类'**
   String get psSearchBar_25;
 
-  /// 来源：lib/shared/ui/ps_search_bar.dart:104；原文：'搜索'
+  /// No description provided for @psSearchBar_104.
   ///
   /// In zh, this message translates to:
   /// **'搜索'**
   String get psSearchBar_104;
 
-  /// 来源：lib/shared/ui/ps_section_header.dart:16；原文：'全部'
+  /// No description provided for @psSectionHeader_16.
   ///
   /// In zh, this message translates to:
   /// **'全部'**

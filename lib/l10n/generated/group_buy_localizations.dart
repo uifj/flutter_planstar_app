@@ -95,179 +95,175 @@ abstract class GroupBuyLocalizations {
     Locale('zh')
   ];
 
-  /// 来源：lib/features/group_buy/group_buy.dart:72；原文：'超低价拼团'
+  /// No description provided for @groupBuy_72.
   ///
   /// In zh, this message translates to:
   /// **'超低价拼团'**
   String get groupBuy_72;
 
-  /// 来源：lib/features/group_buy/group_buy.dart:144；原文：'${rate ~/ 10}折'
+  /// No description provided for @groupBuy_144.
   ///
   /// In zh, this message translates to:
   /// **'{rate}折'**
   String groupBuy_144(Object rate);
 
-  /// 来源：lib/features/group_buy/group_buy.dart:145；原文：'${rate / 10}折'
+  /// No description provided for @groupBuy_145.
   ///
   /// In zh, this message translates to:
   /// **'{rate}折'**
   String groupBuy_145(Object rate);
 
-  /// 来源：lib/features/group_buy/group_buy.dart:155；原文：'拼团中'
+  /// No description provided for @groupBuy_155.
   ///
   /// In zh, this message translates to:
   /// **'拼团中'**
   String get groupBuy_155;
 
-  /// 来源：lib/features/group_buy/group_buy.dart:157；原文：'拼团成功'
+  /// No description provided for @groupBuy_157.
   ///
   /// In zh, this message translates to:
   /// **'拼团成功'**
   String get groupBuy_157;
 
-  /// 来源：lib/features/group_buy/group_buy.dart:159；原文：'拼团失败'
+  /// No description provided for @groupBuy_159.
   ///
   /// In zh, this message translates to:
   /// **'拼团失败'**
   String get groupBuy_159;
 
-  /// 来源：lib/features/group_buy/group_buy.dart:161；原文：'已取消'
+  /// No description provided for @groupBuy_161.
   ///
   /// In zh, this message translates to:
   /// **'已取消'**
   String get groupBuy_161;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:46；原文：'拼团详情'
+  /// No description provided for @groupBuyDetailPage_46.
   ///
   /// In zh, this message translates to:
   /// **'拼团详情'**
   String get groupBuyDetailPage_46;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:49；原文：'拼团活动不存在'
+  /// No description provided for @groupBuyDetailPage_49.
   ///
   /// In zh, this message translates to:
   /// **'拼团活动不存在'**
   String get groupBuyDetailPage_49;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:60；原文：'拼团详情'
+  /// No description provided for @groupBuyDetailPage_60.
   ///
   /// In zh, this message translates to:
   /// **'拼团详情'**
   String get groupBuyDetailPage_60;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:172；原文：'拼团价 '
+  /// No description provided for @groupBuyDetailPage_172.
   ///
   /// In zh, this message translates to:
   /// **'拼团价 '**
   String get groupBuyDetailPage_172;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:208；原文：'省${group.savedAmount.format(withSymbol: false)}'
+  /// No description provided for @groupBuyDetailPage_208.
   ///
   /// In zh, this message translates to:
   /// **'省{savedAmount}'**
   String groupBuyDetailPage_208(Object savedAmount);
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:249；原文：'${group.succeedNum}人成团'
+  /// No description provided for @groupBuyDetailPage_249.
   ///
   /// In zh, this message translates to:
   /// **'{succeedNum}人成团'**
   String groupBuyDetailPage_249(Object succeedNum);
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:259；原文：'已满团'
+  /// No description provided for @groupBuyDetailPage_259.
   ///
   /// In zh, this message translates to:
   /// **'已满团'**
   String get groupBuyDetailPage_259;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:259；原文：'还差${group.remaining}人'
+  /// No description provided for @groupBuyDetailPage_259_2.
   ///
   /// In zh, this message translates to:
   /// **'还差{remaining}人'**
   String groupBuyDetailPage_259_2(Object remaining);
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:283；原文：'剩余 ${group.remainingHours} 小时'
+  /// No description provided for @groupBuyDetailPage_283.
   ///
   /// In zh, this message translates to:
   /// **'剩余 {remainingHours} 小时'**
   String groupBuyDetailPage_283(Object remainingHours);
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:316；原文：'参团成员 (${group.currentMembers}/${group.succeedNum})'
+  /// No description provided for @groupBuyDetailPage_316.
   ///
   /// In zh, this message translates to:
   /// **'参团成员 ({currentMembers}/{succeedNum})'**
   String groupBuyDetailPage_316(Object currentMembers, Object succeedNum);
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:394；原文：'团长'
+  /// No description provided for @groupBuyDetailPage_394.
   ///
   /// In zh, this message translates to:
   /// **'团长'**
   String get groupBuyDetailPage_394;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:444；原文：'待邀请'
+  /// No description provided for @groupBuyDetailPage_444.
   ///
   /// In zh, this message translates to:
   /// **'待邀请'**
   String get groupBuyDetailPage_444;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:472；原文：'拼团规则'
+  /// No description provided for @groupBuyDetailPage_472.
   ///
   /// In zh, this message translates to:
   /// **'拼团规则'**
   String get groupBuyDetailPage_472;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:481；原文：'1. 在有效期内邀请好友参团，满人数即成团\n'
-  ///             '2. 拼团成功后系统自动出票\n'
-  ///             '3. 未在有效期内满团则自动退款\n'
-  ///             '4. 每人限参 1 个拼团\n'
-  ///             '5. 拼团价不与其他优惠叠加'
+  /// No description provided for @groupBuyDetailPage_481.
   ///
   /// In zh, this message translates to:
   /// **'1. 在有效期内邀请好友参团，满人数即成团\n2. 拼团成功后系统自动生成支持凭证\n3. 未在有效期内满团则自动退款\n4. 每人限参 1 个拼团\n5. 拼团价不与其他优惠叠加'**
   String get groupBuyDetailPage_481;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:533；原文：'拼团价'
+  /// No description provided for @groupBuyDetailPage_533.
   ///
   /// In zh, this message translates to:
   /// **'拼团价'**
   String get groupBuyDetailPage_533;
 
-  /// 来源：lib/features/group_buy/group_buy_detail_page.dart:573；原文：'立即参团'
+  /// No description provided for @groupBuyDetailPage_573.
   ///
   /// In zh, this message translates to:
   /// **'立即参团'**
   String get groupBuyDetailPage_573;
 
-  /// 来源：lib/features/group_buy/group_buy_page.dart:28；原文：'超低价拼团'
+  /// No description provided for @groupBuyPage_28.
   ///
   /// In zh, this message translates to:
   /// **'超低价拼团'**
   String get groupBuyPage_28;
 
-  /// 来源：lib/features/group_buy/group_buy_page.dart:31；原文：'暂无拼团活动'
+  /// No description provided for @groupBuyPage_31.
   ///
   /// In zh, this message translates to:
   /// **'暂无拼团活动'**
   String get groupBuyPage_31;
 
-  /// 来源：lib/features/group_buy/group_buy_page.dart:32；原文：'拼团活动上线后会显示在这里'
+  /// No description provided for @groupBuyPage_32.
   ///
   /// In zh, this message translates to:
   /// **'拼团活动上线后会显示在这里'**
   String get groupBuyPage_32;
 
-  /// 来源：lib/features/group_buy/group_buy_page.dart:150；原文：'拼团价 '
+  /// No description provided for @groupBuyPage_150.
   ///
   /// In zh, this message translates to:
   /// **'拼团价 '**
   String get groupBuyPage_150;
 
-  /// 来源：lib/features/group_buy/group_buy_page.dart:210；原文：'${group.currentMembers}/${group.succeedNum}人'
+  /// No description provided for @groupBuyPage_210.
   ///
   /// In zh, this message translates to:
   /// **'{currentMembers}/{succeedNum}人'**
   String groupBuyPage_210(Object currentMembers, Object succeedNum);
 
-  /// 来源：lib/features/group_buy/group_buy_providers.dart:59；原文：'参团成功！等待拼团完成'
+  /// No description provided for @groupBuyProviders_59.
   ///
   /// In zh, this message translates to:
   /// **'参团成功！等待拼团完成'**

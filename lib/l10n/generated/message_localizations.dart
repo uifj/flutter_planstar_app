@@ -101,199 +101,199 @@ abstract class MessageLocalizations {
   /// **'消息'**
   String get messageTitle;
 
-  /// 来源：lib/features/message/application/message_providers.dart:48；原文：'活动通知'
+  /// No description provided for @messageProviders_48.
   ///
   /// In zh, this message translates to:
   /// **'活动通知'**
   String get messageProviders_48;
 
-  /// 来源：lib/features/message/application/message_providers.dart:49；原文：'回复我的'
+  /// No description provided for @messageProviders_49.
   ///
   /// In zh, this message translates to:
   /// **'回复我的'**
   String get messageProviders_49;
 
-  /// 来源：lib/features/message/application/message_providers.dart:50；原文：'赞和关注'
+  /// No description provided for @messageProviders_50.
   ///
   /// In zh, this message translates to:
   /// **'赞和关注'**
   String get messageProviders_50;
 
-  /// 来源：lib/features/message/application/message_providers.dart:55；原文：'企划星官方客服'
+  /// No description provided for @messageProviders_55.
   ///
   /// In zh, this message translates to:
   /// **'企划星官方客服'**
   String get messageProviders_55;
 
-  /// 来源：lib/features/message/application/message_providers.dart:56；原文：'您好，关于《剧院魅影》的退改签问题，我们已为您登记…'
+  /// No description provided for @messageProviders_56.
   ///
   /// In zh, this message translates to:
   /// **'您好，关于《星海回声》企划的支持退款问题，我们已为您登记…'**
   String get messageProviders_56;
 
-  /// 来源：lib/features/message/application/message_providers.dart:64；原文：'演出提醒'
+  /// No description provided for @messageProviders_64.
   ///
   /// In zh, this message translates to:
   /// **'企划提醒'**
   String get messageProviders_64;
 
-  /// 来源：lib/features/message/application/message_providers.dart:65；原文：'您关注的「周杰伦上海站」即将开票，别忘了设置提醒'
+  /// No description provided for @messageProviders_65.
   ///
   /// In zh, this message translates to:
   /// **'您关注的「夏日回声企划」即将开放支持，别忘了设置提醒'**
   String get messageProviders_65;
 
-  /// 来源：lib/features/message/application/message_providers.dart:71；原文：'订单助手'
+  /// No description provided for @messageProviders_71.
   ///
   /// In zh, this message translates to:
   /// **'订单助手'**
   String get messageProviders_71;
 
-  /// 来源：lib/features/message/application/message_providers.dart:72；原文：'订单 PN20261108000001 已出票，可在「我的订单」查看电子票'
+  /// No description provided for @messageProviders_72.
   ///
   /// In zh, this message translates to:
   /// **'订单 PN20261108000001 已生成支持凭证，可在「我的订单」查看'**
   String get messageProviders_72;
 
-  /// 来源：lib/features/message/application/message_providers.dart:79；原文：'剧院常驻民'
+  /// No description provided for @messageProviders_79.
   ///
   /// In zh, this message translates to:
   /// **'企划常驻民'**
   String get messageProviders_79;
 
-  /// 来源：lib/features/message/application/message_providers.dart:80；原文：'你发的动态收到了 12 个赞'
+  /// No description provided for @messageProviders_80.
   ///
   /// In zh, this message translates to:
   /// **'你发的动态收到了 12 个赞'**
   String get messageProviders_80;
 
-  /// 来源：lib/features/message/application/message_providers.dart:86；原文：'抢票小分队'
+  /// No description provided for @messageProviders_86.
   ///
   /// In zh, this message translates to:
   /// **'支持小分队'**
   String get messageProviders_86;
 
-  /// 来源：lib/features/message/application/message_providers.dart:87；原文：'上海站加场了，明天十点开抢'
+  /// No description provided for @messageProviders_87.
   ///
   /// In zh, this message translates to:
   /// **'新档位追加了，明天十点开放支持'**
   String get messageProviders_87;
 
-  /// 来源：lib/features/message/application/message_providers.dart:93；原文：'企划星福利官'
+  /// No description provided for @messageProviders_93.
   ///
   /// In zh, this message translates to:
   /// **'企划星福利官'**
   String get messageProviders_93;
 
-  /// 来源：lib/features/message/application/message_providers.dart:94；原文：'您有一张 50 星币无门槛券即将过期'
+  /// No description provided for @messageProviders_94.
   ///
   /// In zh, this message translates to:
   /// **'您有一张 50 星币无门槛券即将过期'**
   String get messageProviders_94;
 
-  /// 来源：lib/features/message/chat_page.dart:75；原文：'会话'
+  /// No description provided for @chatPage_75.
   ///
   /// In zh, this message translates to:
   /// **'会话'**
   String get chatPage_75;
 
-  /// 来源：lib/features/message/chat_page.dart:76；原文：'官方账号'
+  /// No description provided for @chatPage_76.
   ///
   /// In zh, this message translates to:
   /// **'官方账号'**
   String get chatPage_76;
 
-  /// 来源：lib/features/message/chat_page.dart:80；原文：'会话不存在'
+  /// No description provided for @chatPage_80.
   ///
   /// In zh, this message translates to:
   /// **'会话不存在'**
   String get chatPage_80;
 
-  /// 来源：lib/features/message/chat_page.dart:81；原文：'它可能已被清空'
+  /// No description provided for @chatPage_81.
   ///
   /// In zh, this message translates to:
   /// **'它可能已被清空'**
   String get chatPage_81;
 
-  /// 来源：lib/features/message/chat_page.dart:83；原文：'返回消息'
+  /// No description provided for @chatPage_83.
   ///
   /// In zh, this message translates to:
   /// **'返回消息'**
   String get chatPage_83;
 
-  /// 来源：lib/features/message/chat_page.dart:91；原文：'还没有消息'
+  /// No description provided for @chatPage_91.
   ///
   /// In zh, this message translates to:
   /// **'还没有消息'**
   String get chatPage_91;
 
-  /// 来源：lib/features/message/chat_page.dart:92；原文：'打个招呼吧'
+  /// No description provided for @chatPage_92.
   ///
   /// In zh, this message translates to:
   /// **'打个招呼吧'**
   String get chatPage_92;
 
-  /// 来源：lib/features/message/chat_page.dart:288；原文：'演示环境：消息只保存在本地，不会真的发送'
+  /// No description provided for @chatPage_288.
   ///
   /// In zh, this message translates to:
   /// **'演示环境：消息只保存在本地，不会真的发送'**
   String get chatPage_288;
 
-  /// 来源：lib/features/message/chat_page.dart:310；原文：'输入消息…'
+  /// No description provided for @chatPage_310.
   ///
   /// In zh, this message translates to:
   /// **'输入消息…'**
   String get chatPage_310;
 
-  /// 来源：lib/features/message/chat_page.dart:334；原文：'发送'
+  /// No description provided for @chatPage_334.
   ///
   /// In zh, this message translates to:
   /// **'发送'**
   String get chatPage_334;
 
-  /// 来源：lib/features/message/message_page.dart:62；原文：'${entry.title}列表（演示）'
+  /// No description provided for @messagePage_62.
   ///
   /// In zh, this message translates to:
   /// **'{title}列表（演示）'**
   String messagePage_62(Object title);
 
-  /// 来源：lib/features/message/message_page.dart:72；原文：'暂无消息'
+  /// No description provided for @messagePage_72.
   ///
   /// In zh, this message translates to:
   /// **'暂无消息'**
   String get messagePage_72;
 
-  /// 来源：lib/features/message/message_page.dart:73；原文：'订单进度、开票提醒都会出现在这里'
+  /// No description provided for @messagePage_73.
   ///
   /// In zh, this message translates to:
   /// **'订单进度、支持提醒都会出现在这里'**
   String get messagePage_73;
 
-  /// 来源：lib/features/message/message_page.dart:122；原文：'清空消息'
+  /// No description provided for @messagePage_122.
   ///
   /// In zh, this message translates to:
   /// **'清空消息'**
   String get messagePage_122;
 
-  /// 来源：lib/features/message/message_page.dart:123；原文：'清空后会话记录将不再显示，确定继续吗？'
+  /// No description provided for @messagePage_123.
   ///
   /// In zh, this message translates to:
   /// **'清空后会话记录将不再显示，确定继续吗？'**
   String get messagePage_123;
 
-  /// 来源：lib/features/message/message_page.dart:131；原文：'清空'
+  /// No description provided for @messagePage_131.
   ///
   /// In zh, this message translates to:
   /// **'清空'**
   String get messagePage_131;
 
-  /// 来源：lib/features/message/message_page.dart:160；原文：'消息中心'
+  /// No description provided for @messagePage_160.
   ///
   /// In zh, this message translates to:
   /// **'消息中心'**
   String get messagePage_160;
 
-  /// 来源：lib/features/message/message_page.dart:358；原文：'官方'
+  /// No description provided for @messagePage_358.
   ///
   /// In zh, this message translates to:
   /// **'官方'**

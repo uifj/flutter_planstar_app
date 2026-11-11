@@ -2,108 +2,32 @@
   "@@locale": "zh",
   "messageTitle": "消息",
   "messageProviders_48": "活动通知",
-  "@messageProviders_48": {
-    "description": "来源：lib/features/message/application/message_providers.dart:48；原文：'活动通知'"
-  },
   "messageProviders_49": "回复我的",
-  "@messageProviders_49": {
-    "description": "来源：lib/features/message/application/message_providers.dart:49；原文：'回复我的'"
-  },
   "messageProviders_50": "赞和关注",
-  "@messageProviders_50": {
-    "description": "来源：lib/features/message/application/message_providers.dart:50；原文：'赞和关注'"
-  },
   "messageProviders_55": "企划星官方客服",
-  "@messageProviders_55": {
-    "description": "来源：lib/features/message/application/message_providers.dart:55；原文：'企划星官方客服'"
-  },
   "messageProviders_56": "您好，关于《星海回声》企划的支持退款问题，我们已为您登记…",
-  "@messageProviders_56": {
-    "description": "来源：lib/features/message/application/message_providers.dart:56；原文：'您好，关于《剧院魅影》的退改签问题，我们已为您登记…'"
-  },
   "messageProviders_64": "企划提醒",
-  "@messageProviders_64": {
-    "description": "来源：lib/features/message/application/message_providers.dart:64；原文：'演出提醒'"
-  },
   "messageProviders_65": "您关注的「夏日回声企划」即将开放支持，别忘了设置提醒",
-  "@messageProviders_65": {
-    "description": "来源：lib/features/message/application/message_providers.dart:65；原文：'您关注的「周杰伦上海站」即将开票，别忘了设置提醒'"
-  },
   "messageProviders_71": "订单助手",
-  "@messageProviders_71": {
-    "description": "来源：lib/features/message/application/message_providers.dart:71；原文：'订单助手'"
-  },
   "messageProviders_72": "订单 PN20261108000001 已生成支持凭证，可在「我的订单」查看",
-  "@messageProviders_72": {
-    "description": "来源：lib/features/message/application/message_providers.dart:72；原文：'订单 PN20261108000001 已出票，可在「我的订单」查看电子票'"
-  },
   "messageProviders_79": "企划常驻民",
-  "@messageProviders_79": {
-    "description": "来源：lib/features/message/application/message_providers.dart:79；原文：'剧院常驻民'"
-  },
   "messageProviders_80": "你发的动态收到了 12 个赞",
-  "@messageProviders_80": {
-    "description": "来源：lib/features/message/application/message_providers.dart:80；原文：'你发的动态收到了 12 个赞'"
-  },
   "messageProviders_86": "支持小分队",
-  "@messageProviders_86": {
-    "description": "来源：lib/features/message/application/message_providers.dart:86；原文：'抢票小分队'"
-  },
   "messageProviders_87": "新档位追加了，明天十点开放支持",
-  "@messageProviders_87": {
-    "description": "来源：lib/features/message/application/message_providers.dart:87；原文：'上海站加场了，明天十点开抢'"
-  },
   "messageProviders_93": "企划星福利官",
-  "@messageProviders_93": {
-    "description": "来源：lib/features/message/application/message_providers.dart:93；原文：'企划星福利官'"
-  },
   "messageProviders_94": "您有一张 50 星币无门槛券即将过期",
-  "@messageProviders_94": {
-    "description": "来源：lib/features/message/application/message_providers.dart:94；原文：'您有一张 50 星币无门槛券即将过期'"
-  },
   "chatPage_75": "会话",
-  "@chatPage_75": {
-    "description": "来源：lib/features/message/chat_page.dart:75；原文：'会话'"
-  },
   "chatPage_76": "官方账号",
-  "@chatPage_76": {
-    "description": "来源：lib/features/message/chat_page.dart:76；原文：'官方账号'"
-  },
   "chatPage_80": "会话不存在",
-  "@chatPage_80": {
-    "description": "来源：lib/features/message/chat_page.dart:80；原文：'会话不存在'"
-  },
   "chatPage_81": "它可能已被清空",
-  "@chatPage_81": {
-    "description": "来源：lib/features/message/chat_page.dart:81；原文：'它可能已被清空'"
-  },
   "chatPage_83": "返回消息",
-  "@chatPage_83": {
-    "description": "来源：lib/features/message/chat_page.dart:83；原文：'返回消息'"
-  },
   "chatPage_91": "还没有消息",
-  "@chatPage_91": {
-    "description": "来源：lib/features/message/chat_page.dart:91；原文：'还没有消息'"
-  },
   "chatPage_92": "打个招呼吧",
-  "@chatPage_92": {
-    "description": "来源：lib/features/message/chat_page.dart:92；原文：'打个招呼吧'"
-  },
   "chatPage_288": "演示环境：消息只保存在本地，不会真的发送",
-  "@chatPage_288": {
-    "description": "来源：lib/features/message/chat_page.dart:288；原文：'演示环境：消息只保存在本地，不会真的发送'"
-  },
   "chatPage_310": "输入消息…",
-  "@chatPage_310": {
-    "description": "来源：lib/features/message/chat_page.dart:310；原文：'输入消息…'"
-  },
   "chatPage_334": "发送",
-  "@chatPage_334": {
-    "description": "来源：lib/features/message/chat_page.dart:334；原文：'发送'"
-  },
   "messagePage_62": "{title}列表（演示）",
   "@messagePage_62": {
-    "description": "来源：lib/features/message/message_page.dart:62；原文：'${entry.title}列表（演示）'",
     "placeholders": {
       "title": {
         "type": "Object"
@@ -111,31 +35,10 @@
     }
   },
   "messagePage_72": "暂无消息",
-  "@messagePage_72": {
-    "description": "来源：lib/features/message/message_page.dart:72；原文：'暂无消息'"
-  },
   "messagePage_73": "订单进度、支持提醒都会出现在这里",
-  "@messagePage_73": {
-    "description": "来源：lib/features/message/message_page.dart:73；原文：'订单进度、开票提醒都会出现在这里'"
-  },
   "messagePage_122": "清空消息",
-  "@messagePage_122": {
-    "description": "来源：lib/features/message/message_page.dart:122；原文：'清空消息'"
-  },
   "messagePage_123": "清空后会话记录将不再显示，确定继续吗？",
-  "@messagePage_123": {
-    "description": "来源：lib/features/message/message_page.dart:123；原文：'清空后会话记录将不再显示，确定继续吗？'"
-  },
   "messagePage_131": "清空",
-  "@messagePage_131": {
-    "description": "来源：lib/features/message/message_page.dart:131；原文：'清空'"
-  },
   "messagePage_160": "消息中心",
-  "@messagePage_160": {
-    "description": "来源：lib/features/message/message_page.dart:160；原文：'消息中心'"
-  },
-  "messagePage_358": "官方",
-  "@messagePage_358": {
-    "description": "来源：lib/features/message/message_page.dart:358；原文：'官方'"
-  }
+  "messagePage_358": "官方"
 }

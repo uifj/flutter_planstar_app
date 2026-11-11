@@ -86,17 +86,8 @@
   "settingsPage_180": "Sign out",
   "settingsPage_188": "Signed out",
   "settingsPageGroupAccount": "Account",
-  "@settingsPageGroupAccount": {
-    "description": "来源：lib/features/user/settings_page.dart；设置页分组标题（账号）"
-  },
   "settingsPageGroupGeneral": "General",
-  "@settingsPageGroupGeneral": {
-    "description": "来源：lib/features/user/settings_page.dart；设置页分组标题（通用）"
-  },
   "settingsPageGroupAbout": "About",
-  "@settingsPageGroupAbout": {
-    "description": "来源：lib/features/user/settings_page.dart；设置页分组标题（关于）"
-  },
   "userPage_81": "Supporter management coming soon",
   "userPage_82": "Customer service chat (demo)",
   "userPage_83": "Seller recruitment is out of scope this time",

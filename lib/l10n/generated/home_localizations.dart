@@ -125,331 +125,331 @@ abstract class HomeLocalizations {
   /// **'planstar://order_confirm → /order/confirm，触发登录门禁'**
   String get homeEntryOrderConfirmSubtitle;
 
-  /// 来源：lib/features/home/city_list_page.dart:46；原文：'$city 暂无演出数据（演示数据仅覆盖部分城市）'
+  /// No description provided for @cityListPage_46.
   ///
   /// In zh, this message translates to:
   /// **'{city} 暂无企划数据（演示数据仅覆盖部分城市）'**
   String cityListPage_46(Object city);
 
-  /// 来源：lib/features/home/city_list_page.dart:53；原文：'选择城市'
+  /// No description provided for @cityListPage_53.
   ///
   /// In zh, this message translates to:
   /// **'选择城市'**
   String get cityListPage_53;
 
-  /// 来源：lib/features/home/city_list_page.dart:57；原文：'上海'
+  /// No description provided for @cityListPage_57.
   ///
   /// In zh, this message translates to:
   /// **'上海'**
   String get cityListPage_57;
 
-  /// 来源：lib/features/home/city_list_page.dart:59；原文：'热门城市'
+  /// No description provided for @cityListPage_59.
   ///
   /// In zh, this message translates to:
   /// **'热门城市'**
   String get cityListPage_59;
 
-  /// 来源：lib/features/home/city_list_page.dart:65；原文：'全部城市'
+  /// No description provided for @cityListPage_65.
   ///
   /// In zh, this message translates to:
   /// **'全部城市'**
   String get cityListPage_65;
 
-  /// 来源：lib/features/home/city_list_page.dart:73；原文：'演示数据只覆盖上海、北京、杭州、广州、深圳；其余城市会显示空态。'
+  /// No description provided for @cityListPage_73.
   ///
   /// In zh, this message translates to:
   /// **'演示数据只覆盖上海、北京、杭州、广州、深圳；其余城市会显示空态。'**
   String get cityListPage_73;
 
-  /// 来源：lib/features/home/city_list_page.dart:115；原文：'当前定位：上海'
+  /// No description provided for @cityListPage_115.
   ///
   /// In zh, this message translates to:
   /// **'当前定位：上海'**
   String get cityListPage_115;
 
-  /// 来源：lib/features/home/city_list_page.dart:120；原文：'演示环境没有接入定位，这里固定为上海'
+  /// No description provided for @cityListPage_120.
   ///
   /// In zh, this message translates to:
   /// **'演示环境没有接入定位，这里固定为上海'**
   String get cityListPage_120;
 
-  /// 来源：lib/features/home/city_list_page.dart:126；原文：'上海'
+  /// No description provided for @cityListPage_126.
   ///
   /// In zh, this message translates to:
   /// **'上海'**
   String get cityListPage_126;
 
-  /// 来源：lib/features/home/city_list_page.dart:140；原文：'使用'
+  /// No description provided for @cityListPage_140.
   ///
   /// In zh, this message translates to:
   /// **'使用'**
   String get cityListPage_140;
 
-  /// 来源：lib/features/home/home_page.dart:51；原文：'演唱会 · 音乐节 · 巡演'
+  /// No description provided for @homePage_51.
   ///
   /// In zh, this message translates to:
   /// **'音乐企划 · 现场企划 · 巡演企划'**
   String get homePage_51;
 
-  /// 来源：lib/features/home/home_page.dart:52；原文：'话剧 · 音乐剧 · 沉浸式'
+  /// No description provided for @homePage_52.
   ///
   /// In zh, this message translates to:
   /// **'话剧 · 音乐剧 · 沉浸式'**
   String get homePage_52;
 
-  /// 来源：lib/features/home/home_page.dart:53；原文：'交响 · 独奏 · 室内乐'
+  /// No description provided for @homePage_53.
   ///
   /// In zh, this message translates to:
   /// **'交响 · 独奏 · 室内乐'**
   String get homePage_53;
 
-  /// 来源：lib/features/home/home_page.dart:54；原文：'儿童剧 · 亲子活动'
+  /// No description provided for @homePage_54.
   ///
   /// In zh, this message translates to:
   /// **'儿童剧 · 亲子活动'**
   String get homePage_54;
 
-  /// 来源：lib/features/home/home_page.dart:132；原文：'$next 暂无演出数据（演示数据仅覆盖部分城市）'
+  /// No description provided for @homePage_132.
   ///
   /// In zh, this message translates to:
   /// **'{next} 暂无企划数据（演示数据仅覆盖部分城市）'**
   String homePage_132(Object next);
 
-  /// 来源：lib/features/home/home_page.dart:163；原文：'${slide.title} · 运营活动页（演示）'
+  /// No description provided for @homePage_163.
   ///
   /// In zh, this message translates to:
   /// **'{title} · 运营活动页（演示）'**
   String homePage_163(Object title);
 
-  /// 来源：lib/features/home/home_page.dart:175；原文：'$city 暂无演出'
+  /// No description provided for @homePage_175.
   ///
   /// In zh, this message translates to:
   /// **'{city} 暂无企划'**
   String homePage_175(Object city);
 
-  /// 来源：lib/features/home/home_page.dart:176；原文：'演示数据只覆盖上海、北京、杭州、广州、深圳'
+  /// No description provided for @homePage_176.
   ///
   /// In zh, this message translates to:
   /// **'演示数据只覆盖上海、北京、杭州、广州、深圳'**
   String get homePage_176;
 
-  /// 来源：lib/features/home/home_page.dart:178；原文：'切换到上海'
+  /// No description provided for @homePage_178.
   ///
   /// In zh, this message translates to:
   /// **'切换到上海'**
   String get homePage_178;
 
-  /// 来源：lib/features/home/home_page.dart:180；原文：'上海'
+  /// No description provided for @homePage_180.
   ///
   /// In zh, this message translates to:
   /// **'上海'**
   String get homePage_180;
 
-  /// 来源：lib/features/home/home_page.dart:193；原文：'热门演出'
+  /// No description provided for @homePage_193.
   ///
   /// In zh, this message translates to:
   /// **'热门企划'**
   String get homePage_193;
 
-  /// 来源：lib/features/home/home_page.dart:194；原文：'本周想看人数最多'
+  /// No description provided for @homePage_194.
   ///
   /// In zh, this message translates to:
   /// **'本周想看人数最多'**
   String get homePage_194;
 
-  /// 来源：lib/features/home/home_page.dart:241；原文：'企划星 · 让看演出更简单'
+  /// No description provided for @homePage_241.
   ///
   /// In zh, this message translates to:
   /// **'企划星 · 让好企划被看见'**
   String get homePage_241;
 
-  /// 来源：lib/features/home/home_page.dart:251；原文：'让每一场演出都值得期待'
+  /// No description provided for @homePage_251.
   ///
   /// In zh, this message translates to:
   /// **'让每一个企划都值得期待'**
   String get homePage_251;
 
-  /// 来源：lib/features/home/home_page.dart:270；原文：'演唱会'
+  /// No description provided for @homePage_270.
   ///
   /// In zh, this message translates to:
   /// **'音乐企划'**
   String get homePage_270;
 
-  /// 来源：lib/features/home/home_page.dart:271；原文：'话剧歌剧'
+  /// No description provided for @homePage_271.
   ///
   /// In zh, this message translates to:
   /// **'话剧歌剧'**
   String get homePage_271;
 
-  /// 来源：lib/features/home/home_page.dart:272；原文：'音乐会'
+  /// No description provided for @homePage_272.
   ///
   /// In zh, this message translates to:
   /// **'音乐会'**
   String get homePage_272;
 
-  /// 来源：lib/features/home/home_page.dart:273；原文：'儿童亲子'
+  /// No description provided for @homePage_273.
   ///
   /// In zh, this message translates to:
   /// **'儿童亲子'**
   String get homePage_273;
 
-  /// 来源：lib/features/home/home_page.dart:274；原文：'演出'
+  /// No description provided for @homePage_274.
   ///
   /// In zh, this message translates to:
   /// **'企划'**
   String get homePage_274;
 
-  /// 来源：lib/features/home/home_page.dart:323；原文：'正在加载 $city 的演出…'
+  /// No description provided for @homePage_323.
   ///
   /// In zh, this message translates to:
   /// **'正在加载 {city} 的企划…'**
   String homePage_323(Object city);
 
-  /// 来源：lib/features/home/home_page.dart:363；原文：'加载失败'
+  /// No description provided for @homePage_363.
   ///
   /// In zh, this message translates to:
   /// **'加载失败'**
   String get homePage_363;
 
-  /// 来源：lib/features/home/home_page.dart:364；原文：'无法获取 $city 的演出数据\n${error.toString()}'
+  /// No description provided for @homePage_364.
   ///
   /// In zh, this message translates to:
   /// **'无法获取 {city} 的企划数据\n{toString}'**
   String homePage_364(Object city, Object toString);
 
-  /// 来源：lib/features/home/widgets/city_picker_sheet.dart:70；原文：'选择城市'
+  /// No description provided for @cityPickerSheet_70.
   ///
   /// In zh, this message translates to:
   /// **'选择城市'**
   String get cityPickerSheet_70;
 
-  /// 来源：lib/features/home/widgets/city_picker_sheet.dart:90；原文：'当前定位：上海'
+  /// No description provided for @cityPickerSheet_90.
   ///
   /// In zh, this message translates to:
   /// **'当前定位：上海'**
   String get cityPickerSheet_90;
 
-  /// 来源：lib/features/home/widgets/city_picker_sheet.dart:97；原文：'热门城市'
+  /// No description provided for @cityPickerSheet_97.
   ///
   /// In zh, this message translates to:
   /// **'热门城市'**
   String get cityPickerSheet_97;
 
-  /// 来源：lib/features/home/widgets/city_picker_sheet.dart:127；原文：'查看全部城市'
+  /// No description provided for @cityPickerSheet_127.
   ///
   /// In zh, this message translates to:
   /// **'查看全部城市'**
   String get cityPickerSheet_127;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:47；原文：'新企划首发：星海拾荒者'
+  /// No description provided for @homeBannerFloor_47.
   ///
   /// In zh, this message translates to:
   /// **'新企划首发：星海拾荒者'**
   String get homeBannerFloor_47;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:48；原文：'上线 24 小时 · 支持者抢先看'
+  /// No description provided for @homeBannerFloor_48.
   ///
   /// In zh, this message translates to:
   /// **'上线 24 小时 · 支持者抢先看'**
   String get homeBannerFloor_48;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:49；原文：'首发'
+  /// No description provided for @homeBannerFloor_49.
   ///
   /// In zh, this message translates to:
   /// **'首发'**
   String get homeBannerFloor_49;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:53；原文：'达成目标，解锁回报'
+  /// No description provided for @homeBannerFloor_53.
   ///
   /// In zh, this message translates to:
   /// **'达成目标，解锁回报'**
   String get homeBannerFloor_53;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:54；原文：'每一档回报都写明交付时间'
+  /// No description provided for @homeBannerFloor_54.
   ///
   /// In zh, this message translates to:
   /// **'每一档回报都写明交付时间'**
   String get homeBannerFloor_54;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:55；原文：'达成'
+  /// No description provided for @homeBannerFloor_55.
   ///
   /// In zh, this message translates to:
   /// **'达成'**
   String get homeBannerFloor_55;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:59；原文：'支持者可获进度更新'
+  /// No description provided for @homeBannerFloor_59.
   ///
   /// In zh, this message translates to:
   /// **'支持者可获进度更新'**
   String get homeBannerFloor_59;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:60；原文：'创作者认证 · 每步进展都可查'
+  /// No description provided for @homeBannerFloor_60.
   ///
   /// In zh, this message translates to:
   /// **'创作者认证 · 每步进展都可查'**
   String get homeBannerFloor_60;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:61；原文：'更新'
+  /// No description provided for @homeBannerFloor_61.
   ///
   /// In zh, this message translates to:
   /// **'更新'**
   String get homeBannerFloor_61;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:66；原文：'资金托管 · 未达成全额退'
+  /// No description provided for @homeBannerFloor_66.
   ///
   /// In zh, this message translates to:
   /// **'资金托管 · 未达成全额退'**
   String get homeBannerFloor_66;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:67；原文：'支持款平台托管 · 原路退回'
+  /// No description provided for @homeBannerFloor_67.
   ///
   /// In zh, this message translates to:
   /// **'支持款平台托管 · 原路退回'**
   String get homeBannerFloor_67;
 
-  /// 来源：lib/features/home/widgets/home_banner_floor.dart:68；原文：'保障'
+  /// No description provided for @homeBannerFloor_68.
   ///
   /// In zh, this message translates to:
   /// **'保障'**
   String get homeBannerFloor_68;
 
-  /// 来源：lib/features/home/widgets/home_choiceness_floor.dart:83；原文：'精选推荐'
+  /// No description provided for @homeChoicenessFloor_83.
   ///
   /// In zh, this message translates to:
   /// **'精选推荐'**
   String get homeChoicenessFloor_83;
 
-  /// 来源：lib/features/home/widgets/home_guarantee_floor.dart:13；原文：'100%真票'
+  /// No description provided for @homeGuaranteeFloor_13.
   ///
   /// In zh, this message translates to:
   /// **'100%履约'**
   String get homeGuaranteeFloor_13;
 
-  /// 来源：lib/features/home/widgets/home_guarantee_floor.dart:13；原文：'无票赔付'
+  /// No description provided for @homeGuaranteeFloor_13_2.
   ///
   /// In zh, this message translates to:
   /// **'未达成退款'**
   String get homeGuaranteeFloor_13_2;
 
-  /// 来源：lib/features/home/widgets/home_guarantee_floor.dart:13；原文：'出票保真'
+  /// No description provided for @homeGuaranteeFloor_13_3.
   ///
   /// In zh, this message translates to:
   /// **'交付保障'**
   String get homeGuaranteeFloor_13_3;
 
-  /// 来源：lib/features/home/widgets/home_guarantee_floor.dart:13；原文：'配送保障'
+  /// No description provided for @homeGuaranteeFloor_13_4.
   ///
   /// In zh, this message translates to:
   /// **'配送保障'**
   String get homeGuaranteeFloor_13_4;
 
-  /// 来源：lib/features/home/widgets/home_header.dart:108；原文：'100%真票 · 无票赔付'
+  /// No description provided for @homeHeader_108.
   ///
   /// In zh, this message translates to:
   /// **'100%履约 · 未达成退款'**
   String get homeHeader_108;
 
-  /// 来源：lib/features/home/widgets/home_venues_floor.dart:48；原文：'热门场馆'
+  /// No description provided for @homeVenuesFloor_48.
   ///
   /// In zh, this message translates to:
   /// **'热门活动场地'**

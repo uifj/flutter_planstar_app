@@ -317,61 +317,61 @@ abstract class AuthLocalizations {
   /// **'登录失败，请稍后重试'**
   String get authUnknownError;
 
-  /// 来源：lib/features/auth/data/dto/login_response_dto.dart:50；原文：'登录响应的 user 字段'
+  /// No description provided for @loginResponseDto_50.
   ///
   /// In zh, this message translates to:
   /// **'登录响应的 user 字段'**
   String get loginResponseDto_50;
 
-  /// 来源：lib/features/auth/data/planstar_auth_api.dart:101；原文：'发验证码响应'
+  /// No description provided for @planstarAuthApi_101.
   ///
   /// In zh, this message translates to:
   /// **'发验证码响应'**
   String get planstarAuthApi_101;
 
-  /// 来源：lib/features/auth/data/planstar_auth_api.dart:123；原文：'登录响应'
+  /// No description provided for @planstarAuthApi_123.
   ///
   /// In zh, this message translates to:
   /// **'登录响应'**
   String get planstarAuthApi_123;
 
-  /// 来源：lib/features/auth/data/remote_auth_repository.dart:55；原文：'需要图形验证码'
+  /// No description provided for @remoteAuthRepository_55.
   ///
   /// In zh, this message translates to:
   /// **'需要图形验证码'**
   String get remoteAuthRepository_55;
 
-  /// 来源：lib/features/auth/data/remote_auth_repository.dart:63；原文：'验证码发送失败'
+  /// No description provided for @remoteAuthRepository_63.
   ///
   /// In zh, this message translates to:
   /// **'验证码发送失败'**
   String get remoteAuthRepository_63;
 
-  /// 来源：lib/features/auth/data/remote_auth_repository.dart:118；原文：'需要图形验证码'
+  /// No description provided for @remoteAuthRepository_118.
   ///
   /// In zh, this message translates to:
   /// **'需要图形验证码'**
   String get remoteAuthRepository_118;
 
-  /// 来源：lib/features/auth/data/remote_auth_repository.dart:128；原文：'登录成功，但服务端没有返回有效的用户信息'
+  /// No description provided for @remoteAuthRepository_128.
   ///
   /// In zh, this message translates to:
   /// **'登录成功，但服务端没有返回有效的用户信息'**
   String get remoteAuthRepository_128;
 
-  /// 来源：lib/features/auth/data/remote_auth_repository.dart:163；原文：'锁定'
+  /// No description provided for @remoteAuthRepository_163.
   ///
   /// In zh, this message translates to:
   /// **'锁定'**
   String get remoteAuthRepository_163;
 
-  /// 来源：lib/features/auth/domain/auth_session.dart:31；原文：'AuthSession(${user.userId}, token: ${token == null ? '无' : '有'})'
+  /// No description provided for @authSession_31.
   ///
   /// In zh, this message translates to:
   /// **'AuthSession({userId}, token: {tokenState})'**
   String authSession_31(Object userId, Object tokenState);
 
-  /// 来源：lib/features/auth/domain/auth_user.dart:119；原文：'票友'
+  /// No description provided for @authUser_119.
   ///
   /// In zh, this message translates to:
   /// **'同好'**

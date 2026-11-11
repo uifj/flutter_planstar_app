@@ -95,121 +95,121 @@ abstract class ProxyBuyLocalizations {
     Locale('zh')
   ];
 
-  /// 来源：lib/features/proxy_buy/proxy_buy.dart:142；原文：'待抢票'
+  /// No description provided for @proxyBuy_142.
   ///
   /// In zh, this message translates to:
   /// **'待代购'**
   String get proxyBuy_142;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy.dart:144；原文：'抢票中'
+  /// No description provided for @proxyBuy_144.
   ///
   /// In zh, this message translates to:
   /// **'代购中'**
   String get proxyBuy_144;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy.dart:146；原文：'抢票成功'
+  /// No description provided for @proxyBuy_146.
   ///
   /// In zh, this message translates to:
   /// **'代购成功'**
   String get proxyBuy_146;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy.dart:148；原文：'抢票失败'
+  /// No description provided for @proxyBuy_148.
   ///
   /// In zh, this message translates to:
   /// **'代购失败'**
   String get proxyBuy_148;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy.dart:150；原文：'已取消'
+  /// No description provided for @proxyBuy_150.
   ///
   /// In zh, this message translates to:
   /// **'已取消'**
   String get proxyBuy_150;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:30；原文：'代抢服务'
+  /// No description provided for @proxyBuyPage_30.
   ///
   /// In zh, this message translates to:
   /// **'代购服务'**
   String get proxyBuyPage_30;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:36；原文：'我的代抢订单'
+  /// No description provided for @proxyBuyPage_36.
   ///
   /// In zh, this message translates to:
   /// **'我的代购订单'**
   String get proxyBuyPage_36;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:39；原文：'暂无代抢订单'
+  /// No description provided for @proxyBuyPage_39.
   ///
   /// In zh, this message translates to:
   /// **'暂无代购订单'**
   String get proxyBuyPage_39;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:40；原文：'参与代抢后订单会显示在这里'
+  /// No description provided for @proxyBuyPage_40.
   ///
   /// In zh, this message translates to:
   /// **'参与代购后订单会显示在这里'**
   String get proxyBuyPage_40;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:81；原文：'代抢规则'
+  /// No description provided for @proxyBuyPage_81.
   ///
   /// In zh, this message translates to:
   /// **'代购规则'**
   String get proxyBuyPage_81;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:98；原文：'含赔付'
+  /// No description provided for @proxyBuyPage_98.
   ///
   /// In zh, this message translates to:
   /// **'含赔付'**
   String get proxyBuyPage_98;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:118；原文：'代抢服务费：'
+  /// No description provided for @proxyBuyPage_118.
   ///
   /// In zh, this message translates to:
   /// **'代购服务费：'**
   String get proxyBuyPage_118;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:122；原文：'${info.proxyBuyFee.format()}/张'
+  /// No description provided for @proxyBuyPage_122.
   ///
   /// In zh, this message translates to:
   /// **'{format}/份'**
   String proxyBuyPage_122(Object format);
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:165；原文：'选择截止时间'
+  /// No description provided for @proxyBuyPage_165.
   ///
   /// In zh, this message translates to:
   /// **'选择截止时间'**
   String get proxyBuyPage_165;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:303；原文：'场馆'
+  /// No description provided for @proxyBuyPage_303.
   ///
   /// In zh, this message translates to:
   /// **'活动场地'**
   String get proxyBuyPage_303;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:305；原文：'场次'
+  /// No description provided for @proxyBuyPage_305.
   ///
   /// In zh, this message translates to:
   /// **'活动时间'**
   String get proxyBuyPage_305;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:307；原文：'截止'
+  /// No description provided for @proxyBuyPage_307.
   ///
   /// In zh, this message translates to:
   /// **'截止'**
   String get proxyBuyPage_307;
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:314；原文：'${order.quantity}张 × ${order.ticketPrice.format()}'
+  /// No description provided for @proxyBuyPage_314.
   ///
   /// In zh, this message translates to:
   /// **'{quantity}份 × {format}'**
   String proxyBuyPage_314(Object quantity, Object format);
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:322；原文：'代抢费 ${order.proxyBuyFee.format()}/张'
+  /// No description provided for @proxyBuyPage_322.
   ///
   /// In zh, this message translates to:
   /// **'代购费 {format}/份'**
   String proxyBuyPage_322(Object format);
 
-  /// 来源：lib/features/proxy_buy/proxy_buy_page.dart:334；原文：'合计 '
+  /// No description provided for @proxyBuyPage_334.
   ///
   /// In zh, this message translates to:
   /// **'合计 '**
