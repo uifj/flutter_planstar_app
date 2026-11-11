@@ -28,7 +28,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.planstar.app"
     // geolocator_android / geocoding_android / flutter_plugin_android_lifecycle /
-    // flutter_secure_storage 等插件要求 compileSdk 36（targetSdk 仍留 35，与原项目一致）。
+    // flutter_secure_storage 等插件要求 compileSdk 36；targetSdk 仍留 35。
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 

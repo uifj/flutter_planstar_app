@@ -104,7 +104,7 @@
 		<string>mqzone</string>
 		<string>baidumap</string>
 	</array>
-	<!-- 回跳 URL Scheme：微信登录/分享、QQ 互联（AppID 取自原项目） -->
+	<!-- 回跳 URL Scheme：微信登录/分享、QQ 互联 -->
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!-- 迁移自原 Android 项目第一方权限；厂商推送（JPush/小米/华为HMS/OPPO/vivo）与 OAID 等权限随各自 SDK 插件接入时再补。 -->
+    <!-- 应用第一方权限；厂商推送（JPush/小米/华为HMS/OPPO/vivo）与 OAID 等权限随各自 SDK 插件接入时再补。 -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
-    <!-- 定位（百度地图/地理编码 + geolocator 后台定位）：补齐原项目定位与网络状态权限。 -->
+    <!-- 定位（百度地图/地理编码 + geolocator 后台定位）与网络状态权限。 -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
@@ -29,23 +29,24 @@
     <!-- 分享/拉起第三方 App（微信/QQ/地图）在 Android 11+ 需要包可见性；见下方 <queries>。 -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission"/>
 
-    <!-- 硬件特性：迁移自原清单。glEsVersion=0x20000 为地图/OpenGL 渲染硬性要求。 -->
+    <!-- 硬件特性。glEsVersion=0x20000 为地图/OpenGL 渲染硬性要求。 -->
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <uses-feature android:name="android.hardware.wifi" android:required="false"/>
     <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
 
+    <!-- usesCleartextTraffic：release 全局禁止明文 HTTP；debug 由 src/debug/res/xml
+         的同名文件放开本地联调域名。 -->
     <application
         android:label="企划星"
         android:name="${applicationName}"
         android:allowBackup="false"
-        <!-- release 全局禁止明文 HTTP；debug 由 src/debug/res/xml 的同名文件放开本地联调域名。 -->
         android:usesCleartextTraffic="false"
         android:networkSecurityConfig="@xml/network_security_config"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
-        <!-- ── SDK 声明式配置（取自原 com.planstar.app 清单）───────────── -->
+        <!-- ── SDK 声明式配置 ───────────────────────────────────────── -->
         <!-- 百度地图 / 定位 API Key（com.baidu.mapapi + com.baidu.location 消费）。 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -54,8 +55,8 @@
              manifestPlaceholders（JPUSH_APPKEY/JPUSH_PKGNAME/JPUSH_CHANNEL）注入。
              jpush_flutter 插件自身清单引用 ${JPUSH_APPKEY} 等占位符，若在此再写死
              同名 meta-data 会与之重复、导致清单合并失败。 -->
-        <!-- 厂商推送通道 ID（原清单已含；仅在你接入对应 JPush 厂商 SDK + Gradle 插件后生效，
-             未接入时这些 meta 惰性无害，保留以对齐原项目）。 -->
+        <!-- 厂商推送通道 ID：仅在接入对应 JPush 厂商 SDK + Gradle 插件后生效，
+             未接入时这些 meta 惰性无害，先留着以免接入时再补。 -->
         <meta-data android:name="XIAOMI_APPID"    android:value="MI-2882303761517405771"/>
         <meta-data android:name="XIAOMI_APPKEY"   android:value="MI-5561740550771"/>
         <meta-data android:name="OPPO_APPID"      android:value="3024221"/>
