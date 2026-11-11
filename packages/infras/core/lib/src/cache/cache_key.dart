@@ -8,21 +8,21 @@ import 'package:dio/dio.dart';
 /// 未登录场景可显式使用的 scope。
 ///
 /// 它必须**显式传入**，不存在"没给 scope 就当作匿名"的默认行为——
-/// 那正是来源的串号 bug（30-07）的成因。
+/// 那正是缓存串号 bug 的成因。
 const String anonymousScope = 'anon';
 
 /// 构造缓存键。
 ///
 /// 格式：`scope|METHOD|path|query|body`。
 ///
-/// 相对来源的两处**必须改**：
-/// 1. **`scope` 前置且必填**。来源的键是 `method + path + query + body`，
-///    不含用户身份；企划星支持换账号登录，直接照抄会让 A 用户的订单列表
-///    被 B 用户命中（30-07）。[scope] 传 userId（或 `anon`）。
+/// 两处**必须改**：
+/// 1. **`scope` 前置且必填**。键若只有 `method + path + query + body`、
+///    不含用户身份，企划星支持换账号登录时会让 A 用户的订单列表
+///    被 B 用户命中。[scope] 传 userId（或 `anon`）。
 /// 2. **`scope` 为空直接抛**。宁可让调用方在开发期炸掉，也不要在运行期
 ///    静默写出一个所有用户共享的键。
 ///
-/// 保留来源的优点：[query] 与 [body] 走 [_stableEncode] 递归稳定序列化，
+/// 键的稳定性靠序列化保证：[query] 与 [body] 走 [_stableEncode] 递归稳定序列化，
 /// 嵌套 Map 按键排序、List 保序，解决"同 path 不同 body 撞同一个 key"。
 ///
 /// `⚠` 不做哈希：明文键便于在 L2 里直接排查。若担心键过长或含敏感字段，

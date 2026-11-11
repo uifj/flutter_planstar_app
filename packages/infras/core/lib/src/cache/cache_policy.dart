@@ -3,7 +3,7 @@ library;
 
 /// 单个请求的缓存策略。
 ///
-/// 决策表（直接沿用来源的判断，见 `wiki_zh/30-flutter-adoptable-designs.md` §2.3）：
+/// 决策表：
 ///
 /// | 策略 | 场景 | 一致性 |
 /// |---|---|---|
@@ -89,15 +89,15 @@ final class CachePolicyTable {
   /// 企划星侧建议规则。
   ///
   /// `⚠` 路径片段是**按业务语义给的占位值**，接入真实接口时需与后端实际
-  /// path 对齐（企划星 Android 侧路径分散在 45 个包里的 Api 常量中）。
+  /// path 对齐（真实路径分散在各业务模块的 Api 常量里，容易漏改）。
   ///
-  /// 顺序刻意把"实时性最高"的放前面：座位图一旦被缓存命中就会卖重票。
+  /// 顺序刻意把"实时性最高"的放前面：座位图一旦被缓存命中就会重复占座。
   static const CachePolicyTable planstar = CachePolicyTable(<CacheRule>[
-    // 座位图：实时性最高，缓存会卖重票。
+    // 座位图：实时性最高，缓存会重复占座。
     CacheRule(pathContains: '/seat/', policy: CachePolicy.onlyNetwork),
     // 订单详情：下单/支付链路，强一致。
     CacheRule(pathContains: '/order/detail', policy: CachePolicy.onlyNetwork),
-    // 演出详情：可容忍弱网兜底。
+    // 企划详情：可容忍弱网兜底。
     CacheRule(
       pathContains: '/show/detail',
       policy: CachePolicy.networkFirst,

@@ -8,9 +8,9 @@ import 'config_source.dart';
 
 /// 配置加载器。
 ///
-/// 这个类存在的唯一理由就是修 30-13。
+/// 这个类存在的唯一理由就是修掉"初始化失败后后来者永久挂起"。
 ///
-/// 来源 `HttpManager.initEndpointMap()` 的写法是：
+/// 反面写法（一次性初始化标记 + 裸 Completer）长这样：
 ///
 /// ```dart
 /// if (!_initEndpoint) {
@@ -86,7 +86,7 @@ final class ConfigLoader {
       );
     } finally {
       // 成败都清空：失败后下次调用会重试，而不是拿到一个永远不会完成的
-      // future（30-13）。
+      // future。
       _inFlight = null;
     }
   }

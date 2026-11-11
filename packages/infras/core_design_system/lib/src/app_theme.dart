@@ -1,6 +1,6 @@
 /// L2 装配：把 L0 色板与 L1 语义槽组装成 `ThemeData`。
 ///
-/// 组件样式向 TUIKit（`atomic-x`）靠拢：直角卡片、8/20 圆角按钮、
+/// 组件样式基调：直角卡片、8/20 圆角按钮、
 /// 无阴影、灰底输入框、细描边。
 library;
 
@@ -28,7 +28,7 @@ abstract final class AppTheme {
 
   static ThemeData _build(AppColors colors, Brightness brightness) {
     // 刻意**不用** `ColorScheme.fromSeed`：它会把品牌色派生成一套
-    // "更协调"的色调，TUIKit 的蓝会失真。这里显式给出 ColorScheme。
+    // "更协调"的色调，品牌蓝会失真。这里显式给出 ColorScheme。
     final scheme = ColorScheme(
       brightness: brightness,
       primary: colors.brand,
@@ -61,7 +61,7 @@ abstract final class AppTheme {
       hintColor: colors.textTertiary,
       splashFactory: InkSparkle.splashFactory,
       appBarTheme: AppBarTheme(
-        // TUIKit 顶栏与页面同底，靠分隔线分层。
+        // 顶栏与页面同底，靠分隔线分层。
         backgroundColor: colors.bgPage,
         foregroundColor: colors.textPrimary,
         elevation: 0,
@@ -110,7 +110,7 @@ abstract final class AppTheme {
           disabledBackgroundColor: colors.brandDisabled,
           disabledForegroundColor: colors.textDisabled,
           minimumSize: const Size.fromHeight(44),
-          // TUIKit 主按钮是药丸（superLargeRadius = 20）。
+          // 主按钮是药丸（AppRadius.xl = 20）。
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadius.xl),
           ),

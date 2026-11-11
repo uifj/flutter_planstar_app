@@ -181,8 +181,8 @@ final class ApiClient {
       if (error is FailureCarryingError) {
         return Fail<T>(error.failure);
       }
-      // 非 DioException 也不能逃逸：来源只 catch DioException，
-      // 非法 URL / 序列化错误会直接抛到调用方（30-02 的连带问题）。
+      // 非 DioException 也不能逃逸：只 catch DioException 的话，
+      // 非法 URL / 序列化错误会直接抛到调用方。
       return Fail<T>(
         Failure.server(
           code: 'UNEXPECTED',

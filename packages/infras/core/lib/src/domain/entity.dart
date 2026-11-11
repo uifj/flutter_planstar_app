@@ -9,8 +9,8 @@ import 'value_object.dart';
 /// 有身份的领域对象。
 ///
 /// [TId] 建议用强类型 ID（`extension type TicketOrderId(String value)`），
-/// 这样 `ShowId` 与 `TicketOrderId` 在编译期就不能互换——企划星 Android 侧
-/// 94 个模型都用裸 `int` 存 id（`wiki_zh/27` §10），把 `activityId` 传给
+/// 这样 `ShowId` 与 `TicketOrderId` 在编译期就不能互换——若所有模型
+/// 都用裸 `int` 存 id，把 `activityId` 传给
 /// `orderId` 参数是编译得过的。
 abstract class Entity<TId> {
   const Entity(this.id);

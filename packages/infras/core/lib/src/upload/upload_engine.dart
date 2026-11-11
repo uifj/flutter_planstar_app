@@ -20,7 +20,7 @@ import 'multipart_models.dart';
 /// 「这个失败该不该重试」的判断回调。
 ///
 /// 由调用方注入，因为"哪些错误可重试"属于**调用方的协议知识**：
-/// 企划星 legacy（L879-884）里 OSS 原生错误码 3 / 32 是不可重试的，
+/// 例如 OSS 原生错误码 3 / 32 是不可重试的，
 /// 而 403 恰恰要重试（预签名过期，重新签名后即可成功）。引擎自己不猜。
 typedef RetryDecider = bool Function(Failure failure);
 
@@ -79,7 +79,7 @@ final class MultipartUploadEngine {
   /// 上传 [bytes]。
   ///
   /// [alreadyUploaded] 是断点续传时已完成的片号（1 基），这些片会被跳过；
-  /// 引擎**不负责持久化**它——续传状态留在 feature 层（§2.4 落地改法）。
+  /// 引擎**不负责持久化**它——续传状态留在 feature 层。
   /// [initialEtags] 配合 [alreadyUploaded] 使用，把上次拿到的 ETag 一起带回来，
   /// 这样调用方 complete 时能拼出完整的 ETag 列表。
   ///

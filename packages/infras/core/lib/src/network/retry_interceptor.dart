@@ -1,6 +1,6 @@
 /// 重试拦截器：只重试**瞬时网络错误**，不重试业务失败。
 ///
-/// 移植自 `stone_core` 的 `RetryInterceptor`，并按本包契约收紧：
+/// 按本包契约收紧的三条规则：
 /// - 重试计数存在 `requestOptions.extra`（内部元数据，**不会**写进 HTTP
 ///   请求头，避免 `retry_attempt` 泄漏到服务端）；
 /// - 只认超时 / 连接失败 / `SocketException`：5xx 与业务码失败不重试，
@@ -30,7 +30,7 @@ import 'package:dio/dio.dart';
 ///
 /// `buildDio` 返回后才拿到 Dio 实例，而拦截器构造又需要它。有两种写法：
 /// 先建 Dio 再 `dio.interceptors.add(RetryInterceptor(dio: dio))`；或注入一个
-/// `Dio Function()` 延迟取实例。这里保留 `Dio` 参数，与来源用法一致。
+/// `Dio Function()` 延迟取实例。这里保留 `Dio` 参数。
 final class RetryInterceptor extends Interceptor {
   /// 创建拦截器。
   ///

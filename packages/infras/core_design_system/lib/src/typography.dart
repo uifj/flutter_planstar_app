@@ -1,6 +1,6 @@
 /// 字号与字重令牌 + 数字字体。
 ///
-/// 阶梯对齐 TUIKit（`base_component/theme/font.dart`）：
+/// 字号阶梯：
 /// 标题 32/20、小标题 16、正文 14、说明 12、角标 10；字重只保留
 /// bold / medium / regular 三档。
 library;
@@ -65,21 +65,21 @@ abstract final class AppTypography {
 
 /// 圆角令牌。
 ///
-/// 对齐 TUIKit（`radius.dart`）：4 / 8 / 12 / 16 / 20 / 999。
+/// 圆角阶梯：4 / 8 / 12 / 16 / 20 / 999。
 abstract final class AppRadius {
-  /// 4：提示条、小标签（TUIKit `tipsRadius`）。
+  /// 4：提示条、小标签。
   static const double xs = 4;
 
-  /// 8：输入框、小按钮（TUIKit `smallRadius`）。
+  /// 8：输入框、小按钮。
   static const double sm = 8;
 
-  /// 12：弹窗、卡片（TUIKit `alertRadius`）。
+  /// 12：弹窗、卡片。
   static const double md = 12;
 
-  /// 16：大卡片、面板（TUIKit `largeRadius`）。
+  /// 16：大卡片、面板。
   static const double lg = 16;
 
-  /// 20：底部面板、药丸按钮（TUIKit `superLargeRadius`）。
+  /// 20：底部面板、药丸按钮。
   static const double xl = 20;
 
   /// 20：与 [xl] 同值，保留旧名以兼容既有调用。
@@ -91,7 +91,7 @@ abstract final class AppRadius {
 
 /// 间距令牌。
 ///
-/// 对齐 TUIKit（`spacing.dart`）的 4 基准阶梯：
+/// 4 基准阶梯：
 /// 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 56 / 72。
 abstract final class AppSpacing {
   /// 4：图标与文字。

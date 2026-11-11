@@ -5,9 +5,9 @@ import 'stores.dart';
 
 /// 应用存储门面。
 ///
-/// 相对来源的**刻意改动**：`config.dart` / `hive_store.dart` /
-/// `config_service_impl.dart` 三者都是单例（`XxxService.instance`），
-/// 这里**一个单例都没有**。原因不是洁癖：
+/// **刻意改动**：配置 / 本地存储 / 配置服务这类门面通常是单例
+/// （`XxxService.instance`），这里**一个单例都没有**。
+/// 原因不是洁癖：
 ///
 /// 1. 单例让测试无法隔离——跑第二个用例时上一个用例写的偏好还在；
 /// 2. 单例让"切换账号/清空数据"变成隐藏的全局副作用；
@@ -45,7 +45,7 @@ final class AppStore {
   /// 取某个用户的偏好视图（键自动加 `用户: ` 前缀）。
   ///
   /// 搜索历史、浏览记录、草稿这类数据必须按用户隔离，否则换账号会看到
-  /// 上一个用户的记录——与缓存串号（30-07）是同一类 bug。
+  /// 上一个用户的记录——与缓存串号是同一类 bug。
   ScopedKeyValueStore forUser(String userId) =>
       ScopedKeyValueStore(preferences, userId);
 }

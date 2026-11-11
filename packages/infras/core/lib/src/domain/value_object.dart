@@ -40,7 +40,7 @@ abstract class ValueObject {
 
 /// 值对象内部的深比较。
 ///
-/// 来源（企划星 Android）用 `equals()` 手写比较，`Coupon` 之类还漏了字段；
+/// 手写 `equals()` 比较很容易漏字段（`Coupon` 之类）；
 /// 这里统一成一份实现，子类只需要报 [ValueObject.props]。
 bool _deepEquals(Object? a, Object? b) {
   if (identical(a, b)) return true;

@@ -1,13 +1,13 @@
 /// Dio 工厂：**唯一**创建 Dio 的地方。
 ///
-/// 取代来源的 `HttpManager` 单例（`getInstance()` + 隐式初始化顺序）。
+/// 刻意不做单例（`getInstance()` + 隐式初始化顺序）。
 /// 这里是一个纯函数：给参数，返回一个配好的 [Dio]，没有任何全局状态。
 ///
 /// 三条刻意不做的事：
-/// 1. **不设置 `badCertificateCallback`**。来源在 host 映射为空时 `return true`
-///    ——等于信任一切证书，过不了应用市场审核（30-05 / §5 第 5 条）。
+/// 1. **不设置 `badCertificateCallback`**。在 host 映射为空时 `return true`
+///    ——等于信任一切证书，过不了应用市场审核。
 /// 2. **不注入任何默认拦截器**。鉴权、缓存、埋点由调用方按需挂（见
-///    `interceptors`），避免"默认链里塞了两个空壳"（30-03）。
+///    `interceptors`），避免"默认链里塞了两个空壳"。
 /// 3. **不改 `validateStatus`**。保持 dio 默认（仅 2xx 算成功），让 4xx/5xx 走
 ///    `DioException(badResponse)`，由 `ApiClient` 统一映射成 `Failure`。
 library;

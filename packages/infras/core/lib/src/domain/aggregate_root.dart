@@ -11,8 +11,8 @@ import 'entity.dart';
 
 /// 聚合根。
 ///
-/// 事件收集器是**实例级**的（不是 static）：企划星 Android 侧用全 App 共享的静态
-/// `HashMap`（`PNLogBean`）收集埋点，两个页面同时操作会互相污染，测试也无法并行。
+/// 事件收集器是**实例级**的（不是 static）：用全 App 共享的静态集合
+/// 收集事件，两个页面同时操作会互相污染，测试也无法并行。
 abstract class AggregateRoot<TId> extends Entity<TId> {
   AggregateRoot(super.id);
 

@@ -1,12 +1,12 @@
 /// OSS PostObject 表单直传（凭证由调用方注入）。
 ///
-/// 移植自 `stone_core`，与 [MultipartUploadEngine] 互补：
+/// 与 [MultipartUploadEngine] 互补：
 /// 小文件一把梭走表单 POST，大文件走分片 PUT。
 ///
-/// 相比来源的改动：
+/// 刻意的设计约束：
 /// - **只接受字节**，不碰 `dart:io` 的 `File`——本包保持可在 Web / 纯 Dart
 ///   测试环境编译；读文件是宿主的事；
-/// - 去掉「每次上传新建并 close Dio」的旧模式，Dio 必须由调用方注入复用；
+/// - 不「每次上传新建并 close Dio」，Dio 必须由调用方注入复用；
 /// - 失败统一返回 [Result]，**永不抛**。
 library;
 
@@ -18,12 +18,12 @@ import 'package:dio/dio.dart';
 
 /// 一次 OSS PostObject 表单直传请求。
 ///
-/// 字段契约逐字保留来源实现：
+/// 字段契约（逐字保留，改动会破坏上传签名）：
 /// `key / policy / OSSAccessKeyId / success_action_status=200 / signature / file`。
 final class OssFormUploadRequest {
   /// 创建请求。
   ///
-  /// [endpoint] 是不含 scheme 的 OSS host（与来源 `'https://$url'` 拼接一致）。
+  /// [endpoint] 是不含 scheme 的 OSS host（内部按 `'https://$endpoint'` 拼接）。
   /// [objectKey] 同时用作表单 `key` 与 multipart 文件名。
   const OssFormUploadRequest({
     required this.endpoint,
@@ -57,7 +57,7 @@ final class OssFormUploadRequest {
 final class FormPostUploader {
   /// 注入 Dio（超时 / 代理 / 证书策略由调用方统一配置）。
   ///
-  /// 不提供默认 Dio：来源隐式自建实例，上传结束后 `close`，既浪费连接池，
+  /// 不提供默认 Dio：隐式自建实例、上传结束后 `close`，既浪费连接池，
   /// 也绕过了宿主的网络策略。这里要求显式注入。
   FormPostUploader({required Dio dio, this.logger}) : _dio = dio;
 
@@ -68,7 +68,7 @@ final class FormPostUploader {
 
   bool _disposed = false;
 
-  /// 上传单个文件；成功条件为 HTTP 200（对齐来源）。
+  /// 上传单个文件；成功条件为 HTTP 200。
   Future<Result<void>> upload(
     OssFormUploadRequest request, {
     CancelToken? cancelToken,

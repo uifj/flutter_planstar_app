@@ -7,8 +7,8 @@ import 'cache_entry.dart';
 
 /// 缓存存储端口（L2 磁盘层由上层实现：Hive / SQLite / 文件）。
 ///
-/// 刻意只给内存实现：来源同样"故意不给磁盘实现"，因为 Hive/SQLite 属上层选型
-/// （§2.3 第 3 条）。要在企划星侧落 L2，实现这五个方法即可，其余不用动。
+/// 刻意只给内存实现：Hive/SQLite 属上层选型，核心层不绑定任何一种。
+/// 要在企划星侧落 L2，实现这五个方法即可，其余不用动。
 abstract interface class HttpCacheStore {
   /// 读取。未命中返回 `null`；命中需**不**判过期（过期判断交给拦截器，
   /// 因为 `networkFirst` 需要用过期数据兜底）。
@@ -50,7 +50,7 @@ final class MemoryLruCacheStore implements HttpCacheStore {
   MemoryLruCacheStore({this.capacity = defaultCapacity})
       : assert(capacity > 0, '容量必须为正数');
 
-  /// 默认容量。对齐来源的 200 条。
+  /// 默认容量：200 条。
   static const int defaultCapacity = 200;
 
   /// 最大条目数。

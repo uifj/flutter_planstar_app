@@ -22,9 +22,9 @@ final class InMemoryConfigSource implements ConfigSource {
 
 /// JSON 文本配置源（远端响应、本地文件、测试字面量）。
 ///
-/// 相对来源补的缺口：来源 `ConfigManager` 把"读 assets 里的
-/// `default_config.json` 当引导配置"写死在配置管理器内部（`new String(bytes,
-/// "UTF-8")` + `JSON.parseObject`），于是那段读盘逻辑既没法替换也没法测。
+/// 刻意补的缺口：若把"读 assets 里的 `default_config.json` 当引导配置"
+/// 写死在配置管理器内部（读字节与解析 JSON 耦合在一起），
+/// 那段读盘逻辑就既没法替换也没法测。
 /// 这里把**读字节**这一步作为函数注入：
 ///
 /// ```dart

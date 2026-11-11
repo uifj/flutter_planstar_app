@@ -1,7 +1,7 @@
 /// `Quantity`：件数。**永远非负、永远整数**。
 ///
-/// 企划星 Android 侧的件数散落在 `int` 里（`mCounts`、`goods.count`、`idCard.count`），
-/// 校验靠调用点各自 `if (count <= 0)`。抽成值对象后，"件数不能为负"
+/// 件数若散落在裸 `int` 里（各种 `count` 字段），
+/// 校验就只能靠调用点各自 `if (count <= 0)`。抽成值对象后，"件数不能为负"
 /// 只需要在一个地方保证。
 library;
 
@@ -38,7 +38,7 @@ final class Quantity extends ValueObject implements Comparable<Quantity> {
   Quantity operator +(Quantity other) => Quantity._(value + other.value);
 
   /// 减法。结果为负时抛 [StateError]——调用方必须先判断，
-  /// 否则"1 张票减 2 张"会静默变成 -1 并流进金额计算。
+  /// 否则"1 件减 2 件"会静默变成 -1 并流进金额计算。
   Quantity operator -(Quantity other) {
     if (other.value > value) {
       throw StateError('件数不足：$value - ${other.value}');

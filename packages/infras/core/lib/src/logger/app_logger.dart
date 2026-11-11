@@ -6,17 +6,17 @@ import 'log_sink.dart';
 
 /// 应用日志器。
 ///
-/// 相对来源的**刻意改动**（直指 30-05）：
+/// **刻意改动**：
 ///
-/// 来源 `StoneLogger` 的 `minLevel = LogLevel.debug` 是**无条件赋值**，
-/// 而它自己的注释写的是 "Defaults to debug in debug mode, info otherwise"——
-/// 注释与代码不符，结果 **release 包也会打 debug 日志**（性能与隐私双输）。
+/// 日志级别不能无条件赋值成 `LogLevel.debug`：
+/// 声称 "Defaults to debug in debug mode, info otherwise" 却无条件赋值，
+/// 就是注释与代码不符，结果 **release 包也会打 debug 日志**（性能与隐私双输）。
 ///
 /// 这里把"默认级别"做成一个纯函数 [defaultLevelFor]，由**装配方**传入
 /// `isReleaseMode` 后决定 `level`，测试可以直接断言这个映射，不会因为
 /// "只在真机上才生效"而漏掉。本包不读取 `kReleaseMode`，保持零 Flutter 依赖。
 ///
-/// 另一个改动：**没有全局可变状态**。来源用 `static` 字段持有级别与 sink，
+/// 另一个改动：**没有全局可变状态**。用 `static` 字段持有级别与 sink，
 /// 于是"改级别"是一个谁都能改的全局副作用。这里级别与 sink 都是构造参数，
 /// 想换就换一个实例——在 Riverpod 里就是 `overrideWithValue`。
 final class AppLogger {

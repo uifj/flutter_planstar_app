@@ -1,9 +1,9 @@
 /// `Money`：金额值对象。**内部一律用最小货币单位（分）的整数**，不用 `double`。
 ///
-/// 为什么不用 `double`：企划星 Android 侧的金额全是 `double` 元
-/// （`OrderConfirmActivity.updatePrice`：`goodTotalAmount + postage + splitOrderFee`），
-/// 团队知道有问题，所以外面又包了一层 `ArithmeticUtils`（BigDecimal）和 `Utils.round`；
-/// 但**手写 `-` 的地方（礼品卡、加速包）没包**（`wiki_zh/12` §3.5.4 第 4 点）。
+/// 为什么不用 `double`：金额若用 `double` 元直接相加
+/// （商品总额 + 邮费 + 拆单服务费这类表达式），
+/// 就得在外面再包一层精确算术与舍入工具；
+/// 但**手写 `-` 的地方（礼品卡、加速包）很容易漏包**。
 /// 结果是"有的路径精确、有的路径不精确"，而且只有金额恰好落在 `0.1 + 0.2` 这类
 /// 二进制不可表示的位置时才暴露。
 ///
@@ -36,7 +36,7 @@ final class CurrencyMismatchException implements Exception {
 final class Money extends ValueObject implements Comparable<Money> {
   const Money._(this.minorUnits, this.currency);
 
-  /// 人民币（企划星只有这一种币种，但保留字段以免将来加港澳台/海外票）。
+  /// 人民币（企划星只有这一种币种，但保留字段以免将来加港澳台/海外币种）。
   static const String cny = 'CNY';
 
   /// 零元。
@@ -52,8 +52,7 @@ final class Money extends ValueObject implements Comparable<Money> {
 
   /// 从"元"构造（**只用于边界**：接口返回、配置、测试）。
   ///
-  /// 四舍五入到分，且舍入规则是"远离零"（`-0.005 → -0.01`），
-  /// 与企划星 `Utils.round` 的语义一致。
+  /// 四舍五入到分，且舍入规则是"远离零"（`-0.005 → -0.01`）。
   factory Money.fromYuan(num yuan, {String currency = cny}) =>
       Money.fromMinorUnits(_roundHalfAwayFromZero(yuan * 100), currency: currency);
 

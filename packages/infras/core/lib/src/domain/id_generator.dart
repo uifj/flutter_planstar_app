@@ -16,7 +16,7 @@ abstract interface class IdGenerator {
 ///
 /// 例：`0199f3c2a1b4` + 20 位随机 → 32 字符，**字典序 = 时间序**。
 ///
-/// 与企划星的差别：企划星 94 个模型的 id 是 `int`（`wiki_zh/27` §10 第 13 条），
+/// 为什么不用 `int`：32 位 `int` 存 id
 /// 超过 2,147,483,647 就溢出；这里用字符串，没有上限。
 final class TimestampIdGenerator implements IdGenerator {
   TimestampIdGenerator({Random? random, DateTime Function()? clock})

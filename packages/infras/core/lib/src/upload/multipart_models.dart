@@ -7,9 +7,8 @@ library;
 /// 于是"凭证过期 → 重新签名"不是引擎里的一个 if 分支，而是**结构上的必然**：
 /// 实现方只要在回调里做正常的取签名逻辑，刷新就自动生效。
 ///
-/// 对照企划星 Android 侧的 `oss_client.dart`（legacy L788-800）：那里是 403 之后
-/// 手动刷 `ossConfig` 再重发，属于命令式补丁；这里是依赖倒置的解法
-/// （见 `wiki_zh/30-flutter-adoptable-designs.md` §2.4）。
+/// 反面做法是 403 之后手动刷凭证再重发，属于命令式补丁；
+/// 这里是依赖倒置的解法。
 typedef PartUrlProvider = Future<MultipartTarget> Function(int partNumber);
 
 /// 一片的上传目标。引擎只知道"往这个 URL PUT 这些头"，完全不知道
@@ -33,17 +32,15 @@ final class MultipartTarget {
 
 /// 分片上传配置。
 ///
-/// **每个默认值都对齐 legacy 实现的行号**，不是"我觉得合适"：
+/// 默认值一览（全部可在构造时覆盖）：
 ///
-/// | 项 | 默认值 | legacy 位置 |
-/// |---|---|---|
-/// | 分片大小 | 20 MiB | L341 / L514 |
-/// | 并发数 | 5 | L516 |
-/// | 重试次数 | 5 | L726 |
-/// | 重试间隔 | 1s | L727 |
-/// | 进度节流 | 500ms | L145-147 |
-///
-/// 行为保真的意义：迁移期间新引擎与旧实现的网络行为一致，出问题时可对比排查。
+/// | 项 | 默认值 |
+/// |---|---|
+/// | 分片大小 | 20 MiB |
+/// | 并发数 | 5 |
+/// | 重试次数 | 5 |
+/// | 重试间隔 | 1s |
+/// | 进度节流 | 500ms |
 final class MultipartUploadConfig {
   /// 创建配置。所有字段可覆盖。
   const MultipartUploadConfig({
@@ -56,7 +53,7 @@ final class MultipartUploadConfig {
         assert(concurrency > 0, '并发数必须为正'),
         assert(maxRetries >= 0, '重试次数不能为负');
 
-  /// 默认分片大小：20 MiB（legacy L341 / L514）。
+  /// 默认分片大小：20 MiB。
   static const int defaultPartSize = 20 * 1024 * 1024;
 
   /// 每片字节数。

@@ -1,17 +1,15 @@
 /// L0 原始色板。**只有这一层写死十六进制**。
 ///
-/// 取自 TUIKit（`atomic-x/lib/base_component/theme/colors.dart`）的
-/// `BaseColors`：中性灰阶 + 蓝色主题色阶 + 绿/红/橙功能色阶 + 强调色。
+/// 构成：中性灰阶 + 蓝色主题色阶 + 绿/红/橙功能色阶 + 强调色。
 /// 上层只准引用语义槽（[AppColors]），不要再直接取值。
 library;
 
 import 'dart:ui';
 
-/// TUIKit 基础色板。
+/// 基础色板。
 ///
-/// 命名与来源保持一致（`black1..8`、`white1..7`、`grayLight1..7`、
-/// `grayDark1..7`、`themeLight1..10`、`themeDark1..10`、功能色 light/dark 1..10），
-/// 这样从 TUIKit 示例迁组件时不需要做命名翻译。
+/// 色阶命名：`black1..8`、`white1..7`、`grayLight1..7`、
+/// `grayDark1..7`、`themeLight1..10`、`themeDark1..10`、功能色 light/dark 1..10。
 abstract final class BasePalette {
   // ── Black（白底上的透明黑阶）────────────────────────────────────────────
   static const Color black1 = Color(0xFF000000);
@@ -157,9 +155,9 @@ abstract final class BasePalette {
   static const Color transparent = Color(0x00FFFFFF);
 
   // ── 品牌主色别名 ────────────────────────────────────────────────────────
-  /// 亮色主品牌色（TUIKit `buttonColorPrimaryDefault` = themeLight6）。
+  /// 亮色主品牌色（= themeLight6）。
   static const Color primary = themeLight6;
 
-  /// 暗色主品牌色（TUIKit `buttonColorPrimaryDefault` dark = themeDark6）。
+  /// 暗色主品牌色（= themeDark6）。
   static const Color primaryDark = themeDark6;
 }

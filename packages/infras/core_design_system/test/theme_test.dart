@@ -50,18 +50,18 @@ void main() {
       expect(theme.colorScheme.primary, const Color(0xFF1C66E5));
     });
 
-    test('分隔线是 0.5 逻辑像素（TUIKit 细线风格）', () {
+    test('分隔线是 0.5 逻辑像素（细线风格）', () {
       expect(AppTheme.light().dividerTheme.thickness, 0.5);
     });
   });
 
-  group('令牌取值（TUIKit 色阶）', () {
-    test('品牌色与中性色取自 TUIKit BaseColors', () {
-      // buttonColorPrimaryDefault = themeLight6
+  group('令牌取值（品牌色阶）', () {
+    test('品牌色与中性色取自 L0 色板', () {
+      // L0 品牌主色
       expect(BasePalette.primary, const Color(0xFF1C66E5));
-      // textColorPrimary = black2
+      // L1 正文主色：带透明度的近黑
       expect(AppColors.light.textPrimary, const Color(0xE6000000));
-      // strokeColorSecondary = grayLight2
+      // L1 分隔线：浅灰
       expect(AppColors.light.divider, const Color(0xFFF0F2F7));
     });
 

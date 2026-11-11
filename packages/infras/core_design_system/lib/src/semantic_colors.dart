@@ -1,8 +1,7 @@
 /// L1 语义槽：组件**只准引用这一层**。
 ///
-/// 语义槽映射自 TUIKit（`base_component/theme/color_scheme.dart`）的
-/// `SemanticColorScheme`，按本应用实际用到的 24 个槽收敛。多出来的
-/// TRTC 专属槽（气泡、通话按钮、标签色阶等）不搬。
+/// 语义槽按本应用实际用到的 24 个槽收敛，不追求大而全；
+/// 音视频通话专属槽（气泡、通话按钮、标签色阶等）不引入。
 library;
 
 import 'package:flutter/material.dart';
@@ -11,12 +10,12 @@ import 'palette.dart';
 
 /// 语义色方案，以 [ThemeExtension] 形式挂在 `ThemeData.extensions` 上。
 ///
-/// 为什么是 `ThemeExtension` 而不是来源的 `InheritedNotifier<ThemeState>`：
+/// 为什么是 `ThemeExtension` 而不是 `InheritedNotifier`：
 ///
-/// 1. 来源的 `ComponentTheme` 在构造函数里 `themeState = themeState ?? ThemeState()`，
-///    而它是 `StatelessWidget`，父级每次 rebuild 都会 new 一个 `ThemeState`，
+/// 1. 主题容器若在构造函数里给状态兜一个默认值，而它又是
+///    `StatelessWidget`，父级每次 rebuild 都会 new 一个状态对象，
 ///    主题会被重置为默认。
-/// 2. 来源的 `ThemeConfig.operator==` 只比 `primaryColor`、忽略 `type`，
+/// 2. 主题配置的 `operator==` 若只比 `primaryColor`、忽略 `type`，
 ///    切换亮/暗时缓存判断会失效。[AppColors] 是 `@immutable` 值对象，
 ///    全部字段参与比较，不会出现这个问题。
 /// 3. 与 Riverpod 天然配合：主题由 `Notifier<ThemeMode>` 决定，
@@ -129,7 +128,7 @@ final class AppColors extends ThemeExtension<AppColors> {
   /// 未选中 Tab。
   final Color tabInactive;
 
-  /// 亮色方案（TUIKit `LightSemanticScheme` 的子集）。
+  /// 亮色方案。
   static const AppColors light = AppColors(
     textPrimary: BasePalette.black2,
     textSecondary: BasePalette.black4,
@@ -157,7 +156,7 @@ final class AppColors extends ThemeExtension<AppColors> {
     tabInactive: BasePalette.black4,
   );
 
-  /// 暗色方案（TUIKit `DarkSemanticScheme` 的子集）。
+  /// 暗色方案。
   static const AppColors dark = AppColors(
     textPrimary: BasePalette.white2,
     textSecondary: BasePalette.white4,

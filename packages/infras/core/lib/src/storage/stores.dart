@@ -27,8 +27,8 @@ abstract interface class KeyValueStore {
 /// 安全存储端口（token / 手机号 / 实名信息）。
 ///
 /// 与 [KeyValueStore] **同契约但不同类型**：类型不同，才能让编译器拦住
-/// "把 token 写进普通偏好"这种错误——这正是企划星 Android 侧
-/// `SharePreferenceUtil` 与 `MMKV` 混用留下的问题。
+/// "把 token 写进普通偏好"这种错误——普通偏好与安全存储混用
+/// （两套工具类随意互换）就会留下这个问题。
 abstract interface class SecureStore implements KeyValueStore {}
 
 /// 类型化读写扩展。所有实现共享同一套编解码，行为一致。
