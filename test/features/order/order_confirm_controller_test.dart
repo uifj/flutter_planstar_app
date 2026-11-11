@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// 应用层测试：**不建 Widget 树**，直接驱动控制器。
 ///
-/// 这本身就是分层带来的收益——企划星的确认页逻辑长在 Activity 里，
+/// 这本身就是分层带来的收益——确认页逻辑一旦和页面渲染绑在一起，
 /// 想测"改数量后金额对不对"必须先跑起整个页面。
 void main() {
   late ProviderContainer container;

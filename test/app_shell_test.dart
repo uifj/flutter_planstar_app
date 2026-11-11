@@ -71,7 +71,7 @@ Future<void> _pumpShell(WidgetTester tester, Locale locale) async {
 
 void main() {
   group('主题令牌', () {
-    test('品牌色是 TUIKit 蓝色，且不是 fromSeed 派生出来的', () {
+    test('品牌色等于 L0 色板常量，且不是 fromSeed 派生出来的', () {
       final ThemeData light = AppTheme.light();
 
       // 品牌色必须**等于**色板里的常量。`ColorScheme.fromSeed` 会把种子色
@@ -79,7 +79,7 @@ void main() {
       expect(light.colorScheme.primary, BasePalette.primary);
       expect(light.brightness, Brightness.light);
 
-      // 语义槽必须挂得上，否则所有 Pn* 组件都会回落到硬编码色。
+      // 语义槽必须挂得上，否则所有 Ps* 组件都会回落到硬编码色。
       expect(light.extension<AppColors>(), isNotNull);
     });
 
@@ -88,7 +88,7 @@ void main() {
       final AppColors darkColors = AppTheme.dark().extension<AppColors>()!;
 
       expect(AppTheme.dark().brightness, Brightness.dark);
-      // `AppColors` 手写了 `operator ==` 覆盖全部 24 个槽（缺陷 30-10）；
+      // `AppColors` 手写了 `operator ==` 覆盖全部 24 个槽；
       // 这里同时验证了「相等判断是对的」和「暗色确实换了一套值」。
       expect(darkColors, isNot(equals(lightColors)));
       expect(darkColors, equals(AppColors.dark));

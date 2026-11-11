@@ -82,7 +82,7 @@ void main() {
     );
   }
 
-  /// 抓包原文：登录成功（`LoginBean`，字段取自 `UserBean`）。
+  /// 抓包原文：登录成功。
   const String kLoginSuccessBody =
       '{"needCaptcha":false,"newUser":true,'
       '"user":{"userId":90012345,"userName":"票友小张","avatar":'
@@ -115,8 +115,8 @@ void main() {
             Headers.contentTypeHeader: <String>[
               'application/json;charset=UTF-8',
             ],
-            // 来源 `BaseLoginActivity` 就是从响应头取 `psSession`
-            // （`AccountService.getInstance().setPner(response.headers().get("psSession"))`）。
+            // 令牌从响应头下发，不在 body 里——拦截器负责把它捞进
+            // PsRequestContext，仓库再取出来落盘。
             'psSession': <String>['tok_abc123'],
           },
         );
@@ -142,7 +142,7 @@ void main() {
       // 这里只看内存实现里的键位；跨实例读盘在下一个用例里验。
       expect(env.context.psSession, 'tok_abc123');
 
-      // 请求体是 `{ua, code, ct}`，且带了来源那套 UA / dvid 头。
+      // 请求体是 `{ua, code, ct}`，且带了约定的 UA / dvid 头。
       final RequestOptions request = env.requests.single;
       expect(request.path, 'v1/user/login');
       expect(request.method, 'POST');

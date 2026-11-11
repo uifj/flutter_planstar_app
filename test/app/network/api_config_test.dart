@@ -4,7 +4,7 @@ import 'package:planstar/app/network/device_identity.dart';
 
 /// API 编译期默认配置的测试。
 ///
-/// 本地 `assets/` 已整体移除，配置不再从 `api_config.json` 运行时读取，
+/// 配置不从 `api_config.json` 运行时读取（不依赖本地 `assets/`），
 /// 全部收敛到 [ApiConfig] 的编译期常量 + `--dart-define` 覆盖。
 void main() {
   test('生产 base URL / 客户端类型 / UA', () {

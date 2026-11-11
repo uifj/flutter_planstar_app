@@ -31,11 +31,11 @@ import 'package:go_router/go_router.dart';
 ///
 /// 之所以值得存在：`flutter analyze` 抓不到 `RenderFlex overflowed`、
 /// 抓不到 `Provider` 没被 override、抓不到 `SliverPersistentHeaderDelegate`
-/// 的 extent 自相矛盾。本次重写里真实抓到过 4 处溢出：
+/// 的 extent 自相矛盾。这层测试真实抓到过 4 处溢出：
 /// `ShowCardFloor` 的「价格 + 折扣标签」（76dp 卡片）、
 /// `OrderListCard` 底部的「实付 + 状态按钮」行。
 void main() {
-  /// 360dp 是来源设计稿基线，320dp 是仍在支持的窄屏下限。
+  /// 360dp 是设计基线，320dp 是仍在支持的窄屏下限。
   const List<Size> kSurfaces = <Size>[Size(360, 640), Size(320, 568)];
 
   /// 页面里只要有一处 `context.push` / `context.go` 就需要真实 Router。

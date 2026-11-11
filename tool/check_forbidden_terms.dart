@@ -156,7 +156,7 @@ List<File> _collectFiles() {
   final List<File> files = <File>[];
   final Directory lib = Directory('lib');
   if (!lib.existsSync()) {
-    stderr.writeln('✗ 找不到 lib/（请在 flutter_piaoniu_app 工程根运行）');
+    stderr.writeln('✗ 找不到 lib/（请在 flutter_planstar_app 工程根运行）');
     exit(1);
   }
   for (final entity in lib.listSync(recursive: true)) {

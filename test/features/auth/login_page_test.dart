@@ -26,7 +26,7 @@ import 'package:go_router/go_router.dart';
 /// `200 + {success:false}`）由 `remote_auth_repository_test.dart` 回放真实
 /// 抓包来覆盖，两层各管一段。
 void main() {
-  /// 来源设计稿的窄屏基线。协议行（勾选框 + 两段协议名 + 右侧切换按钮）
+  /// 窄屏基线。协议行（勾选框 + 两段协议名 + 右侧切换按钮）
   /// 是这一页最容易溢出的地方，所以默认就在 360×640 下跑。
   const Size kSurface = Size(360, 640);
 
@@ -237,7 +237,7 @@ void main() {
     await tester.tap(find.text('登录'));
     await tester.pumpAndSettle();
 
-    // 来源就是 `showToast(errorBody().string())`，这里保持"原文直弹"。
+    // 服务端原文直弹，不翻译、不改写。
     expect(find.text('验证码不正确'), findsOneWidget);
     expect(find.text('me-page'), findsNothing);
     expect(env.container.read(authControllerProvider).isLoggedIn, isFalse);
@@ -262,7 +262,7 @@ void main() {
     expect(find.text('账号已被锁定'), findsOneWidget);
     expect(find.text('该账号已被锁定，请联系客服'), findsOneWidget);
 
-    // 点遮罩不能关（来源就是不可取消的）。
+    // 点遮罩不能关（对话框是不可取消的）。
     await tester.tapAt(const Offset(10, 10));
     await tester.pumpAndSettle();
     expect(find.text('账号已被锁定'), findsOneWidget);

@@ -6,7 +6,7 @@ import 'package:planstar/features/order/application/order_confirm_controller.dar
 import 'package:planstar/features/order/application/order_confirm_selection.dart';
 import 'package:planstar/features/order/domain/domain.dart';
 
-/// P0-08 / P0-09 回归测试：选票页参数必须真正进入确认页草稿，
+/// 回归测试：回报档位选择页的参数必须真正进入确认页草稿，
 /// 且提交过程与提交失败后的聚合状态必须一致、可重试。
 void main() {
   ProviderContainer makeContainer() {
@@ -137,7 +137,7 @@ void main() {
       expect(order.status, OrderStatus.draft);
       expect(order.isEditable, isTrue);
       expect(order.hasDomainEvents, isFalse);
-      // 回滚后仍持有有效报价，可在原页直接重试。
+      // 回滚后仍持有有效报价，可在当前页直接重试。
       expect(order.quote, isNotNull);
       expect(order.agreementAccepted, isTrue);
     });
