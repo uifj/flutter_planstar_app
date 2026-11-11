@@ -39,3 +39,9 @@
 -dontwarn com.alibaba.**
 -dontwarn okhttp3.**
 -dontwarn retrofit2.**
+
+# ---- Play Core（Flutter 延迟组件 API，本项目未使用 split install）----
+# Flutter 引擎引用了 com.google.android.play.core.* 做 deferred components，
+# 但未引入 play-core 依赖；R8 在 minifyRelease 阶段会因缺类失败，按 AGP 生成的
+# missing_rules.txt 忽略即可（包内没有该路径代码，运行时不会走到）。
+-dontwarn com.google.android.play.core.**
