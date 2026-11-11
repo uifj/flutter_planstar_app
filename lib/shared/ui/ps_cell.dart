@@ -2,10 +2,10 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 
-/// 菜单行（`view_user_menu.xml`）。
+/// 菜单行。
 ///
-/// 58dp 高、左右 18dp、16sp `text_131415`、右侧 8×14 灰色箭头、行间 1dp `divider`。
-/// 企划星的这个菜单**没有图标**——只有文字 + 箭头。加图标会偏离原设计，
+/// 58dp 高、左右 18dp、16sp 主文本色、右侧 8×14 灰色箭头、行间 1dp `divider`。
+/// 这个菜单**没有图标**——只有文字 + 箭头。加图标会偏离既定视觉，
 /// 所以 [leading] 只在确实需要时传（例如「我的订单」里的状态入口另有实现）。
 class PsCell extends StatelessWidget {
   const PsCell({

@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 
 /// 一个快捷入口。
 ///
-/// 企划星的分类图标是 `drawable/` 下的位图（`ic_category_*`），
-/// 本地图片资源已移除，快捷入口统一用 Lucide 矢量图标。
-/// 所以这里用 Material 图标 + 品牌色淡底圆角块代替，尺寸与排版仍按
-/// `item_home_icon.xml`：40×40 图标位 + 4dp 间距 + 11sp 文案。
+/// 分类图标不用位图：本地图片资源已移除，快捷入口统一用 Lucide 矢量图标。
+/// 这里用矢量图标 + 品牌色淡底圆角块，
+/// 尺寸与排版为 40×40 图标位 + 4dp 间距 + 11sp 文案。
 class PsShortcut {
   const PsShortcut({
     required this.label,
@@ -23,9 +22,9 @@ class PsShortcut {
   final Color? color;
 }
 
-/// 首页快捷入口宫格（`view_home_icon.xml` + `item_home_icon.xml`）。
+/// 首页快捷入口宫格。
 ///
-/// - 5 列 × 2 行一页（企划星 `GridLayoutManager` 的 span 是 5）；
+/// - 5 列 × 2 行一页；
 /// - 每项 50dp 宽、图标 40×40、文案 11sp；
 /// - 超过一页时显示 20×4 的指示器（`#ffe6e6e6` 轨道 + 12dp `#ffff2261` 滑块）。
 ///
@@ -105,7 +104,7 @@ class _PsShortcutGridState extends State<PsShortcutGrid> {
           ),
           if (_pageCount > 1) ...<Widget>[
             const SizedBox(height: 6),
-            // fl_indicator：20×4 圆角轨道，进度 12dp。
+            // 指示器：20×4 圆角轨道，滑块 12dp。
             Container(
               width: 20,
               height: 4,

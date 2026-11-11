@@ -1,9 +1,9 @@
-/// planstar:// 深链 → GoRoute path 的归一表（取自架构图第三张：
-/// 原 Android Manifest 的 ~111 个 `<intent-filter>` host）。
+/// planstar:// 深链 → GoRoute path 的归一表。
 ///
-/// 这里先登记「Part 1 已接线」的目标路由（5 个 shell tab + 少量 push 路由），
-/// 其余 host 未命中时回退首页，避免抛出未匹配异常。随着 fp_* 包逐个落地，
-/// 在 [hostToPath] 中补映射即可，解析器本身无需改动。
+/// 这里只登记已接线的目标路由（4 个 shell tab + 少量 push 路由），
+/// 其余 host 未命中时回退首页，避免抛出未匹配异常。
+/// 后续新增页面时在 [hostToPath] 中补映射即可，
+/// 解析器本身无需改动。
 class PlanstarLinks {
   const PlanstarLinks._();
 
@@ -34,7 +34,7 @@ class PlanstarLinks {
     'account_follow': '/me',
     'setting': '/me',
     'wallet_home': '/me',
-    // 搜索（Part 1 暂归发现 Tab）
+    // 搜索（暂归发现 Tab）
     'search': '/discover',
     'search_activity': '/discover',
   };

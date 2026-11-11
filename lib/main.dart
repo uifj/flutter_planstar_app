@@ -13,8 +13,8 @@ import 'app/network/network_providers.dart';
 ///
 /// 为什么不把这些放进 provider 里懒加载：`dioProvider` 的拦截器是同步的，
 /// 它读 `PsRequestContext` 时 `dvid`/`psSession` 必须已经在内存里；懒加载只能靠
-/// "第一次请求前 await"，那等于把初始化顺序又变回隐式约定（来源
-/// `HttpManager` 单例的老毛病）。宁可启动时多 await 一次。
+/// "第一次请求前 await"，那等于把初始化顺序又变回隐式约定（全局单例
+/// 懒初始化的老毛病）。宁可启动时多 await 一次。
 ///
 /// `⚠` 测试不跑 `main()`，因此拿到的是 `AppBootstrap.memory`（内存存储），
 /// 不会碰任何平台通道。

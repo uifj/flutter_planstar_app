@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// 应用壳的主题入口。
 ///
 /// 直接复用 `core_design_system` 的三层令牌装配（L0 色板 → L1 语义槽 →
-/// L2 ThemeData）。视觉风格来自 TUIKit（`atomic-x`）：品牌蓝 #1C66E5、
+/// L2 ThemeData）。视觉风格：品牌蓝 #1C66E5、
 /// 中性灰阶、药丸主按钮、8/12/16/20 圆角。
 export 'package:core_design_system/core_design_system.dart'
     show AppColors, AppRadius, AppSpacing, AppTheme, AppTypography, BasePalette;

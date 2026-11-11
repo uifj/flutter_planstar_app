@@ -1,8 +1,8 @@
 /// 网络层的 Riverpod 装配。
 ///
 /// 依赖方向是单向的：`app/network` → `core_*`，**不**依赖 `features/*`。
-/// 业务层从这里拿 [apiClientProvider]，而不是自己 new Dio——来源里
-/// "永不自建 OkHttpClient"（05 页 §8 第 1 条）是同一件事。
+/// 业务层从这里拿 [apiClientProvider]，而不是自己 new Dio——
+/// "永不自建 HTTP 客户端"是同一条约束。
 library;
 
 import 'package:core/network.dart';
@@ -76,7 +76,7 @@ final dioProvider = Provider<Dio>((ref) {
 /// 默认信封是 [PassthroughEnvelope]——这不是偷懒，是**实测结果**：
 ///
 /// - `GET /v1/cities` 直接返回 JSON **数组**（`[{"cityId":1,…}]`）；
-/// - `POST /v1/user/login` 直接返回 `LoginBean`（`{needCaptcha,newUser,user}`）；
+/// - `POST /v1/user/login` 直接返回登录结果模型（`{needCaptcha,newUser,user}`）；
 /// - 失败时返回 `4xx/5xx` + `text/plain` 正文（`验证码不正确`）。
 ///
 /// 也就是说企划星的多数接口是**裸模型 + HTTP 状态码表意**，而不是

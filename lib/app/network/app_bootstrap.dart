@@ -1,9 +1,7 @@
 /// 应用启动装配：配置 + 存储 + 请求上下文，**一次异步做完，再交给 UI**。
 ///
-/// 对应来源 `PlanstarApplication.onCreate()` 里的 `initConfig()` / `getDvid()` /
-/// `AccountService.getInstance()` 那几段——它们的问题是**同步 I/O 塞在
-/// 构造函数/静态初始化里**（23 页 §3.1：`profile` 字段损坏会让 App 每次启动
-/// 都崩在 `getInstance()`，且没有降级路径）。
+/// 刻意不把**同步 I/O 塞在构造函数/静态初始化里**：偏好数据一旦损坏，
+/// 单例初始化会在每次启动时抛异常，且没有降级路径，App 直接起不来。
 ///
 /// 这里的做法：
 ///
@@ -25,14 +23,14 @@ import 'api_config.dart';
 import 'device_identity.dart';
 import 'ps_request_context.dart';
 
-/// 设备标识在普通偏好里的键（与来源 `account` 分组的 `dvid` 对齐）。
+/// 设备标识在普通偏好里的键。
 const String dvidStorageKey = 'dvid';
 
-/// 会话令牌在安全存储里的键（与来源 `account` 分组的 `psSession` 对齐）。
+/// 会话令牌在安全存储里的键。
 ///
-/// 来源用普通 `SharedPreferences` 存 `psSession`（M6-05 指出 `profile` 是
-/// **URL 编码的明文 JSON**，可被直接解码）。这里把 token 放进
-/// `flutter_secure_storage`（Keystore/Keychain），是对该缺陷的刻意修正。
+/// token 不能放进普通 `SharedPreferences`：那里的数据是**明文**，
+/// 可被直接读取解码。这里放进 `flutter_secure_storage`
+/// （Keystore/Keychain），是对该缺陷的刻意修正。
 const String psSessionStorageKey = 'psSession';
 
 /// 启动装配结果。
@@ -78,8 +76,8 @@ final class AppBootstrap {
 /// 真实装配：打开存储、灌 `dvid` 与会话令牌。
 ///
 /// **不抛异常**：任何一步失败都退化成可用状态（配置空 → 编译期默认值；
-/// 存储不可用 → 内存实现）。启动期因为"读一个配置文件失败"就白屏，是
-/// 来源 `read()` 无 try/catch 那类问题的反面教材。
+/// 存储不可用 → 内存实现）。启动期因为"读一个配置文件失败"就白屏，
+/// 是必须避免的：所有读取路径都带 try/catch 兜底。
 Future<AppBootstrap> loadAppBootstrap({
   ConfigSource? configSource,
   AppStore? store,

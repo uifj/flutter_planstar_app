@@ -1,21 +1,12 @@
 /// 设备标识 `dvid`。
 ///
-/// 来源：`OkHttpUtil.getDvid()` / `generateDvid()`。
-///
-/// ```java
-/// private static String generateDvid() {
-///     String string = UUID.randomUUID().toString();
-///     return string + string.charAt(3);
-/// }
-/// ```
-///
-/// 也就是 **UUID v4 后面再补一位（第 4 个字符）**，共 37 个字符。
+/// 格式是 **UUID v4 后面再补一位（第 4 个字符）**，共 37 个字符。
 /// 服务端下发的 `dvid` 就是这个形状（实测响应头：
 /// `01d56ec7-10e7-471d-ae58-2167032a1e275` —— 36 位 UUID + 末尾的 `5`，
-/// 而 UUID 第 4 个字符正是 `5`）。所以这里照抄，不自己发明格式。
+/// 而 UUID 第 4 个字符正是 `5`）。格式由服务端约定，不自己发明。
 ///
 /// `dvid` 是**设备级**标识：每个请求都带（`dvid` 头），登录/登出都不清它。
-/// 它同时是推送别名的前缀（来源 `PushManager`），所以不能随手重置。
+/// 它同时是推送别名的前缀，所以不能随手重置。
 library;
 
 import 'dart:math';

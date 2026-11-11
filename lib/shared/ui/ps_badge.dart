@@ -1,8 +1,7 @@
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 
-/// 未读角标（`item_system_message_header.xml` / `item_user_message.xml` 的
-/// `tv_notice_int`）。
+/// 未读角标。
 ///
 /// 最小 18×18、圆角 9dp、`#ffff2661` 实心、1dp 白描边、12dp 白字。
 /// 白描边不是装饰——它是让角标在头像/图标上"浮起来"的必要条件，
@@ -13,7 +12,7 @@ class PsBadge extends StatelessWidget {
   /// 未读数。`> 99` 显示 `99+`。
   final int count;
 
-  /// 纯红点（`red_dot`：10×10 无数字）。
+  /// 纯红点（10×10 无数字）。
   final bool dot;
 
   @override

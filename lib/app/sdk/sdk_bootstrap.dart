@@ -10,7 +10,7 @@ import 'sdk_config.dart';
 
 /// 第三方 SDK（百度地图 / JPush / 微信 fluwx）的初始化骨架。
 ///
-/// 设计对齐原 `PlanstarApplication` 的做法：**先有隐私同意，再初始化第三方 SDK**。
+/// 设计原则：**先有隐私同意，再初始化第三方 SDK**。
 /// 因此所有初始化都挂在 [sdkBootstrapProvider] 上，而它 watch
 /// [privacyConsentProvider] —— 用户同意后 provider 自动重算并真正发起初始化。
 ///

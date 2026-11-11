@@ -44,8 +44,8 @@ final class Session {
 
   /// 用户 id。
   ///
-  /// 未登录为 `null`——来源用 `-1` 表示未登录（`AccountService.userId()`），
-  /// 于是调用方 `profile().getUserId()` 直接 NPE（M6-02）。用 `null` +
+  /// 未登录为 `null`——不用 `-1` 之类的哨兵值表示未登录：调用方容易
+  /// 忘了判断，拿哨兵值直接去查用户资料就会 NPE。用 `null` +
   /// 空安全可以让编译器帮忙拦住这类取值。
   final int? userId;
 

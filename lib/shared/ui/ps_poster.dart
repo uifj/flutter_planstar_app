@@ -9,17 +9,17 @@ import 'ps_network_images.dart';
 /// ## 图片来源：开源免费图床
 ///
 /// 本地 `assets/` 已整体移除，海报统一走 Lorem Picsum（图片来自 Unsplash，
-/// 免费可商用）的确定性 seed URL：同一场演出每次渲染都是同一张图，
-/// 不同演出之间能区分开。底层仍保留一组确定性渐变 + 首字水印作为
+/// 免费可商用）的确定性 seed URL：同一个企划每次渲染都是同一张图，
+/// 不同企划之间能区分开。底层仍保留一组确定性渐变 + 首字水印作为
 /// 网络加载失败时的兜底。接入自有 CDN 后把 [imageUrl] 传进来即可覆盖。
 ///
-/// ## 尺寸来自哪里
+/// ## 尺寸约定
 ///
-/// 各处的宽高由调用方给，取值全部来自 Android layout：
-/// - `item_home_choiceness.xml`：`105 × 140`，圆角 2dp
-/// - `item_home_show_list_common.xml`：`76 × 101`，圆角 8dp
-/// - `item_order_ticket.xml`：`58 × 76`（`corner_gray` 圆角 4dp）
-/// - `view_show_detail_header_picture.xml`：`92 × 124`
+/// 各处的宽高由调用方给，常用四组：
+/// - 首页精选卡片：`105 × 140`，圆角 2dp
+/// - 列表卡片：`76 × 101`，圆角 8dp
+/// - 支持记录（订单）卡片：`58 × 76`，圆角 4dp
+/// - 企划详情头图：`92 × 124`
 class PsPoster extends StatelessWidget {
   const PsPoster({
     super.key,
@@ -32,7 +32,7 @@ class PsPoster extends StatelessWidget {
     this.dimmed = false,
   });
 
-  /// 派生渐变与首字水印用的种子（传演出标题）。
+  /// 派生渐变与首字水印用的种子（传企划标题）。
   final String seed;
 
   /// 海报尺寸。传 [double.infinity] 表示“铺满父级”（父级需有界约束，
@@ -44,10 +44,10 @@ class PsPoster extends StatelessWidget {
   /// 真实海报地址。非空且加载成功时覆盖占位。
   final String? imageUrl;
 
-  /// 叠在海报之上的角标（折扣、城市、代购）。
+  /// 叠在海报之上的角标（折扣、标签、城市）。
   final Widget? overlay;
 
-  /// 售罄/下架时压暗。
+  /// 名额已满/下架时压暗。
   final bool dimmed;
 
   /// 六组派生渐变（洋红/紫/蓝/琥珀/青/朱），与 `BasePalette` 的强调色同族。
@@ -134,14 +134,13 @@ class PsPoster extends StatelessWidget {
   static String _initial(String value, String fallback) {
     final trimmed = value.trim();
     if (trimmed.isEmpty) return fallback;
-    // 标题常以书名号/引号开头（《剧院魅影》），取第一个"字"更好看。
+    // 标题常以书名号/引号开头（《星轨》），取第一个"字"更好看。
     final match = RegExp(r'[\u4e00-\u9fa5A-Za-z0-9]').firstMatch(trimmed);
     return match?.group(0) ?? trimmed.substring(0, 1);
   }
 }
 
-/// 海报上的小角标（`item_home_show_list_common.xml` 的 `tv_tag`：
-/// 9sp 白字、`#80000000` 底、圆角 4dp）。
+/// 海报上的小角标：9sp 白字、`#80000000` 底、圆角 4dp。
 class PsPosterTag extends StatelessWidget {
   const PsPosterTag({super.key, required this.label, this.color});
 
@@ -169,8 +168,8 @@ class PsPosterTag extends StatelessWidget {
   }
 }
 
-/// 海报底部城市条（`layout_city`：24dp 高、底部渐变 `gradient_home_show_name`、
-/// 定位图标 8dp + 9sp 白字）。
+/// 海报底部城市条：24dp 高、底部黑色渐变、
+/// 定位图标 8dp + 9sp 白字。
 class PsPosterCityBar extends StatelessWidget {
   const PsPosterCityBar({super.key, required this.city});
 
@@ -211,7 +210,7 @@ class PsPosterCityBar extends StatelessWidget {
   }
 }
 
-/// 折扣角标（`DiscountView`）。企划星是 28×33 的红角标，这里按同尺寸做。
+/// 折扣角标：品牌红底、9sp 白字，左上/右上 2dp、右下 8dp 圆角。
 class PsDiscountCorner extends StatelessWidget {
   const PsDiscountCorner({super.key, required this.text});
 

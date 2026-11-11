@@ -2,8 +2,8 @@
 ///
 /// 为什么是一个**可变对象**而不是不可变配置：拦截器是同步的
 /// （`Interceptor.onRequest` 不能 await），而 `dvid` 与 `psSession` 都要从磁盘
-/// 读。来源的做法是 `OkHttpUtil.getDvid()` 里同步读 SharedPreferences
-/// （内存缓存），等价于"启动时灌一次、之后只改内存"。
+/// 读。所以采用"启动时灌一次、之后只改内存"的方式，
+/// 拦截器里不做任何磁盘 I/O。
 ///
 /// 这里把同一件事显式化：
 ///
@@ -33,7 +33,6 @@ final class PsRequestContext {
   ///
   /// 企划星的会话不是 `Authorization: Bearer`，而是 **Cookie `psSession`**：
   /// 登录响应头里下发 `psSession`，之后每个请求带 `Cookie: psSession=…`。
-  /// 来源把它同时存进 SharedPreferences 与 WebView 的 CookieManager。
   String? psSession;
 
   /// 图形验证码会话标识（Cookie `psCaptcha`）。
@@ -59,7 +58,7 @@ final class PsRequestContext {
 
   /// 收到 401 时回调（用于全局登出）。
   ///
-  /// `⚠` 来源在**网络拦截器里直接** `AccountService.logout()`（05 页 §3.2），
+  /// `⚠` 不要在**网络拦截器里直接**执行登出：
   /// 副作用藏在传输层、且新增一个会返 401 的接口就会莫名把用户踢下线。
   /// 这里保留"401 → 登出"的语义，但把它变成一个显式注册的钩子：
   /// 只有业务层订阅了才生效，测试里不注册就什么都不发生。

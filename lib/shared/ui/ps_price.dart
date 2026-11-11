@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 /// 企划星的价格不是一个 `Text("星币 880")`，而是"小符号 + 大数字 + 小后缀"的三段式：
 /// `星币` 与 `起` 比主数字小一档，主数字用系统字体 + 等宽数字特性避免跳动。
 ///
-/// 尺寸与颜色来自这些 layout：
-/// - `item_home_choiceness.xml`：16sp 粗体 `text_red`
-/// - `item_home_show_list_common.xml`：12sp 粗体 `#ffff2261`
-/// - `item_home_show_list_hot.xml`：18dp 粗体 + `星币` 14dp + `起` 10dp `text_3`
-/// - `view_show_detail_header_picture.xml`：18dp `text_red`
+/// 尺寸与颜色按使用场景分四档：
+/// - 首页精选卡片：16sp 粗体、价格红
+/// - 普通列表卡片：12sp 粗体 `#ffff2261`
+/// - 热门列表卡片：18dp 粗体 + `星币` 14dp + `起` 10dp 三级文本灰
+/// - 企划详情头图：18dp、价格红
 ///
 /// 金额本身一律走 [Money]（整数分），这里只做排版，不做任何算术。
 class PsPrice extends StatelessWidget {
@@ -36,10 +36,10 @@ class PsPrice extends StatelessWidget {
   /// 默认取语义槽 `price`（`#ffff2661`）。
   final Color? color;
 
-  /// 主数字后的后缀（`起` / `/张`）。10sp、`text_3`。
+  /// 主数字后的后缀（如 `起`）。10sp、三级文本灰。
   final String? suffix;
 
-  /// 主数字前的说明（`代购费：`）。
+  /// 主数字前的说明（如 `服务费：`）。
   final String? prefix;
 
   final bool showSymbol;

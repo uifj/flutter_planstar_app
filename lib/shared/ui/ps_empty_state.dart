@@ -12,8 +12,7 @@ String psErrorMessage(Object error) {
 
 /// 空态。
 ///
-/// 企划星有 `icon_empty` / `icon_search_empty` / `icon_actor_site_goods_empty` /
-/// `icon_empty_toys` 四张空态图，分别对应"通用空 / 搜索无结果 / 演出无票 / 商品空"。
+/// 空态语义分四种："通用空 / 搜索无结果 / 企划名额已满 / 商品空"，
 /// 这里用一张图 + 文案参数化，避免每处各写一套布局。
 class PsEmptyState extends StatelessWidget {
   const PsEmptyState({

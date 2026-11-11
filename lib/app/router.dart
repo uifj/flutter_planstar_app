@@ -48,13 +48,13 @@ import 'session.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
-/// 深链 query 里的非负整数（票档/场次下标）。非法值一律忽略，避免参数注入。
+/// 深链 query 里的非负整数（回报档位/线下回报场次下标）。非法值一律忽略，避免参数注入。
 int? _queryIndex(String? raw) {
   final value = int.tryParse(raw ?? '');
   return value != null && value >= 0 && value < 1000 ? value : null;
 }
 
-/// 深链 query 里的正整数（购买张数）。上限由控制器按限购规则再收敛一次。
+/// 深链 query 里的正整数（支持份数）。上限由控制器按限购规则再收敛一次。
 int? _queryQuantity(String? raw) {
   final value = int.tryParse(raw ?? '');
   return value != null && value > 0 && value <= 99 ? value : null;
@@ -183,14 +183,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
-      // 消息列表。原为底部 tab 一级页，现收敛为「我的 → 消息」二级页：
+      // 消息列表。作为「我的 → 消息」二级页：
       // 放在 shell 之外，全屏显示 + 顶栏返回箭头，返回回到个人中心。
       GoRoute(
         path: '/message',
         name: 'message',
         builder: (context, state) => const MessagePage(),
       ),
-      // 支持列表（订单）。同样收敛为「我的 → 订单」二级页；`/order` 前缀
+      // 支持列表（订单）。作为「我的 → 订单」二级页；`/order` 前缀
       // 仍命中 `_authGatedPrefixes` 登录门禁，游客访问先登录再回来。
       GoRoute(
         path: '/order',
@@ -209,23 +209,23 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             ShowDetailPage(showId: state.pathParameters['showId']!),
       ),
-      // 选票页。详情页「立即购买」跳这里，选好场次/票档/数量后再进确认订单。
+      // 回报档位选择页。企划详情页的支持入口跳这里，选好线下回报场次/回报档位/数量后再进确认订单。
       GoRoute(
         path: '/show/:showId/choose-ticket',
         name: 'chooseTicket',
         builder: (context, state) =>
             ChooseTicketPage(showId: state.pathParameters['showId']!),
       ),
-      // 选座页。选票页里的「选座」入口跳这里。
-      // 对齐企划星 `SelectTicketSeatMapActivity` / `ChooseTicketSeatTableFragment`。
+      // 选座页。回报档位选择页里的「选座」入口跳这里。
+      // 线下回报场次的可选座位图（POSITIONING.md §10 降级能力），仅线下活动型企划使用。
       GoRoute(
         path: '/show/:showId/seat-selection',
         name: 'seatSelection',
         builder: (context, state) =>
             SeatSelectionPage(showId: state.pathParameters['showId']!),
       ),
-      // 场馆详情。场馆没有 numeric id（见 `venueByNameProvider` 的说明），
-      // 所以路径参数是场馆名；GoRouter 会自动做 URL 解码。
+      // 活动场地详情。活动场地没有 numeric id（见 `venueByNameProvider` 的说明），
+      // 所以路径参数是活动场地名；GoRouter 会自动做 URL 解码。
       GoRoute(
         path: '/venue/:name',
         name: 'venue',
@@ -242,7 +242,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
         ),
       ),
-      // 演出列表（分类 / 全部）。`category` 是可选的一级分类 id，
+      // 企划列表（分类 / 全部）。`category` 是可选的一级分类 id，
       // `title` 只在从「分类楼层」进来时带，避免列表页再查一次分类名。
       GoRoute(
         path: '/shows',
@@ -267,8 +267,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             SearchPage(initialQuery: state.uri.queryParameters['q']),
       ),
-      // 动态详情。放在 shell 之外：企划星的动态详情是独立 Activity，
-      // 进详情后底栏消失、返回回到原 tab——这是内容型页面的常规层级。
+      // 动态详情。放在 shell 之外：进详情后底栏消失、返回回到原 tab，
+      // 这是内容型页面的常规层级。
       GoRoute(
         path: '/feed/:id',
         name: 'feedDetail',
@@ -294,10 +294,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/order/confirm',
         name: 'orderConfirm',
-        // showId 走 query 而不是路径参数：企划星的确认页是靠 scheme 参数进来的
+        // showId 走 query 而不是路径参数：确认页是靠 scheme 参数进来的
         // （`goodsId` / `count` / `orderType`），不是路径层级。
-        // P0-08：选票页拼出的 tier / qty / session 必须透传，
-        // 否则确认页会用「首个票档 + 1 张」重建草稿，实付金额与用户选择不符。
+        // 回报档位选择页拼出的 tier / qty / session 必须透传，
+        // 否则确认页会用「首个回报档位 + 1 份」重建草稿，实付金额与用户选择不符。
         builder: (context, state) {
           final query = state.uri.queryParameters;
           return OrderConfirmPage(
@@ -318,7 +318,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       // 支付页。从确认订单提交后进入，是确认订单与支付成功之间的中间页。
-      // 对齐企划星 `PayActivity`：收银台 → 选渠道 → 调 SDK → 成功/失败。
+      // 流程：收银台 → 选渠道 → 调 SDK → 成功/失败。
       GoRoute(
         path: '/order/pay',
         name: 'pay',
@@ -348,7 +348,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       // 退款申请页。从订单详情页「申请退款」按钮进入。
-      // 对齐企划星 `OrderRefundWebActivity`（H5）→ 这里做原生表单。
+      // 退款用原生表单，不套 H5。
       GoRoute(
         path: '/order/refund',
         name: 'refund',
@@ -394,21 +394,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const FeedbackPage(),
       ),
       // 优惠券列表。从「我的 → 优惠券」进入。
-      // 对齐企划星 `CouponActivity`：三 Tab（可用 / 已使用 / 已过期）+ 兑换入口。
+      // 三 Tab（可用 / 已使用 / 已过期）+ 兑换入口。
       GoRoute(
         path: '/coupons',
         name: 'coupons',
         builder: (context, state) => const CouponPage(),
       ),
       // 兑换码输入页。从优惠券列表页右上角「+」进入。
-      // 对齐企划星 `ExchangeCouponActivity`。
       GoRoute(
         path: '/coupons/exchange',
         name: 'exchangeCoupon',
         builder: (context, state) => const ExchangeCouponPage(),
       ),
       // 钱包页。从「我的 → 我的钱包」进入。
-      // 对齐企划星 `MyWalletActivity`：余额 + 交易记录。
+      // 余额 + 交易记录。
       GoRoute(
         path: '/wallet',
         name: 'wallet',
@@ -421,35 +420,33 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const MallPage(),
       ),
       // 礼品卡列表页。从「我的 → 礼品卡」进入。
-      // 对齐企划星 `GiftCardActivity`：可用/不可用列表 + 绑定入口。
+      // 可用/不可用列表 + 绑定入口。
       GoRoute(
         path: '/giftcards',
         name: 'giftCards',
         builder: (context, state) => const GiftCardPage(),
       ),
       // 绑定礼品卡页。从礼品卡列表 AppBar「+」进入。
-      // 对齐企划星 `AddGiftCardActivity`：输入卡号绑定。
+      // 输入卡号绑定。
       GoRoute(
         path: '/giftcards/add',
         name: 'addGiftCard',
         builder: (context, state) => const AddGiftCardPage(),
       ),
       // 代抢服务页。
-      // 对齐企划星 `ProxyBuyChooseTicketActivity` + `ProxyBuyConfirmActivity`。
+      // 遗留票务能力：与「企划支持平台」定位冲突，按 POSITIONING.md §10 待下线。
       GoRoute(
         path: '/proxy-buy',
         name: 'proxyBuy',
         builder: (context, state) => const ProxyBuyPage(),
       ),
-      // 拼团列表页。
-      // 企划星没有独立列表页（入口在演出详情 banner），这里作为聚合入口。
+      // 组队支持列表页（聚合入口）。
       GoRoute(
         path: '/group-buy',
         name: 'groupBuy',
         builder: (context, state) => const GroupBuyPage(),
       ),
-      // 拼团详情页。
-      // 对齐企划星 WebView `groupBooking.html?pinTuanId={id}`。
+      // 组队支持详情页。
       GoRoute(
         path: '/group-buy/:id',
         name: 'groupBuyDetail',

@@ -1,21 +1,20 @@
 /// 企划星的请求头与会话拦截器。
 ///
-/// 对齐来源 `OkHttpUtil.getClient()` 里的匿名 `Interceptor`（05 页 §3.1）：
+/// 每个请求带的头与会话处理约定：
 ///
-/// | 头 | 来源写法 | 这里 |
-/// |---|---|---|
-/// | `User-Agent` | `HttpUtil.getAPIUserAgent()` | `ApiConfig.userAgent` |
-/// | `dvid` | `OkHttpUtil.getDvid()` | `PsRequestContext.dvid` |
-/// | `X-Longitude` / `X-Latitude` | 仅当经纬度 > 0 | 仅当已定位 |
-/// | `Cookie: psSession=…` | OkHttp `CookieJar` 自动带 | 显式拼（见下） |
-/// | `Cookie: psCaptcha=…` | OkHttp `CookieJar` 自动带 | 显式拼（一次性，见下） |
-/// | 401 → 登出 | 拦截器里直接 `AccountService.logout()` | 改为注册钩子 |
+/// | 头 | 取值 |
+/// |---|---|
+/// | `User-Agent` | `ApiConfig.userAgent` |
+/// | `dvid` | `PsRequestContext.dvid` |
+/// | `X-Longitude` / `X-Latitude` | 仅当已定位（经纬度都 > 0） |
+/// | `Cookie: psSession=…` | 显式拼（见下） |
+/// | `Cookie: psCaptcha=…` | 显式拼（一次性，见下） |
+/// | 401 → 登出 | 注册钩子，不在拦截器里直接登出 |
 ///
-/// **为什么用显式 Cookie 而不是 CookieJar**：企划星要带的 cookie 只有
-/// `psSession` 与一次性的 `psCaptcha`，Android 侧用 `PersistentCookieStore`
-/// 持久化整袋 cookie 是顺带的结果，不是需求。Flutter 这边手写一个 cookie jar
-/// 要多一个依赖、还要处理域名/过期，收益为零。显式拼 `Cookie: …` 行为完全等价，
-/// 且**可测**。
+/// **为什么用显式 Cookie 而不是 cookie jar**：要带的 cookie 只有
+/// `psSession` 与一次性的 `psCaptcha`，持久化整袋 cookie 不是需求。
+/// 手写一个 cookie jar 要多一个依赖、还要处理域名/过期，收益为零。
+/// 显式拼 `Cookie: …` 行为完全等价，且**可测**。
 library;
 
 import 'package:dio/dio.dart';
@@ -57,7 +56,7 @@ final class PsNetworkInterceptor extends Interceptor {
       options.headers[deviceHeader] = dvid;
     }
 
-    // 来源：只有经纬度都 > 0 才发地理头。0 表示"没定位到"，发出去反而
+    // 只有经纬度都 > 0 才发地理头。0 表示"没定位到"，发出去反而
     // 会让服务端以为用户在南大西洋。
     final double? lat = context.latitude;
     final double? lng = context.longitude;
@@ -146,9 +145,8 @@ final class PsNetworkInterceptor extends Interceptor {
   /// 从响应里捞 `psSession` / `dvid` / `psCaptcha`。
   ///
   /// `psSession` / `dvid` 两个来源都要看：
-  /// - 企划星把 `psSession` 放在**自定义响应头**里（来源
-  ///   `AccountService.setPner(response.headers().get("psSession"))`）；
-  /// - 同一个值也会出现在 `Set-Cookie` 里（CookieJar 就是靠它工作的）。
+  /// - `psSession` 放在**自定义响应头**里；
+  /// - 同一个值也会出现在 `Set-Cookie` 里（cookie jar 就是靠它工作的）。
   ///
   /// 只读响应头会在中间层剥掉自定义头时丢会话，只读 `Set-Cookie` 则依赖
   /// 服务端把 cookie 的 `Path/Domain` 配对——两处都读最稳。

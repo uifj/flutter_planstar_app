@@ -7,7 +7,7 @@ library;
 abstract final class PsImages {
   static const String _base = 'https://picsum.photos/seed';
 
-  /// 默认头像（替代原来的 `default_avatar.png`）。
+  /// 默认头像。
   static const String defaultAvatar =
       'https://picsum.photos/seed/planstar-avatar/160/160';
 

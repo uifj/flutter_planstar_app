@@ -18,7 +18,7 @@ enum ApiEnvironment {
   /// 生产（HTTPS）。
   prod,
 
-  /// Beta（**明文 HTTP**，来源如此）。
+  /// Beta（**明文 HTTP**）。
   beta,
 }
 
@@ -50,7 +50,7 @@ final class ApiConfig {
   /// 可用 `--dart-define=PS_API_BASE=...` 覆盖（优先级更高）。
   static const String betaBaseUrl = 'http://apibeta.planstar.top/';
 
-  /// Android 客户端类型（原 `PlanstarConstants.CLIENT_TYPE = 11`）。
+  /// Android 客户端类型（固定值 11）。
   ///
   /// 登录请求体里的 `ct` 字段就是这个值。服务端按它决定返回哪些字段，
   /// 改成别的值（比如 iOS 的 10）会拿到不一样的数据形状。
@@ -59,7 +59,7 @@ final class ApiConfig {
   /// 默认版本号，与 `pubspec.yaml` 的 `version:` 保持一致。
   static const String defaultAppVersion = '1.0.1';
 
-  /// 默认渠道（来源 Walle 渠道信息；调试包无渠道时 Android 侧拼 `null`）。
+  /// 默认渠道：调试包拿不到渠道信息，不能拼出 `null`，用固定占位值。
   static const String defaultChannel = 'developer-default';
 
   /// 默认设备品牌（UA 里的 `<brand>` 段）。
@@ -102,8 +102,8 @@ final class ApiConfig {
 
   /// 是否打印请求/响应体。
   ///
-  /// 来源把这个值**硬编码成 true**（`IS_DEV = true`），于是线上包会把
-  /// 完整 body（含 `psSession`、手机号、实名信息）写进 logcat（05 页 §10）。
+  /// 不能把这个值**硬编码成 true**：那样线上包会把
+  /// 完整 body（含 `psSession`、手机号、实名信息）写进 logcat。
   /// 这里默认 **false**，只有显式打开才打印。
   final bool enableLogging;
 
@@ -168,13 +168,13 @@ final class ApiConfig {
 
   /// 请求头 `User-Agent`。
   ///
-  /// 格式照抄来源 `HttpUtil.getAPIUserAgent()`：
+  /// 格式（包名、版本、设备品牌、渠道、系统版本）：
   ///
   /// ```text
   /// PlanstarApi (com.planstar.app/1.0.1 Xiaomi developer-default Android/14)
   /// ```
   ///
-  /// UA 里的包名同步改为 `com.planstar.app` 占位；`ct: 11` 仍声明
+  /// UA 里的包名用 `com.planstar.app` 占位；`ct: 11` 仍声明
   /// "我是 Android"，两侧信息保持一致。
   String get userAgent =>
       'PlanstarApi (com.planstar.app/$appVersion $deviceBrand $channel '

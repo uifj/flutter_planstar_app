@@ -8,7 +8,7 @@ import 'router.dart';
 import 'sdk/sdk_bootstrap.dart';
 import 'theme.dart';
 
-/// 全部 l10n delegate：应用级 + 7 个 feature + Material/Cupertino 内置。
+/// 全部 l10n delegate：应用级 + 13 个 feature + Material/Cupertino 内置。
 ///
 /// 抽成常量而不是写在 `MaterialApp` 的参数里，有两个原因：
 /// 1. **可测**——`test/l10n_wiring_test.dart` 直接断言这份列表，不必渲染
@@ -52,7 +52,7 @@ const List<LocalizationsDelegate<Object>> appLocalizationsDelegates =
 /// 每个 feature 有自己的 ARB 与生成类，**ARB 源统一放在 `lib/l10n/arb`**
 /// （`lib/l10n/arb/features/<name>/<name>_zh.arb`），这里只是把它们的 delegate
 /// 汇总挂上（见 [appLocalizationsDelegates]）。**不要把 feature 文案搬进
-/// 应用级 ARB**——那正是 §3.4 要治的病（一个几千行的巨型 ARB，
+/// 应用级 ARB**——那正是要避免的病（一个几千行的巨型 ARB，
 /// 谁都不敢删任何一个 key）。
 ///
 /// 应用级 [AppLocalizations] 只保留跨 feature 共用的部分：应用名、底栏 Tab、

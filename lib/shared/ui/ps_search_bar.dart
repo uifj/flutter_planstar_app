@@ -5,16 +5,16 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 import '../../l10n/l10n.dart';
 
-/// 首页搜索栏（`home_search_bar.xml`）。
+/// 首页搜索栏。
 ///
-/// 尺寸全部来自原 layout：整条 36dp、白底 + 1.5dp 品牌色描边 + 8dp 圆角；
-/// 左侧城市 13sp 粗体 `text_0`（带下拉箭头）；中间 1dp `#ffd9d9d9` 分隔线（18dp 高）；
-/// 提示文案 13sp `text_2`；右侧「搜索」按钮 13sp 粗体白字、品牌红底、6dp 圆角、
+/// 尺寸：整条 36dp、白底 + 1.5dp 品牌色描边 + 8dp 圆角；
+/// 左侧城市 13sp 粗体主文本色（带下拉箭头）；中间 1dp `#ffd9d9d9` 分隔线（18dp 高）；
+/// 提示文案 13sp 三级文本色；右侧「搜索」按钮 13sp 粗体白字、品牌红底、6dp 圆角、
 /// 左右 14dp 内边距、四周 3dp 外边距。
 ///
-/// 提示文案用**滚动轮播**而不是静态文字：企划星这里挂的是 `MarqueeView`
-/// （`mvDirection=bottom_to_top`、`mvInterval=5000`、`mvAnimDuration=500`），
-/// 用来轮播热门搜索词。静态文字会丢掉这个"轮播热搜"的信息量。
+/// 提示文案用**滚动轮播**而不是静态文字：这里要轮播热门搜索词
+/// （自下而上、5 秒一条、500ms 过渡）。
+/// 静态文字会丢掉这个"轮播热搜"的信息量。
 class PsSearchBar extends StatelessWidget {
   const PsSearchBar({
     super.key,
@@ -126,7 +126,7 @@ class PsSearchBar extends StatelessWidget {
   }
 }
 
-/// 自下而上的文字轮播（`MarqueeView` 的最小等价实现）。
+/// 自下而上的文字轮播（5 秒一条、500ms 滑动淡入）。
 class _MarqueeHint extends StatefulWidget {
   const _MarqueeHint({required this.hints});
 

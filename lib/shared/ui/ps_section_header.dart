@@ -5,10 +5,10 @@ import '../../l10n/l10n.dart';
 
 /// 楼层标题。
 ///
-/// 企划星每个楼层都是"标题 +（可选）副标题 +（可选）全部 >"的三段式：
-/// - `view_home_choiceness.xml`：20sp 粗体、左右 14dp
-/// - `view_home_show_floor.xml`：18dp 粗体 + 12dp `text_3` 副标题 + 11dp「全部」+ 10dp 箭头
-/// - `view_home_popular_venues.xml`：20sp 粗体、左右 14dp
+/// 每个楼层都是"标题 +（可选）副标题 +（可选）全部 >"的三段式：
+/// - 首页精选楼层：20sp 粗体、左右 14dp
+/// - 企划楼层：18dp 粗体 + 12dp 三级灰副标题 + 11dp「全部」+ 10dp 箭头
+/// - 热门活动场地楼层：20sp 粗体、左右 14dp
 class PsSectionHeader extends StatelessWidget {
   const PsSectionHeader({
     super.key,
