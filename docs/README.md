@@ -1,8 +1,8 @@
 ﻿# planstar Flutter 文档索引
 
-> 适用版本：planstar Flutter 1.0.1 · 最后核对：2026-11-07 · 维护：客户端组
+> 适用版本：planstar Flutter 1.0.1 · 最后核对：2026-11-11 · 维护：客户端组
 
-本文件是 `flutter_piaoniu_app/docs/` 的唯一入口。先看这里，再按需跳转。
+本文件是 `flutter_planstar_app/docs/` 的唯一入口。先看这里，再按需跳转。
 
 ## 1. 权威性声明
 
@@ -15,19 +15,19 @@
 
 | 文档 | 内容 | 最后核对 |
 | --- | --- | --- |
-| [`../README.md`](../README.md) | 工程结构（架构入口）、l10n、测试命令，以及本地运行与联调 | 2026-11-07 |
-| 架构（无独立文档） | 以根 README 的目录说明 + 本文件 §4 的代码入口为准；当前没有 `docs/architecture.md` | 2026-11-07 |
-| [`page-parity.md`](page-parity.md) | 页面完成度：逐页对照 Android 原项目，记录刻意差异 | 2026-11-07 |
-| [`api-contract.md`](api-contract.md) | 前端接口契约：通用约定、登录域实测细节、23 个端点逐条接入状态 | 2026-11-07 |
-| [`api/API_CONTRACT.md`](api/API_CONTRACT.md) | 前端副本：顶部指向后端契约，仅保留前端差异与接入状态 | 2026-11-07 |
-| [`unimplemented-modules.md`](unimplemented-modules.md) | 未实现模块清单、原因与推进顺序 | 2026-11-07 |
-| [`ddd-order-domain.md`](ddd-order-domain.md) | 订单领域模型（DDD 战术模式）的设计说明 | 2026-11-07（本轮仅登记，未逐条复核） |
+| [`../README.md`](../README.md) | 工程结构（架构入口）、l10n、测试命令，以及本地运行与联调 | 2026-11-11 |
+| 架构（无独立文档） | 以根 README 的目录说明 + 本文件 §4 的代码入口为准；当前没有 `docs/architecture.md` | 2026-11-11 |
+| [`page-parity.md`](page-parity.md) | 页面完成度：逐页记录实现范围与刻意差异 | 2026-11-11 |
+| [`api-contract.md`](api-contract.md) | 前端接口契约：通用约定、登录域实测细节、42 条客户端路径逐条接入状态（38 已接 / 4 遗留未注册） | 2026-11-11 |
+| [`api/API_CONTRACT.md`](api/API_CONTRACT.md) | 前端副本：顶部指向后端契约，仅保留前端差异与接入状态 | 2026-11-11 |
+| [`unimplemented-modules.md`](unimplemented-modules.md) | 未实现模块清单、原因与推进顺序 | 2026-11-11 |
+| [`ddd-order-domain.md`](ddd-order-domain.md) | 订单领域模型（DDD 战术模式）的设计说明 | 2026-11-11 |
 
 ## 3. 按问题导航
 
 | 我想知道 | 去看 |
 | --- | --- |
-| 这个页面做到哪一步了、和 Android 差在哪 | [`page-parity.md`](page-parity.md) |
+| 这个页面做到哪一步了、刻意差异在哪 | [`page-parity.md`](page-parity.md) |
 | 某个接口怎么调、失败怎么返回、金额单位 | [`api-contract.md`](api-contract.md) |
 | 后端路由/字段的完整定义 | `planstar_kratos_server/docs/api/API_CONTRACT.md` |
 | 前端当前真正发哪些请求 | [`api-contract.md`](api-contract.md) §5 |
@@ -47,8 +47,9 @@
 
 业务接口：
 
-- `lib/features/auth/data/planstar_auth_api.dart`：登录、发验证码、图形验证码，当前唯一已接真实后端的域。
-- `lib/features/{catalog,discover,message,order,user}/data/planstar_*_api.dart`：已按后端形状写好，但 UI 仍以演示数据为主。
+- `lib/features/auth/data/planstar_auth_api.dart`：登录、发验证码、图形验证码。
+- `lib/features/{catalog,discover,message,order,user,mall,project_idea}/data/*_api.dart`：**均已接真实后端**（订单含支付与退款，用户含地址、签到、星币钱包）。演示/真实由 `network_providers.dart` 的 `DataSourcePolicy` 统一切换，业务层不要自行判断开关。
+- 仍是本地数据 / 本地模拟的能力：选座的座位图与库存、优惠券、礼品卡。`group_buy` / `proxy_buy` 的 4 条路径后端未注册，真实模式 404，见 [`api-contract.md`](api-contract.md) §5.4。
 
 ## 5. 维护约定
 
