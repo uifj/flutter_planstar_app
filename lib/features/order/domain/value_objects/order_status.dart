@@ -4,19 +4,19 @@ import 'package:core/result.dart';
 ///
 /// ## 为什么不用服务端的裸 `int`
 ///
-/// 企划星 Android 侧有两套编码，**前四个状态差 1**（`wiki_zh/27` §11.1）：
+/// 服务端存在两套编码，**前四个状态差 1**：
 ///
-/// | 状态 | `OrderStatus.code` | `OrderUtils` | 一致 |
+/// | 状态 | 编码 A | 编码 B | 一致 |
 /// |---|---|---|---|
-/// | INIT | 1 | 0 | ❌ |
-/// | PAYING | 2 | 1 | ❌ |
-/// | WAITING_FOR_TICKETS | 3 | 2 | ❌ |
-/// | GETTING_TICKETS | 4 | 3 | ❌ |
-/// | FINISHED | 5 | 5 | ✅ |
-/// | CANCELED | 6 | 6 | ✅ |
-/// | REFUNDED | 7 | 7 | ✅ |
+/// | 创建（INIT） | 1 | 0 | ❌ |
+/// | 支付中（PAYING） | 2 | 1 | ❌ |
+/// | 待发货 | 3 | 2 | ❌ |
+/// | 待收货 | 4 | 3 | ❌ |
+/// | 已完成 | 5 | 5 | ✅ |
+/// | 已关闭 | 6 | 6 | ✅ |
+/// | 已退款 | 7 | 7 | ✅ |
 ///
-/// 两个类都是零引用，业务代码里全是裸字面量 `status == 2`——"两个错误答案
+/// 两套编码都没被统一引用，业务代码里全是裸字面量 `status == 2`——"两个错误答案
 /// 逼出一个更差答案"。这里的对策是：**只有一个入站映射表**（[fromWire]），
 /// 未知编码返回失败而不是静默兜底；状态之间只允许显式声明的迁移。
 enum OrderStatus {
@@ -27,10 +27,10 @@ enum OrderStatus {
   /// 两者对用户是同一件事（还没付钱），差别只在服务端内部流程。
   awaitingPayment(wireCode: 2, unpaid: true),
 
-  /// 待发货（纸质票已支付、等待出票寄出）。
+  /// 待发货（纸质回报已支付、等待寄出）。
   awaitingTickets(wireCode: 3, unpaid: false),
 
-  /// 待收货（已寄出 / 电子票待确认）。
+  /// 待收货（已寄出 / 电子回报待确认）。
   ticketsInTransit(wireCode: 4, unpaid: false),
 
   /// 已完成。
@@ -61,7 +61,7 @@ enum OrderStatus {
   ///
   /// ⚠ `1`（INIT，订单创建成功）映射到 [awaitingPayment]：它是"已创建未支付"，
   /// 与 `PAYING(2)` 对用户无差别。这条映射写在**唯一一个地方**，
-  /// 而不是像原 App 那样在 12 个 Activity 里各写一次 `== 2`。
+  /// 而不是在十几个页面里各写一次 `== 2`。
   static Result<OrderStatus> fromWire(int code) {
     return switch (code) {
       1 || 2 => const Success<OrderStatus>(OrderStatus.awaitingPayment),

@@ -4,7 +4,7 @@ import '../domain/domain.dart';
 
 /// 内存订单号序列 —— 适配器。
 ///
-/// 真实实现由服务端分配（企划星的订单号在 `makeOrder` 响应里），
+/// 真实实现由服务端分配（订单号在 `makeOrder` 响应里），
 /// 或者走 Redis `INCR` 的本地预分配。这里按"当天重置"的规则模拟。
 final class InMemoryOrderNumberSequence implements OrderNumberSequence {
   int _sequence = 0;

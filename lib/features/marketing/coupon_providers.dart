@@ -18,8 +18,7 @@ enum CouponTab {
 
 /// 优惠券列表 Provider。
 ///
-/// 对齐 Android `CouponActivity` 的 `GET v1/coupons` 调用。
-/// 接口接上后把这里改成 `FutureProvider` 即可——
+/// 目前只有演示数据；服务端券接口接上后把这里改成 `FutureProvider` 即可——
 /// 返回值类型不变，页面不需要改。
 final couponListProvider = Provider<List<Coupon>>(
   (ref) => DemoCoupons.generate(),
@@ -77,9 +76,9 @@ class ExchangeState {
 
 /// 兑换码输入 Controller。
 ///
-/// 对齐 Android `ExchangeCouponFragment`：
+/// 兑换交互：
 /// - 输入框内容变化 → 启用/禁用提交按钮
-/// - 点击兑换 → `POST v1/coupons` → 成功返回券对象
+/// - 点击兑换 → 提交兑换码 → 成功返回券对象
 ///
 /// 这里用内存模拟：任意 8 位以上兑换码"成功"，
 /// 生成一张演示券；短于 8 位"失败"。

@@ -29,7 +29,7 @@ final class OrderCancelled extends DomainEvent {
   String toString() => 'order.cancelled(${orderNumber.value}, $reason)';
 }
 
-/// 订单已寄出（纸质票）。
+/// 订单已寄出（纸质回报）。
 final class OrderShipped extends DomainEvent {
   const OrderShipped({
     required this.orderId,
@@ -39,7 +39,7 @@ final class OrderShipped extends DomainEvent {
 
   final TicketOrderId orderId;
 
-  /// 快递单号（自取/电子票为空）。
+  /// 快递单号（自取/电子回报为空）。
   final String? trackingNumber;
 
   @override
@@ -50,7 +50,7 @@ final class OrderShipped extends DomainEvent {
       'order.shipped(${orderId.value}, ${trackingNumber ?? '无单号'})';
 }
 
-/// 订单已完成（票已确认收货 / 演出已结束）。
+/// 订单已完成（回报已确认收货 / 线下回报场次已结束）。
 final class OrderCompleted extends DomainEvent {
   const OrderCompleted({required this.orderId, required super.occurredAt});
 

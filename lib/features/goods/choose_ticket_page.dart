@@ -14,23 +14,24 @@ import '../catalog/domain/show_summary.dart';
 import '../catalog/ui/catalog_l10n.dart';
 import '../../l10n/l10n.dart';
 
-/// 选档页（企划星 `ChooseTicketB2CActivity` + 3 个 Fragment）。
+/// 选档页。
 ///
 /// ## 在支持漏斗中的位置
 ///
 /// 企划详情 → **选档页** → 确认支持 → 支付
 ///
 /// 详情页的「立即支持」跳到这里，而不是直接跳确认支持：
-/// 确认支持需要知道「选了哪场、哪个回报档位、几份」，这些选择就发生在这一页。
+/// 确认支持需要知道「选了哪个线下回报场次、哪个回报档位、几份」，这些选择就发生在这一页。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意不做的事
 ///
-/// - 企划星用 ViewPager + 3 个 Fragment（Aggregation / SeatMap / SeatTable）来
-///   切换"聚合选档 / 座席图 / 档位表"三种模式。本项目只做**聚合选档**（普通支持），
-///   不做座席图（Mapbox 引擎，不做假实现）和档位表（只是另一种排列，数据源相同）。
-/// - 原页有 15 分钟倒计时（`CountDownTimer`），到时自动返回。这里不加：
+/// - 选档有"聚合选档 / 座席图 / 档位表"三种形态，本页只做**聚合选档**（普通支持）：
+///   不内嵌座席图（需要地图引擎，不做假实现，选座走独立的降级座位图页），
+///   也不做档位表（只是另一种排列，数据源相同）。
+/// - 不加 15 分钟选档倒计时（到时自动返回）：
 ///   演示数据没有真实的库存锁定，倒计时只会给用户制造不必要的焦虑。
-/// - 原页有「代支持 / 拼团」两个分支 tab。本项目不做这两种支持模式。
+/// - 不做「代抢 / 组队支持」两个分支 tab：代抢属遗留票务能力（待下线），
+///   组队支持走独立的 `group_buy` 链路，不在选档页分叉。
 class ChooseTicketPage extends ConsumerStatefulWidget {
   const ChooseTicketPage({super.key, required this.showId});
 
@@ -41,7 +42,7 @@ class ChooseTicketPage extends ConsumerStatefulWidget {
 }
 
 class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
-  /// 选中的场次索引（`-1` = 未选）。
+  /// 选中的线下回报场次索引（`-1` = 未选）。
   int _selectedSession = -1;
 
   /// 选中的回报档位索引（`-1` = 未选）。
@@ -56,7 +57,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
     if (show == null || show.tiers.isEmpty) return 6;
     final tier = _selectedTier >= 0 ? show.tiers[_selectedTier] : null;
     if (tier == null) return 6;
-    // 企划星的限支持通常是 6 份（见 `purchase_limit_policy.dart`）。
+    // 单笔支持上限通常是 6 份（见 `purchase_limit_policy.dart`）。
     // 如果余量更少，以余量为准。
     final remaining = tier.remaining;
     if (remaining != null && remaining > 0) {
@@ -189,7 +190,7 @@ class _ChooseTicketPageState extends ConsumerState<ChooseTicketPage> {
       _toast(context, context.l10n.chooseTicketPage_175);
       return;
     }
-    // 把选好的参数带到确认订单页。企划星走 scheme 参数，这里用 query。
+    // 把选好的参数带到确认订单页：用 query 参数传递。
     context.push(
       '/order/confirm?showId=${widget.showId}'
       '&tier=$_selectedTier'
@@ -334,7 +335,7 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
-/// 场次列表（水平横滑卡片，仅线下回报场次型企划展示）。
+/// 线下回报场次列表（水平横滑卡片，仅线下活动型企划展示）。
 class _SessionList extends StatelessWidget {
   const _SessionList({
     required this.sessions,
@@ -713,7 +714,7 @@ class _BottomBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           // 「选座支持」入口：仅线下回报场次型企划提供具体座席选择。
-          // 企划星在选档页顶部有选座入口，这里放在底部栏上方更符合 Flutter 习惯。
+          // 选座入口放在底部栏上方而不是页顶，更符合 Flutter 习惯。
           if (hasOfflineSession)
             Padding(
               padding: const EdgeInsets.fromLTRB(15, 6, 15, 0),

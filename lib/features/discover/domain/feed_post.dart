@@ -5,8 +5,8 @@ part 'feed_post.g.dart';
 
 /// 一条社区动态（发现页 feed 卡片）。
 ///
-/// 字段对齐 `home_item_waterfall_feed.xml`：标题、作者、浏览量、角标文案，
-/// 外加一个可选的关联演出 id（企划星的动态可以挂到某场演出上）。
+/// 字段：标题、作者、浏览量、角标文案，
+/// 外加一个可选的关联企划 id（动态可以挂到某个企划上）。
 @freezed
 abstract class FeedPost with _$FeedPost {
   const factory FeedPost({
@@ -33,9 +33,9 @@ abstract class FeedPost with _$FeedPost {
       _$FeedPostFromJson(json);
 }
 
-/// 一条评论（`item_feed_comment.xml`）。
+/// 一条评论。
 ///
-/// 企划星的评论是独立聚合（`v1/feed/comment/list`），支持二级回复。
+/// 评论是独立聚合（`v1/feed/comment/list`），支持二级回复。
 /// 这里只做一级：二级回复需要展开状态与"回复谁"的上下文，
 /// 没有真实接口时做出来只是一套点了没反应的空壳。
 @freezed

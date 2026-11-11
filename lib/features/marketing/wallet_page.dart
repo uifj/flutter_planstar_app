@@ -15,7 +15,7 @@ import '../../l10n/l10n.dart';
 ///
 /// 只展示星币余额与流水；充值 / 提现 / 第三方支付已隐藏。
 ///
-/// 交易记录列表对齐 Android 的 `item_wallet_balance.xml`：
+/// 交易记录列表每行展示：
 /// 标题 + 余额 + 金额（带正负号 + 颜色区分）+ 时间。
 class WalletPage extends ConsumerWidget {
   const WalletPage({super.key});
@@ -115,8 +115,7 @@ class _BalanceHeader extends StatelessWidget {
 
 /// 单条交易记录。
 ///
-/// 对齐 Android `item_wallet_balance.xml`：
-/// `tvTitle` / `tvBalance` / `tvAmount` / `tvTime`。
+/// 左侧标题 + 交易后余额 + 时间，右侧金额（带正负号，收入用成功色）。
 class _TransactionItem extends StatelessWidget {
   const _TransactionItem({required this.transaction});
 

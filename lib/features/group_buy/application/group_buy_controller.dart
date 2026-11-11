@@ -9,7 +9,7 @@ import '../domain/repositories/group_buy_repository.dart';
 import '../domain/services/group_buy_pricing.dart';
 import '../domain/services/group_buy_progress.dart';
 
-/// 拼团仓储：演示 / 真实数据源由全局 [DataSourcePolicy] 决定。
+/// 组队支持仓储：演示 / 真实数据源由全局 [DataSourcePolicy] 决定。
 final groupBuyRepositoryProvider = Provider<GroupBuyRepository>((ref) {
   final policy = ref.watch(dataSourcePolicyProvider);
   return policy.pick(
@@ -19,7 +19,7 @@ final groupBuyRepositoryProvider = Provider<GroupBuyRepository>((ref) {
   );
 });
 
-/// 拼团卡片/详情页的视图状态：进度、价格都在这里算好，页面只渲染。
+/// 组队支持卡片/详情页的视图状态：进度、价格都在这里算好，页面只渲染。
 final class GroupBuyView {
   const GroupBuyView({
     required this.info,
@@ -52,7 +52,7 @@ GroupBuyView buildGroupBuyView(GroupBuyInfo info, {required DateTime now}) {
   );
 }
 
-/// 拼团列表。
+/// 组队支持列表。
 class GroupBuyListController extends AsyncNotifier<List<GroupBuyView>> {
   @override
   Future<List<GroupBuyView>> build() async {
@@ -73,7 +73,7 @@ final groupBuyListProvider =
       GroupBuyListController.new,
     );
 
-/// 拼团详情（按 ID）；不存在返回 `null`。
+/// 组队支持详情（按 ID）；不存在返回 `null`。
 final groupBuyByIdProvider = FutureProvider.family<GroupBuyView?, int>((
   ref,
   id,
@@ -87,7 +87,7 @@ final groupBuyByIdProvider = FutureProvider.family<GroupBuyView?, int>((
   return buildGroupBuyView(info, now: DateTime.now());
 });
 
-/// 参团状态。
+/// 参与组队状态。
 sealed class JoinGroupState {
   const JoinGroupState();
   const factory JoinGroupState.initial() = JoinGroupInitial;
@@ -113,9 +113,9 @@ class JoinGroupError extends JoinGroupState {
   final String message;
 }
 
-/// 参团 Controller。
+/// 参与组队 Controller。
 ///
-/// 状态 / 过期 / 满团 / 库存校验走领域策略；请求走仓储；页面只转发点击。
+/// 状态 / 过期 / 满员 / 库存校验走领域策略；请求走仓储；页面只转发点击。
 class JoinGroupController extends Notifier<JoinGroupState> {
   @override
   JoinGroupState build() => const JoinGroupState.initial();

@@ -1,13 +1,12 @@
 /// 登录状态控制器。
 ///
-/// 承担来源 `BaseLoginActivity` + 4 个 Cell 里被复制了**五份**的职责
-/// （23 页 §5）：发码、倒计时、登录、失败分支。区别：
+/// 把发码、倒计时、登录、失败分支收在一处，页面不再各写一份：
 ///
-/// | | 来源 | 这里 |
-/// |---|---|---|
-/// | 倒计时 | 5 个 `Handler` + 5 个 `mValidateLeftCount`，全部无 `onDestroy` 清理（泄漏 60 秒） | 1 个 `Timer`，`ref.onDispose` 里 cancel |
-/// | 失败分支 | `errorBody().string().contains("该账号已被锁定")` | `Failure.code` + [AuthFailureKind] 枚举 |
-/// | 登录态 | `AccountService` 单例 + 静态初始化里读盘 | [AuthState] 不可变状态机 |
+/// | 关注点 | 做法 |
+/// |---|---|
+/// | 倒计时 | 1 个 `Timer`，`ref.onDispose` 里 cancel，离开页面不会泄漏 60 秒 |
+/// | 失败分支 | `Failure.code` + [AuthFailureKind] 枚举，不对错误文案做 `contains` |
+/// | 登录态 | [AuthState] 不可变状态机，读盘不进构造函数/静态初始化 |
 library;
 
 import 'dart:async';

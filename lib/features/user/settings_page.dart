@@ -10,7 +10,7 @@ import '../auth/application/auth_providers.dart';
 import 'application/profile_providers.dart';
 import '../../l10n/l10n.dart';
 
-/// 设置页（企划星 `MoreSettingActivity` + `MoreSettingFragment`）。
+/// 设置页。
 ///
 /// ## 为什么放在 `user` 而不是 `app`
 ///
@@ -20,9 +20,9 @@ import '../../l10n/l10n.dart';
 /// 这里 import 它是**跨层但单向**的依赖（feature → app 的主题状态），
 /// 反过来 app 不依赖 user。
 ///
-/// ## 与 Android 的差异
+/// ## 设计取舍
 ///
-/// - 原页有 12 个入口（含"清除缓存""检查更新""关于""账号安全"等），
+/// - 设置入口不做全集（"清除缓存""检查更新""关于""账号安全"等），
 ///   这里只保留**当前有真实行为**的几项：深色模式（真的切换）、退出登录
 ///   （真的清会话）、其余用 toast 说明"待接入"而不是做成点不动的死链。
 /// - **不做"清除缓存"的实际清理**：`package:core/cache.dart` 的 `HttpCacheStore` 有

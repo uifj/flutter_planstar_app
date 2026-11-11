@@ -4,14 +4,14 @@ import 'seat_map.dart';
 
 /// 演示座位图数据生成器。
 ///
-/// 生成一个 3 区域 × 各 5 排 × 各 10 座的场馆座位图。
+/// 生成一个 3 区域 × 各 5 排 × 各 10 座的活动场地座位图。
 /// 状态分布：
 /// - 约 60% available
 /// - 约 25% sold
 /// - 约 5% locked
 /// - 约 10% aisle / blocked
 ///
-/// 这不是真实数据——真实数据来自 `v5/ticketCategories` + `v1/ticketGroup`。
+/// 这不是真实数据——服务端未提供座位图端点，布局只能在客户端生成。
 /// 这里的目的是让选座 UI 有可渲染的内容，验证交互逻辑。
 class DemoSeatMap {
   DemoSeatMap._();
@@ -19,7 +19,7 @@ class DemoSeatMap {
   /// 生成演示座位图。
   ///
   /// [unitPrice] 非空时所有区域统一按该价（真实环境取自后端权威单价：
-  /// 服务端报价按「在售票档最低价 × 数量」结算，客户端不再自造区域差价）。
+  /// 服务端报价按「在售回报档位最低价 × 数量」结算，客户端不再自造区域差价）。
   static SeatMapData generate({
     String venueName = '上海文化广场',
     Money? unitPrice,

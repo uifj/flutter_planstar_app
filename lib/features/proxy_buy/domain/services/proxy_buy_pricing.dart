@@ -2,21 +2,21 @@ import 'package:core/domain.dart';
 
 import '../proxy_buy.dart';
 
-/// 代抢服务费档位。
+/// 服务费档位。
 ///
-/// 按**单张票价**分档：票价达到 [minTicketPrice] 时使用该档的 [fee]。
+/// 按**单份价格**分档：单价达到 [minTicketPrice] 时使用该档的 [fee]。
 /// 档位可乱序传入，构造时会按门槛从高到低排序。
 final class ProxyBuyFeeTier {
   const ProxyBuyFeeTier({required this.minTicketPrice, required this.fee});
 
-  /// 该档适用的最低单张票价（含）。
+  /// 该档适用的最低单份价格（含）。
   final Money minTicketPrice;
 
-  /// 该档每张票的服务费。
+  /// 该档每份的服务费。
   final Money fee;
 }
 
-/// 一次代抢报价。
+/// 一次报价。
 final class ProxyBuyQuote {
   const ProxyBuyQuote({
     required this.ticketPrice,
@@ -30,29 +30,28 @@ final class ProxyBuyQuote {
   final Money ticketPrice;
   final int quantity;
 
-  /// 每张票的服务费。
+  /// 每份的服务费。
   final Money unitServiceFee;
 
-  /// 票价小计。
+  /// 单价小计。
   final Money ticketAmount;
 
   /// 服务费小计。
   final Money serviceFee;
 
-  /// 合计（票价 + 服务费）。
+  /// 合计（单价小计 + 服务费）。
   final Money totalAmount;
 }
 
 /// 代抢定价服务（纯函数，无状态）。
 ///
-/// 对齐 Android `ProxyBuyHelper.calculateTotalPrice`：
-/// `(salePrice * count) + (proxyBuyFee * count)`。
-/// 与 Android 的差异：服务费可以按票价分档，`ProxyBuyPricing.flat` /
-/// `ProxyBuyPricing.fromInfo` 则退化为原来的单一费率。
+/// 总价 = `(单价 × 数量) + (服务费 × 数量)`。
+/// 服务费可以按单价分档，`ProxyBuyPricing.flat` /
+/// `ProxyBuyPricing.fromInfo` 则退化为单一费率。
 final class ProxyBuyPricing {
   ProxyBuyPricing(Iterable<ProxyBuyFeeTier> tiers) : _tiers = _sorted(tiers);
 
-  /// 单一费率（等价于原 `ProxyBuyInfo.proxyBuyFee * count`）。
+  /// 单一费率（等价于 `ProxyBuyInfo.proxyBuyFee * count`）。
   factory ProxyBuyPricing.flat(Money fee) => ProxyBuyPricing(<ProxyBuyFeeTier>[
     ProxyBuyFeeTier(minTicketPrice: const Money.zero(), fee: fee),
   ]);
@@ -66,7 +65,7 @@ final class ProxyBuyPricing {
 
   List<ProxyBuyFeeTier> get tiers => _tiers;
 
-  /// 取单张票对应的服务费。
+  /// 取单份对应的服务费。
   Money feeFor(Money ticketPrice) {
     for (final ProxyBuyFeeTier tier in _tiers) {
       if (ticketPrice.minorUnits >= tier.minTicketPrice.minorUnits) {
@@ -95,7 +94,7 @@ final class ProxyBuyPricing {
     );
   }
 
-  /// 计算总费用（原 `ProxyBuyInfo.calculateTotal` 的替代入口）。
+  /// 计算总费用（[quote] 的便捷入口）。
   Money total({required Money ticketPrice, required int quantity}) =>
       quote(ticketPrice: ticketPrice, quantity: quantity).totalAmount;
 

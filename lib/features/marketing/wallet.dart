@@ -2,9 +2,8 @@ import 'package:core/domain.dart';
 
 /// 钱包交易记录类型。
 ///
-/// 对齐 Android `item_wallet_balance.xml`：
-/// 金额正数（`+`）为收入，负数为支出。Android 没有显式枚举，
-/// 只用 `amount` 的正负号判断——这里用枚举让意图更清晰。
+/// 金额正数（`+`）为收入，负数为支出。用显式枚举表达方向，
+/// 而不是只靠 `amount` 的正负号判断，让意图更清晰。
 enum WalletTransactionType {
   /// 收入（充值 / 退款入账 / 活动赠送）。
   income,
@@ -15,7 +14,7 @@ enum WalletTransactionType {
 
 /// 钱包交易记录。
 ///
-/// 对齐 Android `v1/moneyaccount/sequences` 返回的单条记录：
+/// 对应 `v1/moneyaccount/sequences` 返回的单条记录：
 /// - `title`：描述文案
 /// - `amount`：金额（有符号）
 /// - `balance`：交易后余额

@@ -4,14 +4,13 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 import '../../../l10n/l10n.dart';
 
-/// 首页运营 banner（`view_home_banner.xml`）。
+/// 首页运营 banner。
 ///
-/// 80dp 高、左右 12dp、圆角 12dp、上边距 8dp——这几个数直接来自原 layout
-/// 的 `CardView`（`cardCornerRadius=12`、`layout_height=80`、`marginHorizontal=12`）。
+/// 80dp 高、左右 12dp、圆角 12dp、上边距 8dp。
 ///
-/// 原图是 CDN 运营图（`BannerBean.imageUrl`），仓库里没有对应素材，
+/// 运营图是 CDN 图片（`BannerSlide.imageUrl`），仓库里没有对应素材，
 /// 所以这里用**品牌渐变的运营位**承载同样的信息：标题 + 副标题 + 角标。
-/// 接真实接口后把 `_slides` 换成 `bannerList` 即可，尺寸与轮播逻辑不用动。
+/// 接真实接口后把 `slides` 传进来即可，尺寸与轮播逻辑不用动。
 class HomeBannerFloor extends StatefulWidget {
   const HomeBannerFloor({super.key, this.onTap, this.slides});
 

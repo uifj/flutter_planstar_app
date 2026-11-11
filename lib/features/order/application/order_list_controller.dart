@@ -10,7 +10,7 @@ import 'order_providers.dart';
 ///
 /// ## 为什么单独建一个枚举
 ///
-/// 企划星的"我的订单"用的是**第三套编码**（`MyOrderFragment.addTabs`）：
+/// "我的订单"列表用的是**第三套编码**：
 ///
 /// | Tab | 传给服务端的 `status` |
 /// |---|---|
@@ -18,11 +18,11 @@ import 'order_providers.dart';
 /// | 待付款 | 1 |
 /// | 待发货 | 2 |
 /// | 待收货 | 3 |
-/// | 待评论 | （换 Fragment，不走订单接口） |
+/// | 待评论 | （走评价接口，不走订单接口） |
 ///
-/// 这套 0–3 既不是 `OrderStatus.code`（1–7）也不是 `OrderUtils`（0/1/2/3/5/6/7），
-/// 三套编码同时在代码库里，是这个项目最容易出错的地方之一
-/// （`wiki_zh/27` §11.1）。
+/// 这套 0–3 既不是 [OrderStatus] 的 wireCode（1–7），也不是服务端订单状态那套
+/// （0/1/2/3/5/6/7），三套编码同时在代码库里，
+/// 是这个项目最容易出错的地方之一。
 ///
 /// 这里的做法：**列表筛选是应用层的概念**，用独立枚举表达，
 /// 并显式声明它和领域状态的关系（[matches]）。领域层不需要知道"待评论"
@@ -37,7 +37,7 @@ enum OrderListFilter {
   /// 该筛选是否命中某个订单状态。
   ///
   /// ⚠ `待评论` 映射到 `completed`：领域模型里**没有**"已收货未评价"这个态
-  /// （评价是另一个聚合）。原 App 的待评论页是独立 Fragment（`ReviewToDoListFragment`），
+  /// （评价是另一个聚合）。待评论页是独立页面，
   /// 走的是评价接口而不是订单接口。这里退一步用"已完成"近似，
   /// 并在卡片上把按钮换成「去评价」——行为对得上，语义不假装。
   bool matches(OrderStatus status) => switch (this) {
@@ -90,7 +90,7 @@ final filteredOrderListProvider = Provider<AsyncValue<List<TicketOrder>>>((
 /// 每个 tab 的订单数（角标用）。
 ///
 /// 只算 `awaitingPayment` / `awaitingTickets` / `ticketsInTransit` / `awaitingReview`
-/// 四个"需要用户处理"的态——「全部」不给数字，企划星也没给。
+/// 四个"需要用户处理"的态——「全部」不给数字。
 final orderStatusCountsProvider = Provider<Map<OrderListFilter, int>>((ref) {
   final orders =
       ref.watch(orderListProvider).valueOrNull ?? const <TicketOrder>[];

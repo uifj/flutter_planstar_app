@@ -4,11 +4,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'show_summary.freezed.dart';
 part 'show_summary.g.dart';
 
-/// 一个票档。
+/// 一个回报档位。
 ///
-/// 与订单上下文的 `TicketTierOffer` 是**两件事**：这里是演出详情页展示的
-/// "卖什么票"，那边是确认页的"这一单选了什么"。两者字段相似但生命周期不同，
-/// 所以不共用类型——详情页的票档随时会因余票变化而失效，订单的票档一旦选中
+/// 与订单上下文的 `TicketTierOffer` 是**两件事**：这里是企划详情页展示的
+/// "支持后能得到什么"，那边是确认页的"这一单选了什么"。两者字段相似但生命周期不同，
+/// 所以不共用类型——详情页的回报档位随时会因剩余名额变化而失效，订单的回报档位一旦选中
 /// 就是这一单的事实。
 @freezed
 abstract class TicketTier with _$TicketTier {
@@ -93,7 +93,7 @@ abstract class ProjectUpdate with _$ProjectUpdate {
       _$ProjectUpdateFromJson(json);
 }
 
-/// 一个场次。
+/// 一个线下回报场次。
 @freezed
 abstract class ShowSession with _$ShowSession {
   const factory ShowSession({
@@ -107,12 +107,12 @@ abstract class ShowSession with _$ShowSession {
       _$ShowSessionFromJson(json);
 }
 
-/// 演出摘要 —— 首页 / 发现 / 详情 / 订单共用的一张"演出卡片"。
+/// 企划摘要 —— 首页 / 发现 / 详情 / 订单共用的一张"企划卡片"。
 ///
 /// ## 为什么叫 Summary 而不是 Show
 ///
-/// 列表页要的是"够画一张卡"的字段；详情页要的是完整信息。企划星的
-/// `ActivityDetailBean` 与列表用的 `ActivityBean` 是两个类、字段高度重叠。
+/// 列表页要的是"够画一张卡"的字段；详情页要的是完整信息。若拆成
+/// "详情模型"与"列表模型"两个类，字段会高度重叠。
 /// 这里只做一个 [ShowSummary]，详情页在此基础上扩展
 /// （[intro] / [tiers] / [lineup] / [purchaseNotice]），
 /// 避免"列表模型 20 个字段 + 详情模型 60 个字段"里那 20 个字段被抄两遍。
@@ -238,7 +238,7 @@ abstract class ShowSummary with _$ShowSummary {
   /// 是否是企划数据（有目标金额）。
   bool get isProject => goalAmount != null;
 
-  /// 企划截止时间；未单独给出时退回首场/首交付时间。
+  /// 企划截止时间；未单独给出时退回首个线下回报场次/首交付时间。
   DateTime get projectDeadline => deadline ?? firstSessionAt;
 
   /// 达成率，千分比：`1280` = 128%。
@@ -261,7 +261,7 @@ abstract class ShowSummary with _$ShowSummary {
   bool get isFundingOpen =>
       fundingStatusValue == 'preheating' || fundingStatusValue == 'ongoing';
 
-  /// 归一化后的状态值（缺省时按是否售罄推断）。
+  /// 归一化后的状态值（缺省时按名额是否已满推断）。
   String get fundingStatusValue {
     if (fundingStatus.isNotEmpty) return fundingStatus;
     return soldOut ? 'failed' : 'ongoing';
@@ -270,9 +270,9 @@ abstract class ShowSummary with _$ShowSummary {
   /// 起价文案（`星币 680`），详情页与卡片都用它。
   String get priceFromText => priceFrom.format();
 
-  /// 城市 + 场馆：`上海 · 上海大剧院`。
+  /// 城市 + 活动场地：`上海 · 线上企划`。
   ///
-  /// 企划数据没有城市/场馆（全国发行），此时返回空串，由 UI 自行隐藏。
+  /// 企划数据没有城市/活动场地（全国发行），此时返回空串，由 UI 自行隐藏。
   String get venueLabel {
     if (city.isEmpty) return venue;
     if (venue.isEmpty) return city;
@@ -283,7 +283,7 @@ abstract class ShowSummary with _$ShowSummary {
   bool belongsTo(int category) => categoryId == category;
 }
 
-/// 日期格式：`2026.11.08`（订单列表的场次行用）。
+/// 日期格式：`2026.11.08`（订单列表的线下回报场次行用）。
 String formatDate(DateTime time) {
   final month = time.month.toString().padLeft(2, '0');
   final day = time.day.toString().padLeft(2, '0');

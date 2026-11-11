@@ -14,24 +14,22 @@ import '../catalog/domain/show_summary.dart';
 import '../../shared/ui/ps_network_images.dart';
 import '../../l10n/l10n.dart';
 
-/// 企划详情（沿用 `layout_show_detail.xml` 的视觉结构）。
+/// 企划详情。
 ///
 /// ## 结构
 ///
-/// - 顶部沉浸式头图（`view_show_detail_header_picture.xml`）：海报 92×124、
+/// - 顶部沉浸式头图：海报 92×124、
 ///   标题 14sp 白字最多 3 行、达成率与支持人数、底部 20dp 白色圆角压住；
 /// - 42dp 的锚点 tab（目标进度 / 回报档位 / 进度更新 / 风险说明），点击滚动到对应段落；
 /// - 内容：目标进度 → 截止/交付信息 → 保障条 → 回报档位 → 进度更新 →
 ///   风险说明 → 创作者信息 → 企划故事 → 支持须知 → 支持保障；
-/// - 底部 46dp 支持栏（`view_show_detail_purchase.xml`）：客服 / 关注 + 支持此企划。
+/// - 底部 46dp 支持栏：客服 / 关注 + 支持此企划。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意不做的事
 ///
-/// - 企划星详情页的 UI 实际跑在 Flutter 引擎里（`ShowDetailActivity` 只是一个
-///   转发壳），`layout_show_detail.xml` 是它的原生降级版。这里以原生 layout
-///   为基准复刻，因为它是仓库里唯一可核对的规格。
-/// - 没有实现「代抢 / 拼团 / 选座 / 求票浮标」四个分支：它们属于旧票务叙事，
-///   线下活动型企划仅保留回报档位与场次能力。
+/// - 没有实现「代抢 / 组队支持 / 选座 / 求票浮标」四个分支：代抢与求票属于
+///   遗留票务叙事（POSITIONING.md §10 待下线），选座只是线下活动型企划的
+///   可选降级能力；本页只保留回报档位与线下回报场次。
 class ShowDetailPage extends ConsumerStatefulWidget {
   const ShowDetailPage({super.key, required this.showId});
 
@@ -186,7 +184,7 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
   }
 }
 
-/// 顶部头图（`view_show_detail_header_picture.xml`）。
+/// 顶部头图。
 class _DetailHeader extends SliverPersistentHeaderDelegate {
   _DetailHeader({
     required this.show,
@@ -216,7 +214,7 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        // 背景：海报放大 + 40% 透明压暗（`iv_bg` alpha=0.4 + `ivBgMask` #66000000）。
+        // 背景：海报放大 + 40% 透明压暗（遮罩 #66000000）。
         PsPoster(
           seed: show.title,
           width: double.infinity,
@@ -313,7 +311,7 @@ class _DetailHeader extends SliverPersistentHeaderDelegate {
             ),
           ),
         ),
-        // 底部 20dp 白色圆角压住头图（`roundedCornerBackground`）。
+        // 底部 20dp 白色圆角压住头图。
         Positioned(
           left: 0,
           right: 0,
@@ -560,7 +558,7 @@ class _MetricCell extends StatelessWidget {
   }
 }
 
-/// 企划截止与交付信息（`view_show_detail_header_other.xml`）。
+/// 企划截止与交付信息。
 class _InfoSection extends StatelessWidget {
   const _InfoSection({required this.show});
 
@@ -569,7 +567,7 @@ class _InfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    // 企划没有场馆：用交付计划占位，避免出现空白信息块。
+    // 企划没有活动场地：用交付计划占位，避免出现空白信息块。
     final hasVenue = show.venue.isNotEmpty || show.venueAddress.isNotEmpty;
     final infoTitle = hasVenue ? show.venue : show.deliveryPlan;
     final infoSubtitle = hasVenue ? show.venueAddress : '';
@@ -644,7 +642,7 @@ class _InfoSection extends StatelessWidget {
   }
 }
 
-/// 支持保障条（`btnTicketSource`，34dp）。
+/// 支持保障条（34dp）。
 class _GuaranteeBanner extends StatelessWidget {
   const _GuaranteeBanner({required this.onTap});
 
@@ -1360,7 +1358,7 @@ class _CreatorSection extends StatelessWidget {
   }
 }
 
-/// 企划故事（`view_show_detail_intro.xml`）。
+/// 企划故事。
 class _IntroSection extends StatelessWidget {
   const _IntroSection({required this.show});
 
@@ -1398,7 +1396,7 @@ class _IntroSection extends StatelessWidget {
   }
 }
 
-/// 支持须知（`dialog_show_detail_more_purchase_notice`）。
+/// 支持须知。
 class _NoticeSection extends StatelessWidget {
   const _NoticeSection({required this.show});
 
@@ -1456,7 +1454,7 @@ class _NoticeSection extends StatelessWidget {
   }
 }
 
-/// 服务保障（`view_show_detail_guarantee.xml`）。
+/// 服务保障。
 class _ServiceGuaranteeSection extends StatelessWidget {
   static const List<IconData> _icons = <IconData>[
     LucideIcons.creditCard,
@@ -1525,7 +1523,7 @@ class _ServiceGuaranteeSection extends StatelessWidget {
   }
 }
 
-/// 底部支持栏（`view_show_detail_purchase.xml`）。
+/// 底部支持栏。
 class _PurchaseBar extends StatelessWidget {
   const _PurchaseBar({
     required this.show,

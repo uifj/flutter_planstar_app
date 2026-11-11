@@ -6,7 +6,7 @@ import '../domain/domain.dart';
 import '../order_l10n.dart';
 import '../../../l10n/l10n.dart';
 
-/// 支付渠道选择面板（`dialog_pay_channel.xml`）。
+/// 支付渠道选择面板。
 ///
 /// ## 为什么从 `order_list_page.dart` 提出来
 ///
@@ -26,8 +26,8 @@ class PaymentChannelSheet extends StatelessWidget {
     );
   }
 
-  /// 渠道与图标。企划星支持微信 / 支付宝 / 云闪付，招行一网通走独立 H5
-  /// （`CmbPayWebActivity`），不在这个面板里。
+  /// 渠道与图标。面板只列微信 / 支付宝 / 云闪付，招行一网通走独立 H5，
+  /// 不在这个面板里。
   static const List<(PaymentChannel, IconData)> _channels =
       <(PaymentChannel, IconData)>[
         (PaymentChannel.wechat, LucideIcons.messageCircle),

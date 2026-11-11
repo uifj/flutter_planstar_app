@@ -2,30 +2,26 @@ import 'package:core/domain.dart';
 
 /// 礼品卡状态。
 ///
-/// 对齐 Android `GiftCard.status` + `isDisable`：
-/// - Android 用 `status`（int）+ `isDisable`（bool）判断是否可用。
-/// - 这里用枚举三态。
+/// 用枚举三态表达是否可用，而不是 int 状态码 + bool 禁用位两个标记位。
 enum GiftCardStatus {
-  /// 可用（`isDisable=false` 且 `balance > 0`）。
+  /// 可用（未禁用且 `balance > 0`）。
   active,
 
   /// 已用完（`balance <= 0`）。
   depleted,
 
-  /// 已禁用（`isDisable=true`）。
+  /// 已禁用。
   disabled,
 }
 
 /// 礼品卡领域模型。
 ///
-/// 对齐 Android `GiftCard.java`（`Serializable` Kotlin data class）。
+/// ## 设计取舍
 ///
-/// ## 与 Android 的差异
-///
-/// - Android 字段全是裸 `double` / `int` / `long`，页面直接读字段。
-/// - 这里用 `final class`：金额用 [Money]（整数分），时间用 [DateTime]，
+/// - 用 `final class` 而不是裸 `double` / `int` / `long` 字段让页面直接读：
+///   金额用 [Money]（整数分），时间用 [DateTime]，
 ///   状态用枚举 [GiftCardStatus] 而不是 `int` + `bool`。
-/// - Android 用 `denomination`（面值）和 `balance`（余额）两个字段；
+/// - `denomination`（面值）和 `balance`（余额）分开存：
 ///   面值是卡片的初始金额（决定卡片颜色），余额是当前可用金额。
 final class GiftCard {
   const GiftCard({
@@ -45,7 +41,7 @@ final class GiftCard {
   /// 礼品卡 ID。
   final int id;
 
-  /// 卡名称（Android 默认 "礼品卡"）。
+  /// 卡名称。
   final String title;
 
   /// 描述文案。
@@ -73,7 +69,7 @@ final class GiftCard {
   /// 卡号（用户绑定时输入的序列号）。
   final String? serialNumber;
 
-  /// 是否可以解绑（Android `isCanRevoke`）。
+  /// 是否可以解绑。
   final bool canRevoke;
 
   /// 是否在有效期内。

@@ -8,7 +8,7 @@ import '../../../l10n/l10n.dart';
 
 /// 绑定礼品卡页。
 ///
-/// 对齐 Android `AddGiftCardActivity`：
+/// 页面结构：
 /// - 单输入框输入卡号 + 提交按钮。
 /// - 提交时调 `POST v1/giftCards`（这里模拟）。
 class AddGiftCardPage extends ConsumerStatefulWidget {

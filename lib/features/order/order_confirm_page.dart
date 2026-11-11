@@ -19,7 +19,7 @@ import 'order_l10n.dart';
 /// 页面是**纯展示**：所有金额来自 [OrderConfirmState.displayQuote]
 /// （服务端报价优先、领域服务预演兜底），所有校验来自聚合返回的 `Result`。
 /// 页面自己不做任何业务判断——
-/// 这与企划星 `OrderConfirmActivity`（2,633 行，金额/校验/埋点/跳转混在一起）相反。
+/// 刻意不把金额/校验/埋点/跳转混在一个几千行的页面组件里。
 class OrderConfirmPage extends ConsumerWidget {
   const OrderConfirmPage({
     super.key,
@@ -32,8 +32,8 @@ class OrderConfirmPage extends ConsumerWidget {
   /// 企划 id（从路由 query 来；缺省时用演示值）。
   final String showId;
 
-  /// 选票页传入的选择（P0-08）：票档下标 / 张数 / 场次下标。
-  /// 三者都只是索引，金额一律由服务端票档数据重新计算，不接受 query 里的金额。
+  /// 档位选择页传入的选择：回报档位下标 / 份数 / 线下回报场次下标。
+  /// 三者都只是索引，金额一律由服务端回报档位数据重新计算，不接受 query 里的金额。
   final int? tierIndex;
   final int? quantity;
   final int? sessionIndex;
@@ -100,7 +100,7 @@ class OrderConfirmPage extends ConsumerWidget {
                         _TierRow(
                           offer: offer,
                           quantity: _quantityOf(state.order, offer.id),
-                          // 提交中/已提交禁用票档编辑，避免展示价与请求价脱节。
+                          // 提交中/已提交禁用回报档位编辑，避免展示价与请求价脱节。
                           enabled: !state.submitting && !state.submitted,
                           onIncrease: () => controller.increase(offer.id),
                           onDecrease: () => controller.decrease(offer.id),
@@ -133,7 +133,7 @@ class OrderConfirmPage extends ConsumerWidget {
                 CheckboxListTile(
                   contentPadding: EdgeInsets.zero,
                   controlAffinity: ListTileControlAffinity.leading,
-                  // ⚠ 默认不勾：企划星默认勾选是合规问题（M5-01）。
+                  // ⚠ 默认不勾：默认勾选交易协议是合规问题。
                   value: state.order.agreementAccepted,
                   onChanged: state.order.isEditable
                       ? (_) => controller.toggleAgreement()

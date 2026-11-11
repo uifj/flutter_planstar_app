@@ -14,8 +14,8 @@ import 'user_api_providers.dart';
 
 /// 用户资料（"我的"页顶部卡片）。
 ///
-/// 企划星的这些数字来自 `v1/user/info`（想看/关注/等级）+ `v1/coupon/count`
-/// + `v1/wallet/balance` 三个接口。**登录返回的 `user` 里已经带了**
+/// 这些数字来自用户资料（想看/关注/等级）+ 券数 + 钱包余额
+/// 三个接口。**登录返回的 `user` 里已经带了**
 /// 昵称 / 头像 / 等级 / 想看数 / 关注数，所以这几项直接用真值；
 /// 券数与余额还没接（要额外的接口），暂时给固定演示值——**不伪造接口形状**：
 /// 等那两个接口接上时，这个类就是 DTO 映射的目标。
@@ -134,7 +134,7 @@ String _maskMobile(String mobile) {
 /// 四个订单状态入口的待处理数量（「我的订单」卡片上的小红点）。
 ///
 /// 复用订单列表的筛选定义，保证"我的页角标"和"订单页 tab 数"永远一致——
-/// 企划星这两处是分别请求的，出现过角标有数、点进去是空列表的情况。
+/// 这两处若分别请求，就会出现角标有数、点进去是空列表的情况。
 final userOrderBadgesProvider = Provider<Map<OrderListFilter, int>>((ref) {
   final counts = ref.watch(orderStatusCountsProvider);
   return <OrderListFilter, int>{

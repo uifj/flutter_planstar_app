@@ -18,20 +18,20 @@ import 'widgets/bilibili_open_sheet.dart';
 import '../../shared/ui/ps_network_images.dart';
 import '../../l10n/l10n.dart';
 
-/// 动态详情页（企划星 `FeedDetailActivity` + `FeedDetailTweetFragment`）。
+/// 动态详情页。
 ///
 /// ## 结构
 ///
-/// 作者行 → 标题 → 正文 → 相关演出 → 互动条 → 评论区。
-/// 企划星的详情页是"一个 Activity + 5 个 Fragment"（图文/文章/视频/转发/收藏），
-/// 本项目只有图文一种，所以不拆 Fragment——**类型分叉靠 `hasVideo` 之类的
+/// 作者行 → 标题 → 正文 → 相关企划 → 互动条 → 评论区。
+/// 动态有图文/文章/视频/转发/收藏多种类型，本项目只有图文一种，
+/// 所以不拆子页面——**类型分叉靠 `hasVideo` 之类的
 /// 字段驱动，而不是靠 5 个子类**。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意不做的事
 ///
 /// - 不做视频播放：`hasVideo` 为真时只在头部显示一个播放角标并说明原因，
-///   不假装能播（播放器需要 CDN 与 `videoplayer` 那 16 个类的等价物）。
-/// - 不做点赞/评论的写入：企划星走 `v1/feed/like` 与评论接口。这里点赞与
+///   不假装能播（自研播放器等于重做一套 CDN 鉴权与播放栈）。
+/// - 不做点赞/评论的写入：后端未提供点赞与发评论端点。这里点赞与
 ///   写评论都是 toast 占位，**不本地改数字**——本地 +1 而服务端没加，
 ///   退出再进就回退，比不给按钮更困惑。
 class FeedDetailPage extends ConsumerWidget {

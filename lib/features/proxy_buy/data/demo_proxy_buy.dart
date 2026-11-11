@@ -4,7 +4,7 @@ import '../domain/proxy_buy.dart';
 
 /// 代抢演示数据。
 ///
-/// 对齐 Android：代抢信息内嵌于 `ActivityBean.proxyBuyInfo`，
+/// 代抢规则内嵌于企划详情、没有独立端点，
 /// 这里用静态演示数据模拟。
 abstract final class DemoProxyBuy {
   /// 演示代抢订单列表。

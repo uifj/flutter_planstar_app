@@ -12,13 +12,13 @@ import 'proxy_buy_l10n.dart';
 
 /// 代抢页面。
 ///
-/// ## 与 Android 的差异
+/// 遗留票务能力：与「企划支持平台」定位冲突，按 POSITIONING.md §10 待下线。
 ///
-/// - 企划星的代抢流程分散在多个页面：
-///   `ProxyBuyChooseTicketActivity` → `ProxyBuyConfirmActivity`。
-///   这里合并为一个页面：顶部规则说明 + 截止选项 + 订单列表。
-/// - 规则页面（Android 用 WebView 加载 `daiqiangRuleWeb.html`）
-///   这里用原生展开文本。
+/// ## 页面结构
+///
+/// - 代抢流程合并为一个页面：顶部规则说明 + 截止选项 + 订单列表，
+///   不再拆成选择与确认两步。
+/// - 规则说明用原生展开文本，不加载 H5 规则页。
 /// - 提交流程遵循"假功能不做"：表单是真实的，提交后 toast 说明"模拟提交"。
 ///
 /// 页面只渲染 `ProxyBuyController` 暴露的视图状态，不取数、不算价。

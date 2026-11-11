@@ -14,12 +14,12 @@ import 'domain/domain.dart';
 import 'widgets/order_list_card.dart';
 import '../../l10n/l10n.dart';
 
-/// 我的支持（`activity_my_order.xml` + `fragment_my_activity_order.xml`），
+/// 我的支持，
 /// 「我的 → 订单」的二级页。
 ///
 /// ## 两层 tab
 ///
-/// 1. 顶部 40dp 的「企划 / 商品」——企划星把企划支持记录和商品（周边）分成两个列表；
+/// 1. 顶部 40dp 的「企划 / 商品」——企划支持记录和商品（周边）分成两个列表；
 /// 2. 40dp 的「全部 / 待支付 / 众筹中 / 交付中 / 待评价」——等宽、24×2dp 下划线。
 ///
 /// 商品列表**没有数据源**（本项目只做了企划支持链路），所以那一栏渲染空态
@@ -33,7 +33,7 @@ import '../../l10n/l10n.dart';
 /// ## 筛选在应用层做
 ///
 /// 仓储只返回"全部支持"，过滤发生在 [OrderListFilter.matches]。
-/// 理由写在 `order_list_controller.dart`：企划星列表的 0–3 筛选码是第三套编码，
+/// 理由写在 `order_list_controller.dart`：列表的 0–3 筛选码是第三套编码，
 /// 不该污染仓储端口。
 class OrderListPage extends ConsumerStatefulWidget {
   const OrderListPage({super.key});
@@ -202,8 +202,8 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
     context.push(
       '/order/pay'
       '?number=${Uri.encodeComponent(order.number.value)}'
-      // P1-01：应付金额取报价快照的 paymentAmount（含折扣/礼品卡/运费/加速包），
-      // goodsTotal 只是票面子小计，用它跳转支付页会多付或少付。
+      // 应付金额取报价快照的 paymentAmount（含折扣/礼品卡/运费/加速包），
+      // goodsTotal 只是回报档位小计，用它跳转支付页会多付或少付。
       '&amount=${order.quote?.paymentAmount.minorUnits ?? order.goodsTotal.minorUnits}'
       '&title=${Uri.encodeComponent(show?.title ?? '')}',
     );
@@ -249,7 +249,7 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
   }
 }
 
-/// 演出 / 商品 一级 tab（`activity_my_order.xml`，40dp）。
+/// 企划 / 商品 一级 tab（40dp）。
 class _PrimaryTabs extends StatelessWidget {
   const _PrimaryTabs({required this.selected, required this.onSelect});
 
@@ -327,7 +327,7 @@ class _PrimaryTabs extends StatelessWidget {
   }
 }
 
-/// 状态 tab（`fragment_my_activity_order.xml`，40dp，等宽）。
+/// 状态 tab（40dp，等宽）。
 class _StatusTabs extends StatelessWidget {
   const _StatusTabs({required this.selected, required this.onSelect});
 

@@ -4,7 +4,7 @@ import '../seat_map.dart';
 
 /// 连座策略 —— **无状态领域服务**。
 ///
-/// 与企划星 `isContinuousSeat` 对齐：选中座位必须满足
+/// 选中座位必须满足
 /// 「同一区域 + 同一排 + 列号（`x`）连续」。
 final class SeatContinuityPolicy {
   const SeatContinuityPolicy();

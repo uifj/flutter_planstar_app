@@ -6,10 +6,10 @@ import 'auth_user.dart';
 /// 会话 = 用户资料 + 会话令牌。
 ///
 /// 企划星的令牌是 `psSession`（登录响应头下发，之后走 `Cookie: psSession=…`）。
-/// 来源把它和资料**分两处存**：`psSession` 在 `SharedPreferences("account")`，
-/// 资料在同一个 prefs 的 `profile` 字段（URL 编码的 JSON）。
-/// 这里仍然分两处存（令牌进安全存储、资料进普通偏好），但合成一个对象
-/// 返回，避免调用方自己去拼"令牌有了但资料还没到"的中间态。
+/// 令牌和资料在存储上**分两处放**：`psSession` 进安全存储，
+/// 资料进普通偏好（纯 JSON，不做 URL 编码）。
+/// 但对调用方合成一个对象返回，避免自己去拼"令牌有了但资料还没到"
+/// 的中间态。
 final class AuthSession {
   /// 创建会话。
   const AuthSession({required this.user, this.token});

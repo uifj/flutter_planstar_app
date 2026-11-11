@@ -3,11 +3,11 @@ import 'package:core/result.dart';
 
 /// 限购规则。
 ///
-/// 企划星 `ActivityBean` 有 4 个相关字段（`numMax` / `numMin` / `orderLimit` /
-/// `orderNumLimit`，`wiki_zh/27` §10）语义重叠，服务端填哪个不固定。
+/// 服务端有 4 个语义重叠的限购字段（`numMax` / `numMin` / `orderLimit` /
+/// `orderNumLimit`），填哪个不固定。
 /// 这里只保留两个**真正影响下单**的维度：
-/// - [maxPerOrder]：单笔最多买几张（"每单限购 6 张"）
-/// - [maxPerUser]：每个账号累计最多买几张（"每人限购 2 张"）
+/// - [maxPerOrder]：单笔最多支持几份（"每单限购 6 份"）
+/// - [maxPerUser]：每个账号累计最多支持几份（"每人限购 2 份"）
 final class PurchaseLimit extends ValueObject {
   const PurchaseLimit({this.maxPerOrder, this.maxPerUser});
 
@@ -38,8 +38,8 @@ final class PurchaseLimit extends ValueObject {
 
 /// 限购策略 —— **无状态领域服务**。
 ///
-/// 单独抽出来的理由：限购要在"加票档"（本地）和"下单前"（服务端返回已购数）两处
-/// 用同一套判断。企划星侧是 `ChooseTicketHelper` 里一段共享计算 + 服务端兜底，
+/// 单独抽出来的理由：限购要在"加回报档位"（本地）和"下单前"（服务端返回已购数）两处
+/// 用同一套判断。散在页面里的一段共享计算 + 服务端兜底，
 /// 前端那套没有任何测试。
 final class PurchaseLimitPolicy {
   const PurchaseLimitPolicy();

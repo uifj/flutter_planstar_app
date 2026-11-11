@@ -1,24 +1,24 @@
 import 'package:core/result.dart';
 
-/// 下单类型（对应企划星的 `OrderType` 编译期常量）。
+/// 下单类型（服务端下发的 `orderType` 编码）。
 ///
-/// 原实现是 `@interface` + `public static final int`，`@Retention(SOURCE)`——
-/// **运行时不存在**，服务端下发 `orderType=3` 客户端也不会拦（`wiki_zh/12` §5.4）。
+/// 不能只靠编译期常量：常量在**运行时不存在**，服务端下发 `orderType=3`
+/// 客户端也不会拦。
 /// 这里用 `enum` + [fromWire]，非法值直接变成 `Failure`。
 enum OrderType {
-  /// 普通票。
+  /// 普通支持单。
   ticket(1),
 
-  /// 拼团。
+  /// 组队支持。
   pinTuan(2),
 
-  /// 抢票。
+  /// 遗留票务订单类型（待下线）。
   grabTicket(5),
 
   /// Plus 会员充值（走 `v1/plusMember/charge/makeOrder`，与主单分叉）。
   plusMember(60),
 
-  /// 加速包。
+  /// 加速包（遗留票务能力，待下线）。
   speedPack(70);
 
   const OrderType(this.wireCode);
@@ -39,15 +39,15 @@ enum OrderType {
   }
 }
 
-/// 购买方式（对应 scheme 里的 `buyType`）。
+/// 支持方式（对应 scheme 里的 `buyType`）。
 ///
-/// 企划星侧 `buyType` 默认 `"1"`，`mIsProxyBuy = (buyType == 2)` 只有这一个标记位，
-/// 但它影响协议弹窗文案和**代购页被裁掉的一整块能力**（`wiki_zh/modules/order-and-payment` §4）。
+/// `buyType` 默认 `"1"`，代抢只有 `buyType == 2` 这一个标记位，
+/// 但它影响协议弹窗文案和**代购页被裁掉的一整块能力**。
 enum BuyType {
-  /// 普通购买。
+  /// 普通支持。
   normal(1),
 
-  /// 代购（企划星代为下单）。
+  /// 代购（平台代为下单）。
   proxy(2);
 
   const BuyType(this.wireCode);

@@ -11,7 +11,7 @@ import 'application/address_providers.dart';
 import 'domain/shipping_address.dart';
 import '../../l10n/l10n.dart';
 
-/// 收货地址管理（企划星 `AddressListActivity` + `item_address.xml`）。
+/// 收货地址管理。
 ///
 /// ## 结构
 ///
@@ -27,16 +27,16 @@ import '../../l10n/l10n.dart';
 /// [AddressListController] 保证（见该文件注释），页面只负责渲染与派发意图。
 /// 页面如果也写一套校验，两处规则迟早会漂移。
 ///
-/// ## 与 Android 的差异
+/// ## 设计取舍
 ///
-/// - **不做省市区三级联动选择器**：原页用 `province/city/district` 三张表 +
+/// - **不做省市区三级联动选择器**：三级联动要 `province/city/district` 三张表 +
 ///   滚轮，这里让用户直接输入 `省 市 区`（输入框提示格式），把"选地址"降级为
 ///   "填地址"。理由是演示项目没有行政区划数据源，硬造三级联动会出现
 ///   "选不到自己的区"的假功能。
-/// - **不做地图选点**：企划星有 `BaiduMap` 选点页，本项目无地图（见 `venue_page`
+/// - **不做地图选点**：本项目无地图能力（见 `venue_page`
 ///   的说明），所以不放入口。
-/// - **编辑**用同一个表单（预填原值）。原页编辑与新增是两个 Activity，
-///   这里复用一套表单避免两份字段顺序不一致。
+/// - **编辑**用同一个表单（预填原值）。编辑与新增分成两个页面
+///   容易出现两份字段顺序不一致，这里复用一套表单。
 class AddressPage extends ConsumerWidget {
   const AddressPage({super.key});
 
@@ -185,7 +185,7 @@ class AddressPage extends ConsumerWidget {
   }
 }
 
-/// 地址卡（`item_address.xml`）。
+/// 地址卡。
 class _AddressCard extends StatelessWidget {
   const _AddressCard({
     required this.address,
@@ -412,8 +412,8 @@ class _AddressDraft {
 /// 新增 / 编辑地址表单（底部面板）。
 ///
 /// 为什么是 `showModalBottomSheet` 而不是独立页面：字段只有四个，
-/// 独立页面会让"填到一半返回"的丢数据风险变高（原页有草稿缓存，
-/// 这里没有）。面板里点空白可以关掉，但关掉即放弃，所以提交按钮
+/// 独立页面会让"填到一半返回"的丢数据风险变高（这里没有草稿缓存）。
+/// 面板里点空白可以关掉，但关掉即放弃，所以提交按钮
 /// 只在四项都合法时可点，减少"填一半关掉"的挫败。
 class _AddressFormSheet extends StatefulWidget {
   const _AddressFormSheet({this.initial});

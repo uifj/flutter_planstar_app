@@ -12,31 +12,31 @@ import '../domain/show_summary.dart';
 import 'show_cards.dart';
 import '../../../l10n/l10n.dart';
 
-/// 演出列表页（企划星 `CategoryHomeActivity` / `HotListActivity` 的合并版）。
+/// 企划列表页（「分类列表」与「热门列表」的合并版）。
 ///
 /// ## 为什么把两个页面合成一个
 ///
-/// 原项目里「分类列表」和「热门列表」是两个 Activity，但除了**标题和默认排序**
-/// 之外完全一样：同一张 `item_show_list.xml`、同一个 `ShowListAdapter`、
+/// 「分类列表」和「热门列表」是两个入口，但除了**标题和默认排序**
+/// 之外完全一样：同一张列表卡片、同一套渲染逻辑、
 /// 同一套分页参数。差异只有入口带的 `categoryId` 和默认 `sort`。
 /// 合成一个页面 + 两个 query 参数（`category` / `title`），
 /// 比复制一份 400 行列表页更好维护——这也是 Flutter 侧一直的做法
 /// （见 `ShowCardRow` 被搜索结果/相似推荐共用）。
 ///
-/// ## 与 Android 的差异
+/// ## 分页与筛选
 ///
-/// - 原页的分页是 `RecyclerView` + 上拉加载；这里用 `NotificationListener`
-///   监听滚动到底部时调用 `ShowCatalogController.loadMore()`，真实接口按
+/// - 分页用 `NotificationListener` 监听滚动到底部时调用
+///   `ShowCatalogController.loadMore()`，真实接口按
 ///   `page/pageSize` 追加；演示数据一次给全，不再触发网络。
-/// - 原页有「筛选」抽屉（价格区间/时间/场馆）；这里只保留排序。
+/// - 不做「筛选」抽屉（价格区间/时间/活动场地）；这里只保留排序。
 ///   筛选需要服务端支持多维聚合，客户端硬筛会把"筛完是空"变成常态。
 class ShowListPage extends ConsumerStatefulWidget {
   const ShowListPage({super.key, this.categoryId, this.title});
 
-  /// 一级分类 id。`null` = 不限分类（「全部演出」）。
+  /// 一级分类 id。`null` = 不限分类（「全部企划」）。
   final int? categoryId;
 
-  /// 页面标题。`null` 时按分类名兜底，再兜底成「全部演出」。
+  /// 页面标题。`null` 时按分类名兜底，再兜底成「全部企划」。
   final String? title;
 
   @override
@@ -193,7 +193,7 @@ enum _SortMode {
   };
 }
 
-/// 分类筛选条（`view_show_list_filter.xml` 的横向 tab）。
+/// 分类筛选条（横向 tab）。
 class _CategoryBar extends StatelessWidget {
   const _CategoryBar({
     required this.categories,

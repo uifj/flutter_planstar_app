@@ -5,7 +5,7 @@ import '../value_objects/order_number.dart';
 
 /// 订单已提交（服务端已创建订单，进入待支付）。
 ///
-/// 订阅方：埋点（企划星 `PNLogger.clickOrderMakeorder` 的等价物）、
+/// 订阅方：埋点（建单点击事件）、
 /// 支付倒计时启动、订单列表刷新。
 ///
 /// ⚠ 命名是过去式：`OrderPlaced` 而不是 `PlaceOrder`——事件是**事实**，
@@ -31,7 +31,7 @@ final class OrderPlaced extends DomainEvent {
   /// 用户实付。
   final Money paymentAmount;
 
-  /// 是否还需要在线支付（实付 0 元时可以直接出票）。
+  /// 是否还需要在线支付（实付 0 元时可以直接成单）。
   final bool requiresPayment;
 
   @override

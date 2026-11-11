@@ -5,13 +5,13 @@ import '../domain/domain.dart';
 
 part 'pay_info.freezed.dart';
 
-/// 支付页面信息（对齐企划星 `GET v1/unifiedPay/payDetail` 的 `PayInfo`）。
+/// 支付页面信息（对应 `GET v1/unifiedPay/payDetail` 的响应）。
 ///
-/// 企划星的 `PayActivity` 在 onCreate 里拉一次 `payDetail`，拿到：
+/// 支付页进入时拉一次 `payDetail`，拿到：
 /// - `payAmount`：应付金额
 /// - `leftTime`：倒计时秒数（订单超时前剩余时间）
 /// - `channels[]`：可用支付渠道列表
-/// - `detailInfo[]`：订单摘要行（演出名 / 票档 / 数量等）
+/// - `detailInfo[]`：订单摘要行（企划名 / 回报档位 / 数量等）
 /// - `payReturnPage`：成功 / 失败页配置
 ///
 /// 页面壳由 [PayInfo.forOrder] 按路由参数构造；真实支付金额与状态

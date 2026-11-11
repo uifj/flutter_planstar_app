@@ -1,20 +1,20 @@
 /// 会话的本地持久化。
 ///
-/// 与来源 `lib\account\AccountService` 的读写对照：
+/// 存储口径：
 ///
-/// | | 来源 | 这里 |
+/// | | 位置 | 形式 |
 /// |---|---|---|
-/// | 令牌 | `SharedPreferences("account")` 的 `psSession`，**明文** | `SecureStore` 的 `psSession`（Keystore/Keychain） |
-/// | 资料 | 同一个 prefs 的 `profile`，`URLEncoder` 之后的 JSON | `KeyValueStore` 的 `profile`，纯 JSON |
-/// | 损坏数据 | `read()` 无 try/catch → 启动即崩（23 页 §3.1） | 任何异常都返回 `null`（当作未登录） |
+/// | 令牌 | `SecureStore` 的 `psSession`（Keystore/Keychain） | 密文，不落明文 prefs |
+/// | 资料 | `KeyValueStore` 的 `profile` | 纯 JSON，不做 URL 编码 |
+/// | 损坏数据 | `read()` 全程 try/catch | 任何异常都返回 `null`（当作未登录） |
 ///
-/// 三处差异都是有意的：
+/// 三条都是有意的：
 ///
-/// 1. **令牌进安全存储**：来源的 `psSession` 与 `profile` 一起躺在明文 prefs 里
-///    （M6-05），root 设备可读；
-/// 2. **不 URL 编码**：`URLEncoder` 会把昵称里的 `+` 变成空格（23 页 §3.2），
+/// 1. **令牌进安全存储**：令牌与资料一起躺在明文 prefs 里时，root 设备
+///    可以直接读走会话；
+/// 2. **不 URL 编码**：表单式 URL 编码会把昵称里的 `+` 变成空格，
 ///    纯 JSON 没有这个问题；
-/// 3. **坏数据不崩**：这是"启动即崩且没有降级路径"的直接修正。
+/// 3. **坏数据不崩**：读盘失败必须有降级路径，不能"启动即崩且无处可退"。
 library;
 
 import 'dart:convert';
@@ -37,7 +37,7 @@ final class AuthSessionStore {
   final AppStore _store;
   final PsRequestContext _context;
 
-  /// 资料在普通偏好里的键（对齐来源 `SharedPreferences("account")` 的 `profile`）。
+  /// 资料在普通偏好里的键。
   static const String profileKey = 'profile';
 
   /// 读会话。没有、或数据损坏时返回 `null`。
@@ -66,7 +66,7 @@ final class AuthSessionStore {
       }
       return AuthSession(user: user, token: token);
     } catch (error) {
-      // 坏数据 = 未登录。**不要**把异常抛到启动路径上（23 页 §3.1）。
+      // 坏数据 = 未登录。**不要**把异常抛到启动路径上。
       debugPrint('[auth] 读取本地会话失败，按未登录处理：$error');
       return null;
     }

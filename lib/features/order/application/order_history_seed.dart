@@ -175,7 +175,7 @@ List<TicketOrder> buildDemoOrderHistory({
     stage: _Stage.awaitingTickets,
   );
 
-  // 3) 待收货：已寄出（纸质票快递）。
+  // 3) 待收货：已寄出（纸质回报快递）。
   place(
     id: 'o-3',
     showId: '1002',

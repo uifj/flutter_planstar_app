@@ -65,10 +65,10 @@ String _safeInitials(String text) {
   }
 }
 
-/// 一条记录（演出 / 动态）的可检索索引。
+/// 一条记录（企划 / 动态）的可检索索引。
 ///
 /// 同时保存三个通道：
-/// - [text]：各字段原文（小写），保留原有 `contains` 行为；
+/// - [text]：各字段原文（小写），支持 `contains` 子串匹配；
 /// - [pinyin]：各字段的全拼（小写、无分隔），支持 `youxi`；
 /// - [initials]：各字段的首字母，支持 `yx`。
 final class SearchTextIndex {

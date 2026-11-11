@@ -2,7 +2,7 @@ import 'package:core/domain.dart';
 
 import 'ids.dart';
 
-/// 证件类型（对齐企划星 `IdCardTypes`，`wiki_zh/modules/order-and-payment` §6.1）。
+/// 证件类型（对应服务端下发的证件类型编码）。
 enum IdCardType {
   idCard(1),
   passport(2),
@@ -19,8 +19,8 @@ enum IdCardType {
 ///
 /// ## 为什么要在值对象里校验
 ///
-/// 企划星侧实名观演人的证件号**只判空**（`M5-07`，安全红旗）：`TextUtils.isEmpty` 之后
-/// 直接进请求体。结果是脏数据一路流到出票环节，退改签时才发现姓名证件对不上。
+/// 实名支持者的证件号如果**只判空**（安全红旗）：判空之后
+/// 直接进请求体。结果是脏数据一路流到交付环节，退款时才发现姓名证件对不上。
 ///
 /// 这里对身份证做 **GB 11643-1999 校验位**验算 + 出生日期合法性检查；
 /// 护照/通行证做长度与字符集检查（没有公开校验位算法，不假装能校验）。
@@ -116,10 +116,10 @@ final class IdCardNumber extends ValueObject {
   String toString() => '${type.name}($masked)';
 }
 
-/// 实名观演人。
+/// 实名支持者。
 ///
-/// 观演人是**值对象**而不是实体：同一个人（同证件号）在这一单里没有独立身份，
-/// 换一张单子也还是"这个人"。企划星侧把它当 DTO 用，同一单里可以重复添加同一个人
+/// 实名支持者是**值对象**而不是实体：同一个人（同证件号）在这一单里没有独立身份，
+/// 换一张单子也还是"这个人"。当成 DTO 用时同一单里可以重复添加同一个人
 /// （去重靠 UI 的选中态）——这里在聚合的 `assignVisitors` 里做去重。
 final class Visitor extends ValueObject {
   Visitor({required this.id, required this.name, required this.idCard}) {

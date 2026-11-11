@@ -2,8 +2,8 @@
 ///
 /// 只有这一个抽象：UI/应用层依赖它，真实实现（[RemoteAuthRepository]）在
 /// `data/`，测试用假实现。端口方法全部返回 `Result`，**不抛异常**——
-/// 与 `package:core/network.dart` 的契约一致（来源同时存在"抛异常"和"返码"两条路径，
-/// 30-02）。
+/// 与 `package:core/network.dart` 的契约一致：不并存"抛异常"和"返码"
+/// 两条路径。
 library;
 
 import 'package:core/result.dart';
@@ -14,7 +14,7 @@ import 'auth_session.dart';
 /// 发送验证码的结果。
 ///
 /// 服务端只回 `{success, needCaptcha, errorMsg}`，没有冷却时长；60 秒是
-/// 客户端写死的（来源 `mValidateLeftCount = 60`）。
+/// 客户端写死的常量，不是服务端下发的。
 final class SendCodeOutcome {
   /// 创建结果。
   const SendCodeOutcome({this.cooldownSeconds = 60});
@@ -60,7 +60,7 @@ abstract interface class AuthRepository {
 
   /// 登出：清本地会话 + 清请求上下文。
   ///
-  /// `⚠` 来源**不发登出请求**（`AccountService.logout()` 只清本地），
+  /// `⚠` **不发登出请求**（只清本地），
   /// 服务端的 `psSession` 只能等它自己过期。这里保持一致：没有 `/logout` 接口。
   Future<void> logout();
 }

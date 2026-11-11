@@ -13,10 +13,10 @@ import '../../../l10n/l10n.dart';
 
 /// 退款申请页。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意的设计选择
 ///
-/// - 企划星的退款是 WebView（`OrderRefundWebActivity` 加载 H5）。
-///   这里做原生表单：原因选择 + 金额展示 + 提交。
+/// - 退款不用 WebView 加载 H5，
+///   而是原生表单：原因选择 + 金额展示 + 提交。
 /// - 退款金额与规则来自订单详情下发的字段；缺失时不自行计算。
 /// - 提交走 `POST /v1/order/{id}/refund`，成功后展示服务端返回的可退金额。
 class RefundPage extends ConsumerWidget {

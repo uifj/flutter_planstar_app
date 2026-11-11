@@ -4,9 +4,9 @@ import '../../../l10n/l10n.dart';
 import '../application/group_buy_controller.dart';
 import '../domain/group_buy.dart';
 
-/// 拼团展示文案的本地化映射。
+/// 组队支持展示文案的本地化映射。
 extension GroupBuyViewL10n on GroupBuyView {
-  /// 标语标签：未配置时回落到默认「超低价拼团」。
+  /// 标语标签：未配置时回落到默认标语（`groupBuy_72`）。
   String tagLabelOf(BuildContext context) =>
       info.tag.isEmpty ? context.l10n.groupBuy_72 : info.tag;
 

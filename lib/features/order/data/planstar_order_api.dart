@@ -30,7 +30,7 @@ import '../domain/value_objects/payment_channel.dart';
 /// 支付（`v1/unifiedPay/payDetail`、`v1/unifiedPay/pay`）后端未实现，
 /// 支付页仍是本地模拟流程。
 ///
-/// `OrderService.fetchOrderList(status, orderType, pageIndex, pageSize)`
+/// [fetchOrderList] 的 `status` / `orderType` / `pageIndex` / `pageSize`
 /// 对应 `GET v1/order/list?status=&orderType=&pageIndex=&pageSize=`。
 final class PlanstarOrderApi {
   PlanstarOrderApi({required ApiClient client}) : _client = client;

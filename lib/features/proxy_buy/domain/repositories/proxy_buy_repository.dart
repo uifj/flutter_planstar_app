@@ -8,7 +8,7 @@ import '../proxy_buy.dart';
 /// 演示 / 真实实现的切换由应用层的 `DataSourcePolicy` 决定，
 /// 领域层不关心数据从哪来。
 abstract interface class ProxyBuyRepository {
-  /// 代抢规则（内嵌于活动详情；页面单独展示时使用默认规则）。
+  /// 代抢规则（内嵌于企划详情；页面单独展示时使用默认规则）。
   Future<Result<ProxyBuyInfo>> fetchInfo();
 
   /// 我的代抢订单。

@@ -2,20 +2,19 @@ import 'package:core/domain.dart';
 
 /// 退款原因。
 ///
-/// 对齐 Android 退款 H5 页面中的原因选项。
-/// 企划星的退款表单是 WebView（`m.planstar.com/order/refund.html`），
+/// 退款表单走 H5（`m.planstar.com/order/refund.html`），
 /// 原因选项由服务端下发。这里枚举常见原因，等接口接上后改为服务端下发。
 enum RefundReason {
   /// 不需要了（计划变更）。
   notNeeded,
 
-  /// 买错了（买错场次 / 票档）。
+  /// 买错了（选错线下回报场次 / 回报档位）。
   boughtWrong,
 
-  /// 票价太贵。
+  /// 价格太贵。
   tooExpensive,
 
-  /// 找到更好的票源。
+  /// 找到更合适的选择。
   foundBetter,
 
   /// 其他原因。

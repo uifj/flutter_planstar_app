@@ -12,7 +12,7 @@ import '../domain/services/proxy_buy_pricing.dart';
 /// |---|---|---|
 /// | 我的代抢订单 | GET | `v1/proxyBuyOrder/myOrders` |
 ///
-/// 代抢规则没有独立端点（内嵌在活动详情里），提交接口后端未提供，
+/// 代抢规则没有独立端点（内嵌在企划详情里），提交接口后端未提供，
 /// 由仓储层决定降级行为，不在这里造打不通的路径。
 final class ProxyBuyApi {
   ProxyBuyApi({required ApiClient client}) : _client = client;

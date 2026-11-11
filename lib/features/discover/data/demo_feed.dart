@@ -2,7 +2,7 @@ import '../domain/feed_post.dart';
 
 /// 演示社区动态。
 ///
-/// 企划星的发现页数据来自 feed 接口（`v1/feed/list`），带图文/视频/演出卡三种类型。
+/// 发现页数据来自 feed 接口（`v1/feed/list`），带图文/视频/企划卡三种类型。
 /// 视频动态只补 bvid / 视频页链接，不造 CDN 地址——播放交给哔哩哔哩官方页，
 /// 真实可验证，也不会出现"链接过期"的假象。
 ///
@@ -327,7 +327,7 @@ List<FeedPost> buildDemoFeed({DateTime? now}) {
 
 /// 演示评论。
 ///
-/// 企划星的评论走独立接口（`v1/feed/comment/list`），按动态 id 分页。
+/// 评论走独立接口（`v1/feed/comment/list`），按动态 id 分页。
 /// 这里只给前几条动态造评论，**其余返回空**——空评论区是真实存在的一屏，
 /// 给它塞假评论会让"这条动态没人讨论"这个信息消失。
 List<FeedComment> buildDemoComments(String postId, {DateTime? now}) {

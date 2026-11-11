@@ -4,7 +4,7 @@ import 'ids.dart';
 
 /// 折扣的两种形态：**减固定金额** 或 **按比例减（可封顶）**。
 ///
-/// 企划星侧只有"减固定金额"（`mCampaignDiscount` / `mCouponDiscount` 都是 `double` 元），
+/// 只有"减固定金额"一种形态不够用（营销/券优惠按 `double` 元下发），
 /// 但服务端下发的券里已经出现"满 1000 减 15%"，所以这里把两种都建模，
 /// 由 [Money.percentage] 统一处理舍入。
 sealed class Discount extends ValueObject {
@@ -12,7 +12,7 @@ sealed class Discount extends ValueObject {
 
   /// 在 [base] 上算出**抵扣金额**（永远非负、且不超过 [base]）。
   ///
-  /// 与企划星的差别：企划星允许抵扣额超过总额，靠事后 `if (paymentAmount < 0) = 0` 兜底。
+  /// 刻意不让抵扣额超过总额再靠事后 `if (paymentAmount < 0) = 0` 兜底。
   /// 这里在源头钳住，`paymentAmount` 就不会出现负数中间态。
   Money discountOn(Money base);
 }
@@ -68,11 +68,11 @@ final class RateDiscount extends Discount {
 
 /// 用户本单选择的优惠：**营销活动 / 优惠券 / 都不用，三选一**。
 ///
-/// ## 这是对原 App `selectStatus` 的直接替换
+/// ## 为什么不用 `int selectStatus`
 ///
-/// 企划星用 `int selectStatus`（`0` 营销、`1` 券、`2` 都不用），互斥关系靠
-/// `if/else if/else` 在 `updatePrice()` 里维持，下单时又要在 `order()` 里
-/// 用另一段 `if (i2 != 0) ... else if` 再维持一次（`wiki_zh/12` §3.5.4/§3.5.5）。
+/// 用 `int selectStatus`（`0` 营销、`1` 券、`2` 都不用）时，互斥关系靠
+/// `if/else if/else` 在重算金额时维持，下单时又要在建单逻辑里
+/// 用另一段 `if (i2 != 0) ... else if` 再维持一次。
 /// 两处逻辑必须同步，否则"页面显示用了券、请求里带的是活动"。
 ///
 /// 用 `sealed` 之后，**互斥由类型保证**：一个 `DiscountSelection` 只能是一种，

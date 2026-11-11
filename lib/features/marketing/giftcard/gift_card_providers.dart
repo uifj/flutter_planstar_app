@@ -6,9 +6,7 @@ import 'gift_card.dart';
 
 /// 礼品卡列表 Provider。
 ///
-/// 对齐 Android `GiftCardService.fetchGiftCards()` → `GiftCardInfo`：
-/// - Android 返回 `enableGiftCards` + `disableGiftCards`。
-/// - 这里返回统一列表，由 `GiftCardStatus` 区分。
+/// 返回统一列表，由 `GiftCardStatus` 区分可用与不可用。
 final giftCardListProvider = Provider<List<GiftCard>>(
   (ref) => DemoGiftCards.all,
 );
@@ -43,7 +41,7 @@ final giftCardTotalBalanceProvider = Provider<Money>(
 
 /// 绑定礼品卡的 Controller。
 ///
-/// 对齐 Android `AddGiftCardActivity` → `POST v1/giftCards`：
+/// 对应 `POST v1/giftCards`：
 /// - 提交卡号（`serialNumber`），成功后刷新列表。
 /// - 这里用模拟数据：绑定成功后添加一张新卡到列表头部。
 class AddGiftCardController extends Notifier<AddGiftCardState> {

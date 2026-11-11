@@ -17,21 +17,21 @@ import '../domain/show_summary.dart';
 import 'catalog_l10n.dart';
 import '../../../l10n/l10n.dart';
 
-/// 分类首页（企划星 `CategoryHomeActivity` + `CategoryHomeFragment`）。
+/// 分类首页。
 ///
 /// ## 结构
 ///
 /// - 顶部分类切换条（横向滚动 tab，选中态加粗 + 品牌色）；
 /// - 二级标签筛选条（选中的一级分类的 `subTags`，可选，多选）；
-/// - 演出列表（按筛选条件过滤后的当前城市演出）。
+/// - 企划列表（按筛选条件过滤后的当前城市企划）。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意不做的事
 ///
-/// - 原页有"日历"入口和"城市日历"楼层（`autoOpenCalendar`）。
-///   日历需要服务端数据（按日期返回演出），这里没有数据源，不做。
-/// - 原页的列表是服务端分页返回；这里同样按 `page/pageSize` 触底追加，
-///   分类与二级标签仍是客户端过滤（演出没有 `subCategoryId` 字段）。
-/// - 分类切换时不做 `ViewPager` 预加载——数据来自同一个 provider，
+/// - 不做"日历"入口和"城市日历"楼层：日历需要服务端按日期返回企划，
+///   这里没有数据源。
+/// - 列表由服务端分页返回，按 `page/pageSize` 触底追加；分类与二级
+///   标签仍是客户端过滤（企划没有 `subCategoryId` 字段）。
+/// - 分类切换时不做多页面预加载——数据来自同一个 provider，
 ///   切换只是改变过滤条件，不需要多页面实例。
 class CategoryHomePage extends ConsumerStatefulWidget {
   const CategoryHomePage({super.key, this.initialCategoryId});
@@ -89,7 +89,7 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
     final filteredShows = allShows.where((show) {
       if (show.categoryId != _selectedCategoryId) return false;
       if (_selectedSubTagIds.isEmpty) return true;
-      // 演出没有 subCategoryId 字段，这里只按分类筛选。
+      // 企划没有 subCategoryId 字段，这里只按分类筛选。
       // 接真实接口后，标签筛选会由服务端 query 参数完成。
       return true;
     }).toList();
@@ -368,7 +368,7 @@ class _SubTagBar extends StatelessWidget {
   }
 }
 
-/// 演出卡片（分类列表用）。
+/// 企划卡片（分类列表用）。
 class _CategoryShowCard extends StatelessWidget {
   const _CategoryShowCard({required this.show, required this.onTap});
 

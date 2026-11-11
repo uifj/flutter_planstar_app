@@ -8,9 +8,9 @@ import '../domain/show_category.dart';
 import '../domain/show_summary.dart';
 import 'catalog_api_providers.dart';
 
-// ── 演出库 ──────────────────────────────────────────────────────────────
+// ── 企划库 ──────────────────────────────────────────────────────────────
 
-/// 演出库（全量）。
+/// 企划库（全量）。
 ///
 /// demo 与真实数据由 `dataSourcePolicyProvider`（终态来自编译期 `PS_USE_DEMO`）决定，
 /// 默认走网络；所有页面都从这一个人口读数据，分页/刷新只在这里做一次。
@@ -93,7 +93,7 @@ class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
   }
 }
 
-/// 按 id 取演出。查不到返回 `null`（不是抛异常）——深链带了脏 id 是正常情况。
+/// 按 id 取企划。查不到返回 `null`（不是抛异常）——深链带了脏 id 是正常情况。
 final showByIdProvider = Provider.family<ShowSummary?, String>((ref, id) {
   final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(
     showCatalogProvider,
@@ -135,7 +135,7 @@ final cityShowsProvider = Provider<AsyncValue<List<ShowSummary>>>((ref) {
   );
 });
 
-/// 当前城市是否有演出数据（用于区分"空态"与"加载中"）。
+/// 当前城市是否有企划数据（用于区分"空态"与"加载中"）。
 final cityHasDataProvider = Provider<bool>(
   (ref) => ref.watch(cityShowsProvider).valueOrNull?.isNotEmpty ?? false,
 );
@@ -207,11 +207,11 @@ final showDetailProvider = FutureProvider.family<ShowSummary?, String>((
   return result.getOrElse((_) => null);
 });
 
-/// 演出完整信息：详情接口优先，列表项兜底。
+/// 企划完整信息：详情接口优先，列表项兜底。
 ///
-/// 列表接口（`/v1/projects`）不返回票档，只用列表项会让选票页和
-/// 确认订单页拿不到票档（表现为「暂无票档信息」、订单无行、提交按钮禁用）。
-/// 这里统一从详情接口取票档/场次，详情未返回或失败时退回列表数据。
+/// 列表接口（`/v1/projects`）不返回回报档位，只用列表项会让选档页和
+/// 确认订单页拿不到回报档位（表现为「暂无回报档位信息」、订单无行、提交按钮禁用）。
+/// 这里统一从详情接口取回报档位/线下回报场次，详情未返回或失败时退回列表数据。
 final showFullProvider = Provider.family<ShowSummary?, String>((ref, id) {
   final summary = ref.watch(showByIdProvider(id));
   if (ref.watch(dataSourcePolicyProvider).isDemo) return summary;
@@ -233,7 +233,7 @@ final projectRankingProvider =
 
 // ── 精选推荐 ────────────────────────────────────────────────────────────
 
-/// 精选推荐：按分类分组后的演出（首页「精选」楼层每个 tab 一组）。
+/// 精选推荐：按分类分组后的企划（首页「精选」楼层每个 tab 一组）。
 final choicenessGroupsProvider = Provider<AsyncValue<List<ChoicenessGroup>>>((
   ref,
 ) {
@@ -276,9 +276,9 @@ final class ChoicenessGroup {
   final List<ShowSummary> shows;
 }
 
-// ── 场馆 ────────────────────────────────────────────────────────────────
+// ── 活动场地 ──────────────────────────────────────────────────────────────
 
-/// 热门场馆（从当前城市的演出里聚合出来）。
+/// 热门活动场地（从当前城市的企划里聚合出来）。
 final popularVenuesProvider = Provider<AsyncValue<List<VenueSummary>>>((ref) {
   final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(cityShowsProvider);
   return asyncShows.whenData((shows) {
@@ -309,7 +309,7 @@ final popularVenuesProvider = Provider<AsyncValue<List<VenueSummary>>>((ref) {
   });
 });
 
-/// 按场馆名取场馆。查不到返回 `null`——深链带脏名字是正常情况。
+/// 按活动场地名取活动场地。查不到返回 `null`——深链带脏名字是正常情况。
 final venueByNameProvider = Provider.family<AsyncValue<VenueSummary?>, String>((
   ref,
   name,
@@ -325,7 +325,7 @@ final venueByNameProvider = Provider.family<AsyncValue<VenueSummary?>, String>((
   });
 });
 
-/// 某场馆在当前城市的全部演出（按首场时间升序）。
+/// 某活动场地在当前城市的全部企划（按首个线下回报场次时间升序）。
 final venueShowsProvider =
     Provider.family<AsyncValue<List<ShowSummary>>, String>((ref, name) {
       final AsyncValue<List<ShowSummary>> asyncShows = ref.watch(

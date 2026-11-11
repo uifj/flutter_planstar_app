@@ -1,24 +1,26 @@
 import 'package:core/domain.dart';
 
+/// 遗留票务能力：与「企划支持平台」定位冲突，按 POSITIONING.md §10 待下线。
+///
 /// 代抢截止时间选项。
 ///
-/// 对齐 Android `ProxyBuyTimeInfo`：
+/// 服务端下发字段：
 /// - `endValue`（int）：截止阈值
 /// - `endValueDesc`（String）：展示文案
 final class ProxyBuyDeadline {
   const ProxyBuyDeadline({required this.endValue, required this.desc});
 
-  /// 截止阈值（Android `endValue`）。
+  /// 截止阈值。
   final int endValue;
 
-  /// 展示文案（Android `endValueDesc`）。
+  /// 展示文案。
   final String desc;
 }
 
-/// 代抢场次信息。
+/// 代抢的线下回报场次信息。
 ///
-/// 对齐 Android `ProxyBuyTurnInfo`：
-/// - `title`：场次标题
+/// 服务端下发字段：
+/// - `title`：线下回报场次标题
 /// - `timeStr`：时间描述
 final class ProxyBuyTurn {
   const ProxyBuyTurn({required this.title, required this.timeStr});
@@ -29,7 +31,7 @@ final class ProxyBuyTurn {
 
 /// 代抢规则信息。
 ///
-/// 对齐 Android `ProxyBuyInfo`（内嵌于 `ActivityBean`）。
+/// 规则内嵌于企划详情，没有独立端点。
 ///
 /// 这里只保留数据；总价计算见
 /// `domain/services/proxy_buy_pricing.dart` 的 `ProxyBuyPricing`。
@@ -42,34 +44,34 @@ final class ProxyBuyInfo {
     this.compensationEnabled = false,
   });
 
-  /// 每张票的代抢服务费（Android `proxyBuyFee`）。
+  /// 每份的服务费。
   final Money proxyBuyFee;
 
-  /// 规则说明文案（Android `proxyBuyRuleDesc`）。
+  /// 规则说明文案。
   final String ruleDesc;
 
-  /// 截止时间选项列表（Android `proxyBuyTimeInfo`）。
+  /// 截止时间选项列表。
   final List<ProxyBuyDeadline> deadlines;
 
-  /// 场次信息（Android `proxyBuyTurnInfo`）。
+  /// 线下回报场次信息。
   final ProxyBuyTurn turn;
 
-  /// 是否开启赔付（Android `proxyBuyCompensationInfo.open`）。
+  /// 是否开启赔付。
   final bool compensationEnabled;
 }
 
 /// 代抢订单状态。
 enum ProxyBuyStatus {
-  /// 待抢票（已提交，等待开抢）。
+  /// 待处理（已提交，等待开始）。
   pending,
 
-  /// 抢票中（开抢时间已到，正在抢）。
+  /// 进行中（已到开始时间，正在处理）。
   inProgress,
 
-  /// 抢票成功。
+  /// 处理成功。
   success,
 
-  /// 抢票失败。
+  /// 处理失败。
   failed,
 
   /// 已取消。
@@ -103,14 +105,14 @@ final class ProxyBuyOrder {
   final ProxyBuyTurn turn;
   final ProxyBuyDeadline deadline;
 
-  /// 单张票价。
+  /// 单份价格。
   final Money ticketPrice;
   final int quantity;
 
-  /// 代抢服务费（每张）。
+  /// 服务费（每份）。
   final Money proxyBuyFee;
 
-  /// 总金额（票价 + 服务费）。
+  /// 总金额（单价小计 + 服务费）。
   final Money totalAmount;
 
   final ProxyBuyStatus status;

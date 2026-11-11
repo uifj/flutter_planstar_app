@@ -138,7 +138,7 @@ final class OrderConfirmController
 
   @override
   OrderConfirmState build(OrderConfirmArgs args) {
-    // 选票页的选择快照（随 family 参数传入，不可变、可比较）。
+    // 档位选择页的选择快照（随 family 参数传入，不可变、可比较）。
     final showId = args.showId;
     final selection = args.selection;
     final seed = ref.watch(orderDraftSeedProvider(arg));
@@ -160,7 +160,7 @@ final class OrderConfirmController
       final seatCount = ref.watch(
         seatSelectionProvider(showId).select((state) => state.count),
       );
-      // 票档：只在下标合法时采用选择，否则回退首个票档。
+      // 回报档位：只在下标合法时采用选择，否则回退首个回报档位。
       final tierIndex = selection.tierIndex;
       final tier =
           (tierIndex != null &&
@@ -168,7 +168,7 @@ final class OrderConfirmController
               tierIndex < seed.tiers.length)
           ? seed.tiers[tierIndex]
           : seed.tiers.first;
-      // 数量：优先选票页的 qty，其次已选座位数，最后 1 张；
+      // 数量：优先档位选择页的 qty，其次已选座位数，最后 1 份；
       // 一律按限购上限收敛，避免深链/旧参数构造出非法订单。
       final requested =
           selection.quantity ?? (seatCount > 0 ? seatCount : 1);
@@ -204,7 +204,7 @@ final class OrderConfirmController
     return OrderConfirmState(order: order, quote: quote, notice: buildNotice);
   }
 
-  /// 加一张某票档。
+  /// 加一份某回报档位。
   void increase(TicketTierId tierId) {
     final seed = ref.read(orderDraftSeedProvider(arg));
     final offer = _offerOf(seed, tierId);
@@ -226,7 +226,7 @@ final class OrderConfirmController
     );
   }
 
-  /// 减一张某票档（减到 0 等于移除）。
+  /// 减一份某回报档位（减到 0 等于移除）。
   void decrease(TicketTierId tierId) {
     final line = _lineOf(tierId);
     if (line == null) return;
@@ -281,7 +281,7 @@ final class OrderConfirmController
   /// 不用礼品卡。
   void clearGiftCard() => _apply(state.order.applyGiftCard(null));
 
-  /// 买加速包（每张票一份）。
+  /// 买加速包（份数与支持份数一致）。
   void buySpeedPack() {
     final seed = ref.read(orderDraftSeedProvider(arg));
     final unitPrice = seed.speedPackUnitPrice;
@@ -307,8 +307,8 @@ final class OrderConfirmController
 
   /// 勾选 / 取消交易协议。
   ///
-  /// ⚠ 默认**不勾**。企划星侧 `OrderConfirmViewModule` 构造时 `postValue(true)`，
-  /// 进页面就是勾上的（合规红旗 M5-01）。这里把默认值反过来，且必须用户主动点。
+  /// ⚠ 默认**不勾**。在视图模型构造时就把勾选置为 true，
+  /// 进页面就是勾上的，这是合规红旗。这里默认不勾，且必须用户主动点。
   void toggleAgreement() {
     final order = state.order;
     _apply(
@@ -318,9 +318,9 @@ final class OrderConfirmController
     );
   }
 
-  /// 选择实名观演人（演示用：固定一位）。
+  /// 选择实名支持者（演示用：固定一位）。
   ///
-  /// 真实实现会拉起企划星的观演人列表（`GET v1/user/realName`），
+  /// 真实实现会拉起实名支持者列表（`GET v1/user/realName`），
   /// 选完把 `List<Visitor>` 交给聚合。
   void assignDemoVisitor() {
     _apply(
@@ -398,7 +398,7 @@ final class OrderConfirmController
           );
       if (result.isFailure) {
         // 工作单元回滚：聚合回到草稿态并丢弃未分发的 OrderPlaced，
-        // 用户可以在原页直接重试，不必重建页面（P0-09）。
+        // 用户可以在当前页直接重试，不必重建页面。
         order.reopenForRetry();
         state = state.copyWith(
           submitting: false,
@@ -559,7 +559,7 @@ final class OrderConfirmController
   void _apply(Result<void> result) {
     // 提交中/已提交：禁止任何编辑。否则在 _refreshServerQuote 的 await 期间
     // 点 +/- 会改掉聚合，submit() 捕获的是同一个可变对象，
-    // 造成「页面显示一个价、请求发出另一个价」（P0-09 / 资金差错）。
+    // 造成「页面显示一个价、请求发出另一个价」（资金差错）。
     if (state.submitting || state.submitted) return;
 
     if (result.isFailure) {
@@ -593,7 +593,7 @@ final class OrderConfirmController
 
   /// 用领域服务算一次报价。
   ///
-  /// 拆单费固定 0：企划星的 `bizParam.splitOrderContext.splitOrderFee` 只在
+  /// 拆单费固定 0：服务端的 `bizParam.splitOrderContext.splitOrderFee` 只在
   /// 跨仓拆单时出现，本切片没有跨仓商品。
   OrderQuote _quoteOf(TicketOrder order) => _pricing.quote(
     goodsTotal: order.goodsTotal,
@@ -619,7 +619,7 @@ final class OrderConfirmController
   }
 }
 
-/// 确认订单页控制器 Provider（按「演出 id + 选票选择」分族）。
+/// 确认订单页控制器 Provider（按「企划 id + 档位选择」分族）。
 final orderConfirmControllerProvider = NotifierProvider.family<
     OrderConfirmController, OrderConfirmState, OrderConfirmArgs>(
   OrderConfirmController.new,

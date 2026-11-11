@@ -4,7 +4,7 @@ import '../domain/proxy_buy.dart';
 
 /// 代抢默认规则配置。
 ///
-/// 代抢规则内嵌在活动详情（`ActivityBean.proxyBuyInfo`）里；本页没有活动
+/// 代抢规则内嵌在企划详情里；本页没有企划
 /// 上下文，因此使用这份默认配置。真实模式下只有订单列表走接口，规则不变。
 abstract final class ProxyBuyDefaults {
   static ProxyBuyInfo get info => ProxyBuyInfo(

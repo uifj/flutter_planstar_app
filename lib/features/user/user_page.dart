@@ -17,7 +17,7 @@ import 'application/sign_in_providers.dart';
 import 'data/planstar_user_api.dart';
 import '../../l10n/l10n.dart';
 
-/// 我的 Tab（`layout_user.xml`）。
+/// 我的 Tab。
 ///
 /// ## 结构（自上而下）
 ///
@@ -29,13 +29,13 @@ import '../../l10n/l10n.dart';
 /// 5. 分组菜单：「更多服务」地址 / 支持人 / 联系客服 / 卖家招募（58dp 行，leading 图标）；
 /// 6. 登出 / 登录按钮。
 ///
-/// ## 与 Android 的差异
+/// ## 设计取舍
 ///
-/// - 企划星在支持卡**背后**还有一张粉色渐变的「支持过清单」卡（`list_to_watch`，
-///   支持卡 `marginTop=92` 压在它上面）。本项目没有"支持过"数据源，
-///   所以按 layout 里 `layoutMyOrder` 的 `goneMarginTop=17` 分支渲染。
+/// - 不做支持卡**背后**那张粉色渐变的「支持过清单」卡：本项目没有
+///   "支持过"数据源，所以支持卡按紧凑上边距（间距令牌 16）渲染，
+///   而不是为了压在清单卡上再抬高一截。
 /// - 头部渐变改用品牌语义色（`brandSubtle → bgPage`），亮/暗主题自动适配。
-/// - 原资料卡右上角「个人主页」是无落地页的死入口，已移除。
+/// - 资料卡右上角不放「个人主页」：没有落地页，做成死入口不如不做。
 class UserPage extends ConsumerWidget {
   const UserPage({super.key});
 
@@ -193,7 +193,7 @@ class UserPage extends ConsumerWidget {
   }
 }
 
-/// 渐变头 + 资料卡（`view_user_info.xml`）。
+/// 渐变头 + 资料卡。
 class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader({
     required this.profile,
@@ -483,7 +483,7 @@ class _StatColumn extends StatelessWidget {
   }
 }
 
-/// 订单卡（`view_user_order.xml` 的 `layoutMyOrder`，120dp）。
+/// 订单卡（120dp）。
 class _OrderCard extends StatelessWidget {
   const _OrderCard({
     required this.badges,
@@ -508,7 +508,7 @@ class _OrderCard extends StatelessWidget {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     return Container(
       height: 120,
-      // 边距对齐间距令牌（16），原 layout 的 17/8.5 不在 4 基准阶梯上。
+      // 边距对齐间距令牌（16），不用落在 4 基准阶梯之外的碎值。
       margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(

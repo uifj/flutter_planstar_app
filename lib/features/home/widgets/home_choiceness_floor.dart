@@ -7,14 +7,14 @@ import '../../catalog/domain/show_summary.dart';
 import '../../catalog/ui/show_cards.dart';
 import '../../../l10n/l10n.dart';
 
-/// 首页「精选推荐」楼层（`view_home_choiceness.xml`）。
+/// 首页「精选推荐」楼层。
 ///
 /// 结构：20sp 粗体标题（上边距 16、左右 14）→ 42dp 可横滑 tab
 /// （选中 16sp 粗体 `text_0`、未选中 14sp 常规 `text_2`、2dp 品牌色下划线）
-/// → 105dp 宽的横滑卡片（`item_home_choiceness.xml`）。
+/// → 105dp 宽的横滑卡片。
 ///
-/// tab 的选中态样式来自 `HomeChoicenessView.onTabSelected/onTabUnselected`，
-/// 不是 layout 里写的（layout 里只有 `tabIndicator`），所以这里必须按 Java 侧取值。
+/// tab 的选中态不只是下划线：文字字号与颜色也要一起切换，
+/// 所以选中/未选中两套样式都在这里显式给出。
 class HomeChoicenessFloor extends StatefulWidget {
   const HomeChoicenessFloor({
     super.key,
@@ -49,7 +49,7 @@ class _HomeChoicenessFloorState extends State<HomeChoicenessFloor> {
   void _select(int index) {
     if (index == _selected) return;
     setState(() => _selected = index);
-    // 选中的 tab 可能滑出屏幕（企划星 `TabLayout` 会自动滚），这里手动居中。
+    // 选中的 tab 可能滑出屏幕，这里手动居中。
     if (index < _tabKeys.length) {
       final target = _tabKeys[index].currentContext;
       if (target != null) {
@@ -80,7 +80,7 @@ class _HomeChoicenessFloorState extends State<HomeChoicenessFloor> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 16),
-          // 企划星的精选楼层只有标题，**没有**「全部」——不要凭印象加。
+          // 精选楼层只有标题，**没有**「全部」——不要凭印象加。
           PsSectionHeader(
             title: context.l10n.homeChoicenessFloor_83,
             titleSize: 20,
@@ -122,7 +122,7 @@ class _HomeChoicenessFloorState extends State<HomeChoicenessFloor> {
                             ),
                           ),
                         ),
-                        // drawable_tab_indicator：2dp 品牌色，宽度跟随文字。
+                        // tab 下划线：2dp 品牌色，宽度跟随文字。
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 180),
                           height: 2,

@@ -46,10 +46,10 @@ abstract class ShowCategory with _$ShowCategory {
   bool get isActive => status == 1;
 }
 
-/// 热门场馆（首页「热门场馆」楼层）。
+/// 热门活动场地（首页「热门活动场地」楼层）。
 ///
-/// 企划星这个楼层展示的是"场馆 + 该场馆近期 2 场演出"的复合卡片
-/// （`item_home_venues.xml`：268×312，头部 72dp，下面两个 115dp 的小卡）。
+/// 这个楼层展示的是"活动场地 + 该场地近期 2 个企划"的复合卡片
+/// （268×312，头部 72dp，下面两个 115dp 的小卡）。
 final class VenueSummary {
   const VenueSummary({
     required this.id,
@@ -65,10 +65,10 @@ final class VenueSummary {
   final String city;
   final String address;
 
-  /// 近期场次数。
+  /// 近期线下回报场次数。
   final int showCount;
 
-  /// 该场馆近期演出 id（最多取 2 个用于卡片）。
+  /// 该活动场地近期企划 id（最多取 2 个用于卡片）。
   final List<String> showIds;
 }
 

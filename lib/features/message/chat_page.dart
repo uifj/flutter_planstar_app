@@ -13,7 +13,7 @@ import 'domain/message_thread.dart';
 import '../../shared/ui/ps_network_images.dart';
 import '../../l10n/l10n.dart';
 
-/// 会话详情页（企划星 `UserMsgDetailActivity` + `ChatListFragment` 的会话内页）。
+/// 会话详情页。
 ///
 /// ## 结构
 ///
@@ -21,7 +21,7 @@ import '../../l10n/l10n.dart';
 /// 底部是输入栏。气泡左右由 [ChatMessage.fromMe] 决定，
 /// 时间只在"与上一条间隔超过 5 分钟"时插入，避免每条都顶一个时间。
 ///
-/// ## 与 Android 的差异
+/// ## 实现要点
 ///
 /// - 真实模式走 `GET/POST /v1/chat/threads/{id}/messages` 与 `.../read`；
 ///   发送采用乐观上屏，失败回滚并提示。

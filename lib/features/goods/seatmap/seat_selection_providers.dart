@@ -11,12 +11,12 @@ import 'domain/seat_continuity_policy.dart';
 import 'seat_lock_service.dart';
 import 'seat_map.dart';
 
-/// 座位图数据 Provider（按演出 id 分族）。
+/// 座位图数据 Provider（按企划 id 分族）。
 ///
-/// 企划星的 `SelectTicketSeatMapActivity` 调 `GET v5/ticketCategories` 拿座位图。
-/// 本演示模式用 [DemoSeatMap.generate] 生成座位布局；
+/// 线下回报场次的可选座位图（POSITIONING.md §10 降级能力），仅线下活动型企划使用。
+/// 座位布局一律由 [DemoSeatMap.generate] 生成，服务端未提供座位图端点；
 /// 真实模式下座位价格统一取后端权威单价（`priceFrom`），
-/// 与服务端「在售票档最低价 × 数量」的结算口径保持一致。
+/// 与服务端「在售回报档位最低价 × 数量」的结算口径保持一致。
 final seatMapDataProvider = Provider.family<SeatMapData, String>((ref, showId) {
   final policy = ref.watch(dataSourcePolicyProvider);
   final show = ref.watch(showFullProvider(showId));
@@ -26,7 +26,7 @@ final seatMapDataProvider = Provider.family<SeatMapData, String>((ref, showId) {
   );
 });
 
-/// 本地锁座服务 Provider（按演出 id 分族，避免不同演出的座位 ID 互相干扰）。
+/// 本地锁座服务 Provider（按企划 id 分族，避免不同企划的座位 ID 互相干扰）。
 ///
 /// **注意：这是本地锁，服务端座位库存未接入**——锁只在当前 App 进程内有效，
 /// 其他用户 / 其他设备看不到，也不会在服务端占座。
@@ -93,7 +93,7 @@ class SeatSelectionState {
   /// 是否达到最大选择数。
   bool get atMax => count >= maxSeats;
 
-  /// 最大可选数量（企划星默认 6，可通过 `buyCount` 参数控制）。
+  /// 最大可选数量（6 个座位）。
   static const int maxSeats = 6;
 
   SeatSelectionState copyWith({
@@ -112,7 +112,7 @@ class SeatSelectionState {
 
 /// 选座控制器。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意不做的事
 ///
 /// - **锁座是本地锁**：选中即写入 [SeatLockService] 的内存锁表（默认 10 分钟），
 ///   取消选择 / 清空 / 超时 / 页面销毁时释放。服务端座位库存未接入，

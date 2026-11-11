@@ -6,7 +6,7 @@ import 'coupon.dart';
 ///
 /// ## 为什么用演示数据
 ///
-/// Android `CouponActivity` 调 `GET v1/coupons` 获取真实券列表。
+/// 真实券列表来自 `GET v1/coupons`。
 /// Flutter 侧该接口尚未接线（只有 `auth` 域走真实网络），
 /// 这里生成一份覆盖三种状态、两种抵扣类型的演示数据，
 /// 等接口接上时直接替换 [CouponRepository.fetchAll] 的实现即可。

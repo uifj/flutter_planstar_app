@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 import '../../../l10n/l10n.dart';
 
-/// 首页服务保障条（`view_home_guarantee.xml`）。
+/// 首页服务保障条。
 ///
 /// 26dp 高、白底 + 1dp `#f3f3f3` 描边 + 8dp 圆角、左右与上边距 15dp。
-/// 内容是一排 12sp `text_131415` 的承诺项，项与项之间夹 1dp 竖线。
-/// 企划星的文案由服务端下发（`HomeGuaranteeBean.items`，最多渲染 4 项），
-/// 这里用同一批固定文案——它们是平台级承诺，不随运营变化。
+/// 内容是一排 12sp `textPrimary` 的承诺项，项与项之间夹 1dp 竖线。
+/// 文案可由调用方传入（最多渲染 4 项），缺省时用同一批固定文案——
+/// 它们是平台级承诺，不随运营变化。
 class HomeGuaranteeFloor extends StatelessWidget {
   const HomeGuaranteeFloor({super.key, this.items, this.onTap});
 

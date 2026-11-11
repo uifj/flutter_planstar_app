@@ -17,14 +17,14 @@ import 'widgets/feed_card.dart';
 import 'widgets/publish_sheet.dart';
 import '../../l10n/l10n.dart';
 
-/// 发现 Tab（`fragment_discovery.xml`）。
+/// 发现 Tab。
 ///
 /// ## 结构
 ///
 /// - 顶部 44dp 条：左侧搜索图标（50dp 宽、左右 15dp 内边距），中间两个 tab
-///   （17sp 粗体、`pstsIndicatorHeight=0` 即无下划线，靠**字色**区分选中）；
-/// - 下方是双列瀑布流（`home_item_waterfall_feed.xml` 的深色卡）；
-/// - 右下角 42dp 发布按钮（`btnNewPost`，`marginEnd=11`、`marginBottom=14`）。
+///   （17sp 粗体、无下划线，靠**字色**区分选中）；
+/// - 下方是双列瀑布流（深色卡）；
+/// - 右下角 42dp 发布按钮（右边距 11、下边距 14）。
 ///
 /// ## 瀑布流实现
 ///
@@ -54,10 +54,9 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
     );
     final AsyncValue<List<FeedPost>> posts = _tab == 0 ? hot : following;
 
-    // 动态详情页（`/feed/:id`）。以前这里只有一条 toast——`showId` 非空时
-    // 跳演出、为空时什么也不做。现在每条动态都有详情页，关联演出的那条
-    // 在详情页里再给「查看演出」入口，层级比"卡片直接跳走"更合理：
-    // 用户点的是这条动态，不是那场演出。
+    // 动态详情页（`/feed/:id`）。刻意不让卡片直接跳走：每条动态都有详情页，
+    // 关联企划的那条在详情页里再给「相关企划」入口，层级更合理——
+    // 用户点的是这条动态，不是那个企划。
     void openPost(FeedPost post) => context.push('/feed/${post.id}');
 
     return AdaptiveScaffold(
@@ -125,7 +124,7 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
   }
 }
 
-/// 顶部条（`layout_search` 44dp）。
+/// 顶部条（44dp）。
 class _DiscoveryTopBar extends StatelessWidget {
   const _DiscoveryTopBar({
     required this.tabs,
@@ -200,7 +199,7 @@ class _DiscoveryTopBar extends StatelessWidget {
               ],
             ),
           ),
-          // shadow_gray_to_trans：3dp 的下投影，分隔顶部条与内容。
+          // 3dp 的下投影，分隔顶部条与内容。
           Container(
             height: 3,
             decoration: const BoxDecoration(
@@ -278,7 +277,7 @@ class _MasonryFeed extends ConsumerWidget {
   }
 }
 
-/// 发布按钮（`btnNewPost` 42×42）。
+/// 发布按钮（42×42）。
 class _PublishButton extends StatelessWidget {
   const _PublishButton({required this.onTap});
 

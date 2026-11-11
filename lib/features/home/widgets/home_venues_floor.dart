@@ -9,11 +9,11 @@ import '../../catalog/domain/show_summary.dart';
 import '../../catalog/ui/catalog_l10n.dart';
 import '../../../l10n/l10n.dart';
 
-/// 首页「热门场馆」楼层（`view_home_popular_venues.xml` + `item_home_venues.xml`）。
+/// 首页「热门活动场地」楼层。
 ///
-/// 20sp 粗体标题（上边距 16、左右 14）→ 横滑场馆卡（268dp 宽）：
-/// 头部 72dp（场馆名 16dp 粗体 + 副标题 12dp `text_2` + 右箭头）、
-/// 0.5dp 分隔线、下方并排两张 115dp 宽的演出小卡。
+/// 20sp 粗体标题（上边距 16、左右 14）→ 横滑活动场地卡（268dp 宽）：
+/// 头部 72dp（活动场地名 16dp 粗体 + 副标题 12dp `text_2` + 右箭头）、
+/// 0.5dp 分隔线、下方并排两张 115dp 宽的企划小卡。
 class HomeVenuesFloor extends StatelessWidget {
   const HomeVenuesFloor({
     super.key,
@@ -25,7 +25,7 @@ class HomeVenuesFloor extends StatelessWidget {
 
   final List<VenueSummary> venues;
 
-  /// `showId → ShowSummary`，用于渲染场馆下的两张小卡。
+  /// `showId → ShowSummary`，用于渲染活动场地下的两张小卡。
   final Map<String, ShowSummary> showsById;
 
   final void Function(VenueSummary venue) onTapVenue;

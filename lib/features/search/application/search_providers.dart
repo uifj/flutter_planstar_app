@@ -71,13 +71,13 @@ class SearchHistoryCache extends AsyncNotifier<List<String>?> {
       ref.watch(searchHistoryStorageProvider).read();
 }
 
-/// 搜索历史（企划星的 `sp_search_history`）。
+/// 搜索历史。
 ///
 /// 历史落盘到 `AppStore.preferences`。初始化时序：`build()` 先给默认词，
 /// 异步缓存 [searchHistoryCacheProvider] 完成后 provider 重建，再用读到的
 /// 历史替换；用户已经编辑过（[_userEdited]）时不覆盖，避免加载慢吞掉刚搜的词。
 class SearchHistoryController extends Notifier<List<String>> {
-  /// 最多保留条数（企划星是 10）。
+  /// 最多保留条数。
   static const int maxEntries = 10;
 
   /// 没有落盘记录时的默认词。
@@ -134,7 +134,7 @@ final searchHistoryProvider =
 
 /// 热搜榜。
 ///
-/// 企划星来自 `v1/search/hot`。这里写死一份，且**词与演示企划库对得上**
+/// 真实热搜来自 `v1/search/hot`。这里写死一份，且**词与演示企划库对得上**
 /// （搜「游戏企划」能出结果）——热搜点了是空页，比没有热搜更糟。
 final hotKeywordsProvider = Provider<List<HotKeyword>>(
   (ref) => const <HotKeyword>[

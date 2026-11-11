@@ -9,7 +9,7 @@ import '../auth/application/auth_providers.dart';
 import 'application/profile_providers.dart';
 import '../../l10n/l10n.dart';
 
-/// 编辑资料页（企划星 `EditProfileActivity` + `fragment_edit_profile.xml`）。
+/// 编辑资料页。
 ///
 /// ## 结构
 ///
@@ -19,13 +19,13 @@ import '../../l10n/l10n.dart';
 /// - 个性签名（多行输入框，最多 50 字）；
 /// - 底部保存按钮。
 ///
-/// ## 与 Android 的差异
+/// ## 设计取舍
 ///
 /// - **不上传头像**：需要图片上传接口（OSS），这里只展示当前头像。
 ///   点击头像 toast 说明"头像上传待接入"。
-/// - **不实际提交保存**：企划星走 `POST v1/user/baseInfo`，这里没有
+/// - **不实际提交保存**：修改资料接口后端未实现，这里没有
 ///   真实的接口实现。保存时 toast 提示"已记录（演示）"。
-/// - 不做生日选择：原页用 `DatePicker`，这里展示当前值（如果有），
+/// - 不做生日选择：不引入 `DatePicker`，这里展示当前值（如果有），
 ///   点击 toast 说明"待接入"。
 class EditProfilePage extends ConsumerStatefulWidget {
   const EditProfilePage({super.key});
@@ -239,7 +239,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   void _save() {
-    // 不实际提交：企划星走 POST v1/user/baseInfo，这里没有真实接口实现。
+    // 不实际提交：修改资料接口后端未实现。
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(context.l10n.editProfilePage_229)));

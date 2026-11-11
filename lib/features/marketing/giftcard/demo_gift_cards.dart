@@ -4,9 +4,8 @@ import 'gift_card.dart';
 
 /// 礼品卡演示数据。
 ///
-/// 对齐 Android `GiftCardService.fetchGiftCards()` → `GiftCardInfo`：
-/// - Android 返回 `enableGiftCards` + `disableGiftCards` 两个列表。
-/// - 这里直接生成混合列表，由 `GiftCardStatus` 区分。
+/// 直接生成可用与不可用混合的单个列表，由 `GiftCardStatus` 区分，
+/// 不预先拆成两个来源列表。
 class DemoGiftCards {
   DemoGiftCards._();
 

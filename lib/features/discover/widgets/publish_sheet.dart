@@ -2,10 +2,10 @@ import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 import '../../../l10n/l10n.dart';
 
-/// 发布动态面板（对应企划星发现页右下角的 `btnNewPost`）。
+/// 发布动态面板（发现页右下角的发布按钮）。
 ///
 /// 只做最小可用闭环：写文字 → 发布 → 插到热门流头部。
-/// 图片/视频/关联演出都不做——那需要上传服务与演出选择器，
+/// 图片/视频/关联企划都不做——那需要上传服务与企划选择器，
 /// 在半成品状态放出入口比没有入口更糟。
 class PublishSheet extends StatefulWidget {
   const PublishSheet({super.key, required this.onPublish});

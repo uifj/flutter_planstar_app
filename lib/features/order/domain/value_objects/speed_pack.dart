@@ -2,16 +2,16 @@ import 'package:core/domain.dart';
 
 import 'ids.dart';
 
-/// 加速包（抢票加速）。
+/// 加速包（遗留票务能力，待下线）。
 ///
-/// 企划星的算法（`wiki_zh/modules/order-and-payment` §3.5）：
+/// 金额拆分算法：
 /// ```
-/// 总加速包 = 单张加速包价 × 票数
+/// 总加速包 = 单份加速包价 × 份数
 /// 现金部分 = max(0, 总加速包 − 账户加速包余额)   ← 计入应付
 /// 余额部分 = 总加速包 − 现金部分                 ← 走余额抵扣，不动现金
 /// ```
 /// 关键语义：**加速包不能用礼品卡付**——它是在礼品卡抵扣之后的 `paymentAmount`
-/// 上"加回去"的（原实现顺序：先礼品卡后加速包）。这个顺序被固化在
+/// 上"加回去"的（顺序固定：先礼品卡后加速包）。这个顺序被固化在
 /// [OrderQuote] 的计算里，不再依赖调用方记得。
 final class SpeedPack extends ValueObject {
   SpeedPack({
@@ -32,7 +32,7 @@ final class SpeedPack extends ValueObject {
     }
   }
 
-  /// 按票数生成：每张票一份加速包（原实现 `speedPackage * mCounts`）。
+  /// 按数量生成：每份对应一份加速包。
   factory SpeedPack.forTickets({
     required int tickets,
     required Money unitPrice,
@@ -43,7 +43,7 @@ final class SpeedPack extends ValueObject {
     balanceAvailable: balanceAvailable,
   );
 
-  /// 份数（= 票数）。
+  /// 份数（与支持份数一致）。
   final int units;
 
   /// 单份价格。
@@ -72,8 +72,8 @@ final class SpeedPack extends ValueObject {
 /// 礼品卡（本单用于抵扣的一张卡）。
 ///
 /// 只带 id 与余额：**实际抵扣额由金额计算决定**（`min(余额, 应付)`），
-/// 不存在"卡上写死抵扣多少"的状态。企划星把 `useAmount` 写回卡对象
-/// （`giftCard.setUseAmount(...)`），导致同一个卡对象在不同页面带着不同的抵扣额。
+/// 不存在"卡上写死抵扣多少"的状态。把 `useAmount` 写回卡对象会让
+/// 同一个卡对象在不同页面带着不同的抵扣额。
 final class GiftCardTender extends ValueObject {
   GiftCardTender({required this.id, required this.balance}) {
     if (balance.isNegative) {

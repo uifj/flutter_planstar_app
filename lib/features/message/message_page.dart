@@ -11,7 +11,7 @@ import 'application/message_providers.dart';
 import 'domain/message_thread.dart';
 import '../../l10n/l10n.dart';
 
-/// 消息中心（`layout_user_message.xml`），「我的 → 消息」的二级页。
+/// 消息中心，「我的 → 消息」的二级页。
 ///
 /// ## 结构
 ///
@@ -24,8 +24,8 @@ import '../../l10n/l10n.dart';
 ///
 /// ## 层级
 ///
-/// 原为底部 tab 的一级页，顶栏没有返回箭头；现在收敛为个人中心的二级页，
-/// 顶栏恢复返回箭头（`context.maybePop`），返回回到个人中心。
+/// 作为个人中心的二级页而不是底部 tab 的一级页，
+/// 顶栏必须有返回箭头（`context.maybePop`），返回回到个人中心。
 class MessagePage extends ConsumerWidget {
   const MessagePage({super.key});
 
@@ -234,7 +234,7 @@ class _MessageTopBar extends StatelessWidget {
   }
 }
 
-/// 三角色卡（`layout_user_message_header.xml`，113dp）。
+/// 三角色卡（113dp）。
 class _SystemEntryCard extends StatelessWidget {
   const _SystemEntryCard({required this.entries, required this.onTap});
 
@@ -243,8 +243,8 @@ class _SystemEntryCard extends StatelessWidget {
 
   /// 领域层的图标标识 → Material 图标。
   ///
-  /// 企划星用的是 `vector_notice_campaign` / `vector_notice_reply` /
-  /// `vector_notice_like` 三个 vector drawable，未随资源迁移，这里按语义替换。
+  /// 领域层只给语义标识（`campaign` / `reply` / `like`），
+  /// 具体图标在这里映射，避免领域层依赖 Flutter 图标常量。
   static const Map<String, IconData> _icons = <String, IconData>{
     'campaign': LucideIcons.megaphone,
     'reply': LucideIcons.messageCircle,
@@ -305,7 +305,7 @@ class _SystemEntryCard extends StatelessWidget {
   }
 }
 
-/// 会话行（`item_user_message.xml`，80dp）。
+/// 会话行（80dp）。
 class _ThreadRow extends StatelessWidget {
   const _ThreadRow({
     required this.thread,

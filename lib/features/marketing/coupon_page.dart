@@ -13,11 +13,11 @@ import '../../l10n/l10n.dart';
 
 /// 我的优惠券页面。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意不做的事
 ///
-/// - 企划星 `CouponActivity` 用两个 RecyclerView（可用 / 不可用）垂直排列，
-///   不分 Tab。这里改成三 Tab（可用 / 已使用 / 已过期），对齐主流电商 App
-///   的券列表范式（美团 / 淘宝），也更符合用户对"分类浏览"的心智模型。
+/// - 不用"可用 / 不可用"两段垂直列表，改成三 Tab（可用 / 已使用 / 已过期）：
+///   对齐主流电商 App 的券列表范式（美团 / 淘宝），
+///   也更符合用户对"分类浏览"的心智模型。
 /// - 兑换入口放在 AppBar 右上角（`IconButton`），而不是页面底部的悬浮按钮。
 /// - 选择模式（pick mode）单独走 [CouponSelectionSheet]，不在这页里混。
 class CouponPage extends ConsumerWidget {
@@ -124,8 +124,7 @@ class _CouponList extends ConsumerWidget {
 
 /// 单张优惠券卡片。
 ///
-/// 对齐 Android `CouponAdapter.convert` 的排版：
-/// 左侧金额/折扣大字 → 右侧标题 + 描述 + 到期时间。
+/// 排版：左侧金额/折扣大字 → 右侧标题 + 描述 + 到期时间。
 class _CouponCard extends StatelessWidget {
   const _CouponCard({required this.coupon});
 

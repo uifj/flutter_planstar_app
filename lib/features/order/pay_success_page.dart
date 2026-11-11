@@ -9,20 +9,20 @@ import 'package:go_router/go_router.dart';
 import '../../shared/ui/ps_price.dart';
 import '../../l10n/l10n.dart';
 
-/// 支付成功页（企划星 `PaySuccessActivity` + `PaySuccessFragment`）。
+/// 支付成功页。
 ///
 /// ## 结构
 ///
 /// - 顶部成功图标 + 「支付成功」标题；
-/// - 订单摘要卡（演出名 + 订单号 + 金额）；
+/// - 订单摘要卡（企划名 + 订单号 + 金额）；
 /// - 底部两个按钮：「查看订单」和「继续逛逛」。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意的设计选择
 ///
-/// - 原页是一个 `PNSlideActivity`（可侧滑返回），这里用 `PopScope(canPop: false)`
+/// - 用 `PopScope(canPop: false)` 而不是可侧滑返回的页面容器
 ///   阻止返回：支付成功后不应该让用户回到支付页。
-/// - 原页的 Fragment 负责拉取订单详情。这里只展示路由参数传入的信息
-///   （订单号 + 金额 + 演出名），因为支付完成时这些信息已经确定，
+/// - 不在本页拉取订单详情，只展示路由参数传入的信息
+///   （订单号 + 金额 + 企划名），因为支付完成时这些信息已经确定，
 ///   不需要再请求一次——如果请求失败，"支付成功了但详情拉不到"
 ///   反而让用户焦虑。
 /// - 不做 Lottie 成功动画：本地动画资源已移除，
@@ -41,7 +41,7 @@ class PaySuccessPage extends ConsumerWidget {
   /// 支付金额。
   final Money amount;
 
-  /// 演出名（可选）。
+  /// 企划名（可选）。
   final String? showTitle;
 
   @override

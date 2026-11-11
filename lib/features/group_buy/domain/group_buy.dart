@@ -1,29 +1,29 @@
 import 'package:core/domain.dart';
 
-/// 拼团状态。
+/// 组队支持状态。
 ///
-/// 对齐 Android `pinTuanOrderStatus`：
-/// - `1` = 拼团中
-/// - `2` = 拼团成功
-/// - `3` = 拼团失败（未成团）
+/// 服务端状态码取值：
+/// - `1` = 组队中
+/// - `2` = 组队成功
+/// - `3` = 组队失败（人数未达标）
 /// - `4` = 已取消
 enum GroupBuyStatus {
-  /// 拼团中（Android status=1）。
+  /// 组队中（状态码 1）。
   grouping,
 
-  /// 拼团成功（Android status=2）。
+  /// 组队成功（状态码 2）。
   success,
 
-  /// 拼团失败（Android status=3）。
+  /// 组队失败（状态码 3）。
   failed,
 
-  /// 已取消（Android status=4）。
+  /// 已取消（状态码 4）。
   cancelled,
 }
 
-/// 拼团成员。
+/// 组队支持成员。
 ///
-/// 对齐 Android：拼团列表中的成员项。
+/// 组队列表中的成员项。
 final class GroupBuyMember {
   const GroupBuyMember({
     required this.userId,
@@ -37,17 +37,17 @@ final class GroupBuyMember {
   final String nickname;
   final String? avatarUrl;
 
-  /// 是否团长。
+  /// 是否发起人。
   final bool isLeader;
 
   final DateTime joinedAt;
 }
 
-/// 拼团信息。
+/// 组队支持信息。
 ///
-/// 对齐 Android `PinTuanInfo.java`（Kotlin data class）。
+/// 组队支持：保留社交裂变、去掉票务心智（POSITIONING.md §10）。
 ///
-/// 这里只保留数据；成团进度、剩余时间、过期与库存判定见
+/// 这里只保留数据；组队进度、剩余时间、过期与库存判定见
 /// `domain/services/group_buy_progress.dart`，价格见
 /// `domain/services/group_buy_pricing.dart`。
 final class GroupBuyInfo {
@@ -70,51 +70,51 @@ final class GroupBuyInfo {
     this.tag = '',
   });
 
-  /// 拼团活动 ID（Android `id`）。
+  /// 组队支持活动 ID。
   final int id;
 
-  /// 演出标题。
+  /// 企划标题。
   final String showTitle;
 
   /// 海报 URL。
   final String? showPoster;
 
-  /// 场馆。
+  /// 活动场地。
   final String venue;
 
-  /// 演出时间。
+  /// 线下回报场次时间。
   final String eventTime;
 
-  /// 拼团价（Android `lowPrice`）。
+  /// 组队支持价。
   final Money lowPrice;
 
-  /// 原价（Android `originPrice`）。
+  /// 原价。
   final Money originalPrice;
 
-  /// 成团人数（Android `succeedNum`）。
+  /// 组队成功所需人数。
   final int succeedNum;
 
-  /// 当前已参团人数。
+  /// 当前已参与人数。
   final int currentMembers;
 
-  /// 有效期开始（Android `effectiveFrom`）。
+  /// 有效期开始。
   final DateTime effectiveFrom;
 
-  /// 有效期结束（Android `effectiveTo`）。
+  /// 有效期结束。
   final DateTime effectiveTo;
 
   /// 状态。
   final GroupBuyStatus status;
 
-  /// 标语（Android `slogan`）。
+  /// 标语。
   final String slogan;
 
-  /// 标签（Android `pinTuanTag`）。
+  /// 标签。
   final String tag;
 
-  /// 已参团成员列表。
+  /// 已参与成员列表。
   final List<GroupBuyMember> members;
 
-  /// 库存（Android `stock`）。
+  /// 库存。
   final int stock;
 }

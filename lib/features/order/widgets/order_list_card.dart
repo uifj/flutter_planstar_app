@@ -12,14 +12,14 @@ import '../order_l10n.dart';
 import '../domain/domain.dart';
 import '../../../l10n/l10n.dart';
 
-/// 支持卡片（`item_order_ticket.xml`）。
+/// 支持卡片。
 ///
 /// 结构：14dp 内边距的白卡 →
 /// 标题行（16dp 标题 + 可选「代支持」标 + 右侧 12dp 品牌色状态）→
 /// 58×76 海报 + 右侧描述区 → 1dp 分隔线（上边距 16）→
 /// 46dp 的金额 / 按钮行。
 ///
-/// 金额在企划星是 14dp `text_2` 的灰字。这里把"支持金额"几个字保持灰色、
+/// 金额不做成 14dp 灰字：这里把"支持金额"几个字保持灰色、
 /// 数字改用价格色 16dp 加粗——支持卡上最该被一眼看到的数字是支持金额，
 /// 灰掉它是可读性问题，属于刻意改动。
 class OrderListCard extends StatelessWidget {
@@ -49,7 +49,7 @@ class OrderListCard extends StatelessWidget {
   final VoidCallback? onBuyAgain;
   final VoidCallback? onContactService;
 
-  /// 企划默认展示预计交付时间；线下回报场次型企划保留场次信息。
+  /// 企划默认展示预计交付时间；线下回报场次型企划保留该场次的时间信息。
   String _deliveryLabel(BuildContext context) {
     final show = this.show;
     if (show == null) {
@@ -226,11 +226,11 @@ class OrderListCard extends StatelessWidget {
               height: 46,
               child: Row(
                 children: <Widget>[
-                  // 左侧「共 N 张 实付 + 金额」必须能收缩：按钮是按状态给的，
+                  // 左侧「共 N 份 支持金额 + 金额」必须能收缩：按钮是按状态给的，
                   // 「查看物流 + 确认收货」这种两枚四字胶囊已经吃掉 160dp，
                   // 剩下的宽度在 360dp 屏上装不下不收缩的金额行（实测溢出 8~21px）。
-                  // 来源 `item_order_ticket.xml` 同样是左文字 + 右按钮固定，
-                  // 超出直接裁掉；这里让金额等比缩，信息不丢。
+                  // 左文字 + 右按钮固定的布局在超出时会直接裁掉；
+                  // 这里让金额等比缩，信息不丢。
                   Expanded(
                     child: Row(
                       children: <Widget>[
@@ -271,7 +271,7 @@ class OrderListCard extends StatelessWidget {
     );
   }
 
-  /// 按状态给按钮——和企划星 `OrderItemBtnClickEvent` 的按钮矩阵一致。
+  /// 按状态给按钮（状态 → 可用动作的矩阵）。
   List<Widget> _buttons(BuildContext context) {
     switch (order.status) {
       case OrderStatus.draft:

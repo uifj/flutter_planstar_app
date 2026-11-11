@@ -7,7 +7,7 @@
 ///
 /// 这里的数据按产品定位构造：交易单元是**企划**，行为动词是**支持**，
 /// 品类为游戏 / 小说 / 同人 / 面经四大主品类 + 桌游 / 画集 / 音乐影像 /
-/// 校园活动 / 其他。金额单位为元，写入模型后统一转成分。
+/// 校园活动 / 其他 / 自媒体。金额单位为元，写入模型后统一转成分。
 ///
 /// 接真实接口时替换 `catalogProviders` 里的 `demoShowCatalogProvider` 即可，
 /// 页面层不用动。
@@ -659,7 +659,7 @@ List<ShowSummary> buildDemoCatalog({DateTime? now}) {
 /// 构造一条演示企划。
 ///
 /// 线下活动型企划保留一个"线下回报场次"，用于验证既有选场流程；
-/// 其余字段（场馆/艺人）在企划语境下分别映射为交付方式与创作者。
+/// 其余字段（`venue` / `artist`）在企划语境下分别映射为交付方式与创作者。
 ShowSummary _project({
   required String id,
   required String title,

@@ -1,15 +1,15 @@
-/// 选票页 → 确认页的**用户选择快照**。
+/// 档位选择页 → 确认页的**用户选择快照**。
 ///
-/// 历史缺陷（P0-08）：`choose_ticket_page.dart` 把 `tier/qty/session` 拼进
+/// 历史缺陷：`choose_ticket_page.dart` 把 `tier/qty/session` 拼进
 /// `/order/confirm` 的 query，但路由 builder 只取了 `showId`，确认页固定用
-/// `seed.tiers.first` + 1 张建草稿，导致用户选的高价档 / 多份 / 指定场次全部
+/// `seed.tiers.first` + 1 份建草稿，导致用户选的高价档 / 多份 / 指定线下回报场次全部
 /// 失效，实付金额与意愿不符。
 ///
 /// 现在把选择作为不可变值对象并入 [OrderConfirmArgs]，作为控制器与种子
 /// provider 的 family 参数：无全局可变状态、无 Riverpod 作用域覆盖，
 /// 同一个 showId 的不同选择也各自独立缓存，天然支持多页面并存。
 ///
-/// 所有字段都是「索引」而非金额：金额一律由服务端票档数据重新计算。
+/// 所有字段都是「索引」而非金额：金额一律由服务端回报档位数据重新计算。
 final class OrderConfirmSelection {
   const OrderConfirmSelection({
     this.tierIndex,
@@ -17,13 +17,13 @@ final class OrderConfirmSelection {
     this.sessionIndex,
   });
 
-  /// `show.tiers` 的下标；越界或为 null 时回退首个票档。
+  /// `show.tiers` 的下标；越界或为 null 时回退首个回报档位。
   final int? tierIndex;
 
-  /// 购买张数；小于 1 或超过限购时由控制器按限购规则收敛。
+  /// 支持份数；小于 1 或超过限购时由控制器按限购规则收敛。
   final int? quantity;
 
-  /// `show.sessions` 的下标；越界或为 null 时回退首个场次。
+  /// `show.sessions` 的下标；越界或为 null 时回退首个线下回报场次。
   final int? sessionIndex;
 
   bool get isEmpty =>

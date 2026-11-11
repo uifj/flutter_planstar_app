@@ -2,7 +2,7 @@ import 'package:core/domain.dart';
 
 /// 手机号（中国大陆 11 位）。
 ///
-/// 企划星侧手机号是 `String`，校验散落在 `TextUtils.isEmpty` 和几个手写正则里。
+/// 手机号如果只是裸 `String`，校验就会散落在判空和几个手写正则里。
 /// 抽成值对象后，"能不能下单"不再取决于某个输入框有没有做校验。
 final class PhoneNumber extends ValueObject {
   PhoneNumber(String raw) : value = _validate(raw);
@@ -70,16 +70,16 @@ final class Receiver extends ValueObject {
   List<Object?> get props => <Object?>[name, phone, address];
 }
 
-/// 取票方式。
+/// 回报交付方式。
 ///
-/// 企划星 `DeliverType` 有 7 个值（还带个拼错的 `UNKOWN`），这里只保留真正
-/// 影响金额与流程的三种：电子票（无运费）、快递（有运费、必须有收件人）、
+/// 服务端的交付类型有 7 个值（还带个拼错的 `UNKOWN`），这里只保留真正
+/// 影响金额与流程的三种：电子回报（无运费）、快递（有运费、必须有收件人）、
 /// 现场自取（无运费、无地址）。
 enum DeliveryMethod {
-  /// 电子票：出票后直接进"我的票夹"。
+  /// 电子回报：交付后直接到账，无需物流。
   electronic(requiresReceiver: false, requiresPostage: false),
 
-  /// 纸质票快递。
+  /// 纸质回报快递。
   express(requiresReceiver: true, requiresPostage: true),
 
   /// 现场自取。
@@ -99,7 +99,7 @@ enum DeliveryMethod {
 
 /// 配送信息：方式 + 运费（+ 收件人）。
 ///
-/// 运费是**订单总额的一部分**（企划星 `totalAmount = goodTotalAmount + postage + splitOrderFee`），
+/// 运费是**订单总额的一部分**（`totalAmount = goodsTotal + postage + splitFee`），
 /// 所以它必须跟着配送方式走，而不是散在页面状态里。
 final class DeliveryInfo extends ValueObject {
   DeliveryInfo({required this.method, required this.postage, this.receiver}) {
@@ -114,7 +114,7 @@ final class DeliveryInfo extends ValueObject {
     }
   }
 
-  /// 电子票（零运费、无收件人）。
+  /// 电子回报（零运费、无收件人）。
   factory DeliveryInfo.electronic() =>
       DeliveryInfo(method: DeliveryMethod.electronic, postage: Money.zero());
 

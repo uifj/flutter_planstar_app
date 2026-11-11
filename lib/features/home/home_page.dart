@@ -24,12 +24,12 @@ import 'widgets/home_ranking_floor.dart';
 import 'widgets/home_show_floor.dart';
 import '../../l10n/l10n.dart';
 
-/// 首页（`layout_home.xml` + `HomeFragment`）。
+/// 首页。
 ///
 /// ## 楼层顺序
 ///
-/// 企划星的首页楼层由服务端 `HomeFloorBean` 列表驱动（`HomeMultiAdapter` 里注册了
-/// 17 个 provider）。服务端不给我们数据，所以这里固定成一套**稳定可读**的顺序：
+/// 首页楼层本可由服务端下发的楼层列表驱动，但服务端不给我们数据，
+/// 所以这里固定成一套**稳定可读**的顺序：
 ///
 /// 1. 顶部（logo + 服务承诺 + 搜索栏，可收起）
 /// 2. 分类快捷入口（5 列 × 2 行，超一页带指示器）
@@ -41,11 +41,11 @@ import '../../l10n/l10n.dart';
 /// 8. 分类楼层 ×4（游戏 / 小说 / 同人 / 面经）
 /// 9. 页脚 logo
 ///
-/// ## 与 Android 的差异（写在页面里，避免"看起来一样其实不同"）
+/// ## 刻意不做的事（写在页面里，避免"看起来一样其实不同"）
 ///
 /// - 没有"限时秒杀 / 品牌馆 / 城市日历 / 视频频道"这些运营楼层：
 ///   它们依赖服务端配置，没有数据源就无法正确渲染，硬造等于假功能。
-/// - 分类快捷入口的图标用 Material 图标（原项目是 `drawable` 位图，未迁移）。
+/// - 分类快捷入口的图标用 Lucide 矢量图标（仓库里没有分类位图素材）。
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
@@ -99,7 +99,7 @@ class HomePage extends ConsumerWidget {
 
         void openShows({int? categoryId, String? title}) {
           // 有分类 id 时优先进分类首页（更丰富的落地页）；
-          // 无分类时进全部演出列表。
+          // 无分类时进全部企划列表。
           if (categoryId != null) {
             context.push('/category/$categoryId');
           } else {

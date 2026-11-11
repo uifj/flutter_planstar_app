@@ -1,8 +1,7 @@
 /// 企划星登录接口（**纯 Dart**，不 import Flutter）。
 ///
-/// 三个端点的路径、请求体与响应形状全部来自来源
-/// `lib\services\LoginService.java` 与 `account\QuickLoginCell.java` /
-/// `account\BaseLoginActivity.java`：
+/// 三个端点的路径、请求体与响应形状（契约由 curl 实测，见
+/// `docs/api-contract.md`）：
 ///
 /// | 用途 | 方法 | 路径 | body |
 /// |---|---|---|---|
@@ -16,8 +15,8 @@
 /// 把"请求形状"和"Flutter 装配"分开，验证脚本就能复用**同一份**代码，
 /// 而不是另抄一遍 curl。
 ///
-/// `⚠` 版本号是错位的：发码在 **v3**，提交登录在 **v1**（M6-16 记的
-/// "发码 v3、提交 v1 的版本错配"）。这里照抄，不"顺手统一"——服务端就是这么挂的。
+/// `⚠` 版本号是错位的：发码在 **v3**，提交登录在 **v1**。
+/// 这里照抄，不"顺手统一"——服务端就是这么挂的。
 library;
 
 import 'package:core/network.dart';
@@ -37,7 +36,7 @@ final class PlanstarAuthApi {
 
   final ApiClient _client;
 
-  /// 客户端类型（请求体的 `ct`，来源 `PlanstarConstants.CLIENT_TYPE = 11` = Android）。
+  /// 客户端类型（请求体的 `ct`，`11` = Android）。
   final int clientType;
 
   /// 登录路径。
@@ -51,7 +50,7 @@ final class PlanstarAuthApi {
 
   /// 登录。`code` 与 `password` 二选一（都为空时服务端会报错，这里不拦）。
   ///
-  /// 来源的密码分支还会带一个 `channelAttributeInfo`（广告归因的 JSON 字符串，
+  /// 密码分支还可以带一个 `channelAttributeInfo`（广告归因的 JSON 字符串，
   /// 内含 androidId / clickid / oaid）。这里**不发**：它只影响投放归因，不影响
   /// 鉴权，而我们没有 OAID/clickId 可填，发一串 null 反而可能被服务端判成
   /// 脏数据。等接了归因 SDK 再补。
@@ -77,7 +76,7 @@ final class PlanstarAuthApi {
     return _client.post<LoginResponseDto>(
       loginPath,
       data: body,
-      // 登录返回的是**裸 LoginBean**（不是 {code,message,data}），
+      // 登录返回的是**裸响应体**（不是 {code,message,data}），
       // 失败靠 HTTP 状态码 + text/plain 正文表达。
       envelope: const PassthroughEnvelope(),
       parser: _parseLogin,

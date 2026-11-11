@@ -20,25 +20,25 @@ import '../value_objects/visitor.dart';
 // 外部只能通过聚合根改它。Dart 没有 friend class，`part` 是标准替代。
 part 'order_line.dart';
 
-/// 票务订单聚合根 —— 整个交易漏斗的一致性边界。
+/// 支持单聚合根 —— 整个支持漏斗的一致性边界。
 ///
 /// ## 边界怎么划的
 ///
-/// 一个聚合 = **一张订单**（根）+ 它的订单行（子实体）+ 配送/优惠/礼品卡/加速包/
-/// 观演人（值对象）。判据是"改这件事必须和改那件事一起成功"：
+/// 一个聚合 = **一张支持单**（根）+ 它的订单行（子实体）+ 配送/优惠/礼品卡/加速包/
+/// 实名支持者（值对象）。判据是"改这件事必须和改那件事一起成功"：
 /// 改数量必须和重算金额一起；改配送方式必须和重算运费一起。
 ///
-/// **不**放进聚合的：券/卡的余额（别的聚合）、演出余票（别的聚合）、支付流水。
-/// 它们只通过 id 引用，一致性是最终一致——这正是企划星"订单页直接扣礼品卡余额"
-/// 那类跨聚合写操作应该被拆开的地方。
+/// **不**放进聚合的：券/卡的余额（别的聚合）、企划剩余名额（别的聚合）、支付流水。
+/// 它们只通过 id 引用，一致性是最终一致——"支持单页直接扣礼品卡余额"
+/// 那类跨聚合写操作正是应该被拆开的地方。
 ///
-/// ## 与企划星 Android 侧的对应
+/// ## 为什么状态必须收进一个对象
 ///
-/// 原实现里这些状态散在 `OrderConfirmActivity` 的 20 多个成员变量上：
-/// `mCounts` / `mTotalAmount` / `mPaymentAmount` / `mSelectStatus` / `mCurrentCoupon` /
-/// `mCurrentGiftCard` / `mSpeedPackage` / `mIsProxyBuy` …… 每个方法都可能改其中几个，
-/// 没有任何地方能回答"这张订单现在合法吗"。这里全部收进一个对象，且**每次变更
-/// 都会让旧报价失效**（[attachQuote] 之前必须重算），从结构上消灭
+/// 数量、金额、优惠选择、礼品卡、加速包一旦散在页面的 20 多个成员变量上，
+/// 每个方法都可能改其中几个，
+/// 没有任何地方能回答"这张支持单现在合法吗"。
+/// 这里全部收进一个对象，且**每次变更都会让旧报价失效**
+/// （[attachQuote] 之前必须重算），从结构上消灭
 /// "页面显示一个价、请求发另一个价"。
 final class TicketOrder extends AggregateRoot<TicketOrderId> {
   TicketOrder._({
@@ -104,16 +104,16 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
   /// 订单号。
   final OrderNumber number;
 
-  /// 演出 id。
+  /// 企划 id。
   final ShowId showId;
 
-  /// 场次 id。
+  /// 线下回报场次 id。
   final SessionId sessionId;
 
   /// 下单类型。
   final OrderType orderType;
 
-  /// 购买方式（普通 / 代购）。
+  /// 支持方式（普通 / 代购）。
   final BuyType buyType;
 
   /// 草稿创建时间。
@@ -125,7 +125,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
   /// 限购规则。
   final PurchaseLimit purchaseLimit;
 
-  /// 本单需要几位实名观演人（0 = 不需要实名）。
+  /// 本单需要几位实名支持者（0 = 不需要实名）。
   final int requiredVisitorCount;
 
   final PurchaseLimitPolicy _limitPolicy;
@@ -161,7 +161,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
   /// 本单购买的加速包。
   SpeedPack? get speedPack => _speedPack;
 
-  /// 实名观演人。
+  /// 实名支持者。
   List<Visitor> get visitors => List<Visitor>.unmodifiable(_visitors);
 
   /// 当前有效报价（改动后会被置空）。
@@ -185,7 +185,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
   /// 商品总额 = 各行小计之和。
   Money get goodsTotal => Money.sum(_lines.map((line) => line.subtotal));
 
-  /// 总票数。
+  /// 总份数。
   Quantity get totalTickets =>
       _lines.fold(Quantity.zero, (sum, line) => sum + line.quantity);
 
@@ -200,9 +200,9 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
 
   // ── 编辑（只在草稿态）────────────────────────────────────────────────────
 
-  /// 加一个票档。同一票档会**合并**数量（企划星 `AddLine` 的等价语义）。
+  /// 加一个回报档位。同一回报档位会**合并**数量。
   ///
-  /// 合并的前提是单价一致：同一票档出现两个单价说明服务端数据已经变了，
+  /// 合并的前提是单价一致：同一回报档位出现两个单价说明服务端数据已经变了，
   /// 这时应该失败让用户重新拉确认页，而不是取其中一个价格。
   Result<void> addLine(OrderLine line) {
     final editable = _requireEditable();
@@ -228,7 +228,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     return const Success<void>(null);
   }
 
-  /// 改某个票档的数量。数量为 0 等于移除。
+  /// 改某个回报档位的数量。数量为 0 等于移除。
   Result<void> changeLineQuantity(TicketTierId tierId, Quantity quantity) {
     final editable = _requireEditable();
     if (editable.isFailure) return editable;
@@ -256,7 +256,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     return const Success<void>(null);
   }
 
-  /// 移除票档。
+  /// 移除回报档位。
   Result<void> removeLine(TicketTierId tierId) {
     final line = _lineOrNull(tierId);
     if (line == null) {
@@ -285,7 +285,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
 
   /// 购买加速包（`null` 表示不买）。
   ///
-  /// 加速包按票买，份数不能超过票数（企划星 `speedPackage * mCounts` 的约束）。
+  /// 加速包按份买，份数不能超过支持份数。
   Result<void> selectSpeedPack(SpeedPack? pack) {
     final editable = _requireEditable();
     if (editable.isFailure) return editable;
@@ -311,12 +311,12 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
     return const Success<void>(null);
   }
 
-  /// 指定实名观演人。
+  /// 指定实名支持者。
   ///
-  /// 三条不变量（企划星 `order()` 里是内联 if + toast）：
+  /// 三条不变量（不要退回成页面里的内联 if + toast）：
   /// 1. 同一人不能重复选（按证件号去重）；
   /// 2. 人数必须**严格等于**服务端要求的人数；
-  /// 3. 不需要实名的场次不能塞观演人。
+  /// 3. 不需要实名的线下回报场次不能塞支持者。
   Result<void> assignVisitors(List<Visitor> visitors) {
     final editable = _requireEditable();
     if (editable.isFailure) return editable;
@@ -344,7 +344,7 @@ final class TicketOrder extends AggregateRoot<TicketOrderId> {
 
   /// 勾选交易协议。
   ///
-  /// ⚠ 企划星侧默认 `postValue(true)`（进页面就是勾上的），这是合规红旗（`M5-01`）。
+  /// ⚠ 默认勾选（进页面就是勾上的）是合规红旗。
   /// 这里把"勾选"做成必须显式调用的动作，且 [submit] 会强制校验——
   /// **默认值在类型层面就不存在**，UI 想默认勾上得自己写一行。
   Result<void> acceptAgreement() {

@@ -11,28 +11,20 @@ import '../../l10n/l10n.dart';
 /// 隐私协议同意状态在普通偏好里的键。
 const String privacyAgreedStorageKey = 'privacyAgreed';
 
-/// 隐私协议 + 启动页（企划星 `PrivacyActivity` + `SplashActivity`）。
+/// 隐私协议 + 启动页。
 ///
-/// ## 企划星的启动流程
+/// ## 启动流程
 ///
-/// 1. `PrivacyActivity`（LAUNCHER）：检查是否已同意隐私协议。
-///    - 已同意 → 跳 `SplashActivity`，这里 finish。
-///    - 未同意 → 弹隐私协议弹窗，同意后跳 Splash，不同意进浏览模式。
-/// 2. `SplashActivity`：品牌广告屏（视频/图片 + 倒计时 + 跳过），
-///    倒计时结束后进 `MainActivity`。
-///
-/// ## Flutter 实现
-///
-/// 把两步合成一个页面：
+/// 隐私协议检查与品牌启动屏合成一个页面：
 /// - **未同意隐私协议** → 弹隐私协议弹窗，同意后进首页；
 /// - **已同意** → 品牌启动屏（Logo + slogan + 2 秒后自动进首页）。
 ///
-/// ## 与 Android 的差异
+/// ## 设计取舍
 ///
 /// - 不做广告视频/图片轮播：需要运营素材和 CDN。
 /// - 不做倒计时跳过按钮：没有广告就没有倒计时的必要。
 /// - 不做"浏览模式"（不同意隐私协议时的降级浏览）：
-///   企划星的浏览模式是一套独立的只读列表，本项目不做。
+///   那需要一套独立的只读列表，本项目不做。
 /// - 同意结果写入普通偏好（[privacyAgreedStorageKey]），冷启动不再重复弹窗；
 ///   同时同步到 `privacyConsentProvider`，让第三方 SDK 在同意后才初始化。
 class SplashPage extends ConsumerStatefulWidget {
@@ -109,7 +101,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         onDisagree: () {
           Navigator.of(dialogContext).pop();
           // 不同意 → 退出应用。
-          // 企划星进浏览模式；浏览模式是独立的只读列表，本项目不做。
+          // 不做"浏览模式"降级：那需要一套独立的只读列表。
           SystemNavigator.pop();
         },
       ),

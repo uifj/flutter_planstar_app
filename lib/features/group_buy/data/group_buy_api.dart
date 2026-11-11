@@ -5,19 +5,19 @@ import 'package:core/result.dart';
 import '../../../app/network/api_paths.dart';
 import '../domain/group_buy.dart';
 
-/// 拼团 API 适配。
+/// 组队支持 API 适配。
 ///
 /// | 用途 | 方法 | 路径 |
 /// |---|---|---|
-/// | 我的拼团 | GET | `v1/pinTuanOrder/myOrders` |
-/// | 拼团详情 | GET | `v1/pinTuanCampaign/{id}` |
-/// | 参团 | POST | `v1/pinTuanOrder/make` |
+/// | 我的组队 | GET | `v1/pinTuanOrder/myOrders` |
+/// | 组队详情 | GET | `v1/pinTuanCampaign/{id}` |
+/// | 参与组队 | POST | `v1/pinTuanOrder/make` |
 final class GroupBuyApi {
   GroupBuyApi({required ApiClient client}) : _client = client;
 
   final ApiClient _client;
 
-  /// 我的拼团列表。
+  /// 我的组队支持列表。
   Future<Result<List<GroupBuyInfo>>> fetchCampaigns() {
     return _client.get<List<GroupBuyInfo>>(
       ApiPaths.groupBuyOrders,
@@ -35,7 +35,7 @@ final class GroupBuyApi {
     );
   }
 
-  /// 拼团详情（不存在返回 `null`）。
+  /// 组队支持详情（不存在返回 `null`）。
   Future<Result<GroupBuyInfo?>> fetchCampaign(int id) {
     return _client.get<GroupBuyInfo?>(
       ApiPaths.groupBuyCampaign(id),
@@ -47,7 +47,7 @@ final class GroupBuyApi {
     );
   }
 
-  /// 参团。
+  /// 参与组队。
   Future<Result<void>> join(int id) {
     return _client.post<void>(
       ApiPaths.groupBuyJoin,

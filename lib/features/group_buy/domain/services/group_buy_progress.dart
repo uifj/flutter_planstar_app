@@ -1,14 +1,14 @@
 import '../group_buy.dart';
 
-/// 参团被拒绝的原因。
+/// 参与组队被拒绝的原因。
 enum GroupBuyJoinBlock {
-  /// 可以参团。
+  /// 可以参与组队。
   none,
 
-  /// 活动不在「拼团中」状态。
+  /// 活动不在「组队中」状态。
   notGrouping,
 
-  /// 已满团。
+  /// 组队已满员。
   full,
 
   /// 已过有效期。
@@ -18,7 +18,7 @@ enum GroupBuyJoinBlock {
   outOfStock,
 }
 
-/// 拼团进度快照。
+/// 组队支持进度快照。
 final class GroupBuyProgress {
   const GroupBuyProgress({
     required this.remainingSlots,
@@ -30,10 +30,10 @@ final class GroupBuyProgress {
     required this.block,
   });
 
-  /// 还差多少人成团（不会为负）。
+  /// 还差多少人组队成功（不会为负）。
   final int remainingSlots;
 
-  /// 是否已满团。
+  /// 是否已满员。
   final bool isFull;
 
   /// 进度百分比（0–1）。
@@ -48,14 +48,14 @@ final class GroupBuyProgress {
   /// 库存是否充足。
   final bool hasStock;
 
-  /// 参团拦截原因；[GroupBuyJoinBlock.none] 表示可以参团。
+  /// 参与组队拦截原因；[GroupBuyJoinBlock.none] 表示可以参与组队。
   final GroupBuyJoinBlock block;
 
-  /// 是否可以参团。
+  /// 是否可以参与组队。
   bool get canJoin => block == GroupBuyJoinBlock.none;
 }
 
-/// 拼团进度策略（纯函数）。
+/// 组队支持进度策略（纯函数）。
 ///
 /// [now] 显式注入，便于测试过期与剩余时间；不依赖 `DateTime.now()`。
 final class GroupBuyProgressPolicy {
@@ -91,9 +91,9 @@ final class GroupBuyProgressPolicy {
     );
   }
 
-  /// 判断能否参团（加入 / 下单）。
+  /// 判断能否参与组队（加入 / 下单）。
   ///
-  /// 顺序：状态 → 过期 → 满团 → 库存。库存不足单独暴露为
+  /// 顺序：状态 → 过期 → 满员 → 库存。库存不足单独暴露为
   /// [GroupBuyJoinBlock.outOfStock]，供应用层给出明确提示。
   GroupBuyJoinBlock blockOf(
     GroupBuyInfo info, {
@@ -117,7 +117,7 @@ final class GroupBuyProgressPolicy {
     return GroupBuyJoinBlock.none;
   }
 
-  /// 便捷判定：能否参团。
+  /// 便捷判定：能否参与组队。
   bool canJoin(GroupBuyInfo info, {required DateTime now}) =>
       blockOf(info, now: now) == GroupBuyJoinBlock.none;
 }

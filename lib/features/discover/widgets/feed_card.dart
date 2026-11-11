@@ -8,7 +8,7 @@ import '../domain/feed_post.dart';
 import '../feed_l10n.dart';
 import '../../../shared/ui/ps_network_images.dart';
 
-/// 发现流卡片（`home_item_waterfall_feed.xml`）。
+/// 发现流卡片。
 ///
 /// 这是一张**深色卡**：黑色圆角 6dp 底、16:9 海报压住上半部分并在底部渐变成黑、
 /// 黄色「网友热议」角标骑在海报下沿、白色 13dp 标题 2 行、
@@ -27,7 +27,7 @@ class FeedCard extends StatelessWidget {
 
   final FeedPost post;
 
-  /// 关联演出（用于海报与标题兜底）。
+  /// 关联企划（用于海报与标题兜底）。
   final ShowSummary? show;
 
   final VoidCallback? onTap;
@@ -64,7 +64,7 @@ class FeedCard extends StatelessWidget {
                     height: double.infinity,
                     radius: 0,
                   ),
-                  // gradient_65543c_to_000000：海报底部 20dp 压暗，让角标与标题有依托。
+                  // 海报底部 20dp 压暗，让角标与标题有依托。
                   const Positioned(
                     left: 0,
                     right: 0,

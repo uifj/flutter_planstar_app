@@ -1,15 +1,15 @@
-/// 登录后的用户资料（来源 `lib\account\UserProfile` + `lib\domain\UserBean`）。
+/// 登录后的用户资料。
 ///
-/// 字段是 `UserBean` 里**真正会被 UI 用到**的那一部分，不是全量照搬：
-/// `UserBean` 有 26 个字段，其中 `followHim` / `blocked` / `forceFollow` /
-/// `shopType` 之类是"看别人的主页"场景才用的，登录返回里恒为默认值。
+/// 字段只收登录接口里**真正会被 UI 用到**的那一部分，不是全量照搬：
+/// `followHim` / `blocked` / `forceFollow` / `shopType` 之类是
+/// "看别人的主页"场景才用的，登录返回里恒为默认值。
 ///
-/// 刻意修掉来源的两个毛病：
+/// 刻意修掉两个毛病：
 ///
-/// 1. `UserProfile.isSame()` 里 `getUserName().equals(...)` 对 null 直接 NPE
-///    （23 页 §3.6）——这里 [isSame] 全程判空；
+/// 1. 比较昵称时不判空，昵称为 null 就直接崩
+///    ——这里 [isSame] 全程判空；
 /// 2. `isComplete()` 把 `birthday == 0` 当成"没填"，但 0 是 1970-01-01
-///    （23 页 §3.6 的注）——这里语义不变（0 就是没填），但把判断集中到
+///    ——这里语义不变（0 就是没填），但把判断集中到
 ///    [isComplete] 一处，并写清口径。
 library;
 
@@ -25,19 +25,19 @@ abstract class AuthUser with _$AuthUser {
 
   /// 创建资料。
   const factory AuthUser({
-    /// 用户 id。未登录时来源用 `-1` 表示（`AccountService.userId()`）。
+    /// 用户 id。缺失或非法时兜底为 `-1`，由 [isValid] 判为未登录。
     @JsonKey(readValue: _readUserId) required int userId,
 
     /// 昵称。
     @JsonKey(readValue: _readUserName) String? userName,
 
-    /// 头像 URL。空串表示没设置（来源 `UserBean.avatar` 默认 `""`）。
+    /// 头像 URL。空串表示没设置。
     @JsonKey(readValue: _readAvatar) @Default('') String avatar,
 
     /// 个性签名。
     @JsonKey(readValue: _readBio) String? bio,
 
-    /// 性别：0 未设置 / 1 男 / 2 女（来源 `UserBean.gender`）。
+    /// 性别：0 未设置 / 1 男 / 2 女。
     @JsonKey(readValue: _readGender) @Default(0) int gender,
 
     /// 生日（毫秒时间戳）。0 表示未设置。
@@ -65,13 +65,13 @@ abstract class AuthUser with _$AuthUser {
     @JsonKey(readValue: _readBadgeIcon) String? badgeIcon,
   }) = _AuthUser;
 
-  /// 从 JSON 解析（字段名对齐 `UserBean`）。
+  /// 从 JSON 解析（字段名与服务端下发的一致）。
   factory AuthUser.fromJson(Map<String, dynamic> json) =>
       _$AuthUserFromJson(json);
 
   /// 是否是一个"真实存在"的用户。
   ///
-  /// 来源用 `userId == -1` 表示未登录，但服务端在异常情况下也可能返回 0；
+  /// 未登录不能用 `-1` 之类的哨兵值表示：服务端在异常情况下也可能返回 0；
   /// 这里把 `<= 0` 一律当成无效，避免把"空用户"当成已登录。
   bool get isValid => userId > 0;
 
@@ -87,9 +87,9 @@ abstract class AuthUser with _$AuthUser {
     return '${mobile.substring(0, 3)}****${mobile.substring(7)}';
   }
 
-  /// 资料是否完善（来源 `UserProfile.isComplete()`）。
+  /// 资料是否完善。
   ///
-  /// 口径与来源一致：头像非空、性别已填、生日已填。
+  /// 口径：头像非空、性别已填、生日已填。
   /// `birthday == 0` 视为未填（它确实是 epoch，但业务上就是"没填"）。
   bool get isComplete => avatar.isNotEmpty && gender != 0 && birthday != 0;
 

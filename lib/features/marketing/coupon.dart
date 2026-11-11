@@ -2,12 +2,11 @@ import 'package:core/domain.dart';
 
 /// 优惠券状态。
 ///
-/// 对齐 Android `Coupon.status` + `isDisable`：
-/// - Android 用 `status`（int）+ `isDisable`（bool）两个标记位，
-///   列表页据此分成"可用 / 不可用"两个 RecyclerView。
-/// - 这里用枚举三态，避免两个标记位交叉出第四种"既可用又不可用"的矛盾。
+/// 用枚举三态，而不是 int 状态码 + bool 禁用位两个标记位：
+/// - 两个标记位会交叉出第四种"既可用又不可用"的矛盾状态；
+/// - 列表页按三态分 Tab（可用 / 已使用 / 已过期），不需要再做二次归并。
 enum CouponStatus {
-  /// 可使用（Android `isDisable=false` 且未过期）。
+  /// 可使用（未禁用且未过期）。
   usable,
 
   /// 已使用。
@@ -19,7 +18,7 @@ enum CouponStatus {
 
 /// 抵扣类型。
 ///
-/// 对齐 Android `Coupon.discountType`：
+/// 抵扣类型的接口取值（见 `wireCode`）：
 /// - `1` = 固定金额（现金券）
 /// - 其他 = 折扣率（例如 8.5 = 85 折）
 enum CouponDiscountType {
@@ -36,12 +35,11 @@ enum CouponDiscountType {
 
 /// 优惠券领域模型。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意不做的事
 ///
-/// - Android 的 `Coupon` 是 Kotlin data class（`Serializable`），
-///   字段全裸 `double` / `int` / `long`，页面直接读字段。
-/// - 这里用 `final class` + 语义化 getter：金额用 [Money]（整数分），
-///   到期时间用 [DateTime]（不是 `long` ms），
+/// - 不用裸 `double` / `int` / `long` 字段让页面直接读：
+///   这里用 `final class` + 语义化 getter，金额用 [Money]（整数分），
+///   到期时间用 [DateTime]（不是 ms 时间戳），
 ///   抵扣类型用枚举 [CouponDiscountType] 而不是 `int`。
 /// - `ExtraCondition` 保留为可选字段——下单选券时用来判断适用范围。
 final class Coupon {
@@ -122,9 +120,9 @@ final class Coupon {
 
 /// 优惠券使用限制。
 ///
-/// 对齐 Android `Coupon.ExtraConditionBean`：
+/// 服务端下发的使用限制：
 /// - `activityCategoryIds`：限定分类
-/// - `activityIds`：限定演出
+/// - `activityIds`：限定企划
 /// - `shopIds`：限定店铺
 final class CouponExtraCondition {
   const CouponExtraCondition({
@@ -140,7 +138,7 @@ final class CouponExtraCondition {
   /// 是否有限定分类。
   bool get hasCategoryRestriction => activityCategoryIds.isNotEmpty;
 
-  /// 是否有限定演出。
+  /// 是否有限定企划。
   bool get hasActivityRestriction => activityIds.isNotEmpty;
 
   /// 是否有限定店铺。

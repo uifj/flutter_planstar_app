@@ -15,8 +15,8 @@ import '../domain/feed_post.dart';
 /// | 动态详情 | GET | `v1/tweets/{id}` |
 /// | 评论列表 | GET | `v1/userReply` |
 ///
-/// 点赞/发评论等写操作后端未提供端点（`userLike`、`POST userReply` 只在
-/// 来源 Android 工程里存在），这里不封装，避免造出打不通的接口。
+/// 点赞/发评论等写操作后端未提供端点（`userLike`、`POST userReply` 都不可用），
+/// 这里不封装，避免造出打不通的接口。
 final class PlanstarFeedApi {
   PlanstarFeedApi({required ApiClient client}) : _client = client;
 
@@ -87,9 +87,9 @@ final class PlanstarFeedApi {
   }
 
   static List<FeedPost> _parseFeedList(Object? data) {
-    // 企划星 feed 接口有两种包装：
-    // 1. 直接返回 List<FeedBean>
-    // 2. 包在 FeedPagination 里 {data, hasMore, nextPageKey}
+    // feed 接口有两种包装：
+    // 1. 直接返回 List<FeedPost>
+    // 2. 包在分页对象里 {data, hasMore, nextPageKey}
     if (data is Map<String, dynamic>) {
       final inner = data['data'];
       if (inner is List) {

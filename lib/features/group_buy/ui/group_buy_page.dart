@@ -11,14 +11,13 @@ import '../application/group_buy_controller.dart';
 import '../domain/group_buy.dart';
 import 'group_buy_l10n.dart';
 
-/// 拼团列表页。
+/// 组队支持列表页。
 ///
-/// ## 与 Android 的差异
+/// ## 为什么单独做一页
 ///
-/// - 企划星的拼团入口在演出详情页（`ShowDetailPinTuanView` banner），
-///   没有独立的拼团列表页。这里做列表页作为"我的拼团"入口，
-///   方便用户查看所有进行中的拼团。
-/// - 拼团详情通过点击列表项进入 `/group-buy/:id`。
+/// - 企划详情页没有组队支持入口，所以这里用独立列表页承载"我的组队"，
+///   方便用户查看所有进行中的组队。
+/// - 组队详情通过点击列表项进入 `/group-buy/:id`。
 ///
 /// 页面只渲染 `GroupBuyListController` 暴露的 `GroupBuyView`。
 class GroupBuyPage extends ConsumerWidget {
@@ -66,7 +65,7 @@ class GroupBuyPage extends ConsumerWidget {
   }
 }
 
-/// 拼团卡片。
+/// 组队支持卡片。
 class _GroupBuyCard extends StatelessWidget {
   const _GroupBuyCard({required this.group, required this.onTap});
 
@@ -135,7 +134,7 @@ class _GroupBuyCard extends StatelessWidget {
                 ],
               ),
             ),
-            // 中部：标题 + 场馆
+            // 中部：标题 + 活动场地
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               child: Column(

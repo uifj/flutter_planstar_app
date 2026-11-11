@@ -5,7 +5,7 @@ part 'message_thread.g.dart';
 
 /// 消息中心的一条会话。
 ///
-/// 对应 `item_user_message.xml`：48dp 方头像、16dp 标题、11dp 时间、
+/// 渲染尺寸：48dp 方头像、16dp 标题、11dp 时间、
 /// 14dp `text_3` 单行摘要、底部 1dp `#ffeeeeee` 分隔线。
 @freezed
 abstract class MessageThread with _$MessageThread {
@@ -42,7 +42,7 @@ abstract class MessageThread with _$MessageThread {
   }
 }
 
-/// 系统消息入口（`layout_user_message_header.xml` 的三列）。
+/// 系统消息入口（头部三列）。
 @freezed
 abstract class SystemMessageEntry with _$SystemMessageEntry {
   const factory SystemMessageEntry({

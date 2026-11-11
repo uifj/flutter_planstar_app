@@ -9,7 +9,7 @@ import 'wallet.dart';
 
 /// 钱包演示数据。
 ///
-/// 对齐 Android `GET v1/moneyaccount` + `GET v1/moneyaccount/sequences`。
+/// 对应真实接口 `GET v1/moneyaccount` + `GET v1/moneyaccount/sequences`。
 final class DemoWallet {
   DemoWallet._();
 

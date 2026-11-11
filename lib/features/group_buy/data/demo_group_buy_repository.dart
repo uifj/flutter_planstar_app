@@ -4,7 +4,7 @@ import '../domain/group_buy.dart';
 import '../domain/repositories/group_buy_repository.dart';
 import 'demo_group_buy.dart';
 
-/// 演示仓储：内存拼团数据，参团只模拟一次网络往返。
+/// 演示仓储：内存组队支持数据，参与组队只模拟一次网络往返。
 final class DemoGroupBuyRepository implements GroupBuyRepository {
   @override
   Future<Result<List<GroupBuyInfo>>> fetchCampaigns() async =>

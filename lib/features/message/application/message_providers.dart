@@ -42,7 +42,7 @@ final class MessageCenterState {
   }
 }
 
-/// 三个系统入口的固定顺序与文案（与 Android 头部三角色卡一致）。
+/// 三个系统入口的固定顺序与文案（对应头部三张角色卡）。
 const List<({String id, String title, String icon, String type})> _entrySpecs =
     <({String id, String title, String icon, String type})>[
       (id: 'activity', title: '活动通知', icon: 'campaign', type: '1'),
@@ -87,7 +87,7 @@ class MessageCenterController extends AsyncNotifier<MessageCenterState> {
     return result.getOrElse((_) => const <MessageThread>[]);
   }
 
-  /// 清空全部消息（企划星 `ib_message_clear`）。
+  /// 清空全部消息。
   ///
   /// 演示模式清会话与未读，**不清**三个系统入口本身——它们是固定入口，
   /// 清掉之后用户就再也进不去活动通知/回复/赞了。

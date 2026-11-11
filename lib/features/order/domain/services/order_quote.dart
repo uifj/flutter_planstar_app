@@ -10,7 +10,7 @@ enum QuoteLineKind {
   speedPack,
 }
 
-/// 费用明细的一行（对应企划星 `ExpenseDetailsView` 的弹窗）。
+/// 费用明细的一行（用于确认页的费用明细弹窗）。
 final class QuoteLine extends ValueObject {
   const QuoteLine({
     required this.kind,
@@ -35,11 +35,11 @@ final class QuoteLine extends ValueObject {
 ///
 /// ## 为什么要有这个值对象
 ///
-/// 企划星侧把金额拆在 Activity 的成员变量里：`mTotalAmount`（原价）、
-/// `mPaymentAmount`（实付）、`mCampaignDiscount`、`mCouponDiscount`、
-/// `mCostSpeedPackageAmount`、`mCostSpeedPackageBalance`、`mSelectStatus`……
-/// 7 个 `double` 互相依赖，`updatePrice()` 是唯一能算对它们的地方，
-/// 任何一处漏调就出现"页面显示 A、请求发 B"（`wiki_zh/12` §3.5.4 坑 2/3）。
+/// 把金额拆在页面的成员变量里时：原价、实付、营销优惠、券优惠、
+/// 加速包现金部分、加速包余额部分、优惠选择……
+/// 7 个 `double` 互相依赖，只有一个重算入口能算对它们，
+/// 任何一处漏调就出现"页面显示 A、请求发 B"，
+/// 而且这种错要到用户对账时才暴露。
 ///
 /// [OrderQuote] 把这些收成一个**不可变、自洽**的对象：构造时校验
 /// `paymentAmount == payableBeforeTender - giftCardApplied + speedPackCash`，
@@ -78,7 +78,7 @@ final class OrderQuote extends ValueObject {
     }
   }
 
-  /// 商品总额（票档小计之和）。
+  /// 商品总额（回报档位小计之和）。
   final Money goodsTotal;
 
   /// 运费。
@@ -115,10 +115,10 @@ final class OrderQuote extends ValueObject {
   /// 报价是否对当前商品总额失效。
   ///
   /// 聚合在 `submit()` 前必须检查：用户改了数量但没重算报价时，
-  /// 发出去的会是旧价格——这正是企划星"两个金额分别设置"最容易出的错。
+  /// 发出去的会是旧价格——"两个金额分别设置"最容易出的就是这种错。
   bool isStaleFor(Money currentGoodsTotal) => currentGoodsTotal != goodsTotal;
 
-  /// 费用明细（按企划星弹窗的顺序）。
+  /// 费用明细（按弹窗展示顺序）。
   List<QuoteLine> get breakdown => <QuoteLine>[
     QuoteLine(kind: QuoteLineKind.goodsTotal, amount: goodsTotal),
     if (!postage.isZero)

@@ -1,7 +1,7 @@
 import 'package:core_design_system/core_design_system.dart';
 import 'package:flutter/material.dart';
 
-/// 城市格子（`item_city.xml` 的简化版）。
+/// 城市格子。
 ///
 /// 从 [CityPickerSheet] 的私有 `_CityChip` 提升而来：城市选择面板
 /// （首页顶部）和城市列表页（`/cities`）都要渲染同一套"选中 / 可选 /
@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 /// - [selected]：当前城市，品牌色描边 + 淡底 + 粗体；
 /// - [available] 为真：可选，`textPrimary`；
 /// - [available] 为假：**可选但无数据**（`textDisabled`）。仍然可点——
-///   企划星允许切到没有演出的城市，进去看空态。做成不可点会让用户
+///   允许切到没有企划的城市，进去看空态。做成不可点会让用户
 ///   以为"这个城市不存在"。
 class CityTile extends StatelessWidget {
   const CityTile({
@@ -28,7 +28,7 @@ class CityTile extends StatelessWidget {
   final String city;
   final bool selected;
 
-  /// 该城市是否有演出数据。
+  /// 该城市是否有企划数据。
   final bool available;
 
   final VoidCallback onTap;

@@ -1,8 +1,7 @@
-/// 一条会话消息（`item_chat_message.xml` 的左右两种气泡）。
+/// 一条会话消息（左右两种气泡）。
 ///
-/// 企划星的 IM 走 pudding 的 mqtt 通道，消息体是 protobuf。这里只保留
-/// 渲染需要的字段：谁发的、说了什么、什么时候。**不建模已读回执/撤回/图片**
-/// ——这些没有真实通道时全是死字段。
+/// 只保留渲染需要的字段：谁发的、说了什么、什么时候。**不建模已读回执/撤回/图片**
+/// ——没有真实长连接通道时这些全是死字段。
 library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';

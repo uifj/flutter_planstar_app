@@ -10,13 +10,11 @@ import '../../l10n/l10n.dart';
 
 /// 兑换码输入页。
 ///
-/// ## 与 Android 的差异
+/// ## 设计取舍
 ///
-/// - 企划星 `ExchangeCouponActivity` + `ExchangeCouponFragment` 是两件套
-///   （Activity 是壳，Fragment 是内容）。这里合并为一个 Widget，
-///   不需要 Fragment 层级——Flutter 的 Widget 组合就是 Fragment。
-/// - 兑换成功后 Android 用 `setResult` + `finish` 回传券对象，
-///   这里直接 `context.go('/coupons')` 返回券列表页（新券会在列表顶部）。
+/// - 页面壳与内容合并为一个 Widget，不再拆分层级。
+/// - 兑换成功后先提示，再 `context.go('/coupons')` 返回券列表页，
+///   不走"回传券对象给上一页"的路子。
 class ExchangeCouponPage extends ConsumerWidget {
   const ExchangeCouponPage({super.key});
 

@@ -1,11 +1,11 @@
 import 'package:core/domain.dart';
 
-/// 座位状态（对齐企划星 `TicketSeatBean.status`）。
+/// 座位状态。
 enum SeatStatus {
   /// 可选。
   available,
 
-  /// 已售。
+  /// 已占用（不可再选）。
   sold,
 
   /// 已锁定（别人正在选）。
@@ -18,7 +18,7 @@ enum SeatStatus {
   blocked,
 }
 
-/// 单个座位（对齐企划星 `TicketSeatBean`）。
+/// 单个座位。
 class Seat {
   const Seat({
     required this.id,
@@ -53,17 +53,17 @@ class Seat {
   /// 所属区域名。
   final String? areaName;
 
-  /// 票价（可选，不同区域不同价）。
+  /// 座位单价（可选，不同区域不同价）。
   final Money? price;
 
-  /// 票档 ID（关联到 `TicketCategory.id`）。
+  /// 回报档位 ID。
   final int? categoryId;
 
   /// 是否可选。
   bool get isSelectable => status == SeatStatus.available;
 }
 
-/// 一个区域（对齐企划星 `TicketAreaBean`）。
+/// 一个区域。
 class SeatArea {
   const SeatArea({
     required this.id,
@@ -111,11 +111,11 @@ class SeatRow {
   final int y;
 }
 
-/// 完整的座位图数据（对齐企划星 `SeatMapBean`）。
+/// 完整的座位图数据。
 ///
-/// 企划星用 Mapbox GL 渲染 venue 的俯视图，点击区域后展开座位。
-/// 本项目用**网格表格模式**（对齐 `ChooseTicketSeatTableFragment`），
-/// 直接渲染区域 → 排 → 座位的三级结构。
+/// 线下回报场次的可选座位图（POSITIONING.md §10 降级能力），仅线下活动型企划使用。
+/// 用**网格表格模式**直接渲染区域 → 排 → 座位的三级结构，
+/// 不做地图引擎的场地俯视图 + 点击区域展开座位那套交互。
 class SeatMapData {
   const SeatMapData({
     required this.areas,
@@ -126,7 +126,7 @@ class SeatMapData {
   /// 所有区域。
   final List<SeatArea> areas;
 
-  /// 场馆名。
+  /// 活动场地名。
   final String venueName;
 
   /// 舞台标签（显示在座位图顶部）。

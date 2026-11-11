@@ -4,7 +4,7 @@ import '../../../l10n/l10n.dart';
 import '../domain/show_category.dart';
 import '../domain/show_summary.dart';
 
-/// 演出展示文案的本地化映射。
+/// 企划展示文案的本地化映射。
 ///
 /// Domain 层只保留纯数据，所有面向用户的文案在这里按 `BuildContext` 解析。
 extension ShowSummaryL10n on ShowSummary {
@@ -19,22 +19,22 @@ extension ShowSummaryL10n on ShowSummary {
     return context.l10n.showSummary_165(text);
   }
 
-  /// 首场时间：`11月8日 周日 19:30`。
+  /// 首个线下回报场次时间：`11月8日 周日 19:30`。
   String firstSessionLabelOf(BuildContext context) =>
       formatSessionLabelL10n(context, firstSessionAt);
 
-  /// 演出状态文案（`售票中` / `暂时售罄`）。
+  /// 支持状态文案（支持中 / 名额已满）。
   String saleStatusLabelOf(BuildContext context) =>
       soldOut ? context.l10n.showSummary_178 : context.l10n.showSummary_178_2;
 }
 
 extension VenueSummaryL10n on VenueSummary {
-  /// 副标题：`浦东新区 · 12 场演出`。
+  /// 副标题：`浦东新区 · 12 个企划`。
   String subtitleOf(BuildContext context) =>
       context.l10n.showCategory_95(address, showCount);
 }
 
-/// 场次时间格式：`11月8日 周日 19:30`。
+/// 线下回报场次时间格式：`11月8日 周日 19:30`。
 String formatSessionLabelL10n(BuildContext context, DateTime time) {
   final l10n = context.l10n;
   final weekday = switch (time.weekday) {

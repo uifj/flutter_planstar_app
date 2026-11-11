@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../l10n/l10n.dart';
 
-/// 意见反馈页（企划星 `FeedbackActivity` + `fragment_feedback.xml`）。
+/// 意见反馈页。
 ///
 /// ## 结构
 ///
@@ -14,10 +14,10 @@ import '../../l10n/l10n.dart';
 /// - 联系方式输入框（可选，手机号或邮箱）；
 /// - 底部提交按钮。
 ///
-/// ## 与 Android 的差异
+/// ## 设计取舍
 ///
-/// - **不实际上传反馈内容**：企划星走 `POST v1/feedback` 接口，这里没有
-///   真实的后端反馈接口实现。提交时 toast 提示"已记录（演示）"，
+/// - **不实际上传反馈内容**：反馈提交接口后端未实现，
+///   提交时 toast 提示"已记录（演示）"，
 ///   不假装发送成功。
 /// - 不做图片附件上传：需要 OSS / 文件服务支持。
 /// - 不做"反馈历史"：需要接口拉取已提交的反馈列表。
@@ -222,7 +222,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
   }
 
   void _submit() {
-    // 不实际提交：企划星走 POST v1/feedback，这里没有真实接口实现。
+    // 不实际提交：反馈接口后端未实现。
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(context.l10n.feedbackPage_230)));

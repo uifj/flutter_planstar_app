@@ -74,7 +74,7 @@ final class GoodsSku {
   /// 限量（初始库存）。
   int get totalStock => stock + sold;
 
-  /// 是否售罄。
+  /// 是否名额已满（库存为 0）。
   bool get soldOut => stock <= 0;
 
   /// 展示价格。

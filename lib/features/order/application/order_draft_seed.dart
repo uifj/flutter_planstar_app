@@ -6,7 +6,7 @@ import '../../catalog/application/catalog_providers.dart';
 import '../domain/domain.dart';
 import 'order_confirm_selection.dart';
 
-/// 一个可选票档（展示 + 下单用）。
+/// 一个可选回报档位（展示 + 下单用）。
 final class TicketTierOffer {
   const TicketTierOffer({
     required this.id,
@@ -21,10 +21,10 @@ final class TicketTierOffer {
 
 /// 确认页的"服务端数据"。
 ///
-/// 对应企划星 `GET v1/unifiedOrder/confirm` 的响应（`OrderConfirmInfo`）：
-/// 票档、限购、实名要求、可用券/活动/礼品卡都在这里。
+/// 对应 `GET v1/unifiedOrder/confirm` 的响应：
+/// 回报档位、限购、实名要求、可用券/活动/礼品卡都在这里。
 ///
-/// demo 模式用固定数据；真实模式从已加载的演出详情映射票档/场次。
+/// demo 模式用固定数据；真实模式从已加载的企划详情映射回报档位/线下回报场次。
 final class OrderDraftSeed {
   const OrderDraftSeed({
     required this.showId,
@@ -47,7 +47,7 @@ final class OrderDraftSeed {
   final String sessionLabel;
   final List<TicketTierOffer> tiers;
 
-  /// 需要几位实名观演人（0 = 不需要）。
+  /// 需要几位实名支持者（0 = 不需要）。
   final int requiredVisitorCount;
 
   /// 限购规则。
@@ -62,7 +62,7 @@ final class OrderDraftSeed {
   /// 可用礼品卡（没有则为 `null`）。
   final GiftCardTender? giftCard;
 
-  /// 加速包单价（`null` = 本场不提供）。
+  /// 加速包单价（`null` = 本企划不提供）。
   final Money? speedPackUnitPrice;
 
   /// 账户加速包余额。
@@ -71,8 +71,8 @@ final class OrderDraftSeed {
 
 /// 确认页种子数据。
 ///
-/// demo 模式保留原演示场次；真实模式从已加载的演出映射票档和首个场次，
-/// 详情尚未返回时给一个空票档种子，由 UI 展示不可提交状态。
+/// demo 模式保留固定演示数据；真实模式从已加载的企划映射回报档位和首个线下回报场次，
+/// 详情尚未返回时给一个空回报档位种子，由 UI 展示不可提交状态。
 final orderDraftSeedProvider = Provider.family<OrderDraftSeed, OrderConfirmArgs>((
   ref,
   args,
@@ -91,7 +91,7 @@ final orderDraftSeedProvider = Provider.family<OrderDraftSeed, OrderConfirmArgs>
         price: show.tiers[i].price,
       ),
   ];
-  // 选票页指定的场次：只在下标合法时生效，避免深链参数注入导致越界。
+  // 档位选择页指定的线下回报场次：只在下标合法时生效，避免深链参数注入导致越界。
   final requestedSession = args.selection.sessionIndex;
   final resolvedSessionIndex =
       (requestedSession != null &&
@@ -110,7 +110,7 @@ final orderDraftSeedProvider = Provider.family<OrderDraftSeed, OrderConfirmArgs>
         ? show.firstSessionAt.toString()
         : session.startsAt.toString(),
     tiers: tiers,
-    // 真实下单接口当前不要求客户端选集观演人。
+    // 真实下单接口当前不要求客户端选择实名支持者。
     requiredVisitorCount: 0,
     purchaseLimit: const PurchaseLimit.unlimited(),
     availableCoupon: null,
@@ -138,7 +138,7 @@ OrderDraftSeed _emptySeed(String showId) {
   );
 }
 
-/// 演示数据：一个 11 月 8 日晚场的演出。
+/// 演示数据：一个 11 月 8 日晚间的线下回报场次。
 OrderDraftSeed _demoSeed(String showId) {
   return OrderDraftSeed(
     showId: ShowId(showId),

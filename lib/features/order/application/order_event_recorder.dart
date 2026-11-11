@@ -3,10 +3,10 @@ import 'package:core/domain.dart';
 /// 领域事件记录器 —— 演示"聚合不关心副作用"。
 ///
 /// 真实项目里，`OrderPlaced` 的订阅方会是：
-/// - 埋点（企划星 `PNLogger.clickOrderMakeorder` / `enterOrder`）；
+/// - 埋点（建单点击 / 进入确认页）；
 /// - 支付倒计时启动；
 /// - 订单列表 / 角标刷新；
-/// - 广告归因回传（`PNADEventManager`）。
+/// - 广告归因回传。
 ///
 /// 这些订阅方现在都不在聚合里，加一个订阅方不需要改 `TicketOrder` 一行代码——
 /// 这就是"事件解耦"的实际收益。

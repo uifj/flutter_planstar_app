@@ -12,19 +12,19 @@ import 'domain/search_models.dart';
 import 'search_l10n.dart';
 import '../../l10n/l10n.dart';
 
-/// 搜索页（企划星 `SearchActivity` + `SearchHintFragment` / `SearchSuggestFrgment`）。
+/// 搜索页。
 ///
 /// ## 三个状态
 ///
-/// 1. **输入为空** → 搜索历史 + 热搜榜（原页的两块）；
+/// 1. **输入为空** → 搜索历史 + 热搜榜两块；
 /// 2. **正在输入** → 联想列表（企划标题/创作者）+ 顶部「搜索『xx』」；
 /// 3. **提交** → 把词记进历史并跳到结果页。
 ///
-/// ## 与 Android 的差异
+/// ## 设计取舍
 ///
-/// - 原页的热搜是 `MarqueeView` 轮播 + 三列网格；这里用单列带排名的列表，
+/// - 热搜用单列带排名的列表，不做轮播 + 三列网格，
 ///   因为排名（1/2/3 高亮）比网格更能表达"热搜"的语义。
-/// - 原页点联想词直接进详情页，点「搜索」才进结果页。这里保留了这个区分——
+/// - 点联想词直接进详情页，点「搜索」才进结果页。这个区分刻意保留——
 ///   它是搜索体验里最容易做错的一处：联想词是"我确定要看这个"，
 ///   而「搜索」是"我想看更多"。
 /// - **不做拼音/分词联想**（见 `search_providers.dart` 的说明）。
@@ -75,7 +75,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     );
   }
 
-  /// 顶部的输入框（`view_search_input.xml`）。
+  /// 顶部的输入框。
   Widget _buildField(AppColors colors) {
     return Container(
       height: 34,
@@ -150,7 +150,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () => _submit(word),
-                  // 长按删除：企划星是"点右上角编辑再删"，这里省掉一个状态。
+                  // 长按删除：不做"点右上角编辑再删"的编辑态，省掉一个状态。
                   onLongPress: () {
                     ref.read(searchHistoryProvider.notifier).remove(word);
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -185,7 +185,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     );
   }
 
-  /// 热搜榜（`item_search_hot.xml`）。
+  /// 热搜榜。
   Widget _buildHot(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final List<HotKeyword> keywords = ref.watch(hotKeywordsProvider);
@@ -294,7 +294,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
         for (final ShowSummary show in suggestions)
           GestureDetector(
             behavior: HitTestBehavior.opaque,
-            // 联想词直接进详情（"我确定要看这个"），与 Android 行为一致。
+            // 联想词直接进详情（"我确定要看这个"）。
             onTap: () => context.push('/show/${show.id}'),
             child: Container(
               height: 56,

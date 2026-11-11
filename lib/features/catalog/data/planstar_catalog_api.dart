@@ -152,7 +152,7 @@ abstract class RankingEntry with _$RankingEntry {
 
 /// Banner DTO。
 ///
-/// 来源 `v1/home/banners` 返回的每一项：
+/// 对应 `v1/home/banners` 返回的每一项：
 /// `{id, title, image, url?, showId?}`
 @freezed
 abstract class BannerDto with _$BannerDto {

@@ -13,7 +13,7 @@ import 'pay_info.dart';
 import 'pay_providers.dart';
 import '../../../l10n/l10n.dart';
 
-/// 支付页（企划星 `PayActivity`）。
+/// 支付页。
 ///
 /// ## 结构
 ///
@@ -43,7 +43,7 @@ class PayPage extends ConsumerWidget {
   /// 应付金额。
   final Money amount;
 
-  /// 演出名。
+  /// 企划名。
   final String showTitle;
 
   @override

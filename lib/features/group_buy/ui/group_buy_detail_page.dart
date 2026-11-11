@@ -8,16 +8,16 @@ import '../../../l10n/l10n.dart';
 import '../application/group_buy_controller.dart';
 import '../domain/group_buy.dart';
 
-/// 拼团详情页。
+/// 组队支持详情页。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意不做的事
 ///
-/// - 企划星的拼团详情是 WebView（`groupBooking.html?pinTuanId={id}`），
-///   这里做原生页面：顶部演出信息 + 成员头像列表 + 参团按钮。
-/// - 参团遵循"假功能不做"：按钮是真实的，提交后 toast 说明"模拟参团"。
-/// - 规则页面（Android WebView 加载 `pinTuanRule.html`）用展开文本替代。
+/// - 不用 WebView 承载详情，直接做原生页面：
+///   顶部企划信息 + 成员头像列表 + 参与组队按钮。
+/// - 参与组队遵循"假功能不做"：按钮走真实请求，演示仓储只模拟一次网络往返。
+/// - 规则不另开页面，用展开文本替代。
 ///
-/// 进度、剩余时间、库存与参团资格全部来自 `GroupBuyView`，页面不计算。
+/// 进度、剩余时间、库存与参与资格全部来自 `GroupBuyView`，页面不计算。
 class GroupBuyDetailPage extends ConsumerWidget {
   const GroupBuyDetailPage({super.key, required this.groupId});
 
@@ -31,7 +31,7 @@ class GroupBuyDetailPage extends ConsumerWidget {
     final JoinGroupState joinState = ref.watch(joinGroupControllerProvider);
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
 
-    // 监听参团结果
+    // 监听参与组队结果
     ref.listen<JoinGroupState>(joinGroupControllerProvider, (prev, next) {
       if (next is JoinGroupSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -77,7 +77,7 @@ class GroupBuyDetailPage extends ConsumerWidget {
                   ],
                 ),
               ),
-              // 底部参团按钮
+              // 底部参与组队按钮
               if (group.progress.canJoin)
                 _BottomBar(
                   group: group,
@@ -111,7 +111,7 @@ class GroupBuyDetailPage extends ConsumerWidget {
   }
 }
 
-/// 演出信息卡。
+/// 企划信息卡。
 class _ShowInfoCard extends StatelessWidget {
   const _ShowInfoCard({required this.group});
 
@@ -507,7 +507,7 @@ class _RuleCard extends StatelessWidget {
   }
 }
 
-/// 底部参团按钮。
+/// 底部参与组队按钮。
 class _BottomBar extends StatelessWidget {
   const _BottomBar({
     required this.group,

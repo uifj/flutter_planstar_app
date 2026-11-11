@@ -6,11 +6,11 @@ import '../domain/show_summary.dart';
 import '../../../l10n/l10n.dart';
 import 'catalog_l10n.dart';
 
-/// 精选卡片（`item_home_choiceness.xml`）。
+/// 精选卡片。
 ///
 /// 105dp 宽、海报 105×112 圆角 2dp、标题 14sp 粗体 2 行，
 /// 下方固定展示达成率进度条、达成率、目标金额、支持人数与剩余天数。
-/// 卡片之间靠 10dp 的 `marginStart` 留白——企划星用 margin 而不是 `spacing`，
+/// 卡片之间靠 10dp 的左外边距留白——用 margin 而不是 `spacing`，
 /// 所以横向列表的最后一项要补一个尾部 padding。
 class ShowCardChoiceness extends StatelessWidget {
   const ShowCardChoiceness({
@@ -160,7 +160,7 @@ String _remainingLabel(BuildContext context, ShowSummary show) {
       : context.l10n.projectCardDays(days);
 }
 
-/// 楼层卡片（`item_home_show_list_common.xml`）。
+/// 楼层卡片。
 ///
 /// 76dp 宽、海报 76×101 圆角 8dp（底部压一条 24dp 品类渐变条 + 右上角角标）、
 /// 标题 13dp 2 行、达成率 12dp 粗体。
@@ -267,7 +267,7 @@ class ShowCardFloor extends StatelessWidget {
 
 /// 横向列表卡片（发现流 / 搜索结果 / 相似推荐）。
 ///
-/// 结构对应企划星的 `item_feed_detail_relate_show.xml` 一类"左图右文"卡片：
+/// 结构是"左图右文"卡片：
 /// 90×120 海报、标题 15dp 粗体、创作者 / 品类 / 支持人数 12dp `text_3`、
 /// 底部达成率与剩余天数。
 class ShowCardRow extends StatelessWidget {
@@ -397,9 +397,9 @@ class ShowCardRow extends StatelessWidget {
   }
 }
 
-/// 横向滚动的一排楼层卡片（`ll_home_show_list` + `HorizontalScrollView`）。
+/// 横向滚动的一排楼层卡片。
 ///
-/// 企划星给每张卡 10dp 的左边距、容器右 padding 4dp；这里用 `ListView.separated`
+/// 每张卡 10dp 的左边距、容器右 padding 4dp；这里用 `ListView.separated`
 /// 显式表达间距，最后一项之外不再多留白。
 class ShowCardFloorStrip extends StatelessWidget {
   const ShowCardFloorStrip({

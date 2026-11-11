@@ -16,7 +16,7 @@ import 'domain/search_models.dart';
 import 'search_l10n.dart';
 import '../../l10n/l10n.dart';
 
-/// 搜索结果页（企划星 `SearchResultActivity` + 5 个 `SearchResult*Fragment`）。
+/// 搜索结果页。
 ///
 /// ## 查询词来自路由
 ///
@@ -26,12 +26,12 @@ import '../../l10n/l10n.dart';
 ///
 /// ## 分域
 ///
-/// 「全部 / 企划 / 动态」三栏。原项目还有「商品」栏，本项目没有商品数据源，
-/// 所以**不声明**它——见 `SearchScope` 的注释。
+/// 「全部 / 企划 / 动态」三栏。没有商品数据源，
+/// 所以**不声明**「商品」栏——见 `SearchScope` 的注释。
 ///
 /// ## 「全部」栏只给预览
 ///
-/// 每类最多 3 条 + 「查看全部」跳到对应分域。企划星的「全部」也是这个策略，
+/// 每类最多 3 条 + 「查看全部」跳到对应分域，
 /// 否则用户永远不会点开分域 tab。
 class SearchResultPage extends ConsumerStatefulWidget {
   const SearchResultPage({super.key, required this.query});

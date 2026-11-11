@@ -18,15 +18,13 @@ import 'domain/domain.dart';
 import 'widgets/payment_channel_sheet.dart';
 import '../../l10n/l10n.dart';
 
-/// 订单详情页（企划星 `MyOrderActivity` 的详情 + `OrderDetailWebFragment` 的原生化）。
+/// 订单详情页（原生实现，不走 H5）。
 ///
 /// ## 为什么从面板改成独立页
 ///
 /// 订单列表原本用一个 `_OrderDetailSheet` 底部面板展示详情。面板的问题不是
 /// 样式，而是**装不下**：完整详情有状态头、企划、回报档位、支持人、交付方式、
 /// 金额明细、订单信息七段，塞进半屏面板只能滚动，且返回手势与列表滚动冲突。
-/// 企划星在 Android 侧也是独立 Activity（`OrderDetailWebActivity` 走 H5，
-/// 原生详情在 `MyOrderActivity` 里）。
 ///
 /// ## 数据来源
 ///
@@ -223,9 +221,9 @@ class _OrderDetailBody extends ConsumerWidget {
   }
 }
 
-/// 状态头（`view_order_detail_status.xml`）。
+/// 状态头。
 ///
-/// 不同状态给不同的副文案。**企划星的"待付款"还带一个倒计时**，这里只给截止
+/// 不同状态给不同的副文案。**"待付款"刻意不带倒计时**，只给截止
 /// 时刻：倒计时需要 1 秒一次的定时器，而定时器会让所有 `pumpAndSettle`
 /// 类测试永远等不到静止。截止时刻同样能回答"我还有多久"。
 class _StatusHeader extends StatelessWidget {
@@ -306,7 +304,7 @@ class _StatusHeader extends StatelessWidget {
   }
 }
 
-/// 演出信息段（点进去看详情）。
+/// 企划信息段（点进去看详情）。
 class _ShowSection extends StatelessWidget {
   const _ShowSection({required this.show});
 
@@ -428,7 +426,7 @@ class _ActionBar extends ConsumerWidget {
           onTap: () => context.push(
             '/order/refund'
             '?number=${Uri.encodeComponent(order.number.value)}'
-            // P1-01：退款可退额按实付金额（paymentAmount）计算，而非票面子小计。
+            // 退款可退额按实付金额（paymentAmount）计算，而非回报档位小计。
             '&amount=${order.quote?.paymentAmount.minorUnits ?? order.goodsTotal.minorUnits}',
           ),
         ),
@@ -467,7 +465,7 @@ class _ActionBar extends ConsumerWidget {
           onTap: () => context.push(
             '/order/refund'
             '?number=${Uri.encodeComponent(order.number.value)}'
-            // P1-01：退款可退额按实付金额（paymentAmount）计算，而非票面子小计。
+            // 退款可退额按实付金额（paymentAmount）计算，而非回报档位小计。
             '&amount=${order.quote?.paymentAmount.minorUnits ?? order.goodsTotal.minorUnits}',
           ),
         ),

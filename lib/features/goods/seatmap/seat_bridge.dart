@@ -108,7 +108,7 @@ String? _hexColor(int? argb) {
   return '#${rgb.toRadixString(16).padLeft(6, '0').toUpperCase()}';
 }
 
-/// 区域票价（同一区域内票价一致；取首个有价座位）。
+/// 区域单价（同一区域内单价一致；取首个有价座位）。
 int _areaPrice(SeatArea area) {
   for (final row in area.rows) {
     for (final seat in row.seats) {

@@ -2,11 +2,9 @@ import 'package:core/domain.dart';
 
 import '../domain/group_buy.dart';
 
-/// 拼团演示数据。
-///
-/// 对齐 Android `PinTuanService.fetchPinTuanCampaign()` 返回的 `PinTuanInfo`。
+/// 组队支持演示数据。
 abstract final class DemoGroupBuy {
-  /// 演示拼团列表。
+  /// 演示组队支持列表。
   static final List<GroupBuyInfo> campaigns = <GroupBuyInfo>[
     GroupBuyInfo(
       id: 101,

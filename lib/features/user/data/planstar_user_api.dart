@@ -222,7 +222,7 @@ final class WalletAccountInfo {
 
 /// 用户资料 DTO。
 ///
-/// 企划星 `v1/user/` 返回的字段非常多，这里只提取 UI 需要的。
+/// `v1/user` 返回的字段非常多，这里只提取 UI 需要的。
 @freezed
 abstract class UserProfileDto with _$UserProfileDto {
   const factory UserProfileDto({

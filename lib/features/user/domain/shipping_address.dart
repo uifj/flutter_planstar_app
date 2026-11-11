@@ -3,11 +3,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'shipping_address.freezed.dart';
 part 'shipping_address.g.dart';
 
-/// 收货地址（企划星 `AddressListActivity` + `item_address.xml`）。
+/// 收货地址。
 ///
-/// 只建模"寄送线下回报"需要的字段。企划星侧还有 `isDefault` / `tag`（家/公司）/
-/// `longitude` / `latitude`——经纬度是给地图选点用的，本项目没有地图选点，
-/// 所以不收；`tag` 没有 UI 入口，也不收。
+/// 只建模"寄送线下回报"需要的字段。`tag`（家/公司）/ `longitude` / `latitude`
+/// 都不收——经纬度是给地图选点用的，本项目没有地图选点；
+/// `tag` 没有 UI 入口。
 @freezed
 abstract class ShippingAddress with _$ShippingAddress {
   const ShippingAddress._();

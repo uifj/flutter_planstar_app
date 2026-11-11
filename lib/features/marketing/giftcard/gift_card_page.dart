@@ -13,12 +13,12 @@ import '../../../l10n/l10n.dart';
 
 /// 礼品卡列表页。
 ///
-/// ## 与 Android 的差异
+/// ## 设计取舍
 ///
-/// - 企划星 `GiftCardActivity` 是单列表 + pick 模式。这里拆成"可用 / 不可用"
-///   两个 Section，更清晰。pick 模式（下单时选礼品卡抵扣）后续在确认订单页实现。
-/// - 卡片颜色分级对齐 Android：≤100 绿、≤200 蓝、≤500 黄、≤1000 红、>1000 黑。
-/// - 绑定入口在 AppBar 右侧「+」，对齐 Android `AddGiftCardActivity`。
+/// - 拆成"可用 / 不可用"两个 Section，而不是单列表，更清晰。
+///   pick 模式（下单时选礼品卡抵扣）后续在确认订单页实现。
+/// - 卡片颜色分级：≤100 绿、≤200 蓝、≤500 黄、≤1000 红、>1000 黑。
+/// - 绑定入口在 AppBar 右侧「+」。
 class GiftCardPage extends ConsumerWidget {
   const GiftCardPage({super.key});
 
@@ -104,7 +104,6 @@ class _SectionHeader extends StatelessWidget {
 
 /// 礼品卡卡片。
 ///
-/// 对齐 Android `item_giftcard.xml`：
 /// 左侧面值色块 + 右侧标题/描述/余额/到期。
 /// 色块颜色按面值分级。
 class _GiftCardItem extends StatelessWidget {
@@ -244,7 +243,7 @@ class _GiftCardItem extends StatelessWidget {
   }
 
   /// 面值对应的颜色。
-  /// 对齐 Android：≤100 绿、≤200 蓝、≤500 黄、≤1000 红、>1000 黑。
+  /// ≤100 绿、≤200 蓝、≤500 黄、≤1000 红、>1000 黑。
   Color _cardColor(GiftCard card, AppColors colors) {
     final yuan = card.denomination.minorUnits ~/ 100;
     if (yuan <= 100) return const Color(0xFF4CAF50);

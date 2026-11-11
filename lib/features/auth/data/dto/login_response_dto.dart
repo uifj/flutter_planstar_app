@@ -1,12 +1,4 @@
-/// 登录响应（来源 `lib\model\LoginBean`）。
-///
-/// ```java
-/// public class LoginBean implements Serializable {
-///     private boolean needCaptcha;
-///     private boolean newUser;
-///     private UserProfile user;
-/// }
-/// ```
+/// 登录响应。
 ///
 /// 三个字段的含义：
 /// - `needCaptcha`：风控要求先过图形验证码，**此时 `user` 是 null**；

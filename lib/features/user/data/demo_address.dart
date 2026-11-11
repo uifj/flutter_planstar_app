@@ -2,7 +2,7 @@ import '../domain/shipping_address.dart';
 
 /// 演示收货地址。
 ///
-/// 企划星从 `v1/address/list` 读。这里造两条，覆盖"默认 / 非默认"两种状态——
+/// 真实模式从 `v1/myaddress` 读。这里造两条，覆盖"默认 / 非默认"两种状态——
 /// 只有一条时看不出"设为默认"这个动作到底改了什么。
 List<ShippingAddress> buildDemoAddresses() {
   return const <ShippingAddress>[

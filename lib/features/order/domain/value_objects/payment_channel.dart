@@ -1,9 +1,9 @@
 import 'package:core/result.dart';
 
-/// 支付渠道（对齐企划星 `PayInfo.channels[].type` 与 `subjectType` 的用法）。
+/// 支付渠道（对应 `PayInfo.channels[].type` 与 `subjectType` 的用法）。
 ///
-/// 注意企划星有**两套独立编码**：`orderType`（下单）与 `subjectType`（支付），
-/// 混用会导致"改错一个就付不了款"（`wiki_zh/12` §3.5.7）。这里把它们分在两个
+/// 注意有**两套独立编码**：`orderType`（下单）与 `subjectType`（支付），
+/// 混用会导致"改错一个就付不了款"。这里把它们分在两个
 /// 枚举里：本枚举对应支付渠道，下单类型见 `OrderType`。
 enum PaymentChannel {
   /// 微信支付。
@@ -15,7 +15,7 @@ enum PaymentChannel {
   /// 云闪付 / 银行卡。
   unionPay('unionpay'),
 
-  /// 信用付（花呗分期 / 企划星信用购）。
+  /// 信用付（花呗分期 / 平台信用购）。
   creditPay('creditpay'),
 
   /// 余额 / 礼品卡全额支付。

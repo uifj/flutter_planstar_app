@@ -15,23 +15,23 @@ import 'application/auth_state.dart';
 import 'domain/auth_failure.dart';
 import '../../l10n/l10n.dart';
 
-/// 登录 / 注册页（`layout_login_register.xml`）。
+/// 登录 / 注册页。
 ///
-/// ## 结构（尺寸全部对齐来源 XML）
+/// ## 结构
 ///
 /// - 顶部纵向渐变头 `#FFFFE9EF → #FFFFFFFF`：24dp 关闭按钮（距顶 45dp、
-///   距左 20dp）→ 24dp 高字标（`ps_logo_name`，marginTop 24dp）→
+///   距左 20dp）→ 24dp 高字标（Lucide 星标 + 文字，marginTop 24dp）→
 ///   24sp 粗体标题（marginTop 12dp）；
 /// - 手机号输入行 52dp（左右 20dp，hint `请输入手机号`）+ 1dp 分隔线；
 /// - 验证码行 52dp：左侧输入框 + 右侧 79×30 的「获取验证码」
 ///   （14sp `#ffff2261`，不可用时 alpha 0.5）；切到密码登录时换成密码行；
-/// - 1dp 分隔线 + 48dp 登录按钮（渐变 `#ffff2661 → #ffff5180`，圆角 8，
+/// - 1dp 分隔线 + 48dp 登录按钮（纯品牌色实底，圆角 8，
 ///   16sp 粗体白字，不可用时 alpha 0.3）；
 /// - 36dp 协议行：14dp 勾选框 + 「已阅读并同意《注册协议》和《隐私协议》」
-///   （12sp，说明文字 `text_3`、协议名 `text_0`）+ 右对齐的
+///   （12sp，说明文字 `textTertiary`、协议名 `textPrimary`）+ 右对齐的
 ///   「密码登录 / 验证码登录」；
 /// - 底部块（距屏底 64dp）：「更多登录方式」两侧细线 + 46dp 微信入口 +
-///   12sp `text_3` 文案。
+///   12sp `textTertiary` 文案。
 ///
 /// ## 这一页现在接的是**真实接口**
 ///
@@ -40,30 +40,30 @@ import '../../l10n/l10n.dart';
 /// `docs/api-contract.md`）。页面自己**不发请求、不拼 token**，只做三件事：
 /// 表单校验、把失败翻译成 UI 动作、成功后导航。
 ///
-/// 与来源 `BaseLoginActivity` 的行为对齐点：
+/// 各场景的行为：
 ///
-/// | 场景 | 来源 | 这里 |
-/// |---|---|---|
-/// | 发码成功 | `showToast("验证码已发送")` + 60s 倒计时 | 同（倒计时在 Controller 里，离开页面不泄漏） |
-/// | 验证码错 | toast 服务端原文 `验证码不正确` | 同（`AuthFailureKind.business` 直接展示原文） |
-/// | 账号被锁 | 不可取消的 `AlertDialog` | 同（`AuthFailureKind.accountLocked`） |
-/// | 风控要图形码 | `lay_captcha` 从 `gone` 切 `visible` 后重试 | 弹 [_CaptchaDialog]，拿字符后**重放原请求** |
-/// | 登录成功 | `finish()` + `EventBus` 通知上一页 | 写会话状态 → 路由 redirect 放行 → 回 `from` |
+/// | 场景 | 行为 |
+/// |---|---|
+/// | 发码成功 | toast `authCodeSent` + 60s 倒计时（倒计时在 Controller 里，离开页面不泄漏） |
+/// | 验证码错 | toast 服务端原文 `验证码不正确`（`AuthFailureKind.business` 直接展示原文） |
+/// | 账号被锁 | 不可取消的 `AlertDialog`（`AuthFailureKind.accountLocked`） |
+/// | 风控要图形码 | 弹 [_CaptchaDialog]，拿字符后**重放原请求** |
+/// | 登录成功 | 写会话状态 → 路由 redirect 放行 → 回 `from` |
 ///
-/// **密码登录**：来源有这个入口，服务端**当前已关闭**——实测返回
+/// **密码登录**：入口保留，但服务端**当前已关闭**——实测返回
 /// `请使用手机号验证码登录，若手机号登录异常，请联系客服`（HTTP 500 +
-/// `text/plain`）。所以这里保留切换按钮（UI 对齐），但把服务端原文如实弹出，
+/// `text/plain`）。所以这里保留切换按钮，但把服务端原文如实弹出，
 /// 不自造"密码错误"之类的假文案。
 ///
-/// ## 与来源的差异（刻意）
+/// ## 刻意的设计取舍
 ///
-/// 1. 图形验证码在来源里默认 `gone`，这里是**按需弹出**——`needCaptcha`
+/// 1. 图形验证码**按需弹出**，不做常驻行——`needCaptcha`
 ///    只在风控触发时出现，做成常驻一行会让 99% 的用户看到一块空白；
-/// 2. `btn_back` 也是 `gone`，只保留关闭；关闭时若来源页是登录门禁页
+/// 2. 只保留关闭按钮，不做返回；关闭时若来源页是登录门禁页
 ///    （`/order`），未登录会被 redirect 再次踢回登录页，所以退回首页；
 /// 3. 微信登录未集成 SDK，点击给出提示而不是拉起授权；
 /// 4. 协议页在演示版本里不存在，点击弹说明对话框；
-/// 5. 微信图标改用 Lucide 矢量图标重绘（本地图片资源已移除），尺寸仍是 46dp。
+/// 5. 微信图标用 Lucide 矢量图标重绘（不依赖本地图片资源），尺寸仍是 46dp。
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key, this.from});
 
@@ -283,7 +283,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
   }
 
-  /// 账号锁定：来源是**不可取消**的对话框，只有"我知道了"能关。
+  /// 账号锁定：**不可取消**的对话框，只有"我知道了"能关。
   Future<void> _showAccountLocked(String message) {
     final l10n = context.l10n;
     return showDialog<void>(
@@ -363,7 +363,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     title: l10n.authLoginTitle,
                     onClose: _close,
                   ),
-                  // 手机号：来源 marginTop 10dp，左右 20dp。
+                  // 手机号行：marginTop 10dp，左右 20dp。
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 10,
@@ -527,10 +527,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
 /// 图形验证码对话框。
 ///
-/// 来源的 `lay_captcha` 是**内联**在验证码行下面的一行（`ImageView` +
-/// `EditText` + 刷新按钮），从 `gone` 切 `visible`。这里改成对话框：
+/// 图形验证码用对话框承载，而不是在验证码行下面常驻一行
+/// （图片 + 输入框 + 刷新按钮）：
 /// 风控是低频事件，为它长期占一行 40dp 不划算；对话框还能保证"必须处理
-/// 完才能继续"，与来源"不填图形码就发不出去"的效果一致。
+/// 完才能继续"，也就是"不填图形码就发不出去"。
 ///
 /// 图片是 `v1/user/captcha` 直接返回的 PNG 字节（`image/png`），
 /// 不是 base64、不是 URL，所以用 [Image.memory]。
@@ -701,14 +701,14 @@ class _Header extends StatelessWidget {
     final AppColors colors = context.appColors;
     return Container(
       decoration: BoxDecoration(
-        // 品牌淡色 → 卡片底，替代原 `gradient_ffe9ef_to_ffffff` 洋红渐层。
+        // 品牌淡色 → 卡片底的纵向渐变，不用洋红渐层。
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: <Color>[colors.brandSubtle, colors.bgCard],
         ),
       ),
-      // 来源：btn_close marginTop 45dp、marginStart 20dp。45dp 是距屏幕顶的
+      // 关闭按钮：marginTop 45dp、marginStart 20dp。45dp 是距屏幕顶的
       // 绝对距离，含状态栏，所以这里减掉安全区再补回去。
       padding: EdgeInsets.only(top: topInset + 21, left: 20, right: 20),
       child: Column(
@@ -720,7 +720,7 @@ class _Header extends StatelessWidget {
             child: Icon(LucideIcons.x, size: 24, color: colors.textPrimary),
           ),
           const SizedBox(height: 24),
-          // 品牌字标：本地图片资源已移除，改用 Lucide 星标 + 文字。
+          // 品牌字标：用 Lucide 星标 + 文字，不依赖本地图片资源。
           SizedBox(
             height: 24,
             child: Row(
@@ -755,7 +755,7 @@ class _Header extends StatelessWidget {
   }
 }
 
-/// 52dp 输入行（对应 `EditTextHasClear`：有内容时右侧出现清除按钮）。
+/// 52dp 输入行：有内容时右侧出现清除按钮。
 class _LoginField extends StatelessWidget {
   const _LoginField({
     required this.controller,
@@ -822,7 +822,7 @@ class _LoginField extends StatelessWidget {
   }
 }
 
-/// 1dp 分隔线（`view_divider_light`，左右 20dp）。
+/// 1dp 分隔线（左右 20dp）。
 class _LoginDivider extends StatelessWidget {
   const _LoginDivider();
 
@@ -835,7 +835,7 @@ class _LoginDivider extends StatelessWidget {
   }
 }
 
-/// 79×30 的「获取验证码」，不可用时 alpha 0.5（与来源一致）。
+/// 79×30 的「获取验证码」，不可用时 alpha 0.5。
 ///
 /// `⚠` 不可用时**仍然挂 onTap**（只是变淡），由 [_LoginPageState._sendCode]
 /// 自己判断"手机号没填 → 提示"还是"冷却中 → 忽略"。挂 `null` 的话，
@@ -876,7 +876,7 @@ class _SendCodeButton extends StatelessWidget {
   }
 }
 
-/// 48dp 渐变登录按钮（`login_button_gradient`，圆角 8）。
+/// 48dp 登录按钮（圆角 8）。
 ///
 /// 同 [_SendCodeButton]：不可用时只降透明度，不摘 `onTap`——这样"没勾协议"
 /// "验证码位数不对"都能给出具体原因，而不是点了没动静。
@@ -903,7 +903,7 @@ class _LoginButton extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            // TUIKit 主按钮是纯品牌蓝实底，不用渐变。
+            // 主按钮用纯品牌色实底，不用渐变。
             color: context.appColors.brand,
           ),
           child: Text(
@@ -920,7 +920,7 @@ class _LoginButton extends StatelessWidget {
   }
 }
 
-/// 14dp 协议勾选框（`ic_uncheck` 未随资源迁移，按品牌色重绘）。
+/// 14dp 协议勾选框（按品牌色重绘，不依赖图片资源）。
 class _AgreementCheckbox extends StatelessWidget {
   const _AgreementCheckbox({
     super.key,
@@ -1003,7 +1003,7 @@ class _BottomWays extends StatelessWidget {
               ),
             ],
           ),
-          // 来源 marginBottom 30dp。
+          // marginBottom 30dp。
           const SizedBox(height: 30),
           GestureDetector(
             behavior: HitTestBehavior.opaque,

@@ -11,7 +11,8 @@ import 'seat_map_webview.dart';
 import 'seat_selection_providers.dart';
 import '../../../l10n/l10n.dart';
 
-/// 选座页（企划星 `SelectTicketSeatMapActivity` / `ChooseTicketSeatTableFragment`）。
+/// 选座页。
+/// 线下回报场次的可选座位图（POSITIONING.md §10 降级能力），仅线下活动型企划使用。
 ///
 /// ## 结构
 ///
@@ -24,10 +25,10 @@ import '../../../l10n/l10n.dart';
 /// 选中态以 Riverpod 为唯一真源，WebView 通过 `PsSeatBridge` 通道回传全量
 /// 选中集合，Flutter 校验后落库，并在返回/重建时回写 WebView 完成回显。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意不做的事
 ///
-/// - **不做 Mapbox**：企划星用 Mapbox GL 渲染场馆俯视图，点击区域后展开座位。
-///   本项目用**网格表格模式**（对齐 `ChooseTicketSeatTableFragment`）。
+/// - **不做地图引擎**：不渲染活动场地俯视图、也不做点击区域后展开座位那套交互。
+///   这里用**网格表格模式**直接铺开区域 → 排 → 座位。
 /// - **锁座是本地锁**：选中即写入本地锁表（默认 10 分钟），取消 / 清空 / 超时释放。
 ///   服务端座位库存尚未接入，锁只在当前 App 进程内有效。
 /// - **连座校验**：进入确认页前校验「同一区域 + 同一排 + 列号连续」。
@@ -122,7 +123,7 @@ class SeatSelectionPage extends ConsumerWidget {
               }
               // 选座结果通过 `seatSelectionProvider(showId)` 传给确认订单页：
               // 确认页与本页共享同一个 ProviderScope，读取到的是同一份
-              // 座位对象（区域/排/座/票价），无需在 URL 里重复编码。
+              // 座位对象（区域/排/座/单价），无需在 URL 里重复编码。
               context.push('/order/confirm?showId=$showId');
             },
           ),

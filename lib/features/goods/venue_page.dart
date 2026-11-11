@@ -13,19 +13,19 @@ import '../catalog/domain/show_summary.dart';
 import '../catalog/ui/show_cards.dart';
 import '../../l10n/l10n.dart';
 
-/// 场馆详情页（企划星 `VenueDetailActivity` + `VenueDetailFragment`）。
+/// 活动场地详情页。
 ///
 /// ## 为什么放在 `goods` 而不是新建 feature
 ///
-/// 场馆页的内容只有两件事：**场馆是谁**（名称/地址）+ **这里演什么**
-/// （该场馆的近期演出）。它不持有任何自己的领域模型——`VenueSummary` 在
-/// `catalog`，演出列表也在 `catalog`。为它单开一个 feature 会得到一个
+/// 活动场地页的内容只有两件事：**场地是谁**（名称/地址）+ **这里有什么企划**
+/// （该场地的近期企划）。它不持有任何自己的领域模型——`VenueSummary` 在
+/// `catalog`，企划列表也在 `catalog`。为它单开一个 feature 会得到一个
 /// 只有一个文件、且所有依赖都指向 `catalog` 的目录，不如就近放在 `goods`
-/// （演出详情域）里。
+/// （企划详情域）里。
 ///
-/// ## 与 Android 的差异
+/// ## 刻意不做的事
 ///
-/// 原页有三块：场馆信息、**地图**（百度地图 `MapView` + 周边）、近期演出。
+/// 完整的场地页有三块：场地信息、**地图**（百度地图 + 周边）、近期企划。
 /// 这里**不做地图**：`flutter_baidu_mapapi_map` 虽然已在依赖里，但演示数据
 /// 没有真实经纬度，画一个假坐标点比不画更误导。地址行给了「复制地址」，
 /// 这是没有地图时最实用的替代动作。
@@ -83,7 +83,7 @@ class VenuePage extends ConsumerWidget {
   }
 }
 
-/// 场馆头部（`view_venue_header.xml`）。
+/// 活动场地头部。
 class _VenueHeader extends StatelessWidget {
   const _VenueHeader({required this.venue, required this.city});
 

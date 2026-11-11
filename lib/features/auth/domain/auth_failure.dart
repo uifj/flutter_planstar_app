@@ -1,14 +1,14 @@
 /// 登录失败的结构化描述。
 ///
-/// 为什么需要分类而不是"一个 message 字符串"：来源把服务端错误体**原文直弹**
-/// （`showToast(response.errorBody().string())`），于是
+/// 为什么需要分类而不是"一个 message 字符串"：服务端错误体是**原文直弹**的
+/// 中文文本，于是
 /// "验证码不正确 / 该账号已被锁定 / 图形验证码错误" 在 UI 上是同一个东西，
-/// 唯一的区别靠 `strString.contains("该账号已被锁定")` 这种字符串判断来做
-/// （`BaseLoginActivity` 第 537 行附近）。这里把那些 `contains` 提成枚举，
+/// 唯一的区别只能靠 `message.contains("该账号已被锁定")` 这种字符串判断来做。
+/// 这里把那些 `contains` 收在仓库层、提成枚举，
 /// UI 只 switch 一次。
 ///
 /// 与 `package:core/result.dart` 的关系：传输层与仓库层仍然统一返回 `Result`/`Failure`
-/// （全项目只有一套失败契约，30-02）。[AuthFailure] 是**面向 UI 的视图**，
+/// （全项目只有一套失败契约）。[AuthFailure] 是**面向 UI 的视图**，
 /// 由 [AuthFailure.fromFailure] 从 `Failure` 派生——分类信息装在
 /// `Failure.code` 里（见 [AuthFailureCodes]），因为 `Failure` 的 `code`
 /// 本来就是"机器可读的失败码"。
@@ -21,7 +21,7 @@ enum AuthFailureKind {
   /// 服务端明确拒绝，[AuthFailure.message] 就是服务端原文（可直接展示）。
   business,
 
-  /// 账号被锁定（来源会弹一个不可取消的对话框）。
+  /// 账号被锁定（UI 弹一个不可取消的对话框）。
   accountLocked,
 
   /// 需要图形验证码（风控触发）。

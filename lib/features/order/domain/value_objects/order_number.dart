@@ -2,7 +2,7 @@ import 'package:core/domain.dart';
 
 /// 订单号：`PN` + `yyyyMMdd` + 6 位序号，例 `PN20261101000123`。
 ///
-/// 为什么要值对象：企划星侧订单号是散落的 `String`，前端没有任何格式校验，
+/// 为什么要值对象：订单号如果只是散落的 `String`，前端没有任何格式校验，
 /// 展示层（我的订单、支付页、客服工单）各自拼各自的。抽成值对象后，
 /// 格式只在一处定义，且**非法订单号在构造时就被拒绝**，不会流到网络请求里。
 final class OrderNumber extends ValueObject {

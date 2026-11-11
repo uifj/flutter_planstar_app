@@ -139,15 +139,15 @@ final class RemoteAuthRepository implements AuthRepository {
 
   /// 把传输层失败归一成认证失败。
   ///
-  /// 关键词判断来自来源 `BaseLoginActivity`：
+  /// 判断依据是服务端错误体里的关键词：
   ///
-  /// ```java
-  /// if (strString.contains("该账号已被锁定")) showAccountLockedAlert(...);
-  /// else if (strString.contains("图形验证码错误")) { reloadCaptcha(); ... }
+  /// ```text
+  /// 含「锁定」       → accountLocked
+  /// 含「图形验证码」  → needsCaptcha
   /// ```
   ///
-  /// 来源靠两次 `contains` 做分支，这里把它提成 `Failure.code`；
-  /// 判断依据保持一致，因为**服务端文案没有错误码**，只能靠文本。
+  /// 关键词分支提成 `Failure.code`，而不是让 UI 自己去 `contains`；
+  /// 只能靠文本，因为**服务端文案没有错误码**。
   static Failure _normalize(Failure failure) {
     // 网络 / 超时 / 401 原样透传：`Failure.type` 已经足够表达，
     // `AuthFailure.fromFailure` 会按类型归一。
