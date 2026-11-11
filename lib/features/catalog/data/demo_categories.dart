@@ -1,8 +1,8 @@
-/// 品类目录：编译期常量（9 个一级品类 + 各自的二级标签）。
+/// 品类目录：编译期常量（10 个一级品类 + 各自的二级标签）。
 ///
 /// 产品定位是「企划支持平台」，品类围绕可被支持、可被交付的创意与经验内容：
 /// 游戏 / 小说 / 同人 / 面经为四大主品类，其余为扩展品类。
-/// 数据形状与原 JSON 配置一致，供首页 / 品类页 / 搜索筛选复用。
+/// 数据形状与服务端分类 JSON 一致，供首页 / 品类页 / 搜索筛选复用。
 library;
 
 import '../domain/show_category.dart';
@@ -131,6 +131,21 @@ const List<ShowCategory> demoCategories = <ShowCategory>[
       SubCategoryTag(id: 902, categoryId: 9, name: '手作'),
       SubCategoryTag(id: 903, categoryId: 9, name: '公益创意'),
       SubCategoryTag(id: 904, categoryId: 9, name: '其他'),
+    ],
+  ),
+  ShowCategory(
+    id: 10,
+    name: '自媒体企划',
+    enName: 'selfmedia',
+    pinyin: 'zimeitiqihua',
+    status: 1,
+    subTags: <SubCategoryTag>[
+      SubCategoryTag(id: 1001, categoryId: 10, name: '短视频栏目'),
+      SubCategoryTag(id: 1002, categoryId: 10, name: '图文专栏'),
+      SubCategoryTag(id: 1003, categoryId: 10, name: '直播企划'),
+      SubCategoryTag(id: 1004, categoryId: 10, name: '知识专栏'),
+      SubCategoryTag(id: 1005, categoryId: 10, name: '播客节目'),
+      SubCategoryTag(id: 1006, categoryId: 10, name: '社群共创'),
     ],
   ),
 ];

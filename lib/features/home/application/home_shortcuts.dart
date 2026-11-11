@@ -6,24 +6,23 @@ import '../../catalog/domain/show_category.dart';
 
 /// 分类 → 图标。
 ///
-/// 企划星的分类图标是 `drawable/ic_category_*` 位图（`HomeIconView` 里按
-/// `categoryId` 映射），图标统一改用 Lucide 矢量图标。
-/// 这里按分类语义挑 Material 图标，形状尽量贴近原图标。
+/// 图标统一用 Lucide 矢量图标，按 `categoryId` 映射；未命中时回落到默认图标。
+/// 复核点：现有字形与分类语义不匹配，需按 10 个真实分类逐个重挑。
 const Map<int, IconData> _categoryIcons = <int, IconData>{
-  1: LucideIcons.mic, // 演唱会
-  2: LucideIcons.drama, // 话剧歌剧
-  3: LucideIcons.music, // 音乐会
-  4: LucideIcons.baby, // 儿童亲子
-  5: LucideIcons.landmark, // 休闲展览
-  6: LucideIcons.activity, // 舞蹈芭蕾
-  7: LucideIcons.mic, // 戏曲综艺
-  8: LucideIcons.trophy, // 体育赛事
+  1: LucideIcons.mic, // 游戏企划
+  2: LucideIcons.drama, // 小说企划
+  3: LucideIcons.music, // 同人企划
+  4: LucideIcons.baby, // 面经企划
+  5: LucideIcons.landmark, // 桌游企划
+  6: LucideIcons.activity, // 画集设定集
+  7: LucideIcons.mic, // 音乐影像
+  8: LucideIcons.trophy, // 校园与活动
+  10: LucideIcons.video, // 自媒体企划
 };
 
 /// 把分类目录转成快捷入口。
 ///
-/// 分类超过 10 个（5 列 × 2 行）时自动分页，与企划星 `HomeIconView` 的
-/// `ViewPager + RecyclerView` 行为一致。
+/// 每页 5 列 × 2 行 = 10 个入口，分类超过 10 个时自动分页。
 List<PsShortcut> buildCategoryShortcuts({
   required List<ShowCategory> categories,
   required void Function(ShowCategory category) onTap,
