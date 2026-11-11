@@ -18,9 +18,8 @@
 # 调用侧统一走 `lib/l10n/l10n.dart` 的 `context.l10n.xxx`：该文件是手写入口，
 # re-export `lib/l10n/generated/` 下的全部生成类与 `AppL10n` 门面。
 #
-# `⚠` 相对来源的刻意改动：来源 `app_common` 有**两套** l10n
-# （`lib/l10n/` 的 ARB 驱动 + `lib/localizations/` 的手写分文件，30-11）。
-# 这里只有一套：ARB → gen-l10n 生成，手写的那套不要。
+# `⚠` 只允许存在**一套** l10n：ARB → gen-l10n 生成。不要再引入手写的
+# 分文件本地化类，两套并存会让同一个 key 出现两份互相漂移的文案。
 arb-dir: lib/l10n/arb
 output-dir: lib/l10n/generated
 synthetic-package: false

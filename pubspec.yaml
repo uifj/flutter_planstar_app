@@ -1,5 +1,5 @@
 name: planstar
-description: "企划星 · Planstar — 做项目前由网友投票的投票决策类应用（Clean DDD + Riverpod + GoRouter）。"
+description: "企划星 · Planstar — 企划支持平台：做项目前由网友投票、星推官审批通过与驳回，立项后支持企划落地（Clean DDD + Riverpod + GoRouter）。"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -15,10 +15,7 @@ environment:
   sdk: ^3.11.5
 
 # ── Pub Workspace ────────────────────────────────────────────────────────────
-# 只纳入自建的 infras/core 与 infras/core_design_system。vendored 的 pudding /
-# appunits 虽然也写了 `resolution: workspace`，但**故意不列在这里**：它们带
-# firebase_remote_config、grpc、gql、sentry 等重依赖，纳入解析会显著拖慢
-# pub get 且易失败。
+# 只纳入自建的 infras/core 与 infras/core_design_system。
 workspace:
   - packages/infras/core
   - packages/infras/core_design_system
