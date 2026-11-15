@@ -137,6 +137,33 @@ void main() {
     expect(find.text('验证码登录'), findsOneWidget);
   });
 
+  testWidgets('输入行不继承主题的填充背景与聚焦描边（无小方框）', (WidgetTester tester) async {
+    await pumpLogin(tester);
+
+    // 先证明环境确实带着"会产生小方框"的主题：filled 底 + 非 none 的聚焦描边。
+    // 否则这条用例是空跑——主题本来就没框时，断言 none 毫无意义。
+    final theme = AppTheme.light().inputDecorationTheme;
+    expect(theme.filled, isTrue);
+    expect(theme.focusedBorder, isA<OutlineInputBorder>());
+
+    // 验证码模式下有手机号 + 验证码两个输入行。TextField 会把主题合并后的
+    // effectiveDecoration 交给 InputDecorator，所以这里读到的就是真正渲染用的装饰。
+    final List<InputDecorator> decorators = tester
+        .widgetList<InputDecorator>(find.byType(InputDecorator))
+        .toList();
+    expect(decorators.length, 2);
+
+    for (final InputDecorator decorator in decorators) {
+      final InputDecoration d = decorator.decoration;
+      // 填充背景关掉：否则每行后面有一块 bgSubtle 圆角底（常驻的小方框）。
+      expect(d.filled, isNot(isTrue));
+      // 会被渲染到的三个边框槽位都必须是 none，聚焦时才不会冒出品牌色描边框。
+      expect(d.border, InputBorder.none);
+      expect(d.enabledBorder, InputBorder.none);
+      expect(d.focusedBorder, InputBorder.none);
+    }
+  });
+
   testWidgets('未勾选协议时提交被拦下，不调接口也不写登录态', (WidgetTester tester) async {
     final env = await pumpLogin(tester);
     await fill(tester, '13800138000', '123456');

@@ -789,7 +789,12 @@ class _LoginField extends StatelessWidget {
               style: TextStyle(fontSize: 15, color: colors.textPrimary),
               decoration: InputDecoration(
                 isDense: true,
+                // 主题默认 filled + focusedBorder 会从空槽位继承进来，只设
+                // border:none 挡不住，聚焦时冒出小方框；这里逐槽关掉保持下划线行。
+                filled: false,
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
                 hintText: hint,
                 hintStyle: TextStyle(fontSize: 15, color: colors.textDisabled),
