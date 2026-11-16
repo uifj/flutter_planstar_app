@@ -30,7 +30,7 @@ import '../../l10n/l10n.dart';
 ///
 /// 没有引入 `flutter_staggered_grid_view`：卡片只有"标题 1 行 / 2 行"两种高度，
 /// 用"两列 `Column` 交替装填"就能得到真正的瀑布流，且不增加依赖。
-/// 20 条数据全量构建，滚动性能足够；接真实分页时再换 `SliverGrid`。
+/// 数据按 20 条一页触底续拉，单次构建量可控。
 class DiscoverPage extends ConsumerStatefulWidget {
   const DiscoverPage({super.key});
 
@@ -44,6 +44,26 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
     context.l10n.discoverPage_39_2,
   ];
   int _tab = 0;
+
+  bool _loadingMore = false;
+  bool _exhausted = false;
+
+  /// 触底追加下一页热门动态；「关注」流只有一页，不参与分页。
+  Future<void> _loadMore() async {
+    if (_loadingMore || _exhausted || _tab != 0) return;
+    final notifier = ref.read(feedControllerProvider.notifier);
+    if (!notifier.hasMore) {
+      setState(() => _exhausted = true);
+      return;
+    }
+    setState(() => _loadingMore = true);
+    await notifier.loadMore();
+    if (!mounted) return;
+    setState(() {
+      _loadingMore = false;
+      _exhausted = !notifier.hasMore;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +88,12 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
               _DiscoveryTopBar(
                 tabs: _tabs,
                 selected: _tab,
-                onSelect: (index) => setState(() => _tab = index),
+                onSelect: (index) => setState(() {
+                  if (index == _tab) return;
+                  _tab = index;
+                  _loadingMore = false;
+                  _exhausted = false;
+                }),
                 // 搜索图标进独立的搜索页（原先是 `context.go('/')` 回首页，
                 // 那是"点了没反应"的同义词）。
                 onTapSearch: () => context.push('/search'),
@@ -94,7 +119,21 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                           actionLabel: context.l10n.discoverPage_75,
                           onAction: () => setState(() => _tab = 0),
                         )
-                      : _MasonryFeed(posts: list, onTapPost: openPost),
+                      : NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification notification) {
+                            if (notification.metrics.axis == Axis.vertical &&
+                                notification.metrics.extentAfter < 320) {
+                              _loadMore();
+                            }
+                            return false;
+                          },
+                          child: _MasonryFeed(
+                            posts: list,
+                            onTapPost: openPost,
+                            loadingMore: _tab == 0 && _loadingMore,
+                            exhausted: _tab == 0 && _exhausted,
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -217,14 +256,25 @@ class _DiscoveryTopBar extends StatelessWidget {
 }
 
 /// 双列瀑布流。
+///
+/// 数据按服务端分页一页页追加，滚动到底自动续拉；
+/// 每次只多构建 20 张卡，避免一次性铺满整屏。
 class _MasonryFeed extends ConsumerWidget {
-  const _MasonryFeed({required this.posts, required this.onTapPost});
+  const _MasonryFeed({
+    required this.posts,
+    required this.onTapPost,
+    required this.loadingMore,
+    required this.exhausted,
+  });
 
   final List<FeedPost> posts;
   final void Function(FeedPost post) onTapPost;
+  final bool loadingMore;
+  final bool exhausted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final left = <FeedPost>[];
     final right = <FeedPost>[];
     for (var i = 0; i < posts.length; i++) {
@@ -257,19 +307,54 @@ class _MasonryFeed extends ConsumerWidget {
         12,
         PsFloatingTabBar.bottomClearance(context),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
         children: <Widget>[
-          Expanded(
-            child: Column(
-              children: <Widget>[for (final post in left) buildCard(post)],
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  children: <Widget>[for (final post in left) buildCard(post)],
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  children: <Widget>[for (final post in right) buildCard(post)],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              children: <Widget>[for (final post in right) buildCard(post)],
-            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: loadingMore
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: colors.brand,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        context.l10n.homeFeedLoading,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colors.textTertiary,
+                        ),
+                      ),
+                    ],
+                  )
+                : exhausted
+                ? Text(
+                    context.l10n.homeFeedEnd,
+                    style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                  )
+                : const SizedBox(height: 20),
           ),
         ],
       ),

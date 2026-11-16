@@ -12,15 +12,63 @@ import 'feed_api_providers.dart';
 /// 用 `Notifier` 而不是 `Provider`：发布动态要**就地插入**到列表头部，
 /// 不能靠重建整个列表（那会把用户滚动位置和已加载状态一起丢掉）。
 class FeedController extends AsyncNotifier<List<FeedPost>> {
+  /// 每页 20 条：与后端默认分页一致，触底再续拉。
+  static const int _pageSize = 20;
+
+  int _page = 1;
+  bool _hasMore = true;
+
+  /// 是否还有下一页（给发现页做触底加载用）。
+  bool get hasMore => _hasMore;
+
   @override
   Future<List<FeedPost>> build() async {
-    if (ref.watch(dataSourcePolicyProvider).isDemo) return buildDemoFeed();
+    _page = 1;
+    _hasMore = true;
+    if (ref.watch(dataSourcePolicyProvider).isDemo) {
+      _hasMore = false;
+      return buildDemoFeed();
+    }
     final PlanstarFeedApi api = ref.read(planstarFeedApiProvider);
-    final result = await api.fetchHotFeeds(page: 1, pageSize: 20);
-    return result.fold(
+    final result = await api.fetchHotFeeds(page: 1, pageSize: _pageSize);
+    final feeds = result.fold(
       onSuccess: (List<FeedPost> feeds) => feeds,
       onFailure: (failure) => throw failure,
     );
+    _hasMore = feeds.length >= _pageSize;
+    return feeds;
+  }
+
+  /// 加载下一页并追加；失败时保留已有列表，只停止继续请求。
+  Future<void> loadMore() async {
+    if (!_hasMore || state.isLoading) return;
+    if (ref.read(dataSourcePolicyProvider).isDemo) return;
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    final PlanstarFeedApi api = ref.read(planstarFeedApiProvider);
+    final result = await api.fetchHotFeeds(
+      page: _page + 1,
+      pageSize: _pageSize,
+    );
+    final next = result.fold(
+      onSuccess: (List<FeedPost> feeds) => feeds,
+      onFailure: (_) => const <FeedPost>[],
+    );
+    _page += 1;
+    if (next.isEmpty) {
+      // 到底了：保持原状态不变，只把 hasMore 关掉。
+      _hasMore = false;
+      state = AsyncData(current);
+      return;
+    }
+    final seen = <String>{for (final post in current) post.id};
+    state = AsyncData(<FeedPost>[
+      ...current,
+      for (final post in next)
+        if (seen.add(post.id)) post,
+    ]);
+    _hasMore = next.length >= _pageSize;
   }
 
   /// 发布一条动态（本地插入，不落库）。
