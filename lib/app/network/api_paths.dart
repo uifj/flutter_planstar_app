@@ -9,6 +9,7 @@ abstract final class ApiPaths {
   static const String homeBanners = 'v1/home/banners';
 
   // ── project ──────────────────────────────────────────────────────────
+  static const String categories = 'v1/categories';
   static const String projectsHot = 'v1/projects/hot';
   static const String projects = 'v1/projects';
   static const String rankings = 'v1/rankings';
@@ -90,6 +91,7 @@ abstract final class ApiPaths {
   /// 所有实际使用的路径（动态段用示例 id `1` 展开），供契约自检。
   static List<String> get all => <String>[
     homeBanners,
+    categories,
     projectsHot,
     projects,
     projectDetail('1'),

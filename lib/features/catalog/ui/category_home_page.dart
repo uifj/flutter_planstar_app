@@ -29,10 +29,11 @@ import '../../../l10n/l10n.dart';
 ///
 /// - 不做"日历"入口和"城市日历"楼层：日历需要服务端按日期返回企划，
 ///   这里没有数据源。
-/// - 列表由服务端分页返回，按 `page/pageSize` 触底追加；分类与二级
-///   标签仍是客户端过滤（企划没有 `subCategoryId` 字段）。
-/// - 分类切换时不做多页面预加载——数据来自同一个 provider，
-///   切换只是改变过滤条件，不需要多页面实例。
+/// - 列表由服务端分页返回，`categoryId` 也交给服务端筛选，按
+///   `page/pageSize` 触底追加；二级标签仍是客户端过滤（企划没有
+///   `subCategoryId` 字段）。
+/// - 分类切换时不做多页面预加载——每个分类是一个独立的 family feed，
+///   切回来时命中 Riverpod 缓存，不会重复请求。
 class CategoryHomePage extends ConsumerStatefulWidget {
   const CategoryHomePage({super.key, this.initialCategoryId});
 
@@ -47,6 +48,7 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
   late int _selectedCategoryId;
   final Set<int> _selectedSubTagIds = <int>{};
   bool _loadingMore = false;
+  bool _exhausted = false;
 
   @override
   void initState() {
@@ -54,21 +56,29 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
     _selectedCategoryId = widget.initialCategoryId ?? 0;
   }
 
+  ShowFeedQuery get _query => ShowFeedQuery(categoryId: _selectedCategoryId);
+
   /// 触底追加下一页；provider 会保留已有列表并在失败时停止继续请求。
   Future<void> _loadMore() async {
-    if (_loadingMore) return;
-    final notifier = ref.read(showCatalogProvider.notifier);
-    if (!notifier.hasMore) return;
+    if (_loadingMore || _exhausted || _selectedCategoryId == 0) return;
+    final notifier = ref.read(showFeedProvider(_query).notifier);
+    if (!notifier.hasMore) {
+      setState(() => _exhausted = true);
+      return;
+    }
     setState(() => _loadingMore = true);
     await notifier.loadMore();
-    if (mounted) setState(() => _loadingMore = false);
+    if (!mounted) return;
+    setState(() {
+      _loadingMore = false;
+      _exhausted = !notifier.hasMore;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final categories =
-        ref.watch(showCategoriesProvider).valueOrNull ?? const <ShowCategory>[];
+    final categories = ref.watch(showCategoriesProvider);
 
     // 如果初始 categoryId 没有对应分类，取第一个。
     if (_selectedCategoryId == 0 && categories.isNotEmpty) {
@@ -81,18 +91,15 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
 
     final policy = ref.watch(dataSourcePolicyProvider);
     final city = policy.isDemo ? ref.watch(selectedCityProvider) : '全国';
-    final showsAsync = ref.watch(cityShowsProvider);
-    final allShows = showsAsync.valueOrNull ?? const <ShowSummary>[];
+    // 分类未确定（分类目录还在加载）时先不请求列表，避免先拉一次全量再重拉。
+    final showsAsync = _selectedCategoryId == 0
+        ? const AsyncValue<List<ShowSummary>>.data(<ShowSummary>[])
+        : ref.watch(showFeedProvider(_query));
+    final filteredShows = showsAsync.valueOrNull ?? const <ShowSummary>[];
     final hasError = showsAsync.hasError && !showsAsync.hasValue;
-
-    // 按分类 + 二级标签筛选。
-    final filteredShows = allShows.where((show) {
-      if (show.categoryId != _selectedCategoryId) return false;
-      if (_selectedSubTagIds.isEmpty) return true;
-      // 企划没有 subCategoryId 字段，这里只按分类筛选。
-      // 接真实接口后，标签筛选会由服务端 query 参数完成。
-      return true;
-    }).toList();
+    final isLoading =
+        _selectedCategoryId == 0 ||
+        (showsAsync.isLoading && !showsAsync.hasValue);
 
     final topPadding = MediaQuery.paddingOf(context).top;
 
@@ -111,8 +118,11 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
               categories: categories,
               selectedId: _selectedCategoryId,
               onSelect: (id) => setState(() {
+                if (id == _selectedCategoryId) return;
                 _selectedCategoryId = id;
                 _selectedSubTagIds.clear();
+                _loadingMore = false;
+                _exhausted = false;
               }),
             ),
           if (selectedCategory != null && selectedCategory.subTags.isNotEmpty)
@@ -128,7 +138,9 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
               }),
             ),
           Expanded(
-            child: hasError
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
+                : hasError
                 ? PsEmptyState(
                     title: context.l10n.categoryHomePage_116(
                       city,
@@ -138,7 +150,7 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
                     description: psErrorMessage(showsAsync.error!),
                     icon: LucideIcons.wifiOff,
                     actionLabel: context.l10n.actionRetry,
-                    onAction: () => ref.invalidate(showCatalogProvider),
+                    onAction: () => ref.invalidate(showFeedProvider(_query)),
                   )
                 : filteredShows.isEmpty
                 ? PsEmptyState(
@@ -154,7 +166,8 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
                   )
                 : NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification notification) {
-                      if (notification.metrics.extentAfter < 300) {
+                      if (notification.metrics.axis == Axis.vertical &&
+                          notification.metrics.extentAfter < 300) {
                         _loadMore();
                       }
                       return false;
@@ -164,8 +177,15 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
                         top: 8,
                         bottom: PsFloatingTabBar.bottomClearance(context),
                       ),
-                      itemCount: filteredShows.length,
+                      // 末尾一项是加载状态 / 没有更多。
+                      itemCount: filteredShows.length + 1,
                       itemBuilder: (context, index) {
+                        if (index == filteredShows.length) {
+                          return _CategoryFeedFooter(
+                            loading: _loadingMore,
+                            exhausted: _exhausted,
+                          );
+                        }
                         final show = filteredShows[index];
                         return _CategoryShowCard(
                           show: show,
@@ -176,6 +196,49 @@ class _CategoryHomePageState extends ConsumerState<CategoryHomePage> {
                   ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 列表末尾的加载状态：加载中转圈，到底了给「没有更多」。
+class _CategoryFeedFooter extends StatelessWidget {
+  const _CategoryFeedFooter({required this.loading, required this.exhausted});
+
+  final bool loading;
+  final bool exhausted;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Center(
+        child: loading
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: colors.brand,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    context.l10n.homeFeedLoading,
+                    style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                  ),
+                ],
+              )
+            : exhausted
+            ? Text(
+                context.l10n.homeFeedEnd,
+                style: TextStyle(fontSize: 12, color: colors.textTertiary),
+              )
+            : const SizedBox(height: 20),
       ),
     );
   }
@@ -207,11 +270,29 @@ class _CategoryTopBar extends StatelessWidget {
         height: 44,
         child: Row(
           children: <Widget>[
+            // 从首页快捷入口 push 进来时给一个显式返回键，
+            // 作为 tab 根页面使用时则没有可返回路由、不渲染。
+            if (context.canPop())
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => context.pop(),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12, right: 4),
+                  child: Icon(
+                    LucideIcons.chevronLeft,
+                    size: 22,
+                    color: colors.textSecondary,
+                  ),
+                ),
+              ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: onTapCity,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                padding: EdgeInsets.only(
+                  left: context.canPop() ? 2 : 15,
+                  right: 15,
+                ),
                 child: Row(
                   children: <Widget>[
                     Text(

@@ -20,7 +20,11 @@ final showCatalogProvider =
     );
 
 class ShowCatalogController extends AsyncNotifier<List<ShowSummary>> {
-  static const int _pageSize = 100;
+  /// 每页条数与后端 `normalizeProjectPage` 的默认值一致：20 条。
+  ///
+  /// 100 条是后端的硬上限，移动端一次拉满会显著放大响应体积与首屏等待
+  /// （4C8G / 2Mbps 的服务器尤其明显），列表改为触底续拉即可。
+  static const int _pageSize = 20;
 
   int _pageIndex = 1;
   bool _hasMore = true;
@@ -106,6 +110,153 @@ final showByIdProvider = Provider.family<ShowSummary?, String>((ref, id) {
   return null;
 });
 
+// ── 服务端筛选 + 分页 ────────────────────────────────────────────────────
+
+/// 列表页的查询条件：分类 / 筹资状态 / 排序。
+///
+/// 与后端 `GET /v1/projects` 的入参一一对应，`null` 表示不带该条件。
+/// family 的 key 会参与 provider 缓存比较，所以必须实现 `==` / `hashCode`，
+/// 否则每次 build 都会被当成新参数重新发请求。
+final class ShowFeedQuery {
+  const ShowFeedQuery({
+    this.categoryId,
+    this.fundingStatus,
+    this.sort,
+    this.onlyProjects = false,
+  });
+
+  final int? categoryId;
+  final String? fundingStatus;
+
+  /// `hot` / `new` / `ending` / `achievement`；`null` 走后端默认排序。
+  final String? sort;
+
+  /// 只保留有目标金额的企划（demo 数据里混有普通演出，真实接口全是企划）。
+  final bool onlyProjects;
+
+  @override
+  bool operator ==(Object other) =>
+      other is ShowFeedQuery &&
+      other.categoryId == categoryId &&
+      other.fundingStatus == fundingStatus &&
+      other.sort == sort &&
+      other.onlyProjects == onlyProjects;
+
+  @override
+  int get hashCode =>
+      Object.hash(categoryId, fundingStatus, sort, onlyProjects);
+}
+
+/// 分类页 / 精品 / 新企划 / 已达成共用的分页 feed。
+///
+/// 筛选与分页都在服务端完成（`categoryId` / `fundingStatus` / `sort` +
+/// `page/pageSize`），前端只做触底续拉。早期实现是把整库拉下来再本地过滤，
+/// 一旦 `pageSize` 降到 20 就会出现「每页筛完只剩几条」甚至整页为空的问题。
+final showFeedProvider =
+    AsyncNotifierProvider.family<
+      ShowFeedController,
+      List<ShowSummary>,
+      ShowFeedQuery
+    >(ShowFeedController.new);
+
+class ShowFeedController
+    extends FamilyAsyncNotifier<List<ShowSummary>, ShowFeedQuery> {
+  /// 与后端 `normalizeProjectPage` 的默认值一致。
+  static const int _pageSize = 20;
+
+  int _pageIndex = 1;
+  bool _hasMore = true;
+
+  /// 是否还有下一页（给列表页做触底加载用）。
+  bool get hasMore => _hasMore;
+
+  @override
+  Future<List<ShowSummary>> build(ShowFeedQuery query) async {
+    _pageIndex = 1;
+    _hasMore = true;
+    if (ref.watch(dataSourcePolicyProvider).isDemo) {
+      _hasMore = false;
+      return _demoMatches(query, ref.watch(selectedCityProvider));
+    }
+    final first = await _fetchPage(query, 1);
+    // 不足一页即没有下一页，避免触底时多打一次空请求。
+    _hasMore = first.length >= _pageSize;
+    return first;
+  }
+
+  Future<List<ShowSummary>> _fetchPage(ShowFeedQuery query, int page) async {
+    final PlanstarCatalogApi api = ref.read(planstarCatalogApiProvider);
+    final result = await api.fetchShows(
+      categoryId: query.categoryId,
+      fundingStatus: query.fundingStatus,
+      sort: query.sort,
+      pageIndex: page,
+      pageSize: _pageSize,
+    );
+    return result.fold(
+      onSuccess: (shows) => shows,
+      onFailure: (failure) => throw failure,
+    );
+  }
+
+  /// 加载下一页并追加；失败时保留已有数据，只停止继续请求。
+  Future<void> loadMore() async {
+    if (!_hasMore || state.isLoading) return;
+    if (ref.read(dataSourcePolicyProvider).isDemo) return;
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    try {
+      final next = await _fetchPage(arg, _pageIndex + 1);
+      _pageIndex += 1;
+      if (next.isEmpty) {
+        _hasMore = false;
+        return;
+      }
+      // OFFSET 分页在并发写入时可能返回重复行，按 id 去重。
+      final seen = <String>{for (final show in current) show.id};
+      state = AsyncValue.data(<ShowSummary>[
+        ...current,
+        for (final show in next)
+          if (seen.add(show.id)) show,
+      ]);
+      _hasMore = next.length >= _pageSize;
+    } catch (_) {
+      _hasMore = false;
+    }
+  }
+
+  /// demo 模式：按当前城市本地筛选 + 排序，一次给全（演示数据量很小）。
+  List<ShowSummary> _demoMatches(ShowFeedQuery query, String city) {
+    final shows = buildDemoCatalog().where((show) {
+      if (show.city != city) return false;
+      if (query.onlyProjects && !show.isProject) return false;
+      if (query.categoryId != null && show.categoryId != query.categoryId) {
+        return false;
+      }
+      if (query.fundingStatus != null &&
+          show.fundingStatusValue != query.fundingStatus) {
+        return false;
+      }
+      return true;
+    }).toList();
+
+    switch (query.sort) {
+      case 'new':
+        shows.sort((a, b) => b.firstSessionAt.compareTo(a.firstSessionAt));
+      case 'ending':
+        shows.sort((a, b) => a.projectDeadline.compareTo(b.projectDeadline));
+      case 'achievement':
+        shows.sort(
+          (a, b) => b.achievementPermille.compareTo(a.achievementPermille),
+        );
+      default:
+        shows.sort((a, b) => b.supporterCount.compareTo(a.supporterCount));
+    }
+    return shows;
+  }
+}
+
 // ── 城市 ────────────────────────────────────────────────────────────────
 
 /// 当前城市。
@@ -142,31 +293,29 @@ final cityHasDataProvider = Provider<bool>(
 
 // ── 分类 ────────────────────────────────────────────────────────────────
 
-/// 分类目录。
+/// 服务端分类目录（一级品类 + 二级标签）。
 ///
-/// 后端没有独立的分类端点，真实模式下从活动列表的 `categoryId/categoryName`
-/// 聚合；demo 模式继续用编译期分类数据。
-final showCategoriesProvider = FutureProvider<List<ShowCategory>>((ref) async {
+/// 真实模式走 `GET /v1/categories`；demo 模式读编译期分类数据。
+/// 只请求一次，由 Riverpod 缓存，切页面不重复拉取。
+final remoteCategoriesProvider = FutureProvider<List<ShowCategory>>((
+  ref,
+) async {
   if (ref.watch(dataSourcePolicyProvider).isDemo) {
     return demoCategories.where((c) => c.isActive).toList(growable: false);
   }
+  final result = await ref.watch(planstarCatalogApiProvider).fetchCategories();
+  return result.getOrElse((_) => const <ShowCategory>[]);
+});
 
-  final shows = await ref.watch(showCatalogProvider.future);
-  final seen = <int, ShowCategory>{};
-  for (final show in shows) {
-    if (show.categoryId == 0) continue;
-    seen.putIfAbsent(
-      show.categoryId,
-      () => ShowCategory(
-        id: show.categoryId,
-        name: show.categoryName.isEmpty ? '其他' : show.categoryName,
-        enName: '',
-        pinyin: '',
-        subTags: const <SubCategoryTag>[],
-      ),
-    );
-  }
-  return seen.values.toList(growable: false);
+/// 分类目录（同步视图）。
+///
+/// 接口未返回或失败时先用本地白名单兜底，避免分类 tab 闪空；
+/// 接口返回后自动切换到服务端数据。接口异常时本地白名单保证 tab 仍可用，
+/// 只是拿不到运营新增的分类。
+final showCategoriesProvider = Provider<List<ShowCategory>>((ref) {
+  final shows = ref.watch(remoteCategoriesProvider).valueOrNull;
+  if (shows != null && shows.isNotEmpty) return shows;
+  return demoCategories.where((c) => c.isActive).toList(growable: false);
 });
 
 // ── 首页 Banner / 热门 ──────────────────────────────────────────────────

@@ -25,9 +25,10 @@ import '../../../l10n/l10n.dart';
 ///
 /// ## 分页与筛选
 ///
-/// - 分页用 `NotificationListener` 监听滚动到底部时调用
-///   `ShowCatalogController.loadMore()`，真实接口按
-///   `page/pageSize` 追加；演示数据一次给全，不再触发网络。
+/// - 分类与排序都交给服务端（`categoryId` / `sort`），分页用
+///   `NotificationListener` 监听滚动到底部时调用 `showFeedProvider` 的
+///   `loadMore()`，按 `page/pageSize` 追加；演示数据一次给全。
+/// - 价格升序后端没有对应排序，只能对已加载的页本地排序——这是已知取舍。
 /// - 不做「筛选」抽屉（价格区间/时间/活动场地）；这里只保留排序。
 ///   筛选需要服务端支持多维聚合，客户端硬筛会把"筛完是空"变成常态。
 class ShowListPage extends ConsumerStatefulWidget {
@@ -50,25 +51,36 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
   _SortMode _sort = _SortMode.recommended;
 
   bool _loadingMore = false;
+  bool _exhausted = false;
+
+  ShowFeedQuery get _query =>
+      ShowFeedQuery(categoryId: _categoryId, sort: _sort.apiSort);
 
   /// 触底追加下一页；失败时 provider 会保留已有列表并把 `hasMore` 置 false。
   Future<void> _loadMore() async {
-    if (_loadingMore) return;
-    final notifier = ref.read(showCatalogProvider.notifier);
-    if (!notifier.hasMore) return;
+    if (_loadingMore || _exhausted) return;
+    final notifier = ref.read(showFeedProvider(_query).notifier);
+    if (!notifier.hasMore) {
+      setState(() => _exhausted = true);
+      return;
+    }
     setState(() => _loadingMore = true);
     await notifier.loadMore();
-    if (mounted) setState(() => _loadingMore = false);
+    if (!mounted) return;
+    setState(() {
+      _loadingMore = false;
+      _exhausted = !notifier.hasMore;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
-    final showsAsync = ref.watch(cityShowsProvider);
+    final showsAsync = ref.watch(showFeedProvider(_query));
     final shows = _sorted(showsAsync.valueOrNull ?? const <ShowSummary>[]);
-    final categories =
-        ref.watch(showCategoriesProvider).valueOrNull ?? const <ShowCategory>[];
+    final categories = ref.watch(showCategoriesProvider);
     final hasError = showsAsync.hasError && !showsAsync.hasValue;
+    final isLoading = showsAsync.isLoading && !showsAsync.hasValue;
 
     return AdaptiveScaffold(
       backgroundColor: colors.bgPage,
@@ -78,22 +90,34 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
           _CategoryBar(
             categories: categories,
             selected: _categoryId,
-            onSelect: (int? id) => setState(() => _categoryId = id),
+            onSelect: (int? id) => setState(() {
+              if (id == _categoryId) return;
+              _categoryId = id;
+              _exhausted = false;
+              _loadingMore = false;
+            }),
           ),
           _SortBar(
             selected: _sort,
             total: shows.length,
-            onSelect: (_SortMode mode) => setState(() => _sort = mode),
+            onSelect: (_SortMode mode) => setState(() {
+              if (mode == _sort) return;
+              _sort = mode;
+              _exhausted = false;
+              _loadingMore = false;
+            }),
           ),
           Container(height: 1, color: colors.divider),
           Expanded(
-            child: hasError
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
+                : hasError
                 ? PsEmptyState(
                     title: context.l10n.showListPage_78,
                     description: psErrorMessage(showsAsync.error!),
                     icon: LucideIcons.wifiOff,
                     actionLabel: context.l10n.actionRetry,
-                    onAction: () => ref.invalidate(showCatalogProvider),
+                    onAction: () => ref.invalidate(showFeedProvider(_query)),
                   )
                 : shows.isEmpty
                 ? PsEmptyState(
@@ -106,20 +130,28 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
                 : NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification notification) {
                       // 距底部 300px 内追加下一页；provider 内部会去重与限流。
-                      if (notification.metrics.extentAfter < 300) {
+                      if (notification.metrics.axis == Axis.vertical &&
+                          notification.metrics.extentAfter < 300) {
                         _loadMore();
                       }
                       return false;
                     },
                     child: ListView.separated(
                       padding: const EdgeInsets.only(bottom: 24),
-                      itemCount: shows.length,
+                      // 末尾一项是加载状态 / 没有更多。
+                      itemCount: shows.length + 1,
                       separatorBuilder: (_, _) => Divider(
                         height: 1,
                         thickness: 1,
                         color: colors.divider,
                       ),
                       itemBuilder: (BuildContext context, int index) {
+                        if (index == shows.length) {
+                          return _FeedFooter(
+                            loading: _loadingMore,
+                            exhausted: _exhausted,
+                          );
+                        }
                         final ShowSummary show = shows[index];
                         return ShowCardRow(
                           show: show,
@@ -146,37 +178,13 @@ class _ShowListPageState extends ConsumerState<ShowListPage> {
     return context.l10n.showListPage_112;
   }
 
-  /// 先按分类过滤，再按当前排序规则排。
-  ///
-  /// 过滤/排序都放在页面里而不是 provider：它们是**这一屏的视图状态**，
-  /// 放进 provider 会让别的页面被迫继承这套排序。
+  /// 服务端已经按分类过滤、按 `sort` 排好序；只有价格升序需要本地兜底
+  /// （后端没有价格排序参数），此时只对已加载的页排序。
   List<ShowSummary> _sorted(List<ShowSummary> source) {
-    final id = _categoryId;
-    final filtered = id == null
-        ? <ShowSummary>[...source]
-        : source.where((show) => show.categoryId == id).toList();
-
-    switch (_sort) {
-      case _SortMode.recommended:
-        // 「推荐」= 热度降序；企划看支持人数，演示数据看想看人数。
-        filtered.sort((a, b) {
-          final int av = a.isProject ? a.supporterCount : a.wishCount;
-          final int bv = b.isProject ? b.supporterCount : b.wishCount;
-          return bv.compareTo(av);
-        });
-      case _SortMode.soonest:
-        // 「最近开演」对企划等价于「即将截止」。
-        filtered.sort((a, b) {
-          final DateTime av = a.isProject ? a.projectDeadline : a.firstSessionAt;
-          final DateTime bv = b.isProject ? b.projectDeadline : b.firstSessionAt;
-          return av.compareTo(bv);
-        });
-      case _SortMode.priceAsc:
-        filtered.sort(
-          (a, b) => a.priceFrom.minorUnits.compareTo(b.priceFrom.minorUnits),
-        );
-    }
-    return filtered;
+    if (_sort != _SortMode.priceAsc) return source;
+    return <ShowSummary>[
+      ...source,
+    ]..sort((a, b) => a.priceFrom.minorUnits.compareTo(b.priceFrom.minorUnits));
   }
 }
 
@@ -186,11 +194,61 @@ enum _SortMode {
   soonest,
   priceAsc;
 
+  /// 对应的 `/v1/projects` 排序枚举；价格升序后端没有，退回默认排序。
+  String get apiSort => switch (this) {
+    _SortMode.recommended => 'hot',
+    _SortMode.soonest => 'ending',
+    _SortMode.priceAsc => 'hot',
+  };
+
   String labelOf(BuildContext context) => switch (this) {
     _SortMode.recommended => context.l10n.showListPage_140,
     _SortMode.soonest => context.l10n.showListPage_141,
     _SortMode.priceAsc => context.l10n.showListPage_142,
   };
+}
+
+/// 列表末尾的加载状态：加载中转圈，到底了给「没有更多」。
+class _FeedFooter extends StatelessWidget {
+  const _FeedFooter({required this.loading, required this.exhausted});
+
+  final bool loading;
+  final bool exhausted;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Center(
+        child: loading
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: colors.brand,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    context.l10n.homeFeedLoading,
+                    style: TextStyle(fontSize: 12, color: colors.textTertiary),
+                  ),
+                ],
+              )
+            : exhausted
+            ? Text(
+                context.l10n.homeFeedEnd,
+                style: TextStyle(fontSize: 12, color: colors.textTertiary),
+              )
+            : const SizedBox(height: 20),
+      ),
+    );
+  }
 }
 
 /// 分类筛选条（横向 tab）。

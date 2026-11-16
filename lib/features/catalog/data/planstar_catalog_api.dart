@@ -3,6 +3,7 @@ import 'package:core/result.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../app/network/api_paths.dart';
+import '../domain/show_category.dart';
 import '../domain/show_summary.dart';
 
 part 'planstar_catalog_api.freezed.dart';
@@ -15,6 +16,7 @@ part 'planstar_catalog_api.g.dart';
 /// | 用途 | 方法 | 路径 |
 /// |---|---|---|
 /// | 首页 Banner | GET | `v1/home/banners` |
+/// | 分类目录 | GET | `v1/categories` |
 /// | 热门企划 | GET | `v1/projects/hot` |
 /// | 企划列表（全部/分类） | GET | `v1/projects` |
 /// | 企划详情 | GET | `v1/projects/{id}` |
@@ -36,6 +38,23 @@ final class PlanstarCatalogApi {
         return list
             .whereType<Map<String, dynamic>>()
             .map(BannerDto.fromJson)
+            .toList(growable: false);
+      },
+    );
+  }
+
+  /// 分类目录（一级品类 + 二级标签）。
+  ///
+  /// 低频枚举数据，服务端不分页；仅返回 `status=1` 的品类。
+  Future<Result<List<ShowCategory>>> fetchCategories() {
+    return _client.get<List<ShowCategory>>(
+      ApiPaths.categories,
+      envelope: const PassthroughEnvelope(),
+      parser: (Object? data) {
+        final list = data as List<dynamic>? ?? <dynamic>[];
+        return list
+            .whereType<Map<String, dynamic>>()
+            .map(ShowCategory.fromJson)
             .toList(growable: false);
       },
     );

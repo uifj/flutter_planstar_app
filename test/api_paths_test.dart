@@ -5,6 +5,7 @@ void main() {
   // 与 `ApiPaths` 一一对应的契约清单；动态段用示例 id `1` 展开。
   const Set<String> expected = <String>{
     'v1/home/banners',
+    'v1/categories',
     'v1/projects/hot',
     'v1/projects',
     'v1/projects/1',

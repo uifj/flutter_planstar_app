@@ -70,7 +70,7 @@ class ShowCardChoiceness extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            _ProjectProgressBar(show: show, height: 4),
+            ProjectProgressBar(show: show, height: 4),
             const SizedBox(height: 4),
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -124,8 +124,8 @@ class ShowCardChoiceness extends StatelessWidget {
 }
 
 /// 达成率进度条（企划卡通用）。
-class _ProjectProgressBar extends StatelessWidget {
-  const _ProjectProgressBar({required this.show, this.height = 4});
+class ProjectProgressBar extends StatelessWidget {
+  const ProjectProgressBar({super.key, required this.show, this.height = 4});
 
   final ShowSummary show;
   final double height;
@@ -223,7 +223,7 @@ class ShowCardFloor extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            _ProjectProgressBar(show: show, height: 3),
+            ProjectProgressBar(show: show, height: 3),
             const SizedBox(height: 4),
             FittedBox(
               fit: BoxFit.scaleDown,
