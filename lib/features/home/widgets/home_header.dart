@@ -31,6 +31,7 @@ class HomeHeader extends SliverPersistentHeaderDelegate {
   final double topPadding;
   final String city;
   final List<String> hints;
+
   /// 城市入口；`null` 时不展示下拉箭头（企划为全国发行，无需切换城市）。
   final VoidCallback? onTapCity;
   final VoidCallback onTapSearch;

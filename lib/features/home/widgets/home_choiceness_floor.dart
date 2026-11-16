@@ -9,7 +9,8 @@ import '../../../l10n/l10n.dart';
 
 /// 首页「精选推荐」楼层。
 ///
-/// 结构：20sp 粗体标题（上边距 16、左右 14）→ 42dp 可横滑 tab
+/// 与分类楼层同一套外观：白底 + 12dp 圆角 + 左右 12dp 外边距。
+/// 结构：18sp 粗体标题（上边距 12、左右 10）→ 42dp 可横滑 tab
 /// （选中 16sp 粗体 `text_0`、未选中 14sp 常规 `text_2`、2dp 品牌色下划线）
 /// → 105dp 宽的横滑卡片。
 ///
@@ -74,16 +75,20 @@ class _HomeChoicenessFloorState extends State<HomeChoicenessFloor> {
     final group = widget.groups[_selected.clamp(0, widget.groups.length - 1)];
 
     return Container(
-      margin: const EdgeInsets.only(top: 12),
-      color: colors.bgCard,
+      margin: const EdgeInsets.only(top: 12, left: 12, right: 12),
+      decoration: BoxDecoration(
+        color: colors.bgCard,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           // 精选楼层只有标题，**没有**「全部」——不要凭印象加。
           PsSectionHeader(
             title: context.l10n.homeChoicenessFloor_83,
-            titleSize: 20,
+            horizontalPadding: 10,
           ),
           const SizedBox(height: 6),
           SizedBox(
@@ -91,7 +96,8 @@ class _HomeChoicenessFloorState extends State<HomeChoicenessFloor> {
             child: ListView.builder(
               controller: _tabController,
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.only(left: 5),
+              // 首个 tab 的文字与标题左边缘对齐（tab 自身还有 12dp 内边距）。
+              padding: const EdgeInsets.only(right: 10),
               itemCount: widget.groups.length,
               itemBuilder: (context, index) {
                 final item = widget.groups[index];
@@ -144,7 +150,7 @@ class _HomeChoicenessFloorState extends State<HomeChoicenessFloor> {
             height: 220,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.only(left: 17, right: 12),
+              padding: const EdgeInsets.only(left: 10, right: 10),
               itemCount: group.shows.length,
               separatorBuilder: (_, _) => const SizedBox(width: 10),
               itemBuilder: (context, index) {

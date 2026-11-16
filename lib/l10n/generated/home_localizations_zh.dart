@@ -228,6 +228,18 @@ class HomeLocalizationsZh extends HomeLocalizations {
   String get homeFloorOther => '更多企划';
 
   @override
+  String get homeFloorMixedTitle => '全部企划';
+
+  @override
+  String get homeFloorMixedDesc => '游戏 · 小说 · 同人';
+
+  @override
+  String get homeFeedLoading => '加载中…';
+
+  @override
+  String get homeFeedEnd => '没有更多企划了';
+
+  @override
   String get homeFloorGameDesc => '把喜欢的游戏做出来';
 
   @override
@@ -265,4 +277,37 @@ class HomeLocalizationsZh extends HomeLocalizations {
   String homeRankingMetricRemaining(int days) {
     return '剩 $days 天';
   }
+
+  @override
+  String get homeShortcutCategory => '分类';
+
+  @override
+  String get homeShortcutRanking => '排行';
+
+  @override
+  String get homeShortcutFeatured => '精品';
+
+  @override
+  String get homeShortcutNew => '新企划';
+
+  @override
+  String get homeShortcutAchieved => '已达成';
+
+  @override
+  String get homeCollectionFeaturedTitle => '精品企划';
+
+  @override
+  String get homeCollectionFeaturedDesc => '按支持热度精选';
+
+  @override
+  String get homeCollectionNewTitle => '新企划';
+
+  @override
+  String get homeCollectionNewDesc => '最近开演的企划';
+
+  @override
+  String get homeCollectionAchievedTitle => '已达成企划';
+
+  @override
+  String get homeCollectionAchievedDesc => '已经达成目标的企划';
 }

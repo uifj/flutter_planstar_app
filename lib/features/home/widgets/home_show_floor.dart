@@ -38,7 +38,7 @@ class HomeShowFloor extends StatelessWidget {
     if (shows.isEmpty) return const SizedBox.shrink();
 
     return Container(
-      margin: const EdgeInsets.only(top: 8, left: 12, right: 12),
+      margin: const EdgeInsets.only(top: 12, left: 12, right: 12),
       padding: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: colors.bgCard,

@@ -69,6 +69,10 @@
   "homeFloorDoujin": "Fan projects",
   "homeFloorInterview": "Interview projects",
   "homeFloorOther": "More projects",
+  "homeFloorMixedTitle": "All projects",
+  "homeFloorMixedDesc": "Games · Novels · Fan works",
+  "homeFeedLoading": "Loading…",
+  "homeFeedEnd": "No more projects",
   "homeFloorGameDesc": "Bring the games you love to life",
   "homeFloorNovelDesc": "Turn stories into printed books",
   "homeFloorDoujinDesc": "Create fan works together",
@@ -100,5 +104,16 @@
         "type": "int"
       }
     }
-  }
+  },
+  "homeShortcutCategory": "Categories",
+  "homeShortcutRanking": "Rankings",
+  "homeShortcutFeatured": "Featured",
+  "homeShortcutNew": "New",
+  "homeShortcutAchieved": "Achieved",
+  "homeCollectionFeaturedTitle": "Featured projects",
+  "homeCollectionFeaturedDesc": "Hand-picked by support heat",
+  "homeCollectionNewTitle": "New projects",
+  "homeCollectionNewDesc": "Projects starting soon",
+  "homeCollectionAchievedTitle": "Achieved projects",
+  "homeCollectionAchievedDesc": "Projects that reached their goals"
 }

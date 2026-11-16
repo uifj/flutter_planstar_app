@@ -114,6 +114,10 @@
   "homeFloorDoujin": "同人企划",
   "homeFloorInterview": "面经企划",
   "homeFloorOther": "更多企划",
+  "homeFloorMixedTitle": "全部企划",
+  "homeFloorMixedDesc": "游戏 · 小说 · 同人",
+  "homeFeedLoading": "加载中…",
+  "homeFeedEnd": "没有更多企划了",
   "homeFloorGameDesc": "把喜欢的游戏做出来",
   "homeFloorNovelDesc": "让故事被印成书",
   "homeFloorDoujinDesc": "同人创作，一起完成",
@@ -145,5 +149,16 @@
         "type": "int"
       }
     }
-  }
+  },
+  "homeShortcutCategory": "分类",
+  "homeShortcutRanking": "排行",
+  "homeShortcutFeatured": "精品",
+  "homeShortcutNew": "新企划",
+  "homeShortcutAchieved": "已达成",
+  "homeCollectionFeaturedTitle": "精品企划",
+  "homeCollectionFeaturedDesc": "按支持热度精选",
+  "homeCollectionNewTitle": "新企划",
+  "homeCollectionNewDesc": "最近开演的企划",
+  "homeCollectionAchievedTitle": "已达成企划",
+  "homeCollectionAchievedDesc": "已经达成目标的企划"
 }

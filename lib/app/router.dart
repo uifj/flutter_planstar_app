@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../features/app/splash_page.dart';
 import '../features/auth/login_page.dart';
 import '../features/catalog/ui/category_home_page.dart';
+import '../features/catalog/ui/show_collection_page.dart';
 import '../features/catalog/ui/show_list_page.dart';
 import '../features/discover/discover_page.dart';
 import '../features/discover/feed_detail_page.dart';
@@ -16,6 +17,7 @@ import '../features/goods/show_detail_page.dart';
 import '../features/goods/venue_page.dart';
 import '../features/home/city_list_page.dart';
 import '../features/home/home_page.dart';
+import '../features/home/ranking_page.dart';
 import '../features/group_buy/ui/group_buy_detail_page.dart';
 import '../features/group_buy/ui/group_buy_page.dart';
 import '../features/marketing/coupon_page.dart';
@@ -251,6 +253,36 @@ final routerProvider = Provider<GoRouter>((ref) {
           categoryId: int.tryParse(state.uri.queryParameters['category'] ?? ''),
           title: state.uri.queryParameters['title'],
         ),
+      ),
+      // 首页固定快捷入口的独立落地页：分类总览 / 排行榜 /
+      // 精品 / 新企划 / 已达成。分类页复用已有的 CategoryHomePage。
+      GoRoute(
+        path: '/categories',
+        name: 'categories',
+        builder: (context, state) => const CategoryHomePage(),
+      ),
+      GoRoute(
+        path: '/ranking',
+        name: 'ranking',
+        builder: (context, state) => const RankingPage(),
+      ),
+      GoRoute(
+        path: '/featured',
+        name: 'featured',
+        builder: (context, state) =>
+            const ShowCollectionPage(kind: ShowCollectionKind.featured),
+      ),
+      GoRoute(
+        path: '/new-projects',
+        name: 'newProjects',
+        builder: (context, state) =>
+            const ShowCollectionPage(kind: ShowCollectionKind.newProjects),
+      ),
+      GoRoute(
+        path: '/achieved',
+        name: 'achieved',
+        builder: (context, state) =>
+            const ShowCollectionPage(kind: ShowCollectionKind.achieved),
       ),
       // 搜索结果。放在 `/search` 之前：GoRouter 按声明顺序匹配，
       // 虽然两者路径不冲突，但把"更具体的先声明"作为约定，避免以后加

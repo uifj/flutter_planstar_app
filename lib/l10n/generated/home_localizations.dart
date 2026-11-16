@@ -509,6 +509,30 @@ abstract class HomeLocalizations {
   /// **'更多企划'**
   String get homeFloorOther;
 
+  /// No description provided for @homeFloorMixedTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'全部企划'**
+  String get homeFloorMixedTitle;
+
+  /// No description provided for @homeFloorMixedDesc.
+  ///
+  /// In zh, this message translates to:
+  /// **'游戏 · 小说 · 同人'**
+  String get homeFloorMixedDesc;
+
+  /// No description provided for @homeFeedLoading.
+  ///
+  /// In zh, this message translates to:
+  /// **'加载中…'**
+  String get homeFeedLoading;
+
+  /// No description provided for @homeFeedEnd.
+  ///
+  /// In zh, this message translates to:
+  /// **'没有更多企划了'**
+  String get homeFeedEnd;
+
   /// No description provided for @homeFloorGameDesc.
   ///
   /// In zh, this message translates to:
@@ -574,6 +598,72 @@ abstract class HomeLocalizations {
   /// In zh, this message translates to:
   /// **'剩 {days} 天'**
   String homeRankingMetricRemaining(int days);
+
+  /// No description provided for @homeShortcutCategory.
+  ///
+  /// In zh, this message translates to:
+  /// **'分类'**
+  String get homeShortcutCategory;
+
+  /// No description provided for @homeShortcutRanking.
+  ///
+  /// In zh, this message translates to:
+  /// **'排行'**
+  String get homeShortcutRanking;
+
+  /// No description provided for @homeShortcutFeatured.
+  ///
+  /// In zh, this message translates to:
+  /// **'精品'**
+  String get homeShortcutFeatured;
+
+  /// No description provided for @homeShortcutNew.
+  ///
+  /// In zh, this message translates to:
+  /// **'新企划'**
+  String get homeShortcutNew;
+
+  /// No description provided for @homeShortcutAchieved.
+  ///
+  /// In zh, this message translates to:
+  /// **'已达成'**
+  String get homeShortcutAchieved;
+
+  /// No description provided for @homeCollectionFeaturedTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'精品企划'**
+  String get homeCollectionFeaturedTitle;
+
+  /// No description provided for @homeCollectionFeaturedDesc.
+  ///
+  /// In zh, this message translates to:
+  /// **'按支持热度精选'**
+  String get homeCollectionFeaturedDesc;
+
+  /// No description provided for @homeCollectionNewTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'新企划'**
+  String get homeCollectionNewTitle;
+
+  /// No description provided for @homeCollectionNewDesc.
+  ///
+  /// In zh, this message translates to:
+  /// **'最近开演的企划'**
+  String get homeCollectionNewDesc;
+
+  /// No description provided for @homeCollectionAchievedTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'已达成企划'**
+  String get homeCollectionAchievedTitle;
+
+  /// No description provided for @homeCollectionAchievedDesc.
+  ///
+  /// In zh, this message translates to:
+  /// **'已经达成目标的企划'**
+  String get homeCollectionAchievedDesc;
 }
 
 class _HomeLocalizationsDelegate extends LocalizationsDelegate<HomeLocalizations> {

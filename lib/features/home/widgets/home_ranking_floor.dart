@@ -7,18 +7,7 @@ import '../../../shared/ui/ps_section_header.dart';
 import '../../catalog/application/catalog_providers.dart';
 import '../../catalog/data/planstar_catalog_api.dart';
 import '../../catalog/domain/show_summary.dart';
-
-/// 榜单类型。
-enum RankingType {
-  hot('hot'),
-  achievement('achievement'),
-  ending('ending');
-
-  const RankingType(this.apiValue);
-
-  /// 与 `v1/rankings` 的 `type` 参数一致。
-  final String apiValue;
-}
+import '../application/project_ranking.dart';
 
 /// 首页「企划榜单」楼层（P2）。
 ///
@@ -48,7 +37,7 @@ class _HomeRankingFloorState extends ConsumerState<HomeRankingFloor> {
     if (rows.isEmpty) return const SizedBox.shrink();
 
     return Container(
-      margin: const EdgeInsets.only(top: 8, left: 12, right: 12),
+      margin: const EdgeInsets.only(top: 12, left: 12, right: 12),
       padding: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
         color: colors.bgCard,
@@ -111,67 +100,23 @@ class _HomeRankingFloorState extends ConsumerState<HomeRankingFloor> {
           _RankItem(
             rank: entry.rank,
             show: entry.show,
-            metric: _serverMetric(context, entry.metricValue),
+            metric: rankingMetricLabel(context, _type, entry.metricValue),
           ),
       ];
     }
 
-    final ranked = _ranked(widget.shows).take(5).toList(growable: false);
+    final ranked = rankShowsLocally(
+      widget.shows,
+      _type,
+    ).take(5).toList(growable: false);
     return <_RankItem>[
       for (var index = 0; index < ranked.length; index++)
         _RankItem(
           rank: index + 1,
           show: ranked[index],
-          metric: _metric(context, ranked[index]),
+          metric: rankingMetricForShow(context, _type, ranked[index]),
         ),
     ];
-  }
-
-  /// 服务端指标：热榜支持人数、达成榜千分比、冲刺榜剩余天数。
-  String _serverMetric(BuildContext context, int value) {
-    return switch (_type) {
-      RankingType.hot => context.l10n.homeRankingMetricSupporters(value),
-      RankingType.achievement => context.l10n.homeRankingMetricAchievement(
-        (value / 10).round(),
-      ),
-      RankingType.ending => context.l10n.homeRankingMetricRemaining(value),
-    };
-  }
-
-  List<ShowSummary> _ranked(List<ShowSummary> source) {
-    // 契约：榜单仅统计 funding_status ∈ (ongoing, achieved)，预热与已结束不参与。
-    final list = source
-        .where((show) {
-          final status = show.fundingStatusValue;
-          return status == 'ongoing' || status == 'achieved';
-        })
-        .toList(growable: true);
-    switch (_type) {
-      case RankingType.hot:
-        list.sort(
-          (a, b) => b.supporterCount.compareTo(a.supporterCount),
-        );
-      case RankingType.achievement:
-        list.sort(
-          (a, b) => b.achievementPermille.compareTo(a.achievementPermille),
-        );
-      case RankingType.ending:
-        list.sort((a, b) => a.remainingDays.compareTo(b.remainingDays));
-    }
-    return list;
-  }
-
-  String _metric(BuildContext context, ShowSummary show) {
-    switch (_type) {
-      case RankingType.hot:
-        return context.l10n.homeRankingMetricSupporters(show.supporterCount);
-      case RankingType.achievement:
-        return context.l10n.homeRankingMetricAchievement(
-          (show.achievementPermille / 10).round(),
-        );
-      case RankingType.ending:
-        return context.l10n.homeRankingMetricRemaining(show.remainingDays);
-    }
   }
 }
 

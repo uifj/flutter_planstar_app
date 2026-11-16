@@ -6,7 +6,7 @@ import '../../../l10n/l10n.dart';
 
 /// 首页运营 banner。
 ///
-/// 80dp 高、左右 12dp、圆角 12dp、上边距 8dp。
+/// 80dp 高、左右 12dp、圆角 12dp、上边距 12dp。
 ///
 /// 运营图是 CDN 图片（`BannerSlide.imageUrl`），仓库里没有对应素材，
 /// 所以这里用**品牌渐变的运营位**承载同样的信息：标题 + 副标题 + 角标。
@@ -121,7 +121,7 @@ class _HomeBannerFloorState extends State<HomeBannerFloor> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     return Padding(
-      padding: const EdgeInsets.only(top: 8, left: 12, right: 12),
+      padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: SizedBox(

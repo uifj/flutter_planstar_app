@@ -228,6 +228,18 @@ class HomeLocalizationsEn extends HomeLocalizations {
   String get homeFloorOther => 'More projects';
 
   @override
+  String get homeFloorMixedTitle => 'All projects';
+
+  @override
+  String get homeFloorMixedDesc => 'Games · Novels · Fan works';
+
+  @override
+  String get homeFeedLoading => 'Loading…';
+
+  @override
+  String get homeFeedEnd => 'No more projects';
+
+  @override
   String get homeFloorGameDesc => 'Bring the games you love to life';
 
   @override
@@ -265,4 +277,37 @@ class HomeLocalizationsEn extends HomeLocalizations {
   String homeRankingMetricRemaining(int days) {
     return '$days days left';
   }
+
+  @override
+  String get homeShortcutCategory => 'Categories';
+
+  @override
+  String get homeShortcutRanking => 'Rankings';
+
+  @override
+  String get homeShortcutFeatured => 'Featured';
+
+  @override
+  String get homeShortcutNew => 'New';
+
+  @override
+  String get homeShortcutAchieved => 'Achieved';
+
+  @override
+  String get homeCollectionFeaturedTitle => 'Featured projects';
+
+  @override
+  String get homeCollectionFeaturedDesc => 'Hand-picked by support heat';
+
+  @override
+  String get homeCollectionNewTitle => 'New projects';
+
+  @override
+  String get homeCollectionNewDesc => 'Projects starting soon';
+
+  @override
+  String get homeCollectionAchievedTitle => 'Achieved projects';
+
+  @override
+  String get homeCollectionAchievedDesc => 'Projects that reached their goals';
 }
