@@ -225,6 +225,15 @@ class UserLocalizationsZh extends UserLocalizations {
   String get settingsPage_95 => '深色模式';
 
   @override
+  String get settingsPageLanguage => '语言';
+
+  @override
+  String get settingsPageLanguageZh => '简体中文';
+
+  @override
+  String get settingsPageLanguageEn => 'English';
+
+  @override
   String get settingsPage_107 => '清除缓存';
 
   @override

@@ -21,12 +21,21 @@ import 'typography.dart';
 /// ```
 abstract final class AppTheme {
   /// 亮色主题。
-  static ThemeData light() => _build(AppColors.light, Brightness.light);
+  ///
+  /// [fontFamily] 为全局字体族（需在 `pubspec.yaml` 的 `fonts:` 中声明）；
+  /// 传 `null` 时使用系统默认字体。
+  static ThemeData light({String? fontFamily}) =>
+      _build(AppColors.light, Brightness.light, fontFamily: fontFamily);
 
   /// 暗色主题。
-  static ThemeData dark() => _build(AppColors.dark, Brightness.dark);
+  static ThemeData dark({String? fontFamily}) =>
+      _build(AppColors.dark, Brightness.dark, fontFamily: fontFamily);
 
-  static ThemeData _build(AppColors colors, Brightness brightness) {
+  static ThemeData _build(
+    AppColors colors,
+    Brightness brightness, {
+    String? fontFamily,
+  }) {
     // 刻意**不用** `ColorScheme.fromSeed`：它会把品牌色派生成一套
     // "更协调"的色调，品牌蓝会失真。这里显式给出 ColorScheme。
     final scheme = ColorScheme(
@@ -53,7 +62,7 @@ abstract final class AppTheme {
       scaffoldBackgroundColor: colors.bgPage,
       canvasColor: colors.bgCard,
       dividerColor: colors.divider,
-      fontFamily: null, // 系统字体
+      fontFamily: fontFamily,
       textTheme: textTheme,
       iconTheme: IconThemeData(color: colors.textPrimary),
       primaryIconTheme: IconThemeData(color: colors.onBrand),
@@ -68,6 +77,7 @@ abstract final class AppTheme {
         scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
+          fontFamily: fontFamily,
           fontSize: AppTypography.subtitle,
           fontWeight: AppTypography.medium,
           color: colors.textPrimary,
@@ -85,6 +95,7 @@ abstract final class AppTheme {
         elevation: 0,
         labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
           (Set<WidgetState> states) => TextStyle(
+            fontFamily: fontFamily,
             fontSize: AppTypography.label,
             fontWeight: states.contains(WidgetState.selected)
                 ? AppTypography.medium
@@ -115,6 +126,7 @@ abstract final class AppTheme {
             borderRadius: BorderRadius.circular(AppRadius.xl),
           ),
           textStyle: TextStyle(
+            fontFamily: fontFamily,
             fontSize: AppTypography.body,
             fontWeight: AppTypography.medium,
           ),
@@ -130,6 +142,7 @@ abstract final class AppTheme {
             borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
           textStyle: TextStyle(
+            fontFamily: fontFamily,
             fontSize: AppTypography.body,
             fontWeight: AppTypography.medium,
           ),
@@ -140,6 +153,7 @@ abstract final class AppTheme {
           foregroundColor: colors.brand,
           disabledForegroundColor: colors.textDisabled,
           textStyle: TextStyle(
+            fontFamily: fontFamily,
             fontSize: AppTypography.body,
             fontWeight: AppTypography.medium,
           ),
@@ -188,11 +202,13 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.circular(AppRadius.md),
         ),
         titleTextStyle: TextStyle(
+          fontFamily: fontFamily,
           fontSize: AppTypography.subtitle,
           fontWeight: AppTypography.medium,
           color: colors.textPrimary,
         ),
         contentTextStyle: TextStyle(
+          fontFamily: fontFamily,
           fontSize: AppTypography.body,
           color: colors.textSecondary,
         ),
@@ -210,6 +226,7 @@ abstract final class AppTheme {
       snackBarTheme: SnackBarThemeData(
         backgroundColor: colors.bgOverlay,
         contentTextStyle: TextStyle(
+          fontFamily: fontFamily,
           fontSize: AppTypography.body,
           color: colors.onBrand,
         ),
@@ -225,6 +242,7 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         textStyle: TextStyle(
+          fontFamily: fontFamily,
           fontSize: AppTypography.body,
           color: colors.textPrimary,
         ),
@@ -264,10 +282,12 @@ abstract final class AppTheme {
         indicatorColor: colors.brand,
         dividerColor: colors.divider,
         labelStyle: TextStyle(
+          fontFamily: fontFamily,
           fontSize: AppTypography.body,
           fontWeight: AppTypography.medium,
         ),
         unselectedLabelStyle: TextStyle(
+          fontFamily: fontFamily,
           fontSize: AppTypography.body,
           fontWeight: AppTypography.regular,
         ),

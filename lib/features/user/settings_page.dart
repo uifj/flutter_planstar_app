@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../app/locale.dart';
 import '../../app/theme.dart';
 import '../../shared/ui/ps_cell.dart';
 import '../auth/application/auth_providers.dart';
@@ -15,10 +16,10 @@ import '../../l10n/l10n.dart';
 /// ## 为什么放在 `user` 而不是 `app`
 ///
 /// 它是"我的"里的二级页，入口在个人中心，数据（昵称/手机号）也来自
-/// `userProfileProvider`，所以留在 `user` 里。只有 [themeModeProvider] 是
-/// app 级的——主题模式不属于任何 feature，放在 `app/theme.dart` 是对的，
-/// 这里 import 它是**跨层但单向**的依赖（feature → app 的主题状态），
-/// 反过来 app 不依赖 user。
+/// `userProfileProvider`，所以留在 `user` 里。只有 [themeModeProvider] 与
+/// [appLocaleProvider] 是 app 级的——主题模式与界面语言不属于任何 feature，
+/// 放在 `app/` 下是对的，这里 import 它们是**跨层但单向**的依赖
+/// （feature → app 的全局状态），反过来 app 不依赖 user。
 ///
 /// ## 设计取舍
 ///
@@ -48,6 +49,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final colors = Theme.of(context).extension<AppColors>() ?? AppColors.light;
     final UserProfile profile = ref.watch(userProfileProvider);
     final ThemeMode themeMode = ref.watch(themeModeProvider);
+    final Locale currentLocale = ref.watch(appLocaleProvider) ??
+        Localizations.localeOf(context);
     final bool loggedIn = ref.watch(authControllerProvider).isLoggedIn;
 
     return AdaptiveScaffold(
@@ -149,6 +152,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
               PsCell(
                 leading: Icon(
+                  LucideIcons.languages,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
+                label: context.l10n.settingsPageLanguage,
+                value: _languageLabel(currentLocale),
+                // 中文 ↔ 英文；未手动切换前跟随系统语言。
+                onTap: () => ref.read(appLocaleProvider.notifier).set(
+                  Locale(currentLocale.languageCode == 'zh' ? 'en' : 'zh'),
+                ),
+                horizontalPadding: AppSpacing.md,
+              ),
+              PsCell(
+                leading: Icon(
                   LucideIcons.trash2,
                   size: 18,
                   color: colors.textSecondary,
@@ -232,6 +249,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     ThemeMode.light => context.l10n.settingsPageDarkModeOff,
     ThemeMode.dark => context.l10n.settingsPage_164,
   };
+
+  /// 语言名称用各自的母语写法展示（切换后仍能认出当前语言）。
+  String _languageLabel(Locale locale) => locale.languageCode == 'zh'
+      ? context.l10n.settingsPageLanguageZh
+      : context.l10n.settingsPageLanguageEn;
 
   Future<void> _confirmLogout() async {
     final bool? confirmed = await showDialog<bool>(

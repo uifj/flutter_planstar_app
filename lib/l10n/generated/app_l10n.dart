@@ -1049,6 +1049,9 @@ final class AppL10n {
   String get settingsPage_79 => _userL10n.settingsPage_79;
   String get settingsPage_86 => _userL10n.settingsPage_86;
   String get settingsPage_95 => _userL10n.settingsPage_95;
+  String get settingsPageLanguage => _userL10n.settingsPageLanguage;
+  String get settingsPageLanguageZh => _userL10n.settingsPageLanguageZh;
+  String get settingsPageLanguageEn => _userL10n.settingsPageLanguageEn;
   String get settingsPage_107 => _userL10n.settingsPage_107;
   String get settingsPage_108 => _userL10n.settingsPage_108;
   String get settingsPage_110 => _userL10n.settingsPage_110;

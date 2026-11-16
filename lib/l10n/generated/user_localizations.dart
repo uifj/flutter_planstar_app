@@ -515,6 +515,24 @@ abstract class UserLocalizations {
   /// **'深色模式'**
   String get settingsPage_95;
 
+  /// No description provided for @settingsPageLanguage.
+  ///
+  /// In zh, this message translates to:
+  /// **'语言'**
+  String get settingsPageLanguage;
+
+  /// No description provided for @settingsPageLanguageZh.
+  ///
+  /// In zh, this message translates to:
+  /// **'简体中文'**
+  String get settingsPageLanguageZh;
+
+  /// No description provided for @settingsPageLanguageEn.
+  ///
+  /// In zh, this message translates to:
+  /// **'English'**
+  String get settingsPageLanguageEn;
+
   /// No description provided for @settingsPage_107.
   ///
   /// In zh, this message translates to:

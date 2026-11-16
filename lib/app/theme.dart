@@ -9,6 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 export 'package:core_design_system/core_design_system.dart'
     show AppColors, AppRadius, AppSpacing, AppTheme, AppTypography, BasePalette;
 
+/// 全局字体族，对应 `pubspec.yaml` 中 `fonts:` 声明的 `ChillRoundGothic`
+///（Regular 400 / Medium 500）。
+const String appFontFamily = 'ChillRoundGothic';
+
 /// 主题模式控制器。`system` / `light` / `dark` 三态，默认跟随系统。
 ///
 /// 持久化留给后续接入 `package:core/storage.dart`：把 [set] 里的赋值改成

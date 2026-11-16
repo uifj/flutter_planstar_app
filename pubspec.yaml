@@ -85,8 +85,17 @@ flutter:
   # 本地 assets/ 与 DIN 品牌字体已整体移除：
   #   - 图片统一走开源免费图床（见 lib/shared/ui/ps_network_images.dart）
   #   - categories / api_config 等配置改为 Dart 编译期常量
-  #   - 字体使用系统默认字体
   #
   # 例外：选座 WebView 的离线页面（HTML/CSS/JS 一体，无外网请求）。
   assets:
     - assets/seatmap/seat_map.html
+
+  # 全局圆体（ChillRoundGothic）：Regular 对应 400，Medium 对应 500；
+  # 设置页在 `app/theme.dart` 的 `appFontFamily` 中引用该 family。
+  fonts:
+    - family: ChillRoundGothic
+      fonts:
+        - asset: assets/fonts/ChillRoundGothic_Regular.ttf
+          weight: 400
+        - asset: assets/fonts/ChillRoundGothic_Medium.ttf
+          weight: 500

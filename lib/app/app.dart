@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../l10n/l10n.dart';
+import 'locale.dart';
 import 'router.dart';
 import 'sdk/sdk_bootstrap.dart';
 import 'theme.dart';
@@ -69,6 +70,8 @@ class PlanstarApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
+    // `null` = 跟随系统；设置页切换中英文时写入显式 Locale。
+    final appLocale = ref.watch(appLocaleProvider);
     // 触发第三方 SDK 初始化骨架：同意隐私前不动作，同意后自动 init
     // （百度地图合规 / JPush setup+init / fluwx registerApi）。见 sdk_bootstrap.dart。
     ref.watch(sdkBootstrapProvider);
@@ -77,9 +80,10 @@ class PlanstarApp extends ConsumerWidget {
       // 无法读取本地化文案。
       onGenerateTitle: (BuildContext context) => context.l10n.appTitle,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: AppTheme.light(fontFamily: appFontFamily),
+      darkTheme: AppTheme.dark(fontFamily: appFontFamily),
       themeMode: themeMode,
+      locale: appLocale,
       routerConfig: router,
       builder: (context, child) => AdaptiveToolbarHost(child: child!),
       localizationsDelegates: appLocalizationsDelegates,

@@ -23,11 +23,13 @@ import '../../l10n/l10n.dart';
 ///
 /// 1. 渐变头 + 103dp 白色资料卡（圆角 12）：56dp 头像、14sp 昵称、等级标、
 ///    卡片底部「支持过 / 关注」两列（20sp 粗体数字 + 12sp 文案 + 1dp 竖线）；
-/// 2. 120dp 支持卡：「我的支持 / 全部支持」+ 四个状态入口（26dp 图标 + 12sp 文案）；
-/// 3. 横向快捷区：星币商城 / 我的钱包 / 优惠券 / 礼品卡（24dp 品牌色图标 + 12sp 文案）；
-/// 4. 每日签到卡；
+/// 2. 每日签到卡；
+/// 3. 横向快捷区：星币商城 / 我的钱包 / 礼品卡（24dp 品牌色图标 + 12sp 文案）；
+/// 4. 120dp 支持卡：「我的支持 / 全部支持」+ 四个状态入口（26dp 图标 + 12sp 文案）；
 /// 5. 分组菜单：「更多服务」地址 / 支持人 / 联系客服 / 卖家招募（58dp 行，leading 图标）；
 /// 6. 登出 / 登录按钮。
+///
+/// 各区块之间统一 16dp 间距（渐变头自身底部留白承担第一段间距）。
 ///
 /// ## 设计取舍
 ///
@@ -81,13 +83,13 @@ class UserPage extends ConsumerWidget {
                   onTapMessage: () => context.push('/message'),
                   onTapSetting: () => context.push('/settings'),
                 ),
+                const _SignInCard(),
+                const _QuickGrid(),
                 _OrderCard(
                   badges: badges,
                   onTapAll: () => openOrders(OrderListFilter.all),
                   onTapStatus: openOrders,
                 ),
-                const _QuickGrid(),
-                const _SignInCard(),
                 // 低频设置：地址 / 支持人 / 客服 / 招募。
                 _MenuGroupCard(
                   title: context.l10n.userMenuGroupMore,
@@ -116,7 +118,7 @@ class UserPage extends ConsumerWidget {
                 ),
                 if (profile.isLoggedIn)
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                     child: SizedBox(
                       height: 48,
                       child: TextButton(
@@ -141,7 +143,7 @@ class UserPage extends ConsumerWidget {
                   )
                 else
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                     child: SizedBox(
                       height: 48,
                       child: FilledButton(
@@ -625,7 +627,8 @@ class _SignInCard extends ConsumerWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+      // 顶部间距由渐变头的底部留白提供，避免叠加成 32dp。
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: colors.bgCard,
         borderRadius: BorderRadius.circular(AppRadius.md),

@@ -225,6 +225,15 @@ class UserLocalizationsEn extends UserLocalizations {
   String get settingsPage_95 => 'Dark mode';
 
   @override
+  String get settingsPageLanguage => 'Language';
+
+  @override
+  String get settingsPageLanguageZh => '简体中文';
+
+  @override
+  String get settingsPageLanguageEn => 'English';
+
+  @override
   String get settingsPage_107 => 'Clear cache';
 
   @override
