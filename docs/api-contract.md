@@ -108,10 +108,10 @@
 
 ## 5. 端点清单与接入状态
 
-后端 `internal/service/service.go` 当前注册 **56 条路由 / 55 个唯一端点**
-（`GET /v1/user/` 是 `GET /v1/user` 的别名）。客户端 `ApiPaths.all` 共 **42 条路径**：
-**38 条**在后端有注册（§5.1），**4 条**是遗留票务路径（§5.4）；后端另有
-**12 条路径**客户端尚未调用（§5.5）。`lib/app/network/api_paths.dart` 是唯一路径清单，
+后端 `internal/service/service.go` 当前注册 **57 条路由 / 56 个唯一端点**
+（`GET /v1/user/` 是 `GET /v1/user` 的别名）。客户端 `ApiPaths.all` 共 **43 条路径**：
+**39 条**在后端有注册（§5.1），**4 条**是遗留票务路径（§5.4）；后端另有部分路径
+客户端尚未调用（§5.5）。`lib/app/network/api_paths.dart` 是唯一路径清单，
 `test/api_paths_test.dart` 以集合相等逐条锁定，多一条、少一条或重复都会失败。
 
 计数口径与后端 `planstar/internal/server/routes_test.go` 的 `normalizeRoute` 一致：
@@ -160,6 +160,7 @@
 | 36 | GET | `v1/user/captcha` | 图形验证码 PNG | `auth/login_page.dart`（按需弹框） |
 | 37 | POST | `v3/user/sendLoginCode` | 发送登录验证码 | 同上 |
 | 38 | POST | `v1/user/login` | 验证码 / 密码登录 | 同上 |
+| 39 | GET | `v1/categories` | 一级品类与二级标签（免鉴权） | `remoteCategoriesProvider` / `showCategoriesProvider` |
 
 演示回落：除登录域（`v1/user/login`、`v3/user/sendLoginCode`、`v1/user/captcha`）
 与企划创意三条端点外，以上都在 `--dart-define=PS_USE_DEMO=true` 时改读本地演示数据
@@ -297,7 +298,7 @@ dart run tool/verify_catalog_api.dart --base=http://127.0.0.1:8098/
 
 这两个脚本是可复跑的运行态核对入口：登录域覆盖失败路径与成功路径，企划库覆盖
 列表 / 分页 / 详情 / 榜单 / 热门 / Banner（检查项见 `tool/verify_catalog_api.dart`）。
-全端点运行态核对需按 §5 的 55 个唯一端点重跑，本文不快照某一次运行的通过数。
+全端点运行态核对需按 §5 的 56 个唯一端点重跑，本文不快照某一次运行的通过数。
 
 ## 8. 客户端已知差异（刻意）
 

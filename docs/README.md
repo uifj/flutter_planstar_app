@@ -18,7 +18,7 @@
 | [`../README.md`](../README.md) | 工程结构（架构入口）、l10n、测试命令，以及本地运行与联调 | 2026-11-11 |
 | 架构（无独立文档） | 以根 README 的目录说明 + 本文件 §4 的代码入口为准；当前没有 `docs/architecture.md` | 2026-11-11 |
 | [`page-parity.md`](page-parity.md) | 页面完成度：逐页记录实现范围与刻意差异 | 2026-11-11 |
-| [`api-contract.md`](api-contract.md) | 前端接口契约：通用约定、登录域实测细节、42 条客户端路径逐条接入状态（38 已接 / 4 遗留未注册） | 2026-11-11 |
+| [`api-contract.md`](api-contract.md) | 前端接口契约：通用约定、登录域实测细节、43 条客户端路径逐条接入状态（39 已接 / 4 遗留未注册） | 2026-11-11 |
 | [`api/API_CONTRACT.md`](api/API_CONTRACT.md) | 前端副本：顶部指向后端契约，仅保留前端差异与接入状态 | 2026-11-11 |
 | [`unimplemented-modules.md`](unimplemented-modules.md) | 未实现模块清单、原因与推进顺序 | 2026-11-11 |
 | [`ddd-order-domain.md`](ddd-order-domain.md) | 订单领域模型（DDD 战术模式）的设计说明 | 2026-11-11 |

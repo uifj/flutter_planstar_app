@@ -52,7 +52,7 @@ Base URL **必须以 `/` 结尾**；路径不带前导 `/`。
 | 域 | 端点 | 状态 |
 | --- | --- | --- |
 | 认证 | `POST v1/user/login`、`POST v3/user/sendLoginCode`、`GET v1/user/captcha` | **已接** |
-| 企划库 | `v1/home/banners`、`v1/projects/hot`、`v1/projects`、`v1/projects/{id}`、`v1/rankings` | **已接**（列表含分页 / 分类 / 筹资状态 / 排序） |
+| 企划库 | `v1/home/banners`、`v1/categories`、`v1/projects/hot`、`v1/projects`、`v1/projects/{id}`、`v1/rankings` | **已接**（列表含分页 / 分类 / 筹资状态 / 排序） |
 | 企划创意 | `v1/projectIdeas/feed`、`v1/projectIdeas/{ideaId}`、`POST v1/projectIdeas/{ideaId}/vote` | **已接**（叠卡流游标翻页 + 支持 / 不支持表态） |
 | 动态 | `v4/feed/hot`、`v1/feed`、`v1/tweets/{id}`、`v1/userReply` | **已接** |
 | 消息 | `v1/messages`、`v1/messages/unreadCount`、`v1/messages/read` | **已接** |
@@ -65,9 +65,9 @@ Base URL **必须以 `/` 结尾**；路径不带前导 `/`。
 | 星币商城 | `v1/shop/goods`、`v1/shop/goods/{id}`、`POST v1/shop/goods/{id}/skus/{skuId}/redeem` | **已接** |
 | 遗留票务路径 | `v1/proxyBuyOrder/myOrders`、`v1/pinTuanOrder/myOrders`、`v1/pinTuanOrder/make`、`v1/pinTuanCampaign/{id}` | 后端未注册，真实模式 404；演示模式不受影响 |
 
-后端注册 **56 条路由 / 55 个唯一端点**（`GET /v1/user/` 是 `GET /v1/user` 的别名）。
-客户端 `ApiPaths.all` 共 **42 条路径**：**38 条**在后端有注册，**4 条**是上表的遗留
-票务路径；后端另有 **12 条路径**客户端尚未调用。逐条对照见
+后端注册 **57 条路由 / 56 个唯一端点**（`GET /v1/user/` 是 `GET /v1/user` 的别名）。
+客户端 `ApiPaths.all` 共 **43 条路径**：**39 条**在后端有注册，**4 条**是上表的遗留
+票务路径；后端另有部分路径客户端尚未调用。逐条对照见
 [`../api-contract.md`](../api-contract.md) §5。
 
 客户端文件：`lib/features/auth/data/planstar_auth_api.dart`、以及

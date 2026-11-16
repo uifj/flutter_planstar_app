@@ -1,6 +1,12 @@
 ﻿# planstar
 
-> 适用版本：planstar Flutter 1.0.1 · 最后核对：2026-11-11 · 维护：客户端组
+[![Flutter CI](https://github.com/uifj/flutter_planstar_app/actions/workflows/ci.yml/badge.svg)](https://github.com/uifj/flutter_planstar_app/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/badge/version-1.0.1%2B1001-blue)](pubspec.yaml)
+[![Flutter](https://img.shields.io/badge/Flutter-3.41.9-02569B?logo=flutter)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-%5E3.11.5-0175C2?logo=dart)](https://dart.dev)
+[![License](https://img.shields.io/badge/License-PolyForm_Noncommercial_1.0.0-lightgrey)](LICENSE)
+
+> 适用版本：planstar Flutter 1.0.1 · 最后核对：2026-11-12 · 维护：客户端组
 
 「企划星」是一款以「做项目前由网友投票」为核心机制的投票决策类应用：应用内的决策项目
 被称为**企划**，涵盖游戏创作、自媒体、小说创作、周边同人等多个分类。「企划」页会显示
@@ -17,6 +23,32 @@
 `planstar_kratos_server/docs/product/POSITIONING.md`。
 
 本仓库是企划星 Flutter 客户端重构工程（monorepo + Clean DDD + Riverpod + GoRouter）。
+
+## 界面预览
+
+截图采自 **Android 16 真机 · 1200×2670 · zh-CN**，连接本机 Docker 本地后端
+（MySQL 8.4 真实种子数据），**非设计稿、非演示假数据**。
+
+**四个主 Tab**
+
+| 首页 | 发现 | 企划 · 星推官审批 | 我的 |
+| :--: | :--: | :--: | :--: |
+| <img src="docs/screenshots/01-home.png" width="230" alt="首页：五个快捷入口、精选推荐与全部企划列表"> | <img src="docs/screenshots/02-discover.png" width="230" alt="发现：动态瀑布流"> | <img src="docs/screenshots/03-project-idea.png" width="230" alt="企划：审批叠卡与支持/不支持"> | <img src="docs/screenshots/06-me-logged-in.png" width="230" alt="我的：登录态个人中心"> |
+
+**核心闭环：立项前投票 → 立项后支持**
+
+| 立项前 · 创意详情 | 立项后 · 企划详情 | 品类浏览 | 搜索结果 |
+| :--: | :--: | :--: | :--: |
+| <img src="docs/screenshots/13-project-idea-detail.png" width="230" alt="创意详情：尚未立项与支持率"> | <img src="docs/screenshots/12-project-detail.png" width="230" alt="企划详情：达成率与回报档位"> | <img src="docs/screenshots/14-category.png" width="230" alt="品类页：服务端品类与二级标签"> | <img src="docs/screenshots/16-search-result.png" width="230" alt="搜索结果：全部/企划/动态计数与命中列表"> |
+
+**浏览与发现**
+
+| 企划榜单 | 已达成企划 | 星币商城 |
+| :--: | :--: | :--: |
+| <img src="docs/screenshots/18-ranking.png" width="230" alt="企划榜单：热度榜、达成榜与冲刺榜"> | <img src="docs/screenshots/19-achieved.png" width="230" alt="已达成企划：达成率与结束状态"> | <img src="docs/screenshots/08-mall.png" width="230" alt="星币商城：余额与兑换档位"> |
+
+> 完整逐页画廊（19 页，含空态与未接入占位、采集环境与复现命令）见
+> [docs/screenshots/](docs/screenshots/README.md)。
 
 ## 目录
 
@@ -66,8 +98,15 @@ flutter run
 
 ### 3. 连本地后端
 
-后端（`planstar_kratos_server`）需先在本机 `8098` 端口启动，具体启动方式见
-该仓库的 README。
+后端（`planstar_kratos_server`）需先在本机 `8098` 端口启动。推荐用后端仓库的本地
+Docker 编排一键起（MySQL 8.4 + Redis 7 + API，含演示种子与演示账号）：
+
+```bash
+# 在后端仓库 planstar_kratos_server/planstar 目录下
+docker compose -f docker-compose.local.yml up -d --build
+```
+
+其余启动方式见该仓库的 README。
 
 **Android 模拟器**（模拟器内 `10.0.2.2` 指向宿主机）：
 
@@ -107,9 +146,9 @@ flutter run --dart-define=PS_API_BASE=http://127.0.0.1:8098/
 
 ### 4. 当前接入范围
 
-后端注册 **56 条路由 / 55 个唯一端点**（`GET /v1/user/` 是 `GET /v1/user` 的尾斜杠
-别名）。客户端 `ApiPaths.all` 共 **42 条**，由 `test/api_paths_test.dart` 锁定；
-其中 **38 条**在后端有对应注册，未注册的 4 条是遗留票务路径
+后端注册 **57 条路由 / 56 个唯一端点**（`GET /v1/user/` 是 `GET /v1/user` 的尾斜杠
+别名）。客户端 `ApiPaths.all` 共 **43 条**，由 `test/api_paths_test.dart` 锁定；
+其中 **39 条**在后端有对应注册，未注册的 4 条是遗留票务路径
 （`v1/proxyBuyOrder/myOrders`、`v1/pinTuanOrder/myOrders`、`v1/pinTuanOrder/make`、
 `v1/pinTuanCampaign/{id}`），真实模式返回 404，演示模式不受影响。
 已接通的范围：登录、企划库（分页/城市过滤/详情/Banner/榜单）、
