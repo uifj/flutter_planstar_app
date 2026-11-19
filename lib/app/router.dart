@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../features/app/splash_page.dart';
 import '../features/auth/login_page.dart';
+import '../features/catalog/domain/show_summary.dart';
 import '../features/catalog/ui/category_home_page.dart';
 import '../features/catalog/ui/show_collection_page.dart';
 import '../features/catalog/ui/show_list_page.dart';
@@ -12,6 +13,7 @@ import '../features/discover/discover_page.dart';
 import '../features/discover/feed_detail_page.dart';
 import '../features/discover/ui/bilibili_player_page.dart';
 import '../features/goods/choose_ticket_page.dart';
+import '../features/goods/reader/show_reader_page.dart';
 import '../features/goods/seatmap/seat_selection_page.dart';
 import '../features/goods/show_detail_page.dart';
 import '../features/goods/venue_page.dart';
@@ -210,6 +212,19 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'showDetail',
         builder: (context, state) =>
             ShowDetailPage(showId: state.pathParameters['showId']!),
+      ),
+      // 企划阅读页：详情页「阅读企划」按钮跳这里，`extra` 直接带已加载的企划详情，
+      // 进入后由 flutter_book_reader 分页渲染，不再重复请求。
+      GoRoute(
+        path: '/show/:showId/read',
+        name: 'showReader',
+        builder: (context, state) => ShowReaderPage(
+          showId: state.pathParameters['showId']!,
+          initialShow: switch (state.extra) {
+            final ShowSummary show => show,
+            _ => null,
+          },
+        ),
       ),
       // 回报档位选择页。企划详情页的支持入口跳这里，选好线下回报场次/回报档位/数量后再进确认订单。
       GoRoute(

@@ -386,6 +386,10 @@ final class AppL10n {
   String get projectSupportClosed => _goodsL10n.projectSupportClosed;
   String get projectSupportFrom => _goodsL10n.projectSupportFrom;
   String get projectStoryTitle => _goodsL10n.projectStoryTitle;
+  String get projectReadEntry => _goodsL10n.projectReadEntry;
+  String get readerIntroEmpty => _goodsL10n.readerIntroEmpty;
+  String get readerStatus => _goodsL10n.readerStatus;
+  String readerRemaining(int count) => _goodsL10n.readerRemaining(count);
   String get projectNoticeTitle => _goodsL10n.projectNoticeTitle;
   String get projectGuaranteeTitle => _goodsL10n.projectGuaranteeTitle;
   String get projectGuaranteeFund => _goodsL10n.projectGuaranteeFund;

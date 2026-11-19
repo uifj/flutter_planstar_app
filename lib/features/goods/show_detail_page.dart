@@ -158,6 +158,8 @@ class _ShowDetailPageState extends ConsumerState<ShowDetailPage> {
           _PurchaseBar(
             show: show,
             onService: () => _toast(context, context.l10n.showDetailPage_143),
+            onRead: () =>
+                context.push('/show/${widget.showId}/read', extra: show),
             onWish: () => _toast(context, context.l10n.showDetailPage_144),
             onBuy: () => _buy(context),
           ),
@@ -1528,12 +1530,14 @@ class _PurchaseBar extends StatelessWidget {
   const _PurchaseBar({
     required this.show,
     required this.onService,
+    required this.onRead,
     required this.onWish,
     required this.onBuy,
   });
 
   final ShowSummary show;
   final VoidCallback onService;
+  final VoidCallback onRead;
   final VoidCallback onWish;
   final VoidCallback onBuy;
 
@@ -1564,6 +1568,11 @@ class _PurchaseBar extends StatelessWidget {
                   icon: LucideIcons.headset,
                   label: context.l10n.showDetailPage_820,
                   onTap: onService,
+                ),
+                _BarAction(
+                  icon: LucideIcons.bookOpen,
+                  label: context.l10n.projectReadEntry,
+                  onTap: onRead,
                 ),
                 _BarAction(
                   icon: LucideIcons.heart,

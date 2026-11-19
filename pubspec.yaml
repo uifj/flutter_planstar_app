@@ -61,6 +61,7 @@ dependencies:
   webview_flutter: ^4.14.1
   url_launcher: ^6.3.3
   lpinyin: ^2.0.3
+  flutter_book_reader: ^1.5.13
 
   # 已移除 lottie：本地动画资源随 assets/ 一并删除，加载态改为代码绘制。
 

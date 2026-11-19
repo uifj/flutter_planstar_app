@@ -408,6 +408,20 @@ class GoodsLocalizationsZh extends GoodsLocalizations {
   String get projectStoryTitle => '企划故事';
 
   @override
+  String get projectReadEntry => '阅读企划';
+
+  @override
+  String get readerIntroEmpty => '企划方暂未提供详细介绍。';
+
+  @override
+  String get readerStatus => '当前状态';
+
+  @override
+  String readerRemaining(int count) {
+    return '剩余 $count 份';
+  }
+
+  @override
   String get projectNoticeTitle => '支持须知';
 
   @override

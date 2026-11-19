@@ -294,6 +294,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.0.2"
+  flutter_book_reader:
+    dependency: "direct main"
+    description:
+      name: flutter_book_reader
+      sha256: "9dca90bf7e92a8bddbefc75006740c7d2ef79fa2c159d3895052b32ddd5f74e0"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.5.13"
   flutter_lints:
     dependency: "direct dev"
     description:

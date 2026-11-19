@@ -123,6 +123,17 @@
   "projectSupportClosed": "This project has ended",
   "projectSupportFrom": "Support from",
   "projectStoryTitle": "Project story",
+  "projectReadEntry": "Read project",
+  "readerIntroEmpty": "The creator hasn't provided a detailed introduction yet.",
+  "readerStatus": "Status",
+  "readerRemaining": "{count} left",
+  "@readerRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "projectNoticeTitle": "Support notes",
   "projectGuaranteeTitle": "Support guarantee",
   "projectGuaranteeFund": "Fund escrow",

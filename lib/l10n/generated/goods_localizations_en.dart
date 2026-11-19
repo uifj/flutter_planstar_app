@@ -408,6 +408,20 @@ class GoodsLocalizationsEn extends GoodsLocalizations {
   String get projectStoryTitle => 'Project story';
 
   @override
+  String get projectReadEntry => 'Read project';
+
+  @override
+  String get readerIntroEmpty => 'The creator hasn\'t provided a detailed introduction yet.';
+
+  @override
+  String get readerStatus => 'Status';
+
+  @override
+  String readerRemaining(int count) {
+    return '$count left';
+  }
+
+  @override
   String get projectNoticeTitle => 'Support notes';
 
   @override

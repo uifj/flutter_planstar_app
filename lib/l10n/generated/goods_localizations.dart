@@ -833,6 +833,30 @@ abstract class GoodsLocalizations {
   /// **'企划故事'**
   String get projectStoryTitle;
 
+  /// No description provided for @projectReadEntry.
+  ///
+  /// In zh, this message translates to:
+  /// **'阅读企划'**
+  String get projectReadEntry;
+
+  /// No description provided for @readerIntroEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'企划方暂未提供详细介绍。'**
+  String get readerIntroEmpty;
+
+  /// No description provided for @readerStatus.
+  ///
+  /// In zh, this message translates to:
+  /// **'当前状态'**
+  String get readerStatus;
+
+  /// No description provided for @readerRemaining.
+  ///
+  /// In zh, this message translates to:
+  /// **'剩余 {count} 份'**
+  String readerRemaining(int count);
+
   /// No description provided for @projectNoticeTitle.
   ///
   /// In zh, this message translates to:

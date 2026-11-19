@@ -249,6 +249,17 @@
   "projectSupportClosed": "企划已结束",
   "projectSupportFrom": "起支持",
   "projectStoryTitle": "企划故事",
+  "projectReadEntry": "阅读企划",
+  "readerIntroEmpty": "企划方暂未提供详细介绍。",
+  "readerStatus": "当前状态",
+  "readerRemaining": "剩余 {count} 份",
+  "@readerRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "projectNoticeTitle": "支持须知",
   "projectGuaranteeTitle": "支持保障",
   "projectGuaranteeFund": "资金托管",
