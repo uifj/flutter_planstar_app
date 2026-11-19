@@ -27,8 +27,9 @@ import '../domain/value_objects/payment_channel.dart';
 /// | 确认订单信息 | POST | `v1/unifiedOrder/confirm` |
 /// | 下单 | POST | `v3/unifiedOrder/makeOrder` |
 ///
-/// 支付（`v1/unifiedPay/payDetail`、`v1/unifiedPay/pay`）后端未实现，
-/// 支付页仍是本地模拟流程。
+/// 支付（`POST v1/unifiedPay/pay` 创建支付单、`GET v1/unifiedPay/payDetail`
+/// 轮询状态）已在 [PlanstarPayApi]（`payment/planstar_pay_api.dart`）接通；
+/// 只有第三方渠道 SDK 的调起仍是本地模拟。
 ///
 /// [fetchOrderList] 的 `status` / `orderType` / `pageIndex` / `pageSize`
 /// 对应 `GET v1/order/list?status=&orderType=&pageIndex=&pageSize=`。
